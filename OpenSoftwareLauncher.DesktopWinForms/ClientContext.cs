@@ -10,10 +10,13 @@ namespace OpenSoftwareLauncher.DesktopWinForms
     public class ClientContext : ApplicationContext
     {
         public LoginForm LoginForm;
+        public ParentForm ParentForm;
 
         public ClientContext()
         {
             Application.ApplicationExit += Application_ApplicationExit;
+
+            Program.Client = new Client();
 
             PromptLoginWindow();
         }
@@ -33,9 +36,12 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             MainForm = LoginForm;
             LoginForm.Show();
         }
-        public void InitializeClientForm()
+        public void InitializeParentForm()
         {
-
+            if (ParentForm == null || ParentForm.IsDisposed)
+                ParentForm = new ParentForm();
+            MainForm = ParentForm;
+            ParentForm.Show();
         }
     }
 }
