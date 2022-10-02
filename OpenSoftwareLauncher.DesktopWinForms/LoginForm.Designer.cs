@@ -285,6 +285,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.Controls.Add(this.tableLayoutPanel5);
             this.Controls.Add(this.tableLayoutPanel4);
             this.Controls.Add(this.tableLayoutPanel1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximumSize = new System.Drawing.Size(254, 352);
             this.MinimumSize = new System.Drawing.Size(254, 352);
             this.Name = "LoginForm";
