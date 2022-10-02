@@ -13,7 +13,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
     public class TokenController : Controller
     {
         [HttpGet("grant")]
-        [Produces(typeof(ObjectResponse<bool>))]
+        [Produces(typeof(ObjectResponse<GrantTokenResponse>))]
         public ActionResult Grant(string username, string password)
         {
             var possibleAddress = Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "";
