@@ -258,6 +258,25 @@ namespace OSLCommon.Authorization
             return null;
         }
 
+        public AccountTokenDetailsResponse[] GetTokenDetails()
+        {
+            var responseList = new List<AccountTokenDetailsResponse>();
+            foreach (var item in Tokens)
+            {
+                responseList.Add(new AccountTokenDetailsResponse()
+                {
+                    Username = this.Username,
+                    Enabled = this.Enabled,
+                    CreatedTimestamp = item.CreatedTimestamp,
+                    LastUsed = item.LastUsed,
+                    UserAgent = item.UserAgent,
+                    Host = item.Host,
+                    Hash = item.TokenHash
+                });
+            }
+            return responseList.ToArray();
+        }
+
         #endregion
 
         #region Account Disable
