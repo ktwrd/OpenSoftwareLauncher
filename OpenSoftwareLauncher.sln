@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenSoftwareLauncher.Server
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OSLCommon", "OSLCommon\OSLCommon.csproj", "{25A9611C-B098-4A63-B2C4-48A69CA89E22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenSoftwareLauncher.DesktopWinForms", "OpenSoftwareLauncher.DesktopWinForms\OpenSoftwareLauncher.DesktopWinForms.csproj", "{646C2B3D-24B5-4439-8E8B-584AB5DC04A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenSoftwareLauncher.DesktopWinForms", "OpenSoftwareLauncher.DesktopWinForms\OpenSoftwareLauncher.DesktopWinForms.csproj", "{646C2B3D-24B5-4439-8E8B-584AB5DC04A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
