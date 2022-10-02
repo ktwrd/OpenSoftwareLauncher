@@ -10,10 +10,11 @@ namespace OpenSoftwareLauncher.Server.Controllers.Account
     [ApiController]
     public class AccountController : Controller
     {
-        [HttpGet]
+        [HttpGet("/account")]
+        [HttpGet("/account/details")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<AccountDetailsResponse>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
-        public ActionResult Index(string token)
+        public ActionResult AccountDetails(string token)
         {
             var account = MainClass.contentManager.AccountManager.GetAccount(token ?? "", true);
             if (account == null)
