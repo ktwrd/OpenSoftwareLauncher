@@ -14,9 +14,11 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         public ClientContext()
         {
             Application.ApplicationExit += Application_ApplicationExit;
+
+            PromptLoginWindow();
         }
 
-        private void Application_ApplicationExit(object? sender, EventArgs e)
+        private void Application_ApplicationExit(object sender, EventArgs e)
         {
         }
         public void Restart()
