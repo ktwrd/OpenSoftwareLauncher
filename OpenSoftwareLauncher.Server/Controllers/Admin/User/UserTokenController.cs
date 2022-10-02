@@ -10,7 +10,6 @@ using System.Text.RegularExpressions;
 using static OSLCommon.Authorization.AccountManager;
 using Account = OSLCommon.Authorization.Account;
 
-
 namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
 {
     [Route("admin/user/token")]
@@ -21,6 +20,39 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
         {
             AccountPermission.USER_TOKEN_PURGE
         };
+
+        [HttpGet("purge/all")]
+        [ProducesResponseType(200, Type = typeof(ObjectResponse<Dictionary<string, int>>))]
+        [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
+        public ActionResult TokenPurgeAll(string token, bool includeGivenToken=false)
+        {
+            if (!MainClass.contentManager.AccountManager.AccountHasPermission(token, RequiredPermissions, bumpLastUsed: true))
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(StatusCodes.Status401Unauthorized, ServerStringResponse.InvalidCredential)
+                }, MainClass.serializerOptions);
+            }
+            var usernameDict = new Dictionary<string, int>();
+            foreach (var user in MainClass.contentManager.AccountManager.AccountList)
+            {
+                string[] exclude = Array.Empty<string>();
+                if (includeGivenToken)
+                    exclude = new string[] { token };
+                var value = user.RemoveTokens(exclude);
+                if (!usernameDict.ContainsKey(user.Username))
+                    usernameDict.Add(user.Username, 0);
+                usernameDict[user.Username] += value;
+            }
+
+            return Json(new ObjectResponse<Dictionary<string, int>>()
+            {
+                Success = true,
+                Data = usernameDict
+            }, MainClass.serializerOptions);
+        }
 
         [HttpGet("purge")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<Dictionary<string, int>>))]
