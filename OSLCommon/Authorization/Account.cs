@@ -32,6 +32,7 @@ namespace OSLCommon.Authorization
         public string[] Groups { get; set; }
         public long FirstSeenTimestamp { get; set; }
         public long LastSeenTimestamp { get; set; }
+        public AccountTokenDetailsResponse[] Tokens { get; set; }
     }
     public class Account
     {
@@ -384,7 +385,8 @@ namespace OSLCommon.Authorization
                 DisableReasons = this.DisableReasons.ToArray(),
                 Groups = this.Groups.ToArray(),
                 FirstSeenTimestamp = this.FirstSeenTimestamp,
-                LastSeenTimestamp = this.LastSeenTimestamp
+                LastSeenTimestamp = this.LastSeenTimestamp,
+                Tokens = GetTokenDetails()
             };
         }
     }
