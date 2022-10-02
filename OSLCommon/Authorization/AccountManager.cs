@@ -72,12 +72,16 @@ namespace OSLCommon.Authorization
         }
 
         #region Get Account
-        public Account GetAccount(string token)
+        public Account GetAccount(string token, bool bumpLastUsed=false)
         { 
             foreach (var account in AccountList)
             {
                 if (account.HasToken(token))
+                {
+                    if (bumpLastUsed)
+                        TokenUsed(token);
                     return account;
+                }
             }
             return null;
         }
@@ -117,7 +121,38 @@ namespace OSLCommon.Authorization
         #endregion
 
         #region Token Management
-        public GrantTokenResponse CreateToken(Account account)
+        /// <summary>
+        /// Used to mark <see cref="AccountToken.LastUsed"/> to the current Unix Epoch
+        /// </summary>
+        /// <param name="token">Token to set <see cref="AccountToken.LastUsed"/></param>
+        public void TokenUsed(string token)
+        {
+            var account = GetAccount(token);
+            if (account == null) return;
+
+            for (int i = 0; i < account.Tokens.Count; i++)
+            {
+                if (account.Tokens[i] != null)
+                    account.Tokens[i] = TokenMarkLastUsedTimestamp(account.Tokens[i]);
+            }
+            if (!IsPendingWrite)
+                OnPendingWrite();
+        }
+        internal AccountToken TokenMarkLastUsedTimestamp(AccountToken token)
+        {
+            if (token.Allow)
+            {
+                token.LastUsed = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            }
+            return token;
+        }
+
+        /// <summary>
+        /// Grant new token from account
+        /// </summary>
+        /// <param name="account">Target account</param>
+        /// <returns></returns>
+        public GrantTokenResponse CreateToken(Account account, string userAgent = "", string host = "")
         {
             bool accountFound = false;
             foreach (var item in AccountList)
@@ -139,6 +174,7 @@ namespace OSLCommon.Authorization
                                 account.Groups = new List<string>();
                             if (account.Permissions == null)
                                 account.Permissions = new List<AccountPermission>();
+                            TokenUsed(success.Token);
                             foreach (var thing in account.Tokens)
                             {
                                 if (thing.Token == success.Token)
@@ -245,11 +281,13 @@ namespace OSLCommon.Authorization
         /// <summary>
         /// Token overload for <see cref="AccountHasPermission(Account, AccountPermission[], bool)"/>
         /// </summary>
-        public bool AccountHasPermission(string token, AccountPermission[] permissions, bool ignoreAdmin=false)
+        public bool AccountHasPermission(string token, AccountPermission[] permissions, bool ignoreAdmin=false, bool bumpLastUsed=false)
         {
             if (token == null || token.Length < AccountToken.TokenLength || token.Length > AccountToken.TokenLength) return false;
             var account = GetAccount(token);
             if (account == null || !account.Enabled) return false;
+            if (bumpLastUsed)
+                TokenUsed(token);
             return AccountHasPermission(account, permissions, ignoreAdmin);
         }
         /// <summary>
