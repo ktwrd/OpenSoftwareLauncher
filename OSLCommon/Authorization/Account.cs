@@ -194,6 +194,27 @@ namespace OSLCommon.Authorization
         }
 
         /// <summary>
+        /// Remove all tokens except some.
+        /// </summary>
+        /// <param name="exclude">Array of tokens to not delete</param>
+        /// <returns>Amount of tokens that were removed</returns>
+        public int RemoveTokens(string[] exclude=null)
+        {
+            int count = Tokens.Count;
+            var newTokenList = new List<AccountToken>();
+            foreach (var item in Tokens)
+            {
+                if (exclude != null && exclude.Contains(item.Token))
+                {
+                    newTokenList.Add(item);
+                }
+            }
+            Tokens = newTokenList;
+            PendingWrite = true;
+            return count - newTokenList.Count;
+        }
+
+        /// <summary>
         /// Register a token
         /// </summary>
         /// <param name="targetToken"></param>
