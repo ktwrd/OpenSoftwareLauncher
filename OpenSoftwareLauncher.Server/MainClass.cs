@@ -90,6 +90,15 @@ namespace OpenSoftwareLauncher.Server
             App.Use((context, next) =>
             {
                 context.Request.EnableBuffering();
+                var possibleAddress = context.Connection.RemoteIpAddress?.ToString() ?? "";
+                if (context.Request.Headers.ContainsKey("X-Forwarded-For"))
+                    possibleAddress = context.Request.Headers["X-Forwarded-For"];
+                else if (context.Request.Headers.ContainsKey("X-Real-IP"))
+                    possibleAddress = context.Request.Headers["X-Real-IP"];
+                var query = context.Request.Path.ToString();
+                if (!query.StartsWith("/token/grant"))
+                    query += context.Request.QueryString.ToString();
+                Console.WriteLine($"[OpenSoftwareLauncher.Server] {context.Request.Method} {possibleAddress} \"{query}\" \"{context.Request.Headers.UserAgent}\"");
                 return next();
             });
 
