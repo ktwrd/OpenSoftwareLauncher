@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace OpenSoftwareLauncher.DesktopWinForms
 {
@@ -27,8 +28,6 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         {
             if (LoginForm == null || LoginForm.IsDisposed)
                 LoginForm = new LoginForm(validate, silent);
-            if (silent)
-                LoginForm.DialogShowed_RememberPassword = true;
             MainForm = LoginForm;
             LoginForm.Show();
         }
