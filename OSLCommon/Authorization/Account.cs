@@ -98,6 +98,8 @@ namespace OSLCommon.Authorization
                 {
                     if (token.CreatedTimestamp > timestamp)
                         timestamp = token.CreatedTimestamp;
+                    if (token.LastUsed > timestamp)
+                        timestamp = token.LastUsed;
                 }
                 return timestamp;
             }
