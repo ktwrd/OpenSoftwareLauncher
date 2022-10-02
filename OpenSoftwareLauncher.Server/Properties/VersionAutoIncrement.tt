@@ -1,0 +1,20 @@
+﻿﻿<#@ template hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+
+using System.Reflection;
+
+[assembly: AssemblyVersion("<#= this.Major #>.<#= this.Minor #>.<#= this.DaysSince #>.<#= this.Minutes  #>")]
+[assembly: AssemblyFileVersion("<#= this.Major #>.<#= this.Minor #>.<#= this.DaysSince #>.<#= this.Minutes  #>")]
+
+<#+
+int Major = 1;
+int Minor = 0;
+
+static DateTime StartedDate = new DateTime(year: 2022, month: 7, day: 18);
+int DaysSince = (int)((DateTime.UtcNow - StartedDate).TotalDays);
+int Minutes = (int)DateTime.UtcNow.TimeOfDay.TotalMinutes;
+#>
