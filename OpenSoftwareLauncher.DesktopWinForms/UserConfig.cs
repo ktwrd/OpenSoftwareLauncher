@@ -28,21 +28,10 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         public static event VoidDelegate SaveEvent;
 
         #region Config Shortcuts
-        public static bool Migration_HasMigrated
-        {
-            get { return GetBoolean("Migration", "HasMigrated", false); }
-            set { Set("Migration", "HasMigrated", value); }
-        }
-
         public static string Auth_Username
         {
             get { return GetString("Authentication", "Username", ""); }
             set { Set("Authentication", "Username", value); }
-        }
-        public static string Auth_Password
-        {
-            get { return GetString("Authentication", "Password", ""); }
-            set { Set("Authentication", "Password", value); }
         }
         public static string Auth_Token
         {
@@ -68,7 +57,6 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             {"Authentication", new Dictionary<string, object>()
                 {
                     {"Username", "" },
-                    {"Password", "" },
                     {"Token", "" },
                     {"Remember", false }
                 }
