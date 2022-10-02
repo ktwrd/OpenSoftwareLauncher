@@ -16,5 +16,13 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         {
             InitializeComponent();
         }
+        public LoginForm(bool validate = false, bool silent = false)
+        {
+            InitializeComponent();
+            if (UserConfig.Auth_Remember == false)
+                validate = false;
+            ValidateOnShow = validate;
+        }
+        private bool ValidateOnShow = false;
     }
 }
