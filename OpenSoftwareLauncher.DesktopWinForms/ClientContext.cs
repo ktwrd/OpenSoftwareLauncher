@@ -24,7 +24,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             Application.Restart();
         }
 
-        public void PromptLoginWindow(bool validate=false, bool silent=false)
+        public void PromptLoginWindow(bool validate = false, bool silent = false)
         {
             if (LoginForm == null || LoginForm.IsDisposed)
                 LoginForm = new LoginForm(validate, silent);
@@ -33,7 +33,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         }
         public void InitializeClientForm()
         {
-            
+
         }
     }
 }
