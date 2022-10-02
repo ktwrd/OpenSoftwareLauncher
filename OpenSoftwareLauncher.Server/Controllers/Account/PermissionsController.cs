@@ -13,7 +13,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Account
         [HttpGet]
         public ActionResult Index(string token)
         {
-            var account = MainClass.contentManager.AccountManager.GetAccount(token ?? "");
+            var account = MainClass.contentManager.AccountManager.GetAccount(token ?? "", true);
             if (account == null)
             {
                 Response.StatusCode = 401;

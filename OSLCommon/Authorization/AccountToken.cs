@@ -1,6 +1,7 @@
 ﻿using kate.shared.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 
@@ -22,9 +23,30 @@ namespace OSLCommon.Authorization
         public AccountToken() : this(null)
         { }
 
-        public bool Allow { get; set; }
+        public bool Allow { get; set; } = true;
         public string Token { get; set; }
-        public long CreatedTimestamp { get; set; }
+        public string TokenHash
+        {
+            get
+            {
+                StringBuilder Sb = new StringBuilder();
+
+                using (var hash = SHA256.Create())
+                {
+                    Encoding enc = Encoding.UTF8;
+                    byte[] result = hash.ComputeHash(enc.GetBytes(Token));
+
+                    foreach (byte b in result)
+                        Sb.Append(b.ToString("x2"));
+                }
+
+                return Sb.ToString();
+            }
+        }
+        public string UserAgent { get; set; } = "unknown";
+        public string Host { get; set; } = "0.0.0.0";
+        public long CreatedTimestamp { get; set; } = 0;
+        public long LastUsed { get; set; } = 0;
 
         public static AccountToken FromObject(Account parentAccount, object source)
         {
@@ -42,6 +64,12 @@ namespace OSLCommon.Authorization
                 instance.CreatedTimestamp = long.Parse(dict["CreatedTimestamp"].ToString());
             if (dict.ContainsKey("Allow"))
                 instance.Allow = bool.Parse(dict["Allow"].ToString());
+            if (dict.ContainsKey("LastUsed"))
+                instance.LastUsed = long.Parse(dict["LastUsed"].ToString());
+            if (dict.ContainsKey("Host"))
+                instance.Host = dict["Host"].ToString();
+            if (dict.ContainsKey("UserAgent"))
+                instance.UserAgent = dict["UserAgent"].ToString();
             return instance;
         }
     }

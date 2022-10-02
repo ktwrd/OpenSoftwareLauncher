@@ -21,7 +21,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [ProducesResponseType(200, Type = typeof(ObjectResponse<Dictionary<string, ProductRelease>>))]
         public ActionResult Index(string token)
         {
-            var account = MainClass.contentManager.AccountManager.GetAccount(token);
+            var account = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
             if (account != null)
             {
                 if (!account.Enabled)
@@ -197,7 +197,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [Produces(typeof(ObjectResponse<List<ProductRelease>>))]
         public ActionResult LatestFromPath(string app, string? token = "")
         {
-            var account = MainClass.contentManager.AccountManager.GetAccount(token);
+            var account = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
             if (account != null && !account.Enabled)
             {
                 Response.StatusCode = StatusCodes.Status401Unauthorized;
@@ -215,7 +215,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult LatestFromParameter(string id="", string? token = "")
         {
-            var account = MainClass.contentManager.AccountManager.GetAccount(token);
+            var account = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
             if (account != null && !account.Enabled)
             {
                 Response.StatusCode = StatusCodes.Status401Unauthorized;

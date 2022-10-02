@@ -16,8 +16,17 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [Produces(typeof(ObjectResponse<bool>))]
         public ActionResult Grant(string username, string password)
         {
-            var grantTokenResponse = MainClass.contentManager.AccountManager.GrantTokenAndOrAccount(WebUtility.UrlDecode(username), WebUtility.UrlDecode(password));
+            var possibleAddress = Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "";
+            if (Request.Headers.ContainsKey("X-Forwarded-For"))
+                possibleAddress = Request.Headers["X-Forwarded-For"];
+            else if (Request.Headers.ContainsKey("X-Real-IP"))
+                possibleAddress = Request.Headers["X-Real-IP"];
 
+            var grantTokenResponse = MainClass.contentManager.AccountManager.GrantTokenAndOrAccount(
+                WebUtility.UrlDecode(username),
+                WebUtility.UrlDecode(password),
+                userAgent: Request.Headers.UserAgent,
+                host: possibleAddress);
             if (!grantTokenResponse.Success)
                 Response.StatusCode = StatusCodes.Status401Unauthorized;
             return Json(new ObjectResponse<GrantTokenResponse>()
@@ -89,7 +98,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
                 }, MainClass.serializerOptions);
             }
 
-            var account = MainClass.contentManager.AccountManager.GetAccount(token);
+            var account = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
             if (account == null)
             {
                 Response.StatusCode = StatusCodes.Status401Unauthorized;
@@ -142,7 +151,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
                 }, MainClass.serializerOptions);
             }
 
-            var account = MainClass.contentManager.AccountManager.GetAccount(token);
+            var account = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
             if (account == null)
             {
                 Response.StatusCode = StatusCodes.Status401Unauthorized;

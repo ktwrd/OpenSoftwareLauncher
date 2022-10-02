@@ -139,6 +139,14 @@ namespace OSLCommon.Authorization
                                 account.Groups = new List<string>();
                             if (account.Permissions == null)
                                 account.Permissions = new List<AccountPermission>();
+                            foreach (var thing in account.Tokens)
+                            {
+                                if (thing.Token == success.Token)
+                                {
+                                    thing.UserAgent = userAgent;
+                                    thing.Host = host;
+                                }
+                            }
                             return new GrantTokenResponse("Granted token", true, success, account.Groups.ToArray(), account.Permissions.ToArray());
                         }
                     }
@@ -151,16 +159,16 @@ namespace OSLCommon.Authorization
             return new GrantTokenResponse("Failed to grant token", false);
         }
 
-        private GrantTokenResponse AttemptGrantToken(Account account, ITokenGranter granter, string username, string password)
+        private GrantTokenResponse AttemptGrantToken(Account account, ITokenGranter granter, string username, string password, string userAgent = "", string host = "")
         {
             var success = granter.Grant(username, password);
             if (success)
             {
-                return CreateToken(account);
+                return CreateToken(account, userAgent: userAgent, host: host);
             }
             return null;
         }
-        public GrantTokenResponse GrantToken(Account account, string username, string password)
+        public GrantTokenResponse GrantToken(Account account, string username, string password, string userAgent="", string host="")
         {
             var taskList = new List<Task>();
             GrantTokenResponse targetResponse = null;
@@ -168,7 +176,7 @@ namespace OSLCommon.Authorization
             {
                 taskList.Add(new Task(delegate
                 {
-                    var res = AttemptGrantToken(account, granter, username, password);
+                    var res = AttemptGrantToken(account, granter, username, password, userAgent: userAgent, host: host);
                     if (targetResponse == null && res != null)
                         targetResponse = res;
                 }));
@@ -181,14 +189,14 @@ namespace OSLCommon.Authorization
             return targetResponse;
         }
 
-        public GrantTokenResponse GrantTokenAndOrAccount(string username, string password)
+        public GrantTokenResponse GrantTokenAndOrAccount(string username, string password, string userAgent="", string host="")
         {
             foreach (var account in AccountList)
             {
                 // Found our account
                 if (account.Username == username)
                 {
-                    return GrantToken(account, username, password);
+                    return GrantToken(account, username, password, userAgent: userAgent, host: host);
                 }
             }
 
@@ -196,7 +204,7 @@ namespace OSLCommon.Authorization
             var accountInstance = new Account(this);
             accountInstance.Username = username;
             AccountList.Add(accountInstance);
-            var response = GrantToken(accountInstance, username, password);
+            var response = GrantToken(accountInstance, username, password, userAgent: userAgent, host: host);
             if (!response.Success)
                 AccountList.Remove(accountInstance);
             return response;

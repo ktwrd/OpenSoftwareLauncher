@@ -59,7 +59,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult TokenPurge(string token, string? username = null, bool? isUsernameFieldRegexPattern = false)
         {
-            if (!MainClass.contentManager.AccountManager.AccountHasPermission(token, RequiredPermissions))
+            if (!MainClass.contentManager.AccountManager.AccountHasPermission(token, RequiredPermissions, bumpLastUsed: true))
             {
                 Response.StatusCode = StatusCodes.Status401Unauthorized;
                 return Json(new ObjectResponse<HttpException>()

@@ -113,7 +113,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [ProducesResponseType(200, Type = typeof(ObjectResponse<Dictionary<string, PublishedRelease>>))]
         public ActionResult All(string token)
         {
-            var account = MainClass.contentManager.AccountManager.GetAccount(token);
+            var account = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
             if (!MainClass.ValidTokens.ContainsKey(token))
             {
                 if (account == null)
@@ -156,7 +156,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [ProducesResponseType(200, Type = typeof(ObjectResponse<PublishedRelease?>))]
         public ActionResult ByCommitHashFromParameter(string hash, string? token)
         {
-            var account = MainClass.contentManager.AccountManager.GetAccount(token ?? "");
+            var account = MainClass.contentManager.AccountManager.GetAccount(token ?? "", bumpLastUsed: true);
             if (account == null)
             {
                 Response.StatusCode = 401;
