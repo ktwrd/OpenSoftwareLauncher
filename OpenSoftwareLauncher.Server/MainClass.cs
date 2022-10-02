@@ -21,6 +21,18 @@ namespace OpenSoftwareLauncher.Server
 {
     public static class MainClass
     {
+        public static bool DebugMode
+        {
+            get
+            {
+                if (ServerConfig.GetBoolean("General", "Debug", false))
+                    return true;
+#if DEBUG
+                return true;
+#endif
+            }
+        }
+
         public static WebApplicationBuilder Builder;
         public static WebApplication App;
         /// <summary>
