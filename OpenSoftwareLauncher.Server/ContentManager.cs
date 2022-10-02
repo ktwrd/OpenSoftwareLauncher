@@ -35,7 +35,7 @@ namespace OpenSoftwareLauncher.Server
         private void SystemAnnouncement_Update()
         {
             File.WriteAllText(JSON_SYSANNOUNCE_FILENAME, SystemAnnouncement.ToJSON());
-            string txt = $"[ContentManager->SystemAnnouncement_Update:{GeneralHelper.GetNanoseconds()}] Wrote SystemAnnouncements to to {Path.GetRelativePath(Directory.GetCurrentDirectory(), JSON_SYSANNOUNCE_FILENAME)}";
+            string txt = $"[ContentManager->SystemAnnouncement_Update]  {Path.GetRelativePath(Directory.GetCurrentDirectory(), JSON_SYSANNOUNCE_FILENAME)}";
             Trace.WriteLine(txt);
             Console.WriteLine(txt);
             ServerConfig.Save();
@@ -45,7 +45,7 @@ namespace OpenSoftwareLauncher.Server
         {
             File.WriteAllText(JSON_ACCOUNT_FILENAME, AccountManager.ToJSON());
             AccountManager.ClearPendingWrite();
-            string txt = $"[ContentManager->AccountManager_PendingWrite:{GeneralHelper.GetNanoseconds()}] Wrote accounts to {Path.GetRelativePath(Directory.GetCurrentDirectory(), JSON_ACCOUNT_FILENAME)}";
+            string txt = $"[ContentManager->AccountManager_PendingWrite] {Path.GetRelativePath(Directory.GetCurrentDirectory(), JSON_ACCOUNT_FILENAME)}";
             Trace.WriteLine(txt);
             Console.WriteLine(txt);
             ServerConfig.Save();
