@@ -1,4 +1,6 @@
-﻿namespace OpenSoftwareLauncher.DesktopWinForms
+﻿using System.Windows.Forms;
+
+namespace OpenSoftwareLauncher.DesktopWinForms
 {
     partial class LoginForm
     {
