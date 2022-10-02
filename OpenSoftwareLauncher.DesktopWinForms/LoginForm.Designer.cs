@@ -30,6 +30,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LoginForm));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
@@ -254,6 +255,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             // 
             // buttonLogin
             // 
+            this.buttonLogin.Image = ((System.Drawing.Image)(resources.GetObject("buttonLogin.Image")));
             this.buttonLogin.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonLogin.Location = new System.Drawing.Point(3, 3);
             this.buttonLogin.Name = "buttonLogin";
@@ -265,6 +267,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             // 
             // buttonOptions
             // 
+            this.buttonOptions.Image = ((System.Drawing.Image)(resources.GetObject("buttonOptions.Image")));
             this.buttonOptions.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonOptions.Location = new System.Drawing.Point(3, 3);
             this.buttonOptions.Name = "buttonOptions";
