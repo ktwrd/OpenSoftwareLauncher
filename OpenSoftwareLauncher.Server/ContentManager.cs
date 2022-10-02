@@ -117,8 +117,8 @@ namespace OpenSoftwareLauncher.Server
         }
         private void RestoreFromJSON()
         {
-            JSONBackupContent deserialized = null;
-            Exception deserializeException = null;
+            JSONBackupContent? deserialized = null;
+            Exception? deserializeException = null;
             try
             {
                 deserialized = JsonSerializer.Deserialize<JSONBackupContent>(File.ReadAllText(JSONBACKUP_FILENAME), MainClass.serializerOptions);
@@ -130,7 +130,9 @@ namespace OpenSoftwareLauncher.Server
             }
             if (deserialized == null)
             {
-                var addedContent = deserializeException == null ? string.Empty : "\n" + deserializeException?.ToString() + "\n" ?? "";
+                string addedContent = "";
+                if (deserializeException != null)
+                    addedContent = "\n" + deserializeException?.ToString() + "\n";
                 Console.Error.Write($"\n[ContentManager->RestoreFromJSON] Failed to restore ;w;{addedContent}");
                 return;
             }
