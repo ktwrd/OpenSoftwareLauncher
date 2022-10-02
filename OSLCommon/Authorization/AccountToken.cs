@@ -19,6 +19,10 @@ namespace OSLCommon.Authorization
             Allow = true;
             Token = GeneralHelper.GenerateToken(TokenLength);
             CreatedTimestamp = 0;
+            UserAgent = "unknown";
+            Host = "0.0.0.0";
+            CreatedTimestamp = 0;
+            LastUsed = 0;
         }
         public AccountToken() : this(null)
         { }
@@ -43,10 +47,10 @@ namespace OSLCommon.Authorization
                 return Sb.ToString();
             }
         }
-        public string UserAgent { get; set; } = "unknown";
-        public string Host { get; set; } = "0.0.0.0";
-        public long CreatedTimestamp { get; set; } = 0;
-        public long LastUsed { get; set; } = 0;
+        public string UserAgent { get; set; }
+        public string Host { get; set; }
+        public long CreatedTimestamp { get; set; }
+        public long LastUsed { get; set; }
 
         public static AccountToken FromObject(Account parentAccount, object source)
         {
