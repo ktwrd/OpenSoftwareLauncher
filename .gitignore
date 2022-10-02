@@ -348,3 +348,28 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+content.db
+*.bak.db
+*.bak
+systemAnnouncement.json
+*systemAnnouncement.json
+**systemAnnouncement.json
+account.json
+*account.json
+**account.json
+content.json
+*content.json
+**content.json
+tokens.json
+*tokens.json
+**tokens.json
+
+OpenSoftwareLauncher.DesktopWinForms/BuildScripts/release/
+OpenSoftwareLauncher.DesktopWinForms/BuildScripts/**/.exe
+*.Update.exe
+OpenSoftwareLauncher/account.json
+OpenSoftwareLauncher/systemAnnouncement.json
+OpenSoftwareLauncher/content.json
+OpenSoftwareLauncher/tokens.json
+config.ini
