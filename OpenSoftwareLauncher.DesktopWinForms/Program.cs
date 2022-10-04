@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenSoftwareLauncher.DesktopWinForms.ServerBridge;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -20,6 +21,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         };
 
         public static Client Client;
+        public static LocalContent LocalContent;
+        public static ClientContext ClientContext;
 
         public static string SoftwareVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString();
         public static string ProductName = @"Open Software Launcher";
@@ -31,12 +34,14 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         [STAThread]
         static void Main()
         {
+            UserConfig.Get();
             LocaleManager.Load();
             try
             {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new ClientContext());
+                ClientContext = new ClientContext();
+                Application.Run(ClientContext);
             }
             catch (Exception e)
             {
