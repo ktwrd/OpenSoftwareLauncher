@@ -41,7 +41,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.labelUsername = new System.Windows.Forms.Label();
             this.textBoxUsername = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBoxServer = new System.Windows.Forms.TextBox();
             this.labelServer = new System.Windows.Forms.Label();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
@@ -62,6 +62,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             // 
             // tableLayoutPanel1
             // 
+            this.tableLayoutPanel1.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel2, 0, 1);
@@ -81,9 +82,9 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             // 
             this.flowLayoutPanel2.Controls.Add(this.tableLayoutPanel3);
             this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 55);
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(4, 57);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(165, 46);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(163, 46);
             this.flowLayoutPanel2.TabIndex = 1;
             // 
             // tableLayoutPanel3
@@ -127,9 +128,9 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.flowLayoutPanel1.Controls.Add(this.tableLayoutPanel2);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(4, 4);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(165, 46);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(163, 46);
             this.flowLayoutPanel1.TabIndex = 1;
             // 
             // tableLayoutPanel2
@@ -174,7 +175,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.tableLayoutPanel4.ColumnCount = 2;
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.Controls.Add(this.textBox1, 1, 0);
+            this.tableLayoutPanel4.Controls.Add(this.textBoxServer, 1, 0);
             this.tableLayoutPanel4.Controls.Add(this.labelServer, 0, 0);
             this.tableLayoutPanel4.Location = new System.Drawing.Point(8, 277);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
@@ -183,13 +184,13 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.tableLayoutPanel4.Size = new System.Drawing.Size(218, 25);
             this.tableLayoutPanel4.TabIndex = 2;
             // 
-            // textBox1
+            // textBoxServer
             // 
-            this.textBox1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.textBox1.Location = new System.Drawing.Point(53, 3);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(162, 20);
-            this.textBox1.TabIndex = 1;
+            this.textBoxServer.Dock = System.Windows.Forms.DockStyle.Top;
+            this.textBoxServer.Location = new System.Drawing.Point(53, 3);
+            this.textBoxServer.Name = "textBoxServer";
+            this.textBoxServer.Size = new System.Drawing.Size(162, 20);
+            this.textBoxServer.TabIndex = 1;
             // 
             // labelServer
             // 
@@ -241,6 +242,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.buttonLogin.Text = "Login";
             this.buttonLogin.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.buttonLogin.UseVisualStyleBackColor = true;
+            this.buttonLogin.Click += new System.EventHandler(this.buttonLogin_Click);
             // 
             // flowLayoutPanel3
             // 
@@ -290,6 +292,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.MinimumSize = new System.Drawing.Size(254, 352);
             this.Name = "LoginForm";
             this.Text = "OSL - Login";
+            this.Shown += new System.EventHandler(this.LoginForm_Shown);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel2.ResumeLayout(false);
             this.flowLayoutPanel2.PerformLayout();
@@ -323,7 +326,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         private TextBox textBoxPassword;
         private TableLayoutPanel tableLayoutPanel4;
         private Label labelServer;
-        private TextBox textBox1;
+        private TextBox textBoxServer;
         private TableLayoutPanel tableLayoutPanel5;
         private FlowLayoutPanel flowLayoutPanel4;
         private FlowLayoutPanel flowLayoutPanel3;

@@ -38,5 +38,30 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             ValidateOnShow = validate;
         }
         private bool ValidateOnShow = false;
+        public void SaveFields()
+        {
+            UserConfig.Auth_Username = textBoxUsername.Text;
+            UserConfig.Auth_Remember = checkBoxRemember.Checked;
+            UserConfig.Connection_Endpoint = textBoxServer.Text;
+            UserConfig.Save();
+        }
+        private void buttonLogin_Click(object sender, EventArgs e)
+        {
+            Enabled = false;
+            SaveFields();
+            var response = Program.Client.ValidateCredentials(textBoxUsername.Text, textBoxPassword.Text, textBoxServer.Text);
+            if (response.Success)
+            {
+                Program.Client.UpdateProperties();
+                Program.ClientContext.InitializeParentForm(true);
+            }
+        }
+
+        private void LoginForm_Shown(object sender, EventArgs e)
+        {
+            textBoxUsername.Text = UserConfig.Auth_Username;
+            checkBoxRemember.Checked = UserConfig.Auth_Remember;
+            textBoxServer.Text = UserConfig.Connection_Endpoint;
+        }
     }
 }
