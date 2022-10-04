@@ -31,10 +31,6 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 
         private void ParentForm_Shown(object sender, EventArgs e)
         {
-            userDetailsForm = new UserDetailsForm();
-            userDetailsForm.MdiParent = this;
-            userDetailsForm.Location = new Point(32, 0);
-            userDetailsForm.Show();
         }
     }
 }
