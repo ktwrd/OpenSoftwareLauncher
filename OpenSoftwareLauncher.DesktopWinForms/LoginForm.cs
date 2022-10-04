@@ -62,6 +62,15 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             textBoxUsername.Text = UserConfig.Auth_Username;
             checkBoxRemember.Checked = UserConfig.Auth_Remember;
             textBoxServer.Text = UserConfig.Connection_Endpoint;
+
+            if (textBoxUsername.Text.Length > 0)
+            {
+                textBoxPassword.Focus();
+            }
+            else
+            {
+                textBoxUsername.Focus();
+            }
         }
     }
 }
