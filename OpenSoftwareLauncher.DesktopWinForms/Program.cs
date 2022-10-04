@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -19,12 +21,17 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 
         public static Client Client;
 
+        public static string SoftwareVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString();
+        public static string ProductName = @"Open Software Launcher";
+        public static string ProductNameAcronym = "OSL";
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main()
         {
+            LocaleManager.Load();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new ClientContext());
