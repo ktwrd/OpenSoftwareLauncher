@@ -117,12 +117,6 @@
     <Compile Include="ServerBridge\LocalContent.cs" />
     <Compile Include="ServerBridge\SystemAnnouncementSummaryAsList.cs" />
     <Compile Include="UserConfig.cs" />
-    <Compile Include="UserDetailsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UserDetailsForm.Designer.cs">
-      <DependentUpon>UserDetailsForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="UserManagementForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -144,9 +138,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="UserDetailsForm.resx">
-      <DependentUpon>UserDetailsForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="UserManagementForm.resx">
       <DependentUpon>UserManagementForm.cs</DependentUpon>
     </EmbeddedResource>
