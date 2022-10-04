@@ -16,12 +16,24 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         public ParentForm()
         {
             InitializeComponent();
+            Locale();
+        }
+
+        public void Locale()
+        {
+            toolStripButtonUsers.Text = LocaleManager.Get(toolStripButtonUsers.Text);
+            toolStripButtonAnnouncements.Text = LocaleManager.Get(toolStripButtonAnnouncements.Text);
+            toolStripButtonReleases.Text = LocaleManager.Get(toolStripButtonReleases.Text);
+            toolStripButtonSettings.Text = LocaleManager.Get(toolStripButtonSettings.Text);
+            toolStripButtonLogs.Text = LocaleManager.Get(toolStripButtonLogs.Text);
+            Text = LocaleManager.Get(Text);
         }
 
         private void ParentForm_Shown(object sender, EventArgs e)
         {
             userDetailsForm = new UserDetailsForm();
             userDetailsForm.MdiParent = this;
+            userDetailsForm.Location = new Point(32, 0);
             userDetailsForm.Show();
         }
     }
