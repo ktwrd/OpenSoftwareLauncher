@@ -32,9 +32,20 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         static void Main()
         {
             LocaleManager.Load();
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new ClientContext());
+            try
+            {
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Run(new ClientContext());
+            }
+            catch (Exception e)
+            {
+                Program.MessageBoxShow(LocaleManager.Get("FatalFailure_Exception", inject: new Dictionary<string, object>()
+                {
+                    { @"exception", e.ToString() }
+                }));
+                Trace.WriteLine($"[Program->Main] Fatal Exception\n================\n{e}\n================\n");
+            }
         }
 
         public static DialogResult MessageBoxShow(
