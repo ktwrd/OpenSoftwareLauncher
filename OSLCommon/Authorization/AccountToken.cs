@@ -24,15 +24,27 @@ namespace OSLCommon.Authorization
             CreatedTimestamp = 0;
             LastUsed = 0;
         }
-        public AccountToken() : this(null)
+        public AccountToken() : this(parentAccount: null)
         { }
+
+        public AccountToken(AccountTokenDetailsResponse res)
+        {
+            Allow = res.Enabled;
+            _tokenHash = res.Hash;
+            UserAgent = res.UserAgent;
+            Host = res.Host;
+            CreatedTimestamp = res.CreatedTimestamp;
+            LastUsed = res.LastUsed;
+        }
 
         public bool Allow { get; set; } = true;
         public string Token { get; set; }
+        private string _tokenHash = null;
         public string TokenHash
         {
             get
             {
+                if (_tokenHash != null) return _tokenHash;
                 StringBuilder Sb = new StringBuilder();
 
                 using (var hash = SHA256.Create())
