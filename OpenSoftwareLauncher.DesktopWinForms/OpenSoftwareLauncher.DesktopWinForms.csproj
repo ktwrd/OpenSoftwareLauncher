@@ -88,15 +88,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Client.cs" />
+    <Compile Include="ServerBridge\AuthClient.cs" />
+    <Compile Include="ServerBridge\Client.cs" />
     <Compile Include="ClientContext.cs" />
-    <Compile Include="ComboBoxItem.cs" />
-    <Compile Include="ComboCollection.cs" />
+    <Compile Include="CustomComponents\ComboBoxItem.cs" />
+    <Compile Include="CustomComponents\ComboCollection.cs" />
     <Compile Include="Endpoint.cs" />
-    <Compile Include="ImagedComboBox.cs">
+    <Compile Include="CustomComponents\ImagedComboBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="LocaleManager.cs" />
+    <Compile Include="Locale\LocaleManager.cs" />
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
