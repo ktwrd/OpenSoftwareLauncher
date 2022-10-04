@@ -16,6 +16,7 @@ namespace OSLCommon.Authorization
         USER_TOKEN_PURGE,
         USER_LIST,
         ANNOUNCEMENT_MANAGE,
-        RELEASE_MANAGE
+        RELEASE_MANAGE,
+        USER_DISABLE_MODIFY,
     }
 }
