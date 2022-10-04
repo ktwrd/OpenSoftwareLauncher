@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenSoftwareLauncher.DesktopWinForms.ServerBridge;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 Application.ApplicationExit += Application_ApplicationExit;
 
                 Program.Client = new Client();
+                Program.LocalContent = new LocalContent();
 
                 PromptLoginWindow();
             }
@@ -59,13 +61,15 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 Trace.WriteLine($"[ClientContext->PromptLoginWindow] Uncaught exception when showing LoginForm\n================\n{e}\n================\n");
             }
         }
-        public void InitializeParentForm()
+        public void InitializeParentForm(bool closeLoginWindow=true)
         {
             try
             {
                 if (ParentForm == null || ParentForm.IsDisposed)
                     ParentForm = new ParentForm();
                 MainForm = ParentForm;
+                if (closeLoginWindow && (LoginForm != null && !LoginForm.IsDisposed))
+                    LoginForm.Close();
                 ParentForm.Show();
             }
             catch (Exception e)
