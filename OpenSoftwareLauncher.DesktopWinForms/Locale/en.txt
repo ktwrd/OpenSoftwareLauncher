@@ -13,3 +13,17 @@ ExceptionMessageBox_Title=Uncaught Exception
 ExceptionMessageBox_Content=Looks like I've done a fucky wucky uwu${nl}${content}
 FailedToLaunch_Title=${product.name.short} - Fatal Error
 FailedToLaunch_Message=Failed to launch ${produce.name}.${nl}${nl}Log written to ${logLocation}
+
+ClientContext_ConstructorFail=ClientContext Fatal Failure.${nl}${nl}${exception}
+
+ClientContext_LoginFormFail=Failed to open login window.${nl}${nl}${exception}
+ClientContext_ParentFormFail=Failed to initialize ParentForm.${nl}${nl}${exception}
+
+FatalFailure_Exception=Fatal Error${nl}${nl}${exception}
+
+
+
+ServerResponse_Invalid=Invalid Response from Server
+
+ServerResponse_InvalidCredentials=Invalid Credentials
+ServerResponse_AccountDisabled=Your account has been disabled. Please contact the server administrator for more details.
