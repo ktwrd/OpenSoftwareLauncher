@@ -64,12 +64,19 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             if (LanguageDatabase[targetLang].ContainsKey(key))
             {
                 value = LanguageDatabase[targetLang][key];
-                Trace.WriteLine($"[LocaleManager->Get] Failed to find item \"{targetLang}.{key}\"");
             }
-            else if (LanguageDatabase[FallbackLanguage].ContainsKey(key))
+            else
             {
-                value = LanguageDatabase[FallbackLanguage][key];
-                Trace.WriteLine($"[LocaleManager->Get] Failed to find item \"{key}\" in fallback language. Returning fallback string");
+                Trace.WriteLine($"[LocaleManager->Get] Failed to find item \"{targetLang}.{key}\"");
+                if ((LanguageDatabase[FallbackLanguage].ContainsKey(key)))
+                {
+                    value = LanguageDatabase[FallbackLanguage][key];
+                }
+                else
+                {
+                    Trace.WriteLine($"[LocaleManager->Get] Failed to find item \"{key}\" in fallback language. Returning fallback string");
+                    value = fallback;
+                }
             }
 
             var dictReplace = new Dictionary<string, object>()
