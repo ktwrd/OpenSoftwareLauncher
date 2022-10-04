@@ -90,7 +90,13 @@
   <ItemGroup>
     <Compile Include="Client.cs" />
     <Compile Include="ClientContext.cs" />
+    <Compile Include="ComboBoxItem.cs" />
+    <Compile Include="ComboCollection.cs" />
     <Compile Include="Endpoint.cs" />
+    <Compile Include="ImagedComboBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="LocaleManager.cs" />
     <Compile Include="LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
