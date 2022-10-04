@@ -85,7 +85,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.flowLayoutPanel2.Location = new System.Drawing.Point(4, 57);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
             this.flowLayoutPanel2.Size = new System.Drawing.Size(163, 46);
-            this.flowLayoutPanel2.TabIndex = 1;
+            this.flowLayoutPanel2.TabIndex = 2;
             // 
             // tableLayoutPanel3
             // 
@@ -103,7 +103,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 17F));
             this.tableLayoutPanel3.Size = new System.Drawing.Size(161, 42);
-            this.tableLayoutPanel3.TabIndex = 3;
+            this.tableLayoutPanel3.TabIndex = 2;
             // 
             // labelPassword
             // 
@@ -111,7 +111,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.labelPassword.Location = new System.Drawing.Point(3, 0);
             this.labelPassword.Name = "labelPassword";
             this.labelPassword.Size = new System.Drawing.Size(53, 13);
-            this.labelPassword.TabIndex = 0;
+            this.labelPassword.TabIndex = 3;
             this.labelPassword.Text = "Password";
             // 
             // textBoxPassword
@@ -120,7 +120,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.textBoxPassword.Location = new System.Drawing.Point(3, 16);
             this.textBoxPassword.Name = "textBoxPassword";
             this.textBoxPassword.Size = new System.Drawing.Size(155, 20);
-            this.textBoxPassword.TabIndex = 1;
+            this.textBoxPassword.TabIndex = 4;
             this.textBoxPassword.UseSystemPasswordChar = true;
             // 
             // flowLayoutPanel1
@@ -157,7 +157,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.labelUsername.Location = new System.Drawing.Point(3, 0);
             this.labelUsername.Name = "labelUsername";
             this.labelUsername.Size = new System.Drawing.Size(55, 13);
-            this.labelUsername.TabIndex = 0;
+            this.labelUsername.TabIndex = 1;
             this.labelUsername.Text = "Username";
             // 
             // textBoxUsername
@@ -166,7 +166,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.textBoxUsername.Location = new System.Drawing.Point(3, 16);
             this.textBoxUsername.Name = "textBoxUsername";
             this.textBoxUsername.Size = new System.Drawing.Size(155, 20);
-            this.textBoxUsername.TabIndex = 1;
+            this.textBoxUsername.TabIndex = 2;
             // 
             // tableLayoutPanel4
             // 
@@ -182,7 +182,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.tableLayoutPanel4.RowCount = 1;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel4.Size = new System.Drawing.Size(218, 25);
-            this.tableLayoutPanel4.TabIndex = 2;
+            this.tableLayoutPanel4.TabIndex = 8;
             // 
             // textBoxServer
             // 
@@ -190,7 +190,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.textBoxServer.Location = new System.Drawing.Point(53, 3);
             this.textBoxServer.Name = "textBoxServer";
             this.textBoxServer.Size = new System.Drawing.Size(162, 20);
-            this.textBoxServer.TabIndex = 1;
+            this.textBoxServer.TabIndex = 9;
             // 
             // labelServer
             // 
@@ -200,7 +200,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.labelServer.Name = "labelServer";
             this.labelServer.Padding = new System.Windows.Forms.Padding(3);
             this.labelServer.Size = new System.Drawing.Size(44, 19);
-            this.labelServer.TabIndex = 0;
+            this.labelServer.TabIndex = 8;
             this.labelServer.Text = "Server";
             // 
             // tableLayoutPanel5
@@ -229,7 +229,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.flowLayoutPanel4.MinimumSize = new System.Drawing.Size(64, 20);
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
             this.flowLayoutPanel4.Size = new System.Drawing.Size(81, 81);
-            this.flowLayoutPanel4.TabIndex = 1;
+            this.flowLayoutPanel4.TabIndex = 7;
             // 
             // buttonLogin
             // 
@@ -238,7 +238,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.buttonLogin.Location = new System.Drawing.Point(3, 3);
             this.buttonLogin.Name = "buttonLogin";
             this.buttonLogin.Size = new System.Drawing.Size(75, 23);
-            this.buttonLogin.TabIndex = 0;
+            this.buttonLogin.TabIndex = 7;
             this.buttonLogin.Text = "Login";
             this.buttonLogin.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.buttonLogin.UseVisualStyleBackColor = true;
@@ -255,7 +255,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.flowLayoutPanel3.MinimumSize = new System.Drawing.Size(64, 20);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
             this.flowLayoutPanel3.Size = new System.Drawing.Size(83, 81);
-            this.flowLayoutPanel3.TabIndex = 2;
+            this.flowLayoutPanel3.TabIndex = 3;
             // 
             // buttonOptions
             // 
@@ -275,7 +275,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.checkBoxRemember.Location = new System.Drawing.Point(3, 32);
             this.checkBoxRemember.Name = "checkBoxRemember";
             this.checkBoxRemember.Size = new System.Drawing.Size(77, 17);
-            this.checkBoxRemember.TabIndex = 4;
+            this.checkBoxRemember.TabIndex = 6;
             this.checkBoxRemember.Text = "Remember";
             this.checkBoxRemember.UseVisualStyleBackColor = true;
             // 
