@@ -75,5 +75,62 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
             }, MainClass.serializerOptions);
         }
 
+        [HttpGet("disable")]
+        [ProducesResponseType(200, Type = typeof(ObjectResponse<AccountDetailsResponse>))]
+        [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
+        public ActionResult DisableState(string token, string username, string reason=null)
+        {
+            if (!MainClass.contentManager.AccountManager.AccountHasPermission(token, AccountPermission.USER_DISABLE_MODIFY))
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new ObjectResponse<string>()
+                {
+                    Success = false,
+                    Data = "Invalid Account"
+                }, MainClass.serializerOptions);
+            }
+
+            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
+            if (tokenAccount == null)
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
+                }, MainClass.serializerOptions);
+            }
+            if (!tokenAccount.Enabled)
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(401, ServerStringResponse.AccountDisabled)
+                }, MainClass.serializerOptions);
+            }
+
+            var targetAccount = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
+            if (targetAccount == null)
+            {
+                Response.StatusCode = StatusCodes.Status404NotFound;
+                return Json(new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(404, ServerStringResponse.AccountNotFound(username))
+                }, MainClass.serializerOptions);
+            }
+            if (reason != null)
+                targetAccount.DisableAccount(reason);
+            else
+                targetAccount.DisableAccount();
+
+
+            return Json(new ObjectResponse<AccountDetailsResponse>()
+            {
+                Success = false,
+                Data = targetAccount.GetDetails()
+            }, MainClass.serializerOptions);
+        }
     }
 }
