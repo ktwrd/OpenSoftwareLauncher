@@ -30,16 +30,35 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
 
         [HttpGet("new")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<SystemAnnouncementSummary>))]
-        [ProducesResponseType(401, Type = typeof(ObjectResponse<string>))]
+        [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult Set(string token, string content, bool? active=true)
         {
             if (!MainClass.contentManager.AccountManager.AccountHasPermission(token, AccountPermission.ANNOUNCEMENT_MANAGE))
             {
                 Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<string>()
+                return Json(new ObjectResponse<HttpException>()
                 {
                     Success = false,
-                    Data = ServerStringResponse.InvalidCredential
+                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
+                }, MainClass.serializerOptions);
+            }
+            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
+            if (tokenAccount == null)
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
+                }, MainClass.serializerOptions);
+            }
+            if (!tokenAccount.Enabled)
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(401, ServerStringResponse.AccountDisabled)
                 }, MainClass.serializerOptions);
             }
 
@@ -53,16 +72,35 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
 
         [HttpGet("update")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<object?>))]
-        [ProducesResponseType(401, Type = typeof(ObjectResponse<string>))]
+        [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult UpdateActiveStatus(string token, bool active)
         {
             if (!MainClass.contentManager.AccountManager.AccountHasPermission(token, AccountPermission.ANNOUNCEMENT_MANAGE))
             {
                 Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<string>()
+                return Json(new ObjectResponse<HttpException>()
                 {
                     Success = false,
-                    Data = "Invalid Permissions"
+                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
+                }, MainClass.serializerOptions);
+            }
+            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
+            if (tokenAccount == null)
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
+                }, MainClass.serializerOptions);
+            }
+            if (!tokenAccount.Enabled)
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(401, ServerStringResponse.AccountDisabled)
                 }, MainClass.serializerOptions);
             }
 
@@ -77,16 +115,35 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
 
         [HttpGet("all")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<SystemAnnouncementEntry[]>))]
-        [ProducesResponseType(401, Type = typeof(ObjectResponse<string>))]
+        [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult FetchAll(string token)
         {
             if (!MainClass.contentManager.AccountManager.AccountHasPermission(token, AccountPermission.ANNOUNCEMENT_MANAGE))
             {
                 Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<string>()
+                return Json(new ObjectResponse<HttpException>()
                 {
                     Success = false,
-                    Data = "Invalid Permissions"
+                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
+                }, MainClass.serializerOptions);
+            }
+            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
+            if (tokenAccount == null)
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
+                }, MainClass.serializerOptions);
+            }
+            if (!tokenAccount.Enabled)
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(401, ServerStringResponse.AccountDisabled)
                 }, MainClass.serializerOptions);
             }
             return Json(new ObjectResponse<SystemAnnouncementEntry[]>()
@@ -98,16 +155,35 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
 
         [HttpGet("summary")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<SystemAnnouncementSummary>))]
-        [ProducesResponseType(401, Type = typeof(ObjectResponse<string>))]
+        [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult GetSummary(string token)
         {
             if (!MainClass.contentManager.AccountManager.AccountHasPermission(token, AccountPermission.ANNOUNCEMENT_MANAGE))
             {
                 Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<string>()
+                return Json(new ObjectResponse<HttpException>()
                 {
                     Success = false,
-                    Data = "Invalid Permissions"
+                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
+                }, MainClass.serializerOptions);
+            }
+            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
+            if (tokenAccount == null)
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
+                }, MainClass.serializerOptions);
+            }
+            if (!tokenAccount.Enabled)
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(401, ServerStringResponse.AccountDisabled)
                 }, MainClass.serializerOptions);
             }
             return Json(new ObjectResponse<SystemAnnouncementSummary>()
@@ -120,16 +196,35 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
     
         [HttpGet("setData")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<SystemAnnouncementSummary>))]
-        [ProducesResponseType(401, Type = typeof(ObjectResponse<string>))]
+        [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult SetData(string token, string content)
         {
             if (!MainClass.contentManager.AccountManager.AccountHasPermission(token, AccountPermission.ADMINISTRATOR))
             {
                 Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<string>()
+                return Json(new ObjectResponse<HttpException>()
                 {
                     Success = false,
-                    Data = "Invalid Permissions"
+                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
+                }, MainClass.serializerOptions);
+            }
+            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
+            if (tokenAccount == null)
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
+                }, MainClass.serializerOptions);
+            }
+            if (!tokenAccount.Enabled)
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(401, ServerStringResponse.AccountDisabled)
                 }, MainClass.serializerOptions);
             }
 

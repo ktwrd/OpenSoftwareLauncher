@@ -29,7 +29,26 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                 return Json(new ObjectResponse<HttpException>()
                 {
                     Success = false,
-                    Data = new HttpException(StatusCodes.Status401Unauthorized, ServerStringResponse.InvalidCredential)
+                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
+                }, MainClass.serializerOptions);
+            }
+            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
+            if (tokenAccount == null)
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
+                }, MainClass.serializerOptions);
+            }
+            if (!tokenAccount.Enabled)
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(401, ServerStringResponse.AccountDisabled)
                 }, MainClass.serializerOptions);
             }
 
@@ -63,7 +82,26 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                 return Json(new ObjectResponse<HttpException>()
                 {
                     Success = false,
-                    Data = new HttpException(StatusCodes.Status401Unauthorized, ServerStringResponse.InvalidCredential)
+                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
+                }, MainClass.serializerOptions);
+            }
+            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
+            if (tokenAccount == null)
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
+                }, MainClass.serializerOptions);
+            }
+            if (!tokenAccount.Enabled)
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(401, ServerStringResponse.AccountDisabled)
                 }, MainClass.serializerOptions);
             }
 
@@ -97,7 +135,26 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                 return Json(new ObjectResponse<HttpException>()
                 {
                     Success = false,
-                    Data = new HttpException(StatusCodes.Status401Unauthorized, ServerStringResponse.InvalidCredential)
+                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
+                }, MainClass.serializerOptions);
+            }
+            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
+            if (tokenAccount == null)
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
+                }, MainClass.serializerOptions);
+            }
+            if (!tokenAccount.Enabled)
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(401, ServerStringResponse.AccountDisabled)
                 }, MainClass.serializerOptions);
             }
 

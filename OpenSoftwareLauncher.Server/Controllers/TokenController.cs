@@ -84,8 +84,8 @@ namespace OpenSoftwareLauncher.Server.Controllers
         }
 
         [HttpGet("details")]
-        [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<AccountTokenDetailsResponse>))]
+        [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult Details(string token)
         {
             if (token == null || token.Length < 32 || token.Length > 32)
