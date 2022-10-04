@@ -1,0 +1,15 @@
+﻿Login=Login
+Options=Options
+Server=Server
+FieldUsername=Username
+FieldPassword=Password
+FieldRemember=Remember
+
+WindowTitle_LoginForm=${product.name.short} v${version}
+
+MessageBox_Title=${product.name} v${version}
+
+ExceptionMessageBox_Title=Uncaught Exception
+ExceptionMessageBox_Content=Looks like I've done a fucky wucky uwu${nl}${content}
+FailedToLaunch_Title=${product.name.short} - Fatal Error
+FailedToLaunch_Message=Failed to launch ${produce.name}.${nl}${nl}Log written to ${logLocation}
