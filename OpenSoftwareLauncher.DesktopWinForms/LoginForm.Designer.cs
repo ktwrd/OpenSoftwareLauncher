@@ -34,21 +34,21 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.label3 = new System.Windows.Forms.Label();
+            this.labelPassword = new System.Windows.Forms.Label();
             this.textBoxPassword = new System.Windows.Forms.TextBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.label2 = new System.Windows.Forms.Label();
+            this.labelUsername = new System.Windows.Forms.Label();
             this.textBoxUsername = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
+            this.labelServer = new System.Windows.Forms.Label();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
-            this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
-            this.checkBoxRemember = new System.Windows.Forms.CheckBox();
             this.buttonLogin = new System.Windows.Forms.Button();
+            this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.buttonOptions = new System.Windows.Forms.Button();
+            this.checkBoxRemember = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
@@ -92,7 +92,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.tableLayoutPanel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanel3.ColumnCount = 1;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Controls.Add(this.label3, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.labelPassword, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.textBoxPassword, 0, 1);
             this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel3.MinimumSize = new System.Drawing.Size(161, 42);
@@ -104,14 +104,14 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.tableLayoutPanel3.Size = new System.Drawing.Size(161, 42);
             this.tableLayoutPanel3.TabIndex = 3;
             // 
-            // label3
+            // labelPassword
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(53, 13);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "Password";
+            this.labelPassword.AutoSize = true;
+            this.labelPassword.Location = new System.Drawing.Point(3, 0);
+            this.labelPassword.Name = "labelPassword";
+            this.labelPassword.Size = new System.Drawing.Size(53, 13);
+            this.labelPassword.TabIndex = 0;
+            this.labelPassword.Text = "Password";
             // 
             // textBoxPassword
             // 
@@ -138,7 +138,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.tableLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.tableLayoutPanel2.ColumnCount = 1;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Controls.Add(this.label2, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.labelUsername, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.textBoxUsername, 0, 1);
             this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel2.MinimumSize = new System.Drawing.Size(161, 42);
@@ -150,14 +150,14 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.tableLayoutPanel2.Size = new System.Drawing.Size(161, 42);
             this.tableLayoutPanel2.TabIndex = 2;
             // 
-            // label2
+            // labelUsername
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(55, 13);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "Username";
+            this.labelUsername.AutoSize = true;
+            this.labelUsername.Location = new System.Drawing.Point(3, 0);
+            this.labelUsername.Name = "labelUsername";
+            this.labelUsername.Size = new System.Drawing.Size(55, 13);
+            this.labelUsername.TabIndex = 0;
+            this.labelUsername.Text = "Username";
             // 
             // textBoxUsername
             // 
@@ -175,7 +175,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel4.Controls.Add(this.textBox1, 1, 0);
-            this.tableLayoutPanel4.Controls.Add(this.label4, 0, 0);
+            this.tableLayoutPanel4.Controls.Add(this.labelServer, 0, 0);
             this.tableLayoutPanel4.Location = new System.Drawing.Point(8, 277);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 1;
@@ -191,16 +191,16 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.textBox1.Size = new System.Drawing.Size(162, 20);
             this.textBox1.TabIndex = 1;
             // 
-            // label4
+            // labelServer
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 3);
-            this.label4.Margin = new System.Windows.Forms.Padding(3);
-            this.label4.Name = "label4";
-            this.label4.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.label4.Size = new System.Drawing.Size(44, 19);
-            this.label4.TabIndex = 0;
-            this.label4.Text = "Server";
+            this.labelServer.AutoSize = true;
+            this.labelServer.Location = new System.Drawing.Point(3, 3);
+            this.labelServer.Margin = new System.Windows.Forms.Padding(3);
+            this.labelServer.Name = "labelServer";
+            this.labelServer.Padding = new System.Windows.Forms.Padding(3);
+            this.labelServer.Size = new System.Drawing.Size(44, 19);
+            this.labelServer.TabIndex = 0;
+            this.labelServer.Text = "Server";
             // 
             // tableLayoutPanel5
             // 
@@ -230,6 +230,18 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.flowLayoutPanel4.Size = new System.Drawing.Size(81, 81);
             this.flowLayoutPanel4.TabIndex = 1;
             // 
+            // buttonLogin
+            // 
+            this.buttonLogin.Image = ((System.Drawing.Image)(resources.GetObject("buttonLogin.Image")));
+            this.buttonLogin.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonLogin.Location = new System.Drawing.Point(3, 3);
+            this.buttonLogin.Name = "buttonLogin";
+            this.buttonLogin.Size = new System.Drawing.Size(75, 23);
+            this.buttonLogin.TabIndex = 0;
+            this.buttonLogin.Text = "Login";
+            this.buttonLogin.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.buttonLogin.UseVisualStyleBackColor = true;
+            // 
             // flowLayoutPanel3
             // 
             this.flowLayoutPanel3.AutoSize = true;
@@ -243,28 +255,6 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.flowLayoutPanel3.Size = new System.Drawing.Size(83, 81);
             this.flowLayoutPanel3.TabIndex = 2;
             // 
-            // checkBoxRemember
-            // 
-            this.checkBoxRemember.AutoSize = true;
-            this.checkBoxRemember.Location = new System.Drawing.Point(3, 32);
-            this.checkBoxRemember.Name = "checkBoxRemember";
-            this.checkBoxRemember.Size = new System.Drawing.Size(77, 17);
-            this.checkBoxRemember.TabIndex = 4;
-            this.checkBoxRemember.Text = "Remember";
-            this.checkBoxRemember.UseVisualStyleBackColor = true;
-            // 
-            // buttonLogin
-            // 
-            this.buttonLogin.Image = ((System.Drawing.Image)(resources.GetObject("buttonLogin.Image")));
-            this.buttonLogin.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonLogin.Location = new System.Drawing.Point(3, 3);
-            this.buttonLogin.Name = "buttonLogin";
-            this.buttonLogin.Size = new System.Drawing.Size(75, 23);
-            this.buttonLogin.TabIndex = 0;
-            this.buttonLogin.Text = "Login";
-            this.buttonLogin.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.buttonLogin.UseVisualStyleBackColor = true;
-            // 
             // buttonOptions
             // 
             this.buttonOptions.Image = ((System.Drawing.Image)(resources.GetObject("buttonOptions.Image")));
@@ -276,6 +266,16 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.buttonOptions.Text = "Options";
             this.buttonOptions.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.buttonOptions.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxRemember
+            // 
+            this.checkBoxRemember.AutoSize = true;
+            this.checkBoxRemember.Location = new System.Drawing.Point(3, 32);
+            this.checkBoxRemember.Name = "checkBoxRemember";
+            this.checkBoxRemember.Size = new System.Drawing.Size(77, 17);
+            this.checkBoxRemember.TabIndex = 4;
+            this.checkBoxRemember.Text = "Remember";
+            this.checkBoxRemember.UseVisualStyleBackColor = true;
             // 
             // LoginForm
             // 
@@ -316,13 +316,13 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         private FlowLayoutPanel flowLayoutPanel2;
         private FlowLayoutPanel flowLayoutPanel1;
         private TableLayoutPanel tableLayoutPanel2;
-        private Label label2;
+        private Label labelUsername;
         private TextBox textBoxUsername;
         private TableLayoutPanel tableLayoutPanel3;
-        private Label label3;
+        private Label labelPassword;
         private TextBox textBoxPassword;
         private TableLayoutPanel tableLayoutPanel4;
-        private Label label4;
+        private Label labelServer;
         private TextBox textBox1;
         private TableLayoutPanel tableLayoutPanel5;
         private FlowLayoutPanel flowLayoutPanel4;
