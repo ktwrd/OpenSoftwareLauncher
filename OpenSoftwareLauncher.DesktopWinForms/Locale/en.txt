@@ -5,7 +5,16 @@ FieldUsername=Username
 FieldPassword=Password
 FieldRemember=Remember
 
+FieldEdit=Edit
+FieldRefresh=Refresh
+FieldBanish=Ban
+FieldPermissionPlural=Permissions
+FieldGroupPlural=Groups
+FieldGroupUtility=Group Editor Tools
+
+WindowTitle_ParentForm=${product.name} v${version}
 WindowTitle_LoginForm=${product.name.short} v${version}
+WindowTitle_UserManagement=User Management
 
 MessageBox_Title=${product.name} v${version}
 
@@ -25,5 +34,12 @@ FatalFailure_Exception=Fatal Error${nl}${nl}${exception}
 
 ServerResponse_Invalid=Invalid Response from Server
 
+ServerResponse_HttpException=Recieved HttpException from Server
+
+ServerResponse_BodySerializationFailure=Failed to serialize request body
+ServerResponse_BodyDeserializationFailure=Failed to deserialize request body
+ServerResponse_InvalidBody=Invalid Request Body
 ServerResponse_InvalidCredentials=Invalid Credentials
+ServerResponse_InvalidPermission=Account does not have permission
+ServerResponse_MediaTypeUnsupported=Media Type provided is unsupported by the server
 ServerResponse_AccountDisabled=Your account has been disabled. Please contact the server administrator for more details.
