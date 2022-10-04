@@ -12,7 +12,6 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 {
     public partial class ParentForm : Form
     {
-        public UserDetailsForm userDetailsForm;
         public ParentForm()
         {
             InitializeComponent();
