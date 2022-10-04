@@ -53,7 +53,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 var deserialized = JsonSerializer.Deserialize<ObjectResponse<AccountTokenDetailsResponse>>(stringCon, Program.serializerOptions);
                 return deserialized.Data;
             }
-            MessageBox.Show(stringCon, $"Invalid Response from Server");
+            Program.MessageBoxShow(stringCon, LocaleManager.Get("ServerResponse_Invalid"));
             return null;
 
         }
