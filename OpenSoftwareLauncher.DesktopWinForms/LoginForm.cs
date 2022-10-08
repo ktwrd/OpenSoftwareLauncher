@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -54,6 +56,21 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             {
                 Program.Client.UpdateProperties();
                 Program.ClientContext.InitializeParentForm(true);
+            }
+            else
+            {
+
+                string errContent = JsonSerializer.Serialize(response, new JsonSerializerOptions()
+                {
+                    IncludeFields = true,
+                    IgnoreReadOnlyFields = true,
+                    IgnoreReadOnlyProperties = true,
+                    WriteIndented = true
+                });
+                Trace.WriteLine($"[LoginForm->buttonLogin_Click] Rcieved failure response from server\n================\n{errContent}\n================\n");
+                Program.MessageBoxShow(
+                    LocaleManager.Get("Client_TokenGrantFailed") + "\n\n" + LocaleManager.Get(response.Message),
+                    LocaleManager.Get("Client_TokenGrantFailed_Title"));
             }
         }
 
