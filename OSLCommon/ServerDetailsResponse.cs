@@ -11,5 +11,8 @@ namespace OSLCommon
         /// </summary>
         public long Uptime { get; set; }
         public string Version { get; set; }
+
+        public string AuthProvider { get; set; }
+        public string AuthProviderSignup { get; set; }
     }
 }

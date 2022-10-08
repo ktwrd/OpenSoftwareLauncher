@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using OpenSoftwareLauncher.Server.OpenSoftwareLauncher.Server;
 
 namespace OpenSoftwareLauncher.Server.Controllers
 {
@@ -45,7 +46,9 @@ namespace OpenSoftwareLauncher.Server.Controllers
             return Json(new ServerDetailsResponse
             {
                 Uptime = ServerUptime(),
-                Version = ServerVersion()
+                Version = ServerVersion(),
+                AuthProvider = ServerConfig.GetString("Authentication", "Provider"),
+                AuthProviderSignup = ServerConfig.GetString("Authentication", "ProviderSignupURL")
             }, MainClass.serializerOptions);
         }
     }
