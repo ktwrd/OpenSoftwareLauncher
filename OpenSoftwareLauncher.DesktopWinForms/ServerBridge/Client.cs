@@ -66,6 +66,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
                 Permissions = deserialized.Data.Permissions;
             }
 
+            Trace.WriteLine($"[Client->ValidateCredentials] Recieved response \"{deserialized.Data.Message}\"");
+
             return deserialized.Data;
         }
         public GrantTokenResponse ValidateCredentials(string username, string password)
