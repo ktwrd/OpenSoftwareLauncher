@@ -16,11 +16,16 @@ WindowTitle_ParentForm=${product.name} v${version}
 WindowTitle_LoginForm=${product.name.short} v${version}
 WindowTitle_UserManagement=User Management
 
-MessageBox_Title=${product.name} v${version}
 
-ExceptionMessageBox_Title=Uncaught Exception
-ExceptionMessageBox_Content=Looks like I've done a fucky wucky uwu${nl}${content}
-FailedToLaunch_Title=${product.name.short} - Fatal Error
+Client_TokenGrantFailed_Title=Authentication Failure
+Client_TokenGrantFailed=Failed to authenticate with server.
+
+MessageBox_Title=${product.name} v${version}
+UncaughtException=Uncaught Exception
+UncaughtException_SpecialContent=Looks like I've done a fucky wucky uwu${nl}${content}
+
+FatalError_WithProductName=${product.name.short} - Fatal Error
+
 FailedToLaunch_Message=Failed to launch ${produce.name}.${nl}${nl}Log written to ${logLocation}
 
 ClientContext_ConstructorFail=ClientContext Fatal Failure.${nl}${nl}${exception}
@@ -30,8 +35,6 @@ ClientContext_ParentFormFail=Failed to initialize ParentForm.${nl}${nl}${excepti
 
 FatalFailure_Exception=Fatal Error${nl}${nl}${exception}
 
-
-
 ServerResponse_Invalid=Invalid Response from Server
 
 ServerResponse_HttpException=Recieved HttpException from Server
@@ -39,7 +42,13 @@ ServerResponse_HttpException=Recieved HttpException from Server
 ServerResponse_BodySerializationFailure=Failed to serialize request body
 ServerResponse_BodyDeserializationFailure=Failed to deserialize request body
 ServerResponse_InvalidBody=Invalid Request Body
-ServerResponse_InvalidCredentials=Invalid Credentials
-ServerResponse_InvalidPermission=Account does not have permission
 ServerResponse_MediaTypeUnsupported=Media Type provided is unsupported by the server
+
+
+ServerResponse_InvalidPermission=Account does not have permission
+ServerResponse_InvalidCredentials=Invalid Credentials
+
 ServerResponse_AccountDisabled=Your account has been disabled. Please contact the server administrator for more details.
+ServerRespones_Account_NotFound=Account does not exist.
+ServerResponse_Account_TokenGrantFailed=Failed to grant token.
+ServerResponse_Account_TokenGranted=Token granted successfully
