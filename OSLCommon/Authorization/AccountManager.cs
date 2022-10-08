@@ -165,7 +165,7 @@ namespace OSLCommon.Authorization
                         var token = new AccountToken(item);
                         AccountToken success = item.AddToken(token);
                         if (success == null)
-                            return new GrantTokenResponse("Failed to grant token", false);
+                            return new GrantTokenResponse(ServerStringResponse.AccountTokenGrantFailed, false);
                         else
                         {
                             if (!IsPendingWrite)
@@ -183,16 +183,16 @@ namespace OSLCommon.Authorization
                                     thing.Host = host;
                                 }
                             }
-                            return new GrantTokenResponse("Granted token", true, success, account.Groups.ToArray(), account.Permissions.ToArray());
+                            return new GrantTokenResponse(ServerStringResponse.AccountTokenGranted, true, success, account.Groups.ToArray(), account.Permissions.ToArray());
                         }
                     }
-                    return new GrantTokenResponse("Account Disabled", false);
+                    return new GrantTokenResponse(ServerStringResponse.AccountDisabled, false);
                 }
             }
 
             if (!accountFound)
-                return new GrantTokenResponse("Account not found", false);
-            return new GrantTokenResponse("Failed to grant token", false);
+                return new GrantTokenResponse(ServerStringResponse.AccountNotFound, false);
+            return new GrantTokenResponse(ServerStringResponse.AccountTokenGrantFailed, false);
         }
 
         private GrantTokenResponse AttemptGrantToken(Account account, ITokenGranter granter, string username, string password, string userAgent = "", string host = "")

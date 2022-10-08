@@ -117,7 +117,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 return Json(new ObjectResponse<HttpException>()
                 {
                     Success = false,
-                    Data = new HttpException(404, ServerStringResponse.AccountNotFound(username))
+                    Data = new HttpException(404, ServerStringResponse.AccountNotFound)
                 }, MainClass.serializerOptions);
             }
             if (reason != null)

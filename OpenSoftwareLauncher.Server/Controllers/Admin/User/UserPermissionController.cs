@@ -59,7 +59,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                 return Json(new ObjectResponse<HttpException>()
                 {
                     Success = false,
-                    Data = new HttpException(StatusCodes.Status404NotFound, ServerStringResponse.AccountNotFound(username))
+                    Data = new HttpException(StatusCodes.Status404NotFound, ServerStringResponse.AccountNotFound)
                 }, MainClass.serializerOptions);
             }
 
@@ -112,7 +112,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                 return Json(new ObjectResponse<HttpException>()
                 {
                     Success = false,
-                    Data = new HttpException(StatusCodes.Status404NotFound, ServerStringResponse.AccountNotFound(username))
+                    Data = new HttpException(StatusCodes.Status404NotFound, ServerStringResponse.AccountNotFound)
                 }, MainClass.serializerOptions);
             }
 
@@ -165,7 +165,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                 return Json(new ObjectResponse<HttpException>()
                 {
                     Success = false,
-                    Data = new HttpException(StatusCodes.Status404NotFound, ServerStringResponse.AccountNotFound(username))
+                    Data = new HttpException(StatusCodes.Status404NotFound, ServerStringResponse.AccountNotFound)
                 }, MainClass.serializerOptions);
             }
 
