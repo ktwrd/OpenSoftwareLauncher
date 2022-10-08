@@ -102,7 +102,7 @@ namespace OpenSoftwareLauncher.Server
                 return next();
             });
 
-            TokenGrantList.Add(new OSLCommon.Minalyze.MinaloggerTokenGrant());
+            TokenGrantList.Add(new OSLCommon.AuthProviders.URLProvider(ServerConfig.GetString("Authentication", "Provider")));
 
             App.UseAuthorization();
             App.MapControllers();

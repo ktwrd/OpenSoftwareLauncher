@@ -63,6 +63,11 @@ namespace OpenSoftwareLauncher.Server
                         {"AllowPermission_ReadReleaseBypass", true },
                         {"AllowGroupRestriction", false }
                     }
+                },
+                {"Authentication", new Dictionary<string, object>()
+                    {
+                        {"Provider", "" }
+                    }
                 }
             };
 
