@@ -66,7 +66,8 @@ namespace OpenSoftwareLauncher.Server
                 },
                 {"Authentication", new Dictionary<string, object>()
                     {
-                        {"Provider", "" }
+                        {"Provider", "" },
+                        {"ProviderSignupURL", "" }
                     }
                 }
             };
