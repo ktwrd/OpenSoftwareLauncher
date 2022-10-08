@@ -1,5 +1,4 @@
-﻿using OSLCommon.Minalyze;
-using kate.shared.Helpers;
+﻿using kate.shared.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,7 +16,6 @@ namespace OSLCommon.Authorization
 
         public static List<ITokenGranter> TokenGranters = new List<ITokenGranter>()
         {
-            new MinaloggerTokenGrant()
         };
         public static void RegisterTokenGranter(ITokenGranter granter)
         {

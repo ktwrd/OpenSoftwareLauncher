@@ -1,5 +1,4 @@
-﻿using OSLCommon.Minalyze;
-using kate.shared.Helpers;
+﻿using kate.shared.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,7 +61,7 @@ namespace OSLCommon
             get { return httpClientHandler.CookieContainer; }
             set { httpClientHandler.CookieContainer = value; }
         }
-        public MinaloggerTokenGrant tokenGranter = new MinaloggerTokenGrant();
+        public ITokenGranter tokenGranter;
         public bool IsCredentialsValid()
         {
             var isvalid = tokenGranter.Grant(Username, password);
