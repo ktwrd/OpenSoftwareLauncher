@@ -72,6 +72,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                     LocaleManager.Get("Client_TokenGrantFailed") + "\n\n" + LocaleManager.Get(response.Message),
                     LocaleManager.Get("Client_TokenGrantFailed_Title"));
             }
+            Enabled = true;
         }
 
         private void LoginForm_Shown(object sender, EventArgs e)
