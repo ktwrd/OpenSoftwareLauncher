@@ -43,10 +43,10 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.labelServer = new System.Windows.Forms.Label();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
-            this.buttonLogin = new System.Windows.Forms.Button();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
-            this.buttonOptions = new System.Windows.Forms.Button();
             this.checkBoxRemember = new System.Windows.Forms.CheckBox();
+            this.buttonLogin = new System.Windows.Forms.Button();
+            this.buttonOptions = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -210,19 +210,6 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.flowLayoutPanel4.Size = new System.Drawing.Size(81, 81);
             this.flowLayoutPanel4.TabIndex = 7;
             // 
-            // buttonLogin
-            // 
-            this.buttonLogin.Image = ((System.Drawing.Image)(resources.GetObject("buttonLogin.Image")));
-            this.buttonLogin.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonLogin.Location = new System.Drawing.Point(3, 3);
-            this.buttonLogin.Name = "buttonLogin";
-            this.buttonLogin.Size = new System.Drawing.Size(75, 23);
-            this.buttonLogin.TabIndex = 7;
-            this.buttonLogin.Text = "Login";
-            this.buttonLogin.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.buttonLogin.UseVisualStyleBackColor = true;
-            this.buttonLogin.Click += new System.EventHandler(this.buttonLogin_Click);
-            // 
             // flowLayoutPanel3
             // 
             this.flowLayoutPanel3.AutoSize = true;
@@ -236,18 +223,6 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.flowLayoutPanel3.Size = new System.Drawing.Size(83, 81);
             this.flowLayoutPanel3.TabIndex = 3;
             // 
-            // buttonOptions
-            // 
-            this.buttonOptions.Image = ((System.Drawing.Image)(resources.GetObject("buttonOptions.Image")));
-            this.buttonOptions.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonOptions.Location = new System.Drawing.Point(3, 3);
-            this.buttonOptions.Name = "buttonOptions";
-            this.buttonOptions.Size = new System.Drawing.Size(75, 23);
-            this.buttonOptions.TabIndex = 5;
-            this.buttonOptions.Text = "Options";
-            this.buttonOptions.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.buttonOptions.UseVisualStyleBackColor = true;
-            // 
             // checkBoxRemember
             // 
             this.checkBoxRemember.AutoSize = true;
@@ -257,6 +232,31 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.checkBoxRemember.TabIndex = 6;
             this.checkBoxRemember.Text = "Remember";
             this.checkBoxRemember.UseVisualStyleBackColor = true;
+            // 
+            // buttonLogin
+            // 
+            this.buttonLogin.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.door_open_in;
+            this.buttonLogin.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonLogin.Location = new System.Drawing.Point(3, 3);
+            this.buttonLogin.Name = "buttonLogin";
+            this.buttonLogin.Size = new System.Drawing.Size(75, 23);
+            this.buttonLogin.TabIndex = 7;
+            this.buttonLogin.Text = "Login";
+            this.buttonLogin.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.buttonLogin.UseVisualStyleBackColor = true;
+            this.buttonLogin.Click += new System.EventHandler(this.buttonLogin_Click);
+            // 
+            // buttonOptions
+            // 
+            this.buttonOptions.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.gear;
+            this.buttonOptions.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonOptions.Location = new System.Drawing.Point(3, 3);
+            this.buttonOptions.Name = "buttonOptions";
+            this.buttonOptions.Size = new System.Drawing.Size(75, 23);
+            this.buttonOptions.TabIndex = 5;
+            this.buttonOptions.Text = "Options";
+            this.buttonOptions.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.buttonOptions.UseVisualStyleBackColor = true;
             // 
             // LoginForm
             // 

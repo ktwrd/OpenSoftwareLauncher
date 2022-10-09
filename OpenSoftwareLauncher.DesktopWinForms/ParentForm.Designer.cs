@@ -30,10 +30,10 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ParentForm));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonUsers = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonAnnouncements = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonReleases = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonSettings = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonLogs = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
@@ -56,10 +56,15 @@
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(29, 6);
+            // 
             // toolStripButtonUsers
             // 
             this.toolStripButtonUsers.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonUsers.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonUsers.Image")));
+            this.toolStripButtonUsers.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.users;
             this.toolStripButtonUsers.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonUsers.Name = "toolStripButtonUsers";
             this.toolStripButtonUsers.Size = new System.Drawing.Size(29, 20);
@@ -68,7 +73,7 @@
             // toolStripButtonAnnouncements
             // 
             this.toolStripButtonAnnouncements.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonAnnouncements.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonAnnouncements.Image")));
+            this.toolStripButtonAnnouncements.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.megaphone;
             this.toolStripButtonAnnouncements.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonAnnouncements.Name = "toolStripButtonAnnouncements";
             this.toolStripButtonAnnouncements.Size = new System.Drawing.Size(29, 20);
@@ -77,21 +82,16 @@
             // toolStripButtonReleases
             // 
             this.toolStripButtonReleases.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonReleases.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonReleases.Image")));
+            this.toolStripButtonReleases.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.box;
             this.toolStripButtonReleases.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonReleases.Name = "toolStripButtonReleases";
             this.toolStripButtonReleases.Size = new System.Drawing.Size(29, 20);
             this.toolStripButtonReleases.Text = "FieldPackagePlural";
             // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(29, 6);
-            // 
             // toolStripButtonSettings
             // 
             this.toolStripButtonSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonSettings.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonSettings.Image")));
+            this.toolStripButtonSettings.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.gear;
             this.toolStripButtonSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonSettings.Name = "toolStripButtonSettings";
             this.toolStripButtonSettings.Size = new System.Drawing.Size(29, 20);
@@ -100,7 +100,7 @@
             // toolStripButtonLogs
             // 
             this.toolStripButtonLogs.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonLogs.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonLogs.Image")));
+            this.toolStripButtonLogs.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.quill;
             this.toolStripButtonLogs.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonLogs.Name = "toolStripButtonLogs";
             this.toolStripButtonLogs.Size = new System.Drawing.Size(29, 20);

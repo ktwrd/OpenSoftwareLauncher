@@ -130,13 +130,14 @@
       <DependentUpon>ParentForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="UserManagementForm.resx">
       <DependentUpon>UserManagementForm.cs</DependentUpon>
@@ -166,6 +167,18 @@
     <Content Include="Locale\en.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\door-open-in.png" />
+    <None Include="Resources\megaphone.png" />
+    <None Include="Resources\users.png" />
+    <None Include="Resources\quill.png" />
+    <None Include="Resources\gear.png" />
+    <None Include="Resources\box.png" />
+    <None Include="Resources\key.png" />
+    <None Include="Resources\drill.png" />
+    <None Include="Resources\category-group-select.png" />
+    <None Include="Resources\hammer.png" />
+    <None Include="Resources\arrow-circle.png" />
+    <None Include="Resources\pencil.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Text.Json.6.0.6\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.6\build\System.Text.Json.targets')" />
