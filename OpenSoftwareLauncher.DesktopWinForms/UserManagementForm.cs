@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OSLCommon.Authorization;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -31,6 +32,40 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             {
                 col.Text = LocaleManager.Get(col.Text);
             }
+        }
+
+        public void ReloadList(bool pull=false)
+        {
+            listViewAccounts.Items.Clear();
+
+            if (Program.Client == null) return;
+            if (!Program.Client.Permissions.Contains(AccountPermission.USER_LIST))
+            {
+                Program.LocalContent.PullAccounts().Wait();
+
+                foreach (var item in Program.LocalContent.AccountDetailList)
+                {
+                    var permissionString = new List<string>();
+                    foreach (var p in item.Permissions)
+                        permissionString.Add(p.ToString());
+                    var lvitem = new ListViewItem(new string[]
+                    {
+                        item.Username,
+                        item.Enabled.ToString(),
+                        string.Join(", ", item.Groups),
+                        string.Join(", ", permissionString)
+                    });
+                    lvitem.Name = item.Username;
+                    listViewAccounts.Items.Add(lvitem);
+                }
+            }
+        }
+
+        private void toolStripButtonRefresh_Click(object sender, EventArgs e)
+        {
+            Enabled = false;
+            ReloadList(true);
+            Enabled = true;
         }
     }
 }
