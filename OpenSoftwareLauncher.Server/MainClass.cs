@@ -103,6 +103,7 @@ namespace OpenSoftwareLauncher.Server
             });
 
             TokenGrantList.Add(new OSLCommon.AuthProviders.URLProvider(ServerConfig.GetString("Authentication", "Provider")));
+            AccountManager.TokenGranters.Add(new OSLCommon.AuthProviders.URLProvider(ServerConfig.GetString("Authentication", "Provider")));
 
             App.UseAuthorization();
             App.MapControllers();
