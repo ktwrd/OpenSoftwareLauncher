@@ -127,7 +127,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
 
             return Json(new ObjectResponse<AccountDetailsResponse>()
             {
-                Success = false,
+                Success = true,
                 Data = targetAccount.GetDetails()
             }, MainClass.serializerOptions);
         }
@@ -186,7 +186,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
 
             return Json(new ObjectResponse<AccountDetailsResponse>()
             {
-                Success = false,
+                Success = true,
                 Data = targetAccount.GetDetails()
             }, MainClass.serializerOptions);
         }
