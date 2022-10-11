@@ -61,7 +61,8 @@ namespace OpenSoftwareLauncher.Server
                     {
                         {"AllowAdminOverride", true },
                         {"AllowPermission_ReadReleaseBypass", true },
-                        {"AllowGroupRestriction", false }
+                        {"AllowGroupRestriction", false },
+                        {"RequireAuthentication", true }
                     }
                 },
                 {"Authentication", new Dictionary<string, object>()
