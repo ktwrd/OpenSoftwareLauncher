@@ -70,6 +70,11 @@ namespace OpenSoftwareLauncher.Server
                         {"Provider", "" },
                         {"ProviderSignupURL", "" }
                     }
+                },
+                {"Telemetry", new Dictionary<string, object>()
+                    {
+                        {"Prometheus", false }
+                    }
                 }
             };
 

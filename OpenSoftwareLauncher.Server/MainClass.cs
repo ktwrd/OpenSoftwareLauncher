@@ -16,6 +16,7 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using Prometheus;
 
 namespace OpenSoftwareLauncher.Server
 {
@@ -106,6 +107,12 @@ namespace OpenSoftwareLauncher.Server
 
             TokenGrantList.Add(new OSLCommon.AuthProviders.URLProvider(ServerConfig.GetString("Authentication", "Provider")));
             AccountManager.TokenGranters.Add(new OSLCommon.AuthProviders.URLProvider(ServerConfig.GetString("Authentication", "Provider")));
+
+            if (ServerConfig.GetBoolean("Telemetry", "Prometheus"))
+            {
+                App.UseMetricServer();
+                App.UseHttpMetrics();
+            }
 
             App.UseAuthorization();
             App.MapControllers();
