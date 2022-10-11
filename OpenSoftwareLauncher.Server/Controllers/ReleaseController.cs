@@ -194,7 +194,8 @@ namespace OpenSoftwareLauncher.Server.Controllers
         }
 
         [HttpGet("latest/{app}")]
-        [Produces(typeof(ObjectResponse<List<ProductRelease>>))]
+        [ProducesResponseType(200, Type = typeof(List<ProductRelease>))]
+        [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult LatestFromPath(string app, string? token = "")
         {
             var account = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
@@ -211,7 +212,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
         }
 
         [HttpGet("latest")]
-        [ProducesResponseType(200, Type = typeof(ObjectResponse<List<ProductRelease>>))]
+        [ProducesResponseType(200, Type = typeof(List<ProductRelease>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult LatestFromParameter(string id="", string? token = "")
         {
