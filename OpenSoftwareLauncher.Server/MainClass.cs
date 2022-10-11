@@ -25,11 +25,13 @@ namespace OpenSoftwareLauncher.Server
         {
             get
             {
-                if (ServerConfig.GetBoolean("General", "Debug", false))
-                    return true;
 #if DEBUG
                 return true;
 #endif
+                // This warning is only disabled because DEBUG is set.
+#pragma warning disable CS0162 // Unreachable code detected
+                return ServerConfig.GetBoolean("General", "Debug", false);
+#pragma warning restore CS0162 // Unreachable code detected
             }
         }
 
