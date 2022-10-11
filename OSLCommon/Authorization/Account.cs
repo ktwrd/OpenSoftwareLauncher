@@ -313,8 +313,18 @@ namespace OSLCommon.Authorization
             Enabled = false;
             DisableReasons.Add(new AccountDisableReason()
             {
-                Message = reason
+                Message = reason,
+                Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
             });
+        }
+
+        /// <summary>
+        /// Re-enable account and cleaning all disable reasons, effecetively the same as unbanning someone from a tf2 server.
+        /// </summary>
+        public void Pardon()
+        {
+            Enabled = true;
+            CleanDisableReasons();
         }
 
         /// <summary>
