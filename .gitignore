@@ -373,3 +373,4 @@ OpenSoftwareLauncher/systemAnnouncement.json
 OpenSoftwareLauncher/content.json
 OpenSoftwareLauncher/tokens.json
 config.ini
+OpenSoftwareLauncher.Server/.config/dotnet-tools.json
