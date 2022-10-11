@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Runtime.Serialization;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Admin
 {
@@ -75,18 +76,75 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
             }, MainClass.serializerOptions);
         }
 
-        [HttpGet("disable")]
+        [HttpGet("pardon")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<AccountDetailsResponse>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
-        public ActionResult DisableState(string token, string username, string reason=null)
+        [ProducesResponseType(404, Type = typeof(ObjectResponse<HttpException>))]
+        public ActionResult PardonState(string token, string username)
         {
             if (!MainClass.contentManager.AccountManager.AccountHasPermission(token, AccountPermission.USER_DISABLE_MODIFY))
             {
                 Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<string>()
+                return Json(new ObjectResponse<HttpException>()
                 {
                     Success = false,
-                    Data = "Invalid Account"
+                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
+                }, MainClass.serializerOptions);
+            }
+
+            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
+            if (tokenAccount == null)
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
+                }, MainClass.serializerOptions);
+            }
+            if (!tokenAccount.Enabled)
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(401, ServerStringResponse.AccountDisabled)
+                }, MainClass.serializerOptions);
+            }
+
+            var targetAccount = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
+            if (targetAccount == null)
+            {
+                Response.StatusCode = StatusCodes.Status404NotFound;
+                return Json(new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(404, ServerStringResponse.AccountNotFound)
+                }, MainClass.serializerOptions);
+            }
+
+            targetAccount.Pardon();
+
+            return Json(new ObjectResponse<AccountDetailsResponse>()
+            {
+                Success = false,
+                Data = targetAccount.GetDetails()
+            }, MainClass.serializerOptions);
+        }
+
+        [HttpGet("disable")]
+        [ProducesResponseType(200, Type = typeof(ObjectResponse<AccountDetailsResponse>))]
+        [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
+        [ProducesResponseType(404, Type = typeof(ObjectResponse<HttpException>))]
+        public ActionResult DisableState(string token, string username, string? reason="No reason")
+        {
+            if (!MainClass.contentManager.AccountManager.AccountHasPermission(token, AccountPermission.USER_DISABLE_MODIFY))
+            {
+                Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Json(new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
                 }, MainClass.serializerOptions);
             }
 
