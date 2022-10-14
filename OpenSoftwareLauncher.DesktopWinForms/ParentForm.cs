@@ -28,8 +28,20 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             Text = LocaleManager.Get(Text);
         }
 
+        public UserManagementForm UserManagementForm;
+
         private void ParentForm_Shown(object sender, EventArgs e)
         {
+        }
+
+        private void toolStripButtonUsers_Click(object sender, EventArgs e)
+        {
+            if (UserManagementForm == null || UserManagementForm.IsDisposed)
+            {
+                UserManagementForm = new UserManagementForm();
+            }
+            UserManagementForm.MdiParent = this;
+            UserManagementForm.Show();
         }
     }
 }

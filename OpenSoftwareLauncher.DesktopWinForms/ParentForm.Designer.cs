@@ -30,10 +30,10 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ParentForm));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonUsers = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonAnnouncements = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonReleases = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonSettings = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonLogs = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
@@ -56,11 +56,6 @@
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(29, 6);
-            // 
             // toolStripButtonUsers
             // 
             this.toolStripButtonUsers.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -69,6 +64,7 @@
             this.toolStripButtonUsers.Name = "toolStripButtonUsers";
             this.toolStripButtonUsers.Size = new System.Drawing.Size(29, 20);
             this.toolStripButtonUsers.Text = "WindowTitle_UserManagement";
+            this.toolStripButtonUsers.Click += new System.EventHandler(this.toolStripButtonUsers_Click);
             // 
             // toolStripButtonAnnouncements
             // 
@@ -87,6 +83,11 @@
             this.toolStripButtonReleases.Name = "toolStripButtonReleases";
             this.toolStripButtonReleases.Size = new System.Drawing.Size(29, 20);
             this.toolStripButtonReleases.Text = "FieldPackagePlural";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(29, 6);
             // 
             // toolStripButtonSettings
             // 
