@@ -111,6 +111,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 }
                 toolStripButtonGroupTool.Enabled = true;
                 toolStripButtonEdit.Enabled = true;
+                toolStripButtonUnban.Enabled = true;
             }
             else
             {
@@ -118,7 +119,38 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 toolStripButtonBanTool.Enabled = false;
                 toolStripButtonGroupTool.Enabled = false;
                 toolStripButtonEdit.Enabled = false;
+            }
         }
+
+        private async void toolStripButtonUnban_Click(object sender, EventArgs e)
+        {
+            var taskList = new List<Task>();
+            var count = 0;
+            foreach (var account in SelectedAccounts)
+            {
+                taskList.Add(new Task(delegate
+                {
+                    var result = Program.Client.AccountParson(account.Username).Result;
+                    if (result != null)
+                        MessageBox.Show(LocaleManager.Get(result.Message, @"Failed to ban user"));
+                    else
+                        count++;
+                }));
+            }
+            foreach (var i in taskList)
+                i.Start();
+            await Task.WhenAll(taskList);
+            ReloadList();
+
+            MessageBox.Show($"Unbanned {count} Accounts");
+        }
+
+        private void toolStripButtonBanTool_Click(object sender, EventArgs e)
+        {
+            if (SelectedAccounts.Length > 1 || SelectedAccounts.Length < 1) return;
+            var form = new UserDisableForm(SelectedAccounts[0]);
+            form.MdiParent = MdiParent;
+            form.Show();
         }
     }
 }

@@ -44,6 +44,7 @@
             this.toolStripButtonPermissionTool = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonGroupTool = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonGroupEditorTool = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonUnban = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -55,6 +56,7 @@
             this.toolStripButtonRefresh,
             this.toolStripSeparator2,
             this.toolStripButtonBanTool,
+            this.toolStripButtonUnban,
             this.toolStripButtonPermissionTool,
             this.toolStripButtonGroupTool,
             this.toolStripButtonGroupEditorTool});
@@ -150,6 +152,7 @@
             this.toolStripButtonBanTool.Name = "toolStripButtonBanTool";
             this.toolStripButtonBanTool.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonBanTool.Text = "FieldBanish";
+            this.toolStripButtonBanTool.Click += new System.EventHandler(this.toolStripButtonBanTool_Click);
             // 
             // toolStripButtonPermissionTool
             // 
@@ -180,6 +183,17 @@
             this.toolStripButtonGroupEditorTool.Name = "toolStripButtonGroupEditorTool";
             this.toolStripButtonGroupEditorTool.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonGroupEditorTool.Text = "FieldGroupUtility";
+            // 
+            // toolStripButtonUnban
+            // 
+            this.toolStripButtonUnban.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonUnban.Enabled = false;
+            this.toolStripButtonUnban.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.hammer__minus;
+            this.toolStripButtonUnban.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonUnban.Name = "toolStripButtonUnban";
+            this.toolStripButtonUnban.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonUnban.Text = "FieldBanishReverse";
+            this.toolStripButtonUnban.Click += new System.EventHandler(this.toolStripButtonUnban_Click);
             // 
             // UserManagementForm
             // 
@@ -217,5 +231,6 @@
         private System.Windows.Forms.ToolStripButton toolStripButtonPermissionTool;
         private System.Windows.Forms.ToolStripButton toolStripButtonGroupTool;
         private System.Windows.Forms.ToolStripButton toolStripButtonGroupEditorTool;
+        private System.Windows.Forms.ToolStripButton toolStripButtonUnban;
     }
 }
