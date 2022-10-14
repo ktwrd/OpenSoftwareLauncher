@@ -129,11 +129,17 @@
     <Compile Include="User Management\UserManagementForm.Designer.cs">
       <DependentUpon>UserManagementForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserDisableForm.cs">
+    <Compile Include="User Management\UserDisableForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UserDisableForm.Designer.cs">
+    <Compile Include="User Management\UserDisableForm.Designer.cs">
       <DependentUpon>UserDisableForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserGroupForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserGroupForm.Designer.cs">
+      <DependentUpon>UserGroupForm.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
@@ -157,8 +163,11 @@
     <EmbeddedResource Include="User Management\UserManagementForm.resx">
       <DependentUpon>UserManagementForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UserDisableForm.resx">
+    <EmbeddedResource Include="User Management\UserDisableForm.resx">
       <DependentUpon>UserDisableForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserGroupForm.resx">
+      <DependentUpon>UserGroupForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -185,6 +194,8 @@
     <Content Include="Locale\en.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\minus.png" />
+    <None Include="Resources\plus.png" />
     <None Include="Resources\hammer--minus.png" />
     <None Include="Resources\upload-cloud.png" />
     <None Include="Resources\door-open-in.png" />
