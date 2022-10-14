@@ -18,6 +18,15 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
         internal string Token { get; set; } = "";
         internal AccountToken TokenData { get; set; } = null;
         internal AccountPermission[] Permissions { get; set; } = Array.Empty<AccountPermission>();
+        public bool HasPermission(AccountPermission permission, bool ignoreAdmin=false)
+        {
+            if (!ignoreAdmin && Permissions.Contains(AccountPermission.ADMINISTRATOR))
+                return true;
+            else if (Permissions.Contains(permission))
+                return true;
+            else
+                return false;
+        }
 
         public ServerDetailsResponse ServerDetails { get; set; } = null;
         public AccountDetailsResponse AccountDetails { get; set; } = null;
