@@ -27,13 +27,14 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
                 return Task.CompletedTask;
             var taskList = new List<Task>()
             {
-                PushAnnouncements(false),
-                PushContentManager(false)
+                new Task(delegate { PushAnnouncements(false).Wait();  }),
+                new Task(delegate { PushContentManager(false).Wait(); })
             };
 
             foreach (var item in taskList)
-                item.Start();
-            Task.WhenAll(taskList).Wait();
+                if (!item.IsCompleted)
+                    item.Start();
+            Task.WhenAll(taskList.ToArray()).Wait();
 
             return Task.CompletedTask;
         }
@@ -43,14 +44,15 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
                 return Task.CompletedTask;
             var taskList = new List<Task>()
             {
-                PullAccounts(false),
-                PullAnnouncements(false),
-                PullContentManager(false)
+                new Task(delegate { PullAccounts(false).Wait(); }),
+                new Task(delegate { PullAnnouncements(false).Wait(); }),
+                new Task(delegate { PullContentManager(false).Wait(); })
             };
 
             foreach (var item in taskList)
-                item.Start();
-            Task.WhenAll(taskList).Wait();
+                if (!item.IsCompleted)
+                    item.Start();
+            Task.WhenAll(taskList.ToArray()).Wait();
 
             return Task.CompletedTask;
         }
