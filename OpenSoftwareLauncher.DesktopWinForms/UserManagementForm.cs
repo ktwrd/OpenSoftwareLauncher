@@ -67,5 +67,58 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             ReloadList(true);
             Enabled = true;
         }
+
+        private void UserManagementForm_Shown(object sender, EventArgs e)
+        {
+            toolStripButtonRefresh_Click(null, null);
+        }
+        public void Pull()
+        {
+            toolStripButtonRefresh_Click(null, null);
+        }
+
+        private void toolStripButtonPermissionTool_Click(object sender, EventArgs e)
+        {
+            if (SelectedAccounts.Length > 1 || SelectedAccounts.Length < 1) return;
+            var form = new PermissionEditForm(SelectedAccounts[0]);
+            form.MdiParent = this.MdiParent;
+            form.Show();
+        }
+
+        public AccountDetailsResponse[] SelectedAccounts = Array.Empty<AccountDetailsResponse>();
+        private void listViewAccounts_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listViewAccounts.SelectedItems.Count < 1)
+            {
+                SelectedAccounts = new AccountDetailsResponse[0];
+            }
+            else
+            {
+                var l = new List<AccountDetailsResponse>();
+                foreach (ListViewItem item in listViewAccounts.SelectedItems)
+                {
+                    l = l.Concat(Program.LocalContent.AccountDetailList.Where(v => v.Username == item.Text)).ToList();
+                }
+                SelectedAccounts = l.ToArray();
+            }
+
+            if (SelectedAccounts.Length > 0)
+            {
+                if (SelectedAccounts.Length < 2)
+                {
+                    toolStripButtonPermissionTool.Enabled = true;
+                    toolStripButtonBanTool.Enabled = true;
+                }
+                toolStripButtonGroupTool.Enabled = true;
+                toolStripButtonEdit.Enabled = true;
+            }
+            else
+            {
+                toolStripButtonPermissionTool.Enabled = false;
+                toolStripButtonBanTool.Enabled = false;
+                toolStripButtonGroupTool.Enabled = false;
+                toolStripButtonEdit.Enabled = false;
+        }
+        }
     }
 }

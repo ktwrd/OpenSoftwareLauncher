@@ -110,6 +110,7 @@
             this.toolStripButtonPermissionTool.Name = "toolStripButtonPermissionTool";
             this.toolStripButtonPermissionTool.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonPermissionTool.Text = "FieldPermissionPlural";
+            this.toolStripButtonPermissionTool.Click += new System.EventHandler(this.toolStripButtonPermissionTool_Click);
             // 
             // toolStripButtonGroupTool
             // 
@@ -145,6 +146,7 @@
             this.listViewAccounts.TabIndex = 1;
             this.listViewAccounts.UseCompatibleStateImageBehavior = false;
             this.listViewAccounts.View = System.Windows.Forms.View.Details;
+            this.listViewAccounts.SelectedIndexChanged += new System.EventHandler(this.listViewAccounts_SelectedIndexChanged);
             // 
             // columnHeaderUsername
             // 
@@ -186,6 +188,7 @@
             this.MinimumSize = new System.Drawing.Size(940, 500);
             this.Name = "UserManagementForm";
             this.Text = "WindowTitle_UserManagement";
+            this.Shown += new System.EventHandler(this.UserManagementForm_Shown);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
