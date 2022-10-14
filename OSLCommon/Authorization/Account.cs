@@ -78,7 +78,7 @@ namespace OSLCommon.Authorization
             get
             {
                 long timestamp = long.MaxValue;
-                foreach (var token in Tokens)
+                foreach (var token in Tokens.ToArray())
                 {
                     if (token.CreatedTimestamp < timestamp)
                         timestamp = token.CreatedTimestamp;
@@ -263,7 +263,7 @@ namespace OSLCommon.Authorization
         /// <returns></returns>
         public AccountTokenDetailsResponse GetTokenDetails(string token)
         {
-            foreach (var item in Tokens)
+            foreach (var item in Tokens.ToArray())
             {
                 if (item.Token == token)
                 {
