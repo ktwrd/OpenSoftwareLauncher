@@ -17,11 +17,11 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         {
             get
             {
-                return UserConfig.GetString("Connection", "Endpoint");
+                return UserConfig.Connection_Endpoint;
             }
             set
             {
-                UserConfig.Set("Connection", "Endpoint", value);
+                UserConfig.Connection_Endpoint = value;
                 UserConfig.Save();
                 OnBaseAPIChanged(value);
             }
