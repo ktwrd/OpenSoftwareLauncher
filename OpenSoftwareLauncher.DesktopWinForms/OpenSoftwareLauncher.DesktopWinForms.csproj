@@ -176,6 +176,7 @@
     <Content Include="Locale\en.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\hammer--minus.png" />
     <None Include="Resources\upload-cloud.png" />
     <None Include="Resources\door-open-in.png" />
     <None Include="Resources\megaphone.png" />
