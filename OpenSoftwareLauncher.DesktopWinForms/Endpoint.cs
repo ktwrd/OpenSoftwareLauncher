@@ -102,5 +102,15 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             string token)
             => $"{Base}/admin/user/group/set?token={encode(token)}";
 
+        public static string UserDisable(
+            string token,
+            string username,
+            string reason)
+            => $"{Base}/admin/user/disable?token={encode(token)}&username={encode(username)}&reason={encode(reason)}";
+        public static string UserPardon(
+            string token,
+            string username)
+            => $"{Base}/admin/user/pardon?token={encode(token)}&username={encode(username)}";
+
     }
 }
