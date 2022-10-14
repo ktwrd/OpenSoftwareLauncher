@@ -285,7 +285,7 @@ namespace OSLCommon.Authorization
         public AccountTokenDetailsResponse[] GetTokenDetails()
         {
             var responseList = new List<AccountTokenDetailsResponse>();
-            foreach (var item in Tokens)
+            foreach (var item in Tokens.ToArray())
             {
                 responseList.Add(new AccountTokenDetailsResponse()
                 {
