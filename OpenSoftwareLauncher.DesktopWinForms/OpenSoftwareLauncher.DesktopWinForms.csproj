@@ -88,10 +88,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PermissionEditForm.cs">
+    <Compile Include="User Management\PermissionEditForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PermissionEditForm.Designer.cs">
+    <Compile Include="User Management\PermissionEditForm.Designer.cs">
       <DependentUpon>PermissionEditForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ServerBridge\AuthClient.cs" />
@@ -123,11 +123,17 @@
     <Compile Include="ServerBridge\LocalContent.cs" />
     <Compile Include="ServerBridge\SystemAnnouncementSummaryAsList.cs" />
     <Compile Include="UserConfig.cs" />
-    <Compile Include="UserManagementForm.cs">
+    <Compile Include="User Management\UserManagementForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UserManagementForm.Designer.cs">
+    <Compile Include="User Management\UserManagementForm.Designer.cs">
       <DependentUpon>UserManagementForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserDisableForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UserDisableForm.Designer.cs">
+      <DependentUpon>UserDisableForm.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
@@ -135,7 +141,7 @@
     <EmbeddedResource Include="ParentForm.resx">
       <DependentUpon>ParentForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="PermissionEditForm.resx">
+    <EmbeddedResource Include="User Management\PermissionEditForm.resx">
       <DependentUpon>PermissionEditForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -148,8 +154,11 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="UserManagementForm.resx">
+    <EmbeddedResource Include="User Management\UserManagementForm.resx">
       <DependentUpon>UserManagementForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserDisableForm.resx">
+      <DependentUpon>UserDisableForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
