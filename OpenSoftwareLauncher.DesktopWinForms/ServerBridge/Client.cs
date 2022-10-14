@@ -146,7 +146,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
         public async Task<HttpException> PermissionRevoke(string username, AccountPermission permission)
         {
             var url = Endpoint.UserPermissionRevoke(Token, username, permission);
-            var response = await HttpClient.GetAsync(url);
+            var response = HttpClient.GetAsync(url).Result;
             var stringContent = await response.Content.ReadAsStringAsync();
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
@@ -173,7 +173,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
         public async Task<HttpException> PermissionGrant(string username, AccountPermission permission)
         {
             var url = Endpoint.UserPermissionGrant(Token, username, permission);
-            var response = await HttpClient.GetAsync(url);
+            var response = HttpClient.GetAsync(url).Result;
             var stringContent = await response.Content.ReadAsStringAsync();
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
@@ -199,6 +199,58 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
             return null;
         }
         #endregion
+
+        public async Task<HttpException> AccountBan(string username, string reason="No Reason")
+        {
+            var url = Endpoint.UserDisable(Token, username, reason);
+            var response = HttpClient.GetAsync(url).Result;
+            var stringContent = await response.Content.ReadAsStringAsync();
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var deser = JsonSerializer.Deserialize<ObjectResponse<AccountDetailsResponse>>(stringContent, Program.serializerOptions);
+                foreach (var i in Program.LocalContent.AccountDetailList.ToArray())
+                {
+                    if (i.Username == username && i != deser.Data)
+                    {
+                        Program.LocalContent.AccountDetailList.Remove(i);
+                        Program.LocalContent.AccountDetailList.Add(deser.Data);
+                    }
+                }
+            }
+            else
+            {
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    var deser = JsonSerializer.Deserialize<ObjectResponse<HttpException>>(stringContent, Program.serializerOptions);
+                    return deser.Data;
+                }
+            }
+            return null;
+        }
+        public async Task<HttpException> AccountParson(string username)
+        {
+            var url = Endpoint.UserPardon(Token, username);
+            var response = await HttpClient.GetAsync(url);
+            var stringContent = await response.Content.ReadAsStringAsync();
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var deser = JsonSerializer.Deserialize<ObjectResponse<AccountDetailsResponse>>(stringContent, Program.serializerOptions);
+                var t = Program.LocalContent.AccountDetailList.Where(v => v.Username != username).ToList();
+                t.Add(deser.Data);
+                Program.LocalContent.AccountDetailList = t;
+            }
+            else
+            {
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    var deser = JsonSerializer.Deserialize<ObjectResponse<HttpException>>(stringContent, Program.serializerOptions);
+                    return deser.Data;
+                }
+            }
+            return null;
+        }
 
         /// <summary>
         /// 
