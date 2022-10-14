@@ -30,20 +30,20 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserManagementForm));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripButtonEdit = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButtonRefresh = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButtonBanTool = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonPermissionTool = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonGroupTool = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonGroupEditorTool = new System.Windows.Forms.ToolStripButton();
             this.listViewAccounts = new System.Windows.Forms.ListView();
             this.columnHeaderUsername = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderEnabled = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderGroups = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderPermissions = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderLastSeen = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.toolStripButtonEdit = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonRefresh = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonBanTool = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonPermissionTool = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonGroupTool = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonGroupEditorTool = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -64,71 +64,15 @@
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // toolStripButtonEdit
-            // 
-            this.toolStripButtonEdit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonEdit.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.pencil;
-            this.toolStripButtonEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonEdit.Name = "toolStripButtonEdit";
-            this.toolStripButtonEdit.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonEdit.Text = "FieldEdit";
-            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
-            // toolStripButtonRefresh
-            // 
-            this.toolStripButtonRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonRefresh.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.arrow_circle;
-            this.toolStripButtonRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonRefresh.Name = "toolStripButtonRefresh";
-            this.toolStripButtonRefresh.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonRefresh.Text = "FieldRefresh";
-            this.toolStripButtonRefresh.Click += new System.EventHandler(this.toolStripButtonRefresh_Click);
-            // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripButtonBanTool
-            // 
-            this.toolStripButtonBanTool.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonBanTool.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.hammer;
-            this.toolStripButtonBanTool.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonBanTool.Name = "toolStripButtonBanTool";
-            this.toolStripButtonBanTool.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonBanTool.Text = "FieldBanish";
-            // 
-            // toolStripButtonPermissionTool
-            // 
-            this.toolStripButtonPermissionTool.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonPermissionTool.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.key;
-            this.toolStripButtonPermissionTool.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonPermissionTool.Name = "toolStripButtonPermissionTool";
-            this.toolStripButtonPermissionTool.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonPermissionTool.Text = "FieldPermissionPlural";
-            this.toolStripButtonPermissionTool.Click += new System.EventHandler(this.toolStripButtonPermissionTool_Click);
-            // 
-            // toolStripButtonGroupTool
-            // 
-            this.toolStripButtonGroupTool.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonGroupTool.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.category_group_select;
-            this.toolStripButtonGroupTool.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonGroupTool.Name = "toolStripButtonGroupTool";
-            this.toolStripButtonGroupTool.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonGroupTool.Text = "FieldGroupPlural";
-            // 
-            // toolStripButtonGroupEditorTool
-            // 
-            this.toolStripButtonGroupEditorTool.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonGroupEditorTool.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.drill;
-            this.toolStripButtonGroupEditorTool.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonGroupEditorTool.Name = "toolStripButtonGroupEditorTool";
-            this.toolStripButtonGroupEditorTool.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonGroupEditorTool.Text = "FieldGroupUtility";
             // 
             // listViewAccounts
             // 
@@ -176,6 +120,66 @@
             this.columnHeaderLastSeen.Text = "FieldLastSeen";
             this.columnHeaderLastSeen.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.columnHeaderLastSeen.Width = 140;
+            // 
+            // toolStripButtonEdit
+            // 
+            this.toolStripButtonEdit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonEdit.Enabled = false;
+            this.toolStripButtonEdit.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.pencil;
+            this.toolStripButtonEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonEdit.Name = "toolStripButtonEdit";
+            this.toolStripButtonEdit.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonEdit.Text = "FieldEdit";
+            // 
+            // toolStripButtonRefresh
+            // 
+            this.toolStripButtonRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonRefresh.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.arrow_circle;
+            this.toolStripButtonRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonRefresh.Name = "toolStripButtonRefresh";
+            this.toolStripButtonRefresh.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonRefresh.Text = "FieldRefresh";
+            this.toolStripButtonRefresh.Click += new System.EventHandler(this.toolStripButtonRefresh_Click);
+            // 
+            // toolStripButtonBanTool
+            // 
+            this.toolStripButtonBanTool.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonBanTool.Enabled = false;
+            this.toolStripButtonBanTool.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.hammer;
+            this.toolStripButtonBanTool.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonBanTool.Name = "toolStripButtonBanTool";
+            this.toolStripButtonBanTool.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonBanTool.Text = "FieldBanish";
+            // 
+            // toolStripButtonPermissionTool
+            // 
+            this.toolStripButtonPermissionTool.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonPermissionTool.Enabled = false;
+            this.toolStripButtonPermissionTool.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.key;
+            this.toolStripButtonPermissionTool.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonPermissionTool.Name = "toolStripButtonPermissionTool";
+            this.toolStripButtonPermissionTool.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonPermissionTool.Text = "FieldPermissionPlural";
+            this.toolStripButtonPermissionTool.Click += new System.EventHandler(this.toolStripButtonPermissionTool_Click);
+            // 
+            // toolStripButtonGroupTool
+            // 
+            this.toolStripButtonGroupTool.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonGroupTool.Enabled = false;
+            this.toolStripButtonGroupTool.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.category_group_select;
+            this.toolStripButtonGroupTool.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonGroupTool.Name = "toolStripButtonGroupTool";
+            this.toolStripButtonGroupTool.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonGroupTool.Text = "FieldGroupPlural";
+            // 
+            // toolStripButtonGroupEditorTool
+            // 
+            this.toolStripButtonGroupEditorTool.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonGroupEditorTool.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.drill;
+            this.toolStripButtonGroupEditorTool.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonGroupEditorTool.Name = "toolStripButtonGroupEditorTool";
+            this.toolStripButtonGroupEditorTool.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonGroupEditorTool.Text = "FieldGroupUtility";
             // 
             // UserManagementForm
             // 
