@@ -43,10 +43,10 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.labelServer = new System.Windows.Forms.Label();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
-            this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
-            this.checkBoxRemember = new System.Windows.Forms.CheckBox();
             this.buttonLogin = new System.Windows.Forms.Button();
+            this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.buttonOptions = new System.Windows.Forms.Button();
+            this.checkBoxRemember = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -210,29 +210,6 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.flowLayoutPanel4.Size = new System.Drawing.Size(81, 81);
             this.flowLayoutPanel4.TabIndex = 7;
             // 
-            // flowLayoutPanel3
-            // 
-            this.flowLayoutPanel3.AutoSize = true;
-            this.flowLayoutPanel3.Controls.Add(this.buttonOptions);
-            this.flowLayoutPanel3.Controls.Add(this.checkBoxRemember);
-            this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel3.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 3);
-            this.flowLayoutPanel3.MinimumSize = new System.Drawing.Size(64, 20);
-            this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(83, 81);
-            this.flowLayoutPanel3.TabIndex = 3;
-            // 
-            // checkBoxRemember
-            // 
-            this.checkBoxRemember.AutoSize = true;
-            this.checkBoxRemember.Location = new System.Drawing.Point(3, 32);
-            this.checkBoxRemember.Name = "checkBoxRemember";
-            this.checkBoxRemember.Size = new System.Drawing.Size(77, 17);
-            this.checkBoxRemember.TabIndex = 6;
-            this.checkBoxRemember.Text = "Remember";
-            this.checkBoxRemember.UseVisualStyleBackColor = true;
-            // 
             // buttonLogin
             // 
             this.buttonLogin.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.door_open_in;
@@ -246,6 +223,19 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.buttonLogin.UseVisualStyleBackColor = true;
             this.buttonLogin.Click += new System.EventHandler(this.buttonLogin_Click);
             // 
+            // flowLayoutPanel3
+            // 
+            this.flowLayoutPanel3.AutoSize = true;
+            this.flowLayoutPanel3.Controls.Add(this.buttonOptions);
+            this.flowLayoutPanel3.Controls.Add(this.checkBoxRemember);
+            this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel3.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanel3.Location = new System.Drawing.Point(3, 3);
+            this.flowLayoutPanel3.MinimumSize = new System.Drawing.Size(64, 20);
+            this.flowLayoutPanel3.Name = "flowLayoutPanel3";
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(83, 81);
+            this.flowLayoutPanel3.TabIndex = 3;
+            // 
             // buttonOptions
             // 
             this.buttonOptions.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.gear;
@@ -257,6 +247,16 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.buttonOptions.Text = "Options";
             this.buttonOptions.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.buttonOptions.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxRemember
+            // 
+            this.checkBoxRemember.AutoSize = true;
+            this.checkBoxRemember.Location = new System.Drawing.Point(3, 32);
+            this.checkBoxRemember.Name = "checkBoxRemember";
+            this.checkBoxRemember.Size = new System.Drawing.Size(77, 17);
+            this.checkBoxRemember.TabIndex = 6;
+            this.checkBoxRemember.Text = "Remember";
+            this.checkBoxRemember.UseVisualStyleBackColor = true;
             // 
             // LoginForm
             // 
@@ -270,6 +270,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.MaximumSize = new System.Drawing.Size(254, 352);
             this.MinimumSize = new System.Drawing.Size(254, 352);
             this.Name = "LoginForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "OSL - Login";
             this.Shown += new System.EventHandler(this.LoginForm_Shown);
             this.tableLayoutPanel1.ResumeLayout(false);

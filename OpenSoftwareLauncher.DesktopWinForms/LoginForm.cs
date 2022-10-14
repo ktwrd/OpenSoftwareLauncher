@@ -31,13 +31,11 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 
             Text = LocaleManager.Get("WindowTitle_LoginForm");
         }
-        public LoginForm(bool validate = false, bool silent = false)
+        public LoginForm(bool validate = false, bool silent = false) : this()
         {
-            InitializeComponent();
-            Locale();
             if (UserConfig.Auth_Remember == false)
                 validate = false;
-            ValidateOnShow = validate;
+            ValidateOnShow = validate || UserConfig.Auth_Remember;
         }
         private bool ValidateOnShow = false;
         public void SaveFields()
@@ -54,6 +52,12 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             var response = Program.Client.ValidateCredentials(textBoxUsername.Text, textBoxPassword.Text, textBoxServer.Text);
             if (response.Success)
             {
+                if (checkBoxRemember.Checked)
+                {
+                    UserConfig.Auth_Token = response.Token.Token;
+                    UserConfig.Save();
+                }
+
                 Program.Client.UpdateProperties();
                 Program.ClientContext.InitializeParentForm(true);
             }
@@ -88,6 +92,22 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             else
             {
                 textBoxUsername.Focus();
+            }
+
+            if (ValidateOnShow && UserConfig.Auth_Token.Length > 8)
+            {
+                Enabled = false;
+                var response = Program.Client.ValidateToken(save: true);
+                if (response != null)
+                {
+                    Program.Client.FetchAccountDetails();
+                    Program.Client.FetchServerDetails();
+                    Program.LocalContent.Pull().Wait();
+                    Program.Client.UpdateProperties();
+                    Program.ClientContext.InitializeParentForm(true);
+                    return;
+                }
+                Enabled = true;
             }
         }
     }
