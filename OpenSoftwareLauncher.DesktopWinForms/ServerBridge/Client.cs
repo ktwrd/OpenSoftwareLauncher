@@ -84,10 +84,11 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
         #endregion
 
         #region ValidateToken
-        public AccountTokenDetailsResponse ValidateToken(string token, string endpoint, bool save=true)
+        public AccountTokenDetailsResponse ValidateToken(string token, string endpoint, bool save=true, bool messageBox=false)
         {
             UserConfig.Connection_Endpoint = endpoint;
-            var response = HttpClient.GetAsync(Endpoint.TokenDetails(token)).Result;
+            var url = Endpoint.TokenDetails(token);
+            var response = HttpClient.GetAsync(url).Result;
             var stringCon = response.Content.ReadAsStringAsync().Result;
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
@@ -99,18 +100,27 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
                     {
                         Token = token
                     };
+                    Token = TokenData.Token;
                     UserConfig.Auth_Token = token;
                     UserConfig.Save();
                 }
                 return deserialized.Data;
             }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                var exceptionDeserialized = JsonSerializer.Deserialize<ObjectResponse<HttpException>>(stringCon, Program.serializerOptions);
+                if (messageBox)
+                {
+                    MessageBox.Show(LocaleManager.Get("Client_TokenGrantFailed") + "\n\n" + LocaleManager.Get(exceptionDeserialized.Data.Message), LocaleManager.Get("Client_TokenGrantFailed_Title"));
+                }
+            }
             Program.MessageBoxShow(stringCon, LocaleManager.Get("ServerResponse_Invalid"));
             return null;
         }
-        public AccountTokenDetailsResponse ValidateToken(string endpoint, bool save = true)
-            => ValidateToken(UserConfig.Auth_Token, endpoint, save);
-        public AccountTokenDetailsResponse ValidateToken(bool save = true)
-            => ValidateToken(UserConfig.Connection_Endpoint, save);
+        public AccountTokenDetailsResponse ValidateToken(string endpoint, bool save = true, bool messageBox = false)
+            => ValidateToken(UserConfig.Auth_Token, endpoint, save, messageBox);
+        public AccountTokenDetailsResponse ValidateToken(bool save = true, bool messageBox = false)
+            => ValidateToken(UserConfig.Connection_Endpoint, save, messageBox);
         #endregion
 
         /// <summary>
