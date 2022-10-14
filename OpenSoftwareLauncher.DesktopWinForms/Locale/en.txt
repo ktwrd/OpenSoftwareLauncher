@@ -12,7 +12,11 @@ FieldGroupPlural=Groups
 FieldGroupUtility=Group Editor Tools
 FieldLastSeen=Last Seen
 FieldPermissionPlural=Permissions
+FieldPush=Push
 FieldRefresh=Refresh
+FieldEditingPermissionFor=Editing permissions for ${username}
+
+Permission_Plural=Permissions
 
 WindowTitle_LoginForm=${product.name.short} v${version}
 WindowTitle_ParentForm=${product.name} v${version}
