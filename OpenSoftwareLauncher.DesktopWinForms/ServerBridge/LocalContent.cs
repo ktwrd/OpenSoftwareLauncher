@@ -63,7 +63,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
         {
             if (Program.Client == null) return Task.CompletedTask;
             AccountDetailList.Clear();
-            if (!Client.Permissions.Contains(AccountPermission.USER_LIST)) return Task.CompletedTask;
+            if (!Client.HasPermission(AccountPermission.USER_LIST)) return Task.CompletedTask;
             var targetURL = Endpoint.UserList(Client.Token);
             var response = Client.HttpClient.GetAsync(targetURL).Result;
             var stringContent = response.Content.ReadAsStringAsync().Result;
@@ -87,7 +87,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
         public Task PullAnnouncements(bool emit = true)
         {
             AnnouncementSummary = new SystemAnnouncementSummaryAsList();
-            if (!Client.Permissions.Contains(AccountPermission.ANNOUNCEMENT_MANAGE))
+            if (!Client.HasPermission(AccountPermission.ANNOUNCEMENT_MANAGE))
                 return Task.CompletedTask;
             var targetURL = Endpoint.AnnouncementSummary(Client.Token);
             Trace.WriteLine($"[LocalContent->RefreshAnnouncements] Fetching Response of {targetURL}");
@@ -110,7 +110,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
         }
         public Task PushAnnouncements(bool emit = true)
         {
-            if (!Client.Permissions.Contains(AccountPermission.ANNOUNCEMENT_MANAGE))
+            if (!Client.HasPermission(AccountPermission.ANNOUNCEMENT_MANAGE))
                 return Task.CompletedTask;
             if (AnnouncementSummary == null)
             {
@@ -161,7 +161,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
         public Task PullContentManager(bool emit = true)
         {
             ContentManagerAlias = null;
-            if (!Client.Permissions.Contains(AccountPermission.ADMINISTRATOR))
+            if (!Client.HasPermission(AccountPermission.ADMINISTRATOR))
                 return Task.CompletedTask;
             var targetURL = Endpoint.DumpDataFetch(Client.Token, DataType.All);
             var response = Client.HttpClient.GetAsync(targetURL).Result;
@@ -182,7 +182,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
         }
         public Task PushContentManager(bool emit = true)
         {
-            if (!Client.Permissions.Contains(AccountPermission.ADMINISTRATOR))
+            if (!Client.HasPermission(AccountPermission.ADMINISTRATOR))
                 return Task.CompletedTask;
             if (ContentManagerAlias == null)
             {

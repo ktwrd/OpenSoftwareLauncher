@@ -39,7 +39,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             listViewAccounts.Items.Clear();
 
             if (Program.Client == null) return;
-            if (!Program.Client.Permissions.Contains(AccountPermission.USER_LIST))
+            if (Program.Client.HasPermission(AccountPermission.USER_LIST))
             {
                 Program.LocalContent.PullAccounts().Wait();
 
