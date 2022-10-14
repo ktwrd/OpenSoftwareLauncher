@@ -123,6 +123,64 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
             => ValidateToken(UserConfig.Connection_Endpoint, save, messageBox);
         #endregion
 
+        #region Permissions Management
+        public async Task<HttpException> PermissionRevoke(string username, AccountPermission permission)
+        {
+            var url = Endpoint.UserPermissionRevoke(Token, username, permission);
+            var response = await HttpClient.GetAsync(url);
+            var stringContent = await response.Content.ReadAsStringAsync();
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var matches = Program.LocalContent.AccountDetailList.Where(v => v.Username == username);
+                foreach (var i in matches)
+                {
+                    var l = new List<AccountPermission>(i.Permissions);
+                    l.Remove(permission);
+
+                    i.Permissions = l.ToArray();
+                }
+            }
+            else
+            {
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    var deser = JsonSerializer.Deserialize<ObjectResponse<HttpException>>(stringContent, Program.serializerOptions);
+                    return deser.Data;
+                }
+            }
+            return null;
+        }
+        public async Task<HttpException> PermissionGrant(string username, AccountPermission permission)
+        {
+            var url = Endpoint.UserPermissionGrant(Token, username, permission);
+            var response = await HttpClient.GetAsync(url);
+            var stringContent = await response.Content.ReadAsStringAsync();
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var matches = Program.LocalContent.AccountDetailList.Where(v => v.Username == username);
+                foreach (var i in matches)
+                {
+                    var l = new List<AccountPermission>(i.Permissions);
+                    if (!l.Contains(permission))
+                        l.Add(permission);
+
+                    i.Permissions = l.ToArray();
+                }
+            }
+            else
+            {
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    var deser = JsonSerializer.Deserialize<ObjectResponse<HttpException>>(stringContent, Program.serializerOptions);
+                    return deser.Data;
+                }
+            }
+            return null;
+        }
+        #endregion
+
         /// <summary>
         /// 
         /// </summary>
