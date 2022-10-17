@@ -29,72 +29,39 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserGroupForm));
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.listView1 = new System.Windows.Forms.ListView();
-            this.button1 = new System.Windows.Forms.Button();
-            this.buttonAdd = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.textBoxTargetGroup = new System.Windows.Forms.TextBox();
+            this.listViewGroups = new System.Windows.Forms.ListView();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.buttonSave = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.buttonRemoveSelected = new System.Windows.Forms.Button();
+            this.buttonAdd = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.SuspendLayout();
             // 
-            // textBox1
+            // textBoxTargetGroup
             // 
-            this.textBox1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.textBox1.Location = new System.Drawing.Point(3, 3);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(300, 20);
-            this.textBox1.TabIndex = 0;
+            this.textBoxTargetGroup.Dock = System.Windows.Forms.DockStyle.Top;
+            this.textBoxTargetGroup.Location = new System.Drawing.Point(3, 3);
+            this.textBoxTargetGroup.Name = "textBoxTargetGroup";
+            this.textBoxTargetGroup.Size = new System.Drawing.Size(300, 20);
+            this.textBoxTargetGroup.TabIndex = 0;
             // 
-            // listView1
+            // listViewGroups
             // 
-            this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(3, 3);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(217, 216);
-            this.listView1.TabIndex = 2;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            // 
-            // button1
-            // 
-            this.button1.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.minus;
-            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(3, 3);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(94, 23);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "FieldRemove";
-            this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // buttonAdd
-            // 
-            this.buttonAdd.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.plus;
-            this.buttonAdd.Location = new System.Drawing.Point(306, 0);
-            this.buttonAdd.Margin = new System.Windows.Forms.Padding(0);
-            this.buttonAdd.Name = "buttonAdd";
-            this.buttonAdd.Size = new System.Drawing.Size(23, 23);
-            this.buttonAdd.TabIndex = 1;
-            this.buttonAdd.UseVisualStyleBackColor = true;
-            // 
-            // button2
-            // 
-            this.button2.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.upload_cloud;
-            this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button2.Location = new System.Drawing.Point(3, 263);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(85, 23);
-            this.button2.TabIndex = 4;
-            this.button2.Text = "FieldPush";
-            this.button2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.button2.UseVisualStyleBackColor = true;
+            this.listViewGroups.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewGroups.HideSelection = false;
+            this.listViewGroups.Location = new System.Drawing.Point(3, 3);
+            this.listViewGroups.Name = "listViewGroups";
+            this.listViewGroups.Size = new System.Drawing.Size(217, 216);
+            this.listViewGroups.TabIndex = 2;
+            this.listViewGroups.UseCompatibleStateImageBehavior = false;
             // 
             // tableLayoutPanel1
             // 
@@ -102,7 +69,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.listView1, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.listViewGroups, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -113,7 +80,8 @@
             // 
             // flowLayoutPanel1
             // 
-            this.flowLayoutPanel1.Controls.Add(this.button1);
+            this.flowLayoutPanel1.Controls.Add(this.buttonRemoveSelected);
+            this.flowLayoutPanel1.Controls.Add(this.buttonSave);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(226, 3);
@@ -128,7 +96,7 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel2.Controls.Add(this.buttonAdd, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.textBox1, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.textBoxTargetGroup, 0, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 231);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -154,6 +122,55 @@
             this.tableLayoutPanel3.Size = new System.Drawing.Size(335, 289);
             this.tableLayoutPanel3.TabIndex = 7;
             // 
+            // buttonSave
+            // 
+            this.buttonSave.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.disk;
+            this.buttonSave.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonSave.Location = new System.Drawing.Point(3, 32);
+            this.buttonSave.Name = "buttonSave";
+            this.buttonSave.Size = new System.Drawing.Size(91, 23);
+            this.buttonSave.TabIndex = 4;
+            this.buttonSave.Text = "FieldSave";
+            this.buttonSave.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.buttonSave.UseVisualStyleBackColor = true;
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
+            // 
+            // button2
+            // 
+            this.button2.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.upload_cloud;
+            this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.button2.Location = new System.Drawing.Point(3, 263);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(85, 23);
+            this.button2.TabIndex = 4;
+            this.button2.Text = "FieldPush";
+            this.button2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.button2.UseVisualStyleBackColor = true;
+            // 
+            // buttonRemoveSelected
+            // 
+            this.buttonRemoveSelected.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.minus;
+            this.buttonRemoveSelected.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonRemoveSelected.Location = new System.Drawing.Point(3, 3);
+            this.buttonRemoveSelected.Name = "buttonRemoveSelected";
+            this.buttonRemoveSelected.Size = new System.Drawing.Size(94, 23);
+            this.buttonRemoveSelected.TabIndex = 3;
+            this.buttonRemoveSelected.Text = "FieldRemove";
+            this.buttonRemoveSelected.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.buttonRemoveSelected.UseVisualStyleBackColor = true;
+            this.buttonRemoveSelected.Click += new System.EventHandler(this.buttonRemoveSelected_Click);
+            // 
+            // buttonAdd
+            // 
+            this.buttonAdd.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.plus;
+            this.buttonAdd.Location = new System.Drawing.Point(306, 0);
+            this.buttonAdd.Margin = new System.Windows.Forms.Padding(0);
+            this.buttonAdd.Name = "buttonAdd";
+            this.buttonAdd.Size = new System.Drawing.Size(23, 23);
+            this.buttonAdd.TabIndex = 1;
+            this.buttonAdd.UseVisualStyleBackColor = true;
+            this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
+            // 
             // UserGroupForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -175,14 +192,15 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBoxTargetGroup;
         private System.Windows.Forms.Button buttonAdd;
-        private System.Windows.Forms.ListView listView1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.ListView listViewGroups;
+        private System.Windows.Forms.Button buttonRemoveSelected;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.Button buttonSave;
     }
 }
