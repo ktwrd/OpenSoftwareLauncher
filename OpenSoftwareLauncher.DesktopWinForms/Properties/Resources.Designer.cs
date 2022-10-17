@@ -93,6 +93,16 @@ namespace OpenSoftwareLauncher.DesktopWinForms.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap disk {
+            get {
+                object obj = ResourceManager.GetObject("disk", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap door_open_in {
             get {
                 object obj = ResourceManager.GetObject("door_open_in", resourceCulture);
