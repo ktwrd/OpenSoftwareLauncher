@@ -8,6 +8,7 @@ namespace OSLCommon.AutoUpdater
 {
     public class ProductSettings
     {
+        public bool AutoLaunch = false;
         public bool AutoUpdate = false;
         public string LaunchArguments = @"";
         public int MemoryLimit = 1024;
@@ -20,6 +21,7 @@ namespace OSLCommon.AutoUpdater
             var dict = new Dictionary<string, string>()
             {
                 { @"AutoUpdate", @"0" },
+                { @"AutoLaunch", @"0" },
                 { @"LaunchArguments", @"" },
                 { @"MemoryLimit", @"1024" },
                 { @"HardwareAcceleration", @"1" }
@@ -46,6 +48,7 @@ namespace OSLCommon.AutoUpdater
             var dict = new Dictionary<string, string>()
             {
                 { @"AutoUpdate", AutoUpdate ? "1" : "0" },
+                { @"AutoLaunch", AutoLaunch ? "1" : "0" },
                 { @"LaunchArguments", LaunchArguments },
                 { @"MemoryLimit", MemoryLimit.ToString() },
                 { @"HardwareAcceleration", HardwareAcceleration ? "1" : "0" }
