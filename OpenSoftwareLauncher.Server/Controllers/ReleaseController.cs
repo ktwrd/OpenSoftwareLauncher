@@ -108,7 +108,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
             }
 
             var filteredReleases = new List<ProductRelease>();
-            var account = MainClass.contentManager.AccountManager.GetAccount(token);
+            var account = MainClass.contentManager?.AccountManager.GetAccount(token);
             if (account == null && token.Length > 0)
             {
                 returnContent.Clear();
@@ -130,11 +130,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
                         switch (stream.BranchName.ToLower())
                         {
                             case "nightly":
-                                isOtherBranch = false;
-                                break;
                             case "beta":
-                                isOtherBranch = false;
-                                break;
                             case "stable":
                                 isOtherBranch = false;
                                 break;
