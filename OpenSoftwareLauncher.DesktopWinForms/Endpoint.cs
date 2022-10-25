@@ -123,5 +123,16 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             string license)
             => $"{Base}/admin/user/license/revoke?token={encode(token)}&username={encode(username)}&license={encode(license)}";
 
+        public static string CreateLicenseKeys(
+            string token)
+            => $"{Base}/admin/license/generateProductKey?token={encode(token)}";
+        public static string GetLicenseKeys(
+            string token)
+            => $"{Base}/admin/license/getKeys?token={encode(token)}";
+        public static string GetLicenseKeys(
+            string token,
+            string remoteLocation)
+            => $"{Base}/admin/license/getKeys?token={encode(token)}&remoteLocation={encode(remoteLocation)}";
+
     }
 }
