@@ -30,8 +30,6 @@ namespace OSLCommon.AutoUpdater
         ReleaseType releaseType { get; set; }
         Dictionary<string, string> files { get; set; }
         Dictionary<string, string> executable { get; set; }
-        string[] groupWhitelist { get; set; }
-        string[] groupBlacklist { get; set; }
     }
     [Serializable]
     public class ReleaseInfo : IReleaseInfo, bSerializable
@@ -48,9 +46,7 @@ namespace OSLCommon.AutoUpdater
         public string commitHashShort { get; set; }
         public ReleaseType releaseType { get; set; }
         public Dictionary<string, string> files { get; set; }
-        public Dictionary<string, string> executable { get; set; }
-        public string[] groupWhitelist { get; set; }
-        public string[] groupBlacklist { get; set; }
+        public Dictionary<string, string> executable { get; set; 
 /*
         #region bFirebaseSerializable
         public Task FromFirebase(DocumentSnapshot document, VoidDelegate completeIncrement)
@@ -114,8 +110,6 @@ namespace OSLCommon.AutoUpdater
             releaseType = ReleaseType.Other;
             files = new Dictionary<string, string>();
             executable = new Dictionary<string, string>();
-            groupWhitelist = Array.Empty<string>();
-            groupBlacklist = Array.Empty<string>();
         }
 
         #region bSerializable
