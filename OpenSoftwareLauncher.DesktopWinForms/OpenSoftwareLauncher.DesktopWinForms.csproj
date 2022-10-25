@@ -203,6 +203,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <None Include="Resources\lock.png" />
     <None Include="Locale\en.locale">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
