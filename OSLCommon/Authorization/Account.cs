@@ -164,7 +164,7 @@ namespace OSLCommon.Authorization
         /// <returns>Is this account in the supplied group already</returns>
         public bool AddGroup(string group)
         {
-            foreach (var item in Groups)
+            foreach (var item in Groups.ToArray())
                 if (item == group.ToUpper().Trim())
                     return true;
             Groups.Add(group.ToUpper().Trim());
@@ -178,7 +178,7 @@ namespace OSLCommon.Authorization
         /// <returns></returns>
         public bool HasGroup(string group)
         {
-            foreach (var item in Groups)
+            foreach (var item in Groups.ToArray())
                 if (item == group.ToUpper().Trim())
                     return true;
             return false;
@@ -206,7 +206,7 @@ namespace OSLCommon.Authorization
         public void RemoveToken(string[] tokens)
         {
             var newTokenList = new List<AccountToken>();
-            foreach (var item in Tokens)
+            foreach (var item in Tokens.ToArray())
             {
                 if (!tokens.Contains(item.Token))
                     newTokenList.Add(item);
@@ -237,7 +237,7 @@ namespace OSLCommon.Authorization
         {
             int count = Tokens.Count;
             var newTokenList = new List<AccountToken>();
-            foreach (var item in Tokens)
+            foreach (var item in Tokens.ToArray())
             {
                 if (exclude != null && exclude.Contains(item.Token))
                 {
@@ -260,7 +260,7 @@ namespace OSLCommon.Authorization
             if (targetToken.parentAccount != this) return null;
             if (Enabled)
             {
-                foreach (var token in Tokens)
+                foreach (var token in Tokens.ToArray())
                 {
                     if (token == targetToken)
                         return token;
@@ -281,7 +281,7 @@ namespace OSLCommon.Authorization
         /// <returns>Is this token registered to this account</returns>
         public bool HasToken(string token)
         {
-            foreach (var item in Tokens)
+            foreach (var item in Tokens.ToArray())
             {
                 if (item.Token == token)
                     return true;
