@@ -88,6 +88,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LicenseKeyCreateDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LicenseKeyCreateDialog.Designer.cs">
+      <DependentUpon>LicenseKeyCreateDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LicenseManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LicenseManager.Designer.cs">
+      <DependentUpon>LicenseManager.cs</DependentUpon>
+    </Compile>
     <Compile Include="User Management\PermissionEditForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -147,6 +159,12 @@
     <Compile Include="User Management\UserLicenceForm.Designer.cs">
       <DependentUpon>UserLicenceForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="LicenseKeyCreateDialog.resx">
+      <DependentUpon>LicenseKeyCreateDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LicenseManager.resx">
+      <DependentUpon>LicenseManager.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </EmbeddedResource>
