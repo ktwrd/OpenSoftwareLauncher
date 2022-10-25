@@ -17,6 +17,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using Prometheus;
+using static Google.Rpc.Context.AttributeContext.Types;
 
 namespace OpenSoftwareLauncher.Server
 {
@@ -115,7 +116,7 @@ namespace OpenSoftwareLauncher.Server
                 var query = context.Request.Path.ToString();
                 if (!query.StartsWith("/token/grant"))
                     query += context.Request.QueryString.ToString();
-                Console.WriteLine($"[OpenSoftwareLauncher.Server] {context.Request.Method} {possibleAddress} \"{query}\" \"{context.Request.Headers.UserAgent}\"");
+               Console.WriteLine($"[OpenSoftwareLauncher.Server] {context.Request.Method} {possibleAddress} \"{query}\" \"{context.Request.Headers.UserAgent}\"");
                 return next();
             });
 
@@ -132,6 +133,58 @@ namespace OpenSoftwareLauncher.Server
             App.MapControllers();
             App.Run();
         }
+        public static ObjectResponse<HttpException>? Validate(string token)
+        {
+            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
+            if (tokenAccount == null)
+            {
+                return new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(StatusCodes.Status401Unauthorized, ServerStringResponse.InvalidCredential)
+                };
+            }
+            if (!tokenAccount.Enabled)
+            {
+                return new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(StatusCodes.Status401Unauthorized, ServerStringResponse.AccountDisabled)
+                };
+            }
+            return null;
+        }
+        public static ObjectResponse<HttpException>? ValidatePermissions(string token, AccountPermission[] permissions)
+        {
+            if (!contentManager.AccountManager.AccountHasPermission(token, permissions))
+            {
+                return new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(StatusCodes.Status401Unauthorized, ServerStringResponse.InvalidCredential)
+                };
+            }
+            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
+            if (tokenAccount == null)
+            {
+                return new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(StatusCodes.Status401Unauthorized, ServerStringResponse.InvalidCredential)
+                };
+            }
+            if (!tokenAccount.Enabled)
+            {
+                return new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(StatusCodes.Status401Unauthorized, ServerStringResponse.AccountDisabled)
+                };
+            }
+            return null;
+        }
+        public static ObjectResponse<HttpException>? ValidatePermissions(string token, AccountPermission permission)
+            => ValidatePermissions(token, new AccountPermission[] { permission });
 
         public static void BeforeExit(object sender, EventArgs e)
         {
