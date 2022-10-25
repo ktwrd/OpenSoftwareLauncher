@@ -61,7 +61,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 
             var dialog = new SaveFileDialog()
             {
-                Title = LocaleManager.Get("FieldSave_GroupPlural"),
+                Title = LocaleManager.Get("Save_GroupPlural"),
                 Filter = "txt files (*.txt)|*.txtx|All files (*.*)|*.*",
                 DefaultExt = "txt",
                 RestoreDirectory = true

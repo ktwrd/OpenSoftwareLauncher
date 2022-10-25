@@ -112,5 +112,16 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             string username)
             => $"{Base}/admin/user/pardon?token={encode(token)}&username={encode(username)}";
 
+        public static string UserLicenseGrant(
+            string token,
+            string username,
+            string license)
+            => $"{Base}/admin/user/license/grant?token={encode(token)}&username={encode(username)}&license={encode(license)}";
+        public static string UserLicenseRevoke(
+            string token,
+            string username,
+            string license)
+            => $"{Base}/admin/user/license/revoke?token={encode(token)}&username={encode(username)}&license={encode(license)}";
+
     }
 }

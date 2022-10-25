@@ -23,12 +23,12 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         public void Locale()
         {
             Text = LocaleManager.Get("Permission_Plural") + $" - {Account.Username}";
-            labelUsername.Text = LocaleManager.Get("FieldEditingPermissionFor", inject: new Dictionary<string, object>()
+            labelUsername.Text = LocaleManager.Get("EditingPermissionFor", inject: new Dictionary<string, object>()
             {
                 {"username", Account.Username }
             });
 
-            buttonPush.Text = LocaleManager.Get("FieldPush");
+            buttonPush.Text = LocaleManager.Get("Push");
         }
 
 

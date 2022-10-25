@@ -22,14 +22,14 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         public void Locale()
         {
             labelServer.Text = LocaleManager.Get("Server");
-            labelUsername.Text = LocaleManager.Get("FieldUsername");
-            labelPassword.Text = LocaleManager.Get("FieldPassword");
-            checkBoxRemember.Text = LocaleManager.Get("FieldRemember");
+            labelUsername.Text = LocaleManager.Get("Username");
+            labelPassword.Text = LocaleManager.Get("Password");
+            checkBoxRemember.Text = LocaleManager.Get("Remember");
 
             buttonLogin.Text = LocaleManager.Get("Login");
             buttonOptions.Text = LocaleManager.Get("Options");
 
-            Text = LocaleManager.Get("WindowTitle_LoginForm");
+            Text = LocaleManager.Get("TitleLoginForm");
         }
         public LoginForm(bool validate = false, bool silent = false) : this()
         {

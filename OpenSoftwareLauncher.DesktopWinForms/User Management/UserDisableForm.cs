@@ -20,7 +20,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 
         public void Locale()
         {
-            Text = LocaleManager.Get("FieldBanish") + $" - {Account.Username}";
+            Text = LocaleManager.Get("Banish") + $" - {Account.Username}";
             buttonSubmit.Text = LocaleManager.Get("Submit");
         }
 

@@ -63,7 +63,7 @@
             this.toolStripButtonUsers.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonUsers.Name = "toolStripButtonUsers";
             this.toolStripButtonUsers.Size = new System.Drawing.Size(29, 20);
-            this.toolStripButtonUsers.Text = "WindowTitle_UserManagement";
+            this.toolStripButtonUsers.Text = "TitleUserManagement";
             this.toolStripButtonUsers.Click += new System.EventHandler(this.toolStripButtonUsers_Click);
             // 
             // toolStripButtonAnnouncements
@@ -73,7 +73,7 @@
             this.toolStripButtonAnnouncements.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonAnnouncements.Name = "toolStripButtonAnnouncements";
             this.toolStripButtonAnnouncements.Size = new System.Drawing.Size(29, 20);
-            this.toolStripButtonAnnouncements.Text = "FieldAnnouncementPlural";
+            this.toolStripButtonAnnouncements.Text = "Announcement_Plural";
             // 
             // toolStripButtonReleases
             // 
@@ -82,7 +82,7 @@
             this.toolStripButtonReleases.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonReleases.Name = "toolStripButtonReleases";
             this.toolStripButtonReleases.Size = new System.Drawing.Size(29, 20);
-            this.toolStripButtonReleases.Text = "FieldPackagePlural";
+            this.toolStripButtonReleases.Text = "Package_Plural";
             // 
             // toolStripSeparator1
             // 
@@ -96,7 +96,7 @@
             this.toolStripButtonSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonSettings.Name = "toolStripButtonSettings";
             this.toolStripButtonSettings.Size = new System.Drawing.Size(29, 20);
-            this.toolStripButtonSettings.Text = "FieldSettingPlural";
+            this.toolStripButtonSettings.Text = "Setting_Plural";
             // 
             // toolStripButtonLogs
             // 
@@ -105,7 +105,7 @@
             this.toolStripButtonLogs.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonLogs.Name = "toolStripButtonLogs";
             this.toolStripButtonLogs.Size = new System.Drawing.Size(29, 20);
-            this.toolStripButtonLogs.Text = "FieldLogPlural";
+            this.toolStripButtonLogs.Text = "Log_Plural";
             // 
             // ParentForm
             // 
@@ -116,7 +116,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.IsMdiContainer = true;
             this.Name = "ParentForm";
-            this.Text = "WindowTitle_ParentForm";
+            this.Text = "TitleParentForm";
             this.Shown += new System.EventHandler(this.ParentForm_Shown);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
