@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OSLCommon.Authorization;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -14,5 +15,6 @@ namespace OSLCommon.Licensing
     {
         public GrantLicenseKeyResponseCode Code { get; set; }
         public string[] Products { get; set; }
+        public AccountPermission[] Permissions { get; set; }
     }
 }

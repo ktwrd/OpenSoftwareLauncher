@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OSLCommon.Authorization;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,6 +9,7 @@ namespace OSLCommon.Licensing
     {
         public int Count { get; set; }
         public string[] RemoteLocations { get; set; }
+        public AccountPermission[] Permissions { get; set; }
         public long ExpiryTimestamp { get; set; }
         public string Note { get; set; }
         public string GroupLabel { get; set; }

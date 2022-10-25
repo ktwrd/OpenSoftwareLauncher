@@ -223,7 +223,7 @@ namespace OpenSoftwareLauncher.Server
             return false;
         }
 
-        public static CreateLicenseKeyResponse CreateLicenseKeys(string author, string[] products, int count = 1, string note ="", long activateBy=-1, string groupLabel="")
+        public static CreateLicenseKeyResponse CreateLicenseKeys(string author, string[] products, int count = 1, AccountPermission[]? permissions = null,  string note ="", long activateBy=-1, string groupLabel="")
         {
             var licenseArray = new LicenseKeyMetadata[count];
             long timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
@@ -240,6 +240,7 @@ namespace OpenSoftwareLauncher.Server
                     ActivateTimestamp = 0,
                     InternalNote = note,
                     Key = generateKey(),
+                    Permissions = permissions ?? Array.Empty<AccountPermission>(),
                     Products = products,
                     CreatedTimestamp = timestamp,
                     CreatedBy = author,
@@ -279,6 +280,8 @@ namespace OpenSoftwareLauncher.Server
                     i.Activated = true;
                     i.ActivatedBy = username;
                     i.ActivateTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                    foreach (var perm in i.Permissions)
+                        account.GrantPermission(perm);
                     return GrantLicenseKeyResponseCode.Granted;
                 }
             }

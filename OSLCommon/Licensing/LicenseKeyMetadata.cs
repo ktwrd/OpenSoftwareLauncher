@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OSLCommon.Authorization;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -35,6 +36,10 @@ namespace OSLCommon.Licensing
         /// Products to activate
         /// </summary>
         public string[] Products { get; set; } = Array.Empty<string>();
+        /// <summary>
+        /// Accounts to grant the accont on activation.
+        /// </summary>
+        public AccountPermission[] Permissions { get; set; } = Array.Empty<AccountPermission>();
         /// <summary>
         /// Timestamp when the license key expires (milliseconds, UTC unix epoch)
         /// </summary>
