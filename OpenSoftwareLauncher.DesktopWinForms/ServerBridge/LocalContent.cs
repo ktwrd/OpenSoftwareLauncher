@@ -222,6 +222,15 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
                 OnPush?.Invoke(ContentField.ContentManager);
             return Task.CompletedTask;
         }
+
+        public string[] GetRemoteLocations()
+        {
+            var lst = new List<string>();
+            foreach (var i in ContentManagerAlias.ReleaseInfoContent)
+                if (!lst.Contains(i.remoteLocation))
+                    lst.Add(i.remoteLocation);
+            return lst.ToArray();
+        }
         #endregion
     }
 }
