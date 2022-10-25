@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.Json;
+using OSLCommon.Authorization;
 
 namespace OpenSoftwareLauncher.Server.Controllers
 {
@@ -96,36 +97,41 @@ namespace OpenSoftwareLauncher.Server.Controllers
                     Data = new HttpException(StatusCodes.Status401Unauthorized, ServerStringResponse.AccountDisabled)
                 }, MainClass.serializerOptions);
             }
-            if (contentManager != null && account != null)
+            if (contentManager != null)
             {
                 if (contentManager.Published.ContainsKey(hash))
                 {
                     var allow = false;
                     var commit = contentManager.Published[hash];
-                    /*if (commit.Release.releaseType != ReleaseType.Other)
+                    if (account != null)
                     {
-                        allow = MainClass.CanUserGroupsAccessStream(commit.Release.groupBlacklist.ToArray(), commit.Release.groupWhitelist.ToArray(), account);
-                    }*/
-                    if (ServerConfig.GetBoolean("Security", "AllowAdminOverride", true))
-                    {
-                        if (account.HasPermission(OSLCommon.Authorization.AccountPermission.ADMINISTRATOR))
-                            allow = true;
-                    }
-
-                    if (commit.Release.releaseType == ReleaseType.Other)
-                    {
-                        if (ServerConfig.GetBoolean("Security", "AllowPermission_ReadReleaseBypass", true))
-                            if (account.HasPermission(OSLCommon.Authorization.AccountPermission.READ_RELEASE_BYPASS))
+                        /*if (commit.Release.releaseType != ReleaseType.Other)
+                        {
+                            allow = MainClass.CanUserGroupsAccessStream(commit.Release.groupBlacklist.ToArray(), commit.Release.groupWhitelist.ToArray(), account);
+                        }*/
+                        if (ServerConfig.GetBoolean("Security", "AllowAdminOverride", true))
+                        {
+                            if (account.HasPermission(OSLCommon.Authorization.AccountPermission.ADMINISTRATOR))
                                 allow = true;
-                    }
+                        }
 
-                    if (account.HasLicense(commit.Release.remoteLocation))
-                    {
+                        if (commit.Release.releaseType == ReleaseType.Other)
+                        {
+                            if (ServerConfig.GetBoolean("Security", "AllowPermission_ReadReleaseBypass", true))
+                                if (account.HasPermission(OSLCommon.Authorization.AccountPermission.READ_RELEASE_BYPASS))
+                                    allow = true;
+                        }
+
+                        if (account.HasLicense(commit.Release.remoteLocation))
+                        {
+                            allow = true;
+                        }
+                    }
+                    if (AccountManager.DefaultLicenses.Contains(commit.Release.remoteLocation))
                         allow = true;
-                    }
-
                     if (allow)
                         returnContent = new List<PublishedReleaseFile>(commit.Files);
+
                 }
             }
             return Json(returnContent, MainClass.serializerOptions);
