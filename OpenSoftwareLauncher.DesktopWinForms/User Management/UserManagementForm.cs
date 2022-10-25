@@ -108,6 +108,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 {
                     toolStripButtonPermissionTool.Enabled = true;
                     toolStripButtonBanTool.Enabled = true;
+                    toolStripButtonLicense.Enabled = true;
                 }
                 toolStripButtonGroupTool.Enabled = true;
                 toolStripButtonEdit.Enabled = true;
@@ -117,6 +118,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             {
                 toolStripButtonPermissionTool.Enabled = false;
                 toolStripButtonBanTool.Enabled = false;
+                toolStripButtonLicense.Enabled = false;
                 toolStripButtonGroupTool.Enabled = false;
                 toolStripButtonEdit.Enabled = false;
             }
@@ -149,6 +151,14 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         {
             if (SelectedAccounts.Length > 1 || SelectedAccounts.Length < 1) return;
             var form = new UserDisableForm(SelectedAccounts[0]);
+            form.MdiParent = MdiParent;
+            form.Show();
+        }
+
+        private void toolStripButtonLicense_Click(object sender, EventArgs e)
+        {
+            if (SelectedAccounts.Length > 1 || SelectedAccounts.Length < 1) return;
+            var form = new UserLicenceForm(SelectedAccounts[0]);
             form.MdiParent = MdiParent;
             form.Show();
         }

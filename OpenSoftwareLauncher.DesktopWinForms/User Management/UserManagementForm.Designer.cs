@@ -41,10 +41,11 @@
             this.toolStripButtonEdit = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonRefresh = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonBanTool = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonUnban = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonPermissionTool = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonGroupTool = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonGroupEditorTool = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonUnban = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonLicense = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -59,7 +60,8 @@
             this.toolStripButtonUnban,
             this.toolStripButtonPermissionTool,
             this.toolStripButtonGroupTool,
-            this.toolStripButtonGroupEditorTool});
+            this.toolStripButtonGroupEditorTool,
+            this.toolStripButtonLicense});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(924, 25);
@@ -96,30 +98,30 @@
             // 
             // columnHeaderUsername
             // 
-            this.columnHeaderUsername.Text = "FieldUsername";
+            this.columnHeaderUsername.Text = "Username";
             this.columnHeaderUsername.Width = 220;
             // 
             // columnHeaderEnabled
             // 
-            this.columnHeaderEnabled.Text = "FieldEnabled";
+            this.columnHeaderEnabled.Text = "Enabled";
             this.columnHeaderEnabled.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.columnHeaderEnabled.Width = 90;
             // 
             // columnHeaderGroups
             // 
-            this.columnHeaderGroups.Text = "FieldGroupPlural";
+            this.columnHeaderGroups.Text = "License_Plural";
             this.columnHeaderGroups.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.columnHeaderGroups.Width = 233;
             // 
             // columnHeaderPermissions
             // 
-            this.columnHeaderPermissions.Text = "FieldPermissionPlural";
+            this.columnHeaderPermissions.Text = "Permission_Plural";
             this.columnHeaderPermissions.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.columnHeaderPermissions.Width = 233;
             // 
             // columnHeaderLastSeen
             // 
-            this.columnHeaderLastSeen.Text = "FieldLastSeen";
+            this.columnHeaderLastSeen.Text = "LastSeen";
             this.columnHeaderLastSeen.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.columnHeaderLastSeen.Width = 140;
             // 
@@ -131,7 +133,7 @@
             this.toolStripButtonEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonEdit.Name = "toolStripButtonEdit";
             this.toolStripButtonEdit.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonEdit.Text = "FieldEdit";
+            this.toolStripButtonEdit.Text = "Edit";
             // 
             // toolStripButtonRefresh
             // 
@@ -140,7 +142,7 @@
             this.toolStripButtonRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonRefresh.Name = "toolStripButtonRefresh";
             this.toolStripButtonRefresh.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonRefresh.Text = "FieldRefresh";
+            this.toolStripButtonRefresh.Text = "Refresh";
             this.toolStripButtonRefresh.Click += new System.EventHandler(this.toolStripButtonRefresh_Click);
             // 
             // toolStripButtonBanTool
@@ -151,8 +153,19 @@
             this.toolStripButtonBanTool.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonBanTool.Name = "toolStripButtonBanTool";
             this.toolStripButtonBanTool.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonBanTool.Text = "FieldBanish";
+            this.toolStripButtonBanTool.Text = "Banish";
             this.toolStripButtonBanTool.Click += new System.EventHandler(this.toolStripButtonBanTool_Click);
+            // 
+            // toolStripButtonUnban
+            // 
+            this.toolStripButtonUnban.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonUnban.Enabled = false;
+            this.toolStripButtonUnban.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.hammer__minus;
+            this.toolStripButtonUnban.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonUnban.Name = "toolStripButtonUnban";
+            this.toolStripButtonUnban.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonUnban.Text = "BanishReverse";
+            this.toolStripButtonUnban.Click += new System.EventHandler(this.toolStripButtonUnban_Click);
             // 
             // toolStripButtonPermissionTool
             // 
@@ -162,7 +175,7 @@
             this.toolStripButtonPermissionTool.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonPermissionTool.Name = "toolStripButtonPermissionTool";
             this.toolStripButtonPermissionTool.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonPermissionTool.Text = "FieldPermissionPlural";
+            this.toolStripButtonPermissionTool.Text = "Permission_Plural";
             this.toolStripButtonPermissionTool.Click += new System.EventHandler(this.toolStripButtonPermissionTool_Click);
             // 
             // toolStripButtonGroupTool
@@ -173,7 +186,7 @@
             this.toolStripButtonGroupTool.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonGroupTool.Name = "toolStripButtonGroupTool";
             this.toolStripButtonGroupTool.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonGroupTool.Text = "FieldGroupPlural";
+            this.toolStripButtonGroupTool.Text = "Group_Plural";
             // 
             // toolStripButtonGroupEditorTool
             // 
@@ -182,18 +195,18 @@
             this.toolStripButtonGroupEditorTool.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonGroupEditorTool.Name = "toolStripButtonGroupEditorTool";
             this.toolStripButtonGroupEditorTool.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonGroupEditorTool.Text = "FieldGroupUtility";
+            this.toolStripButtonGroupEditorTool.Text = "GroupUtility";
             // 
-            // toolStripButtonUnban
+            // toolStripButtonLicense
             // 
-            this.toolStripButtonUnban.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonUnban.Enabled = false;
-            this.toolStripButtonUnban.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.hammer__minus;
-            this.toolStripButtonUnban.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonUnban.Name = "toolStripButtonUnban";
-            this.toolStripButtonUnban.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonUnban.Text = "FieldBanishReverse";
-            this.toolStripButtonUnban.Click += new System.EventHandler(this.toolStripButtonUnban_Click);
+            this.toolStripButtonLicense.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonLicense.Enabled = false;
+            this.toolStripButtonLicense.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.briefcase;
+            this.toolStripButtonLicense.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonLicense.Name = "toolStripButtonLicense";
+            this.toolStripButtonLicense.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonLicense.Text = "LicenceUtility";
+            this.toolStripButtonLicense.Click += new System.EventHandler(this.toolStripButtonLicense_Click);
             // 
             // UserManagementForm
             // 
@@ -205,7 +218,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(940, 500);
             this.Name = "UserManagementForm";
-            this.Text = "WindowTitle_UserManagement";
+            this.Text = "TitleUserManagement";
             this.Shown += new System.EventHandler(this.UserManagementForm_Shown);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
@@ -232,5 +245,6 @@
         private System.Windows.Forms.ToolStripButton toolStripButtonGroupTool;
         private System.Windows.Forms.ToolStripButton toolStripButtonGroupEditorTool;
         private System.Windows.Forms.ToolStripButton toolStripButtonUnban;
+        private System.Windows.Forms.ToolStripButton toolStripButtonLicense;
     }
 }
