@@ -1,5 +1,6 @@
 ﻿using OSLCommon;
 using OSLCommon.Authorization;
+using OSLCommon.Licensing;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -57,6 +58,38 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
         }
 
         public HttpClient HttpClient;
+
+        public CreateLicenseKeyResponse CreateLicenseKeys(CreateProductKeyRequest content)
+        {
+            if (!HasPermission(AccountPermission.LICENSE_MANAGE))
+                return new CreateLicenseKeyResponse
+                {
+                    Keys = Array.Empty<LicenseKeyMetadata>(),
+                    GroupId = ""
+                };
+            var url = Endpoint.CreateLicenseKeys(Token);
+            var response = HttpClient.PostAsync(url, new StringContent(JsonSerializer.Serialize(content, Program.serializerOptions))).Result;
+            var stringContent = response.Content.ReadAsStringAsync().Result;
+
+            switch ((int)response.StatusCode)
+            {
+                case 400:
+                case 401:
+                    var exceptionDeserialized = JsonSerializer.Deserialize<ObjectResponse<HttpException>>(stringContent, Program.serializerOptions);
+                    Trace.WriteLine($"[Client->CreateLicenseKeys] Failed to create license keys\n--------\n{stringContent}\n--------\n");
+                    MessageBox.Show(LocaleManager.Get(exceptionDeserialized.Data.Message) + "\n\n" + exceptionDeserialized.Data.Exception, "Failed to create license keys");
+                    return new CreateLicenseKeyResponse
+                    {
+                        Keys = Array.Empty<LicenseKeyMetadata>(),
+                        GroupId = ""
+                    };
+                    break;
+            }
+
+            var deser = JsonSerializer.Deserialize<ObjectResponse<CreateLicenseKeyResponse>>(stringContent, Program.serializerOptions);
+            Program.LocalContent.PullLicenceKeys().Wait();
+            return deser.Data;
+        }
 
         #region ValidateCredentials
         public void UpdateProperties()
