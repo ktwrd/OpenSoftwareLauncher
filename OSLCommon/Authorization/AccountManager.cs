@@ -17,6 +17,7 @@ namespace OSLCommon.Authorization
         public static List<ITokenGranter> TokenGranters = new List<ITokenGranter>()
         {
         };
+        public static string[] DefaultLicenses = Array.Empty<string>();
         public static void RegisterTokenGranter(ITokenGranter granter)
         {
             foreach (var item in TokenGranters)
