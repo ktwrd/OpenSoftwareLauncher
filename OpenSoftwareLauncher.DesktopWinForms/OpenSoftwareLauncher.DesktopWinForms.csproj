@@ -141,6 +141,12 @@
     <Compile Include="UserGroupForm.Designer.cs">
       <DependentUpon>UserGroupForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="User Management\UserLicenceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="User Management\UserLicenceForm.Designer.cs">
+      <DependentUpon>UserLicenceForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -169,6 +175,12 @@
     <EmbeddedResource Include="UserGroupForm.resx">
       <DependentUpon>UserGroupForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="User Management\UserLicenceForm.resx">
+      <DependentUpon>UserLicenceForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Locale\en-server.locale">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -191,9 +203,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
-    <Content Include="Locale\en.txt">
+    <None Include="Locale\en.locale">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </None>
     <None Include="Resources\briefcase.png" />
     <None Include="Resources\disk.png" />
     <None Include="Resources\minus.png" />
