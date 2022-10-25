@@ -52,7 +52,7 @@
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.toolStrip1.Size = new System.Drawing.Size(32, 861);
+            this.toolStrip1.Size = new System.Drawing.Size(24, 861);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -62,7 +62,7 @@
             this.toolStripButtonUsers.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.users;
             this.toolStripButtonUsers.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonUsers.Name = "toolStripButtonUsers";
-            this.toolStripButtonUsers.Size = new System.Drawing.Size(29, 20);
+            this.toolStripButtonUsers.Size = new System.Drawing.Size(21, 20);
             this.toolStripButtonUsers.Text = "TitleUserManagement";
             this.toolStripButtonUsers.Click += new System.EventHandler(this.toolStripButtonUsers_Click);
             // 
@@ -72,7 +72,7 @@
             this.toolStripButtonAnnouncements.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.megaphone;
             this.toolStripButtonAnnouncements.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonAnnouncements.Name = "toolStripButtonAnnouncements";
-            this.toolStripButtonAnnouncements.Size = new System.Drawing.Size(29, 20);
+            this.toolStripButtonAnnouncements.Size = new System.Drawing.Size(21, 20);
             this.toolStripButtonAnnouncements.Text = "Announcement_Plural";
             // 
             // toolStripButtonReleases
@@ -81,13 +81,13 @@
             this.toolStripButtonReleases.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.box;
             this.toolStripButtonReleases.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonReleases.Name = "toolStripButtonReleases";
-            this.toolStripButtonReleases.Size = new System.Drawing.Size(29, 20);
+            this.toolStripButtonReleases.Size = new System.Drawing.Size(21, 20);
             this.toolStripButtonReleases.Text = "Package_Plural";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(29, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(21, 6);
             // 
             // toolStripButtonSettings
             // 
@@ -95,7 +95,7 @@
             this.toolStripButtonSettings.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.gear;
             this.toolStripButtonSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonSettings.Name = "toolStripButtonSettings";
-            this.toolStripButtonSettings.Size = new System.Drawing.Size(29, 20);
+            this.toolStripButtonSettings.Size = new System.Drawing.Size(21, 20);
             this.toolStripButtonSettings.Text = "Setting_Plural";
             // 
             // toolStripButtonLogs
@@ -104,7 +104,7 @@
             this.toolStripButtonLogs.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.quill;
             this.toolStripButtonLogs.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonLogs.Name = "toolStripButtonLogs";
-            this.toolStripButtonLogs.Size = new System.Drawing.Size(29, 20);
+            this.toolStripButtonLogs.Size = new System.Drawing.Size(21, 20);
             this.toolStripButtonLogs.Text = "Log_Plural";
             // 
             // ParentForm
@@ -116,7 +116,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.IsMdiContainer = true;
             this.Name = "ParentForm";
-            this.Text = "TitleParentForm";
+            this.Text = "Title_ParentForm";
             this.Shown += new System.EventHandler(this.ParentForm_Shown);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();

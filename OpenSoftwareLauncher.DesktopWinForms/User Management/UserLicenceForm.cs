@@ -22,7 +22,16 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         {
             InitializeComponent();
             Account = account;
+            labelEmail.Text = Account.Username;
+            Locale();
             TargetLicenses = new List<string>(Account.Licenses);
+        }
+
+        public void Locale()
+        {
+            Text = LocaleManager.Get("License_Plural") + $" - {Account.Username}";
+            buttonPush.Text = LocaleManager.Get("Push");
+            buttonRemoveLicense.Text = LocaleManager.Get("Remove");
         }
 
         public List<string> TargetLicenses = new List<string>();
