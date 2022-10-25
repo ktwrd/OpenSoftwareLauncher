@@ -129,6 +129,7 @@
             this.buttonRemoveLicense.Text = "Remove";
             this.buttonRemoveLicense.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.buttonRemoveLicense.UseVisualStyleBackColor = true;
+            this.buttonRemoveLicense.Click += new System.EventHandler(this.buttonRemoveLicense_Click);
             // 
             // tableLayoutPanel3
             // 

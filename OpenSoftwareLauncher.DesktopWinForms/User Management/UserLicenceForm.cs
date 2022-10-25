@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -51,7 +52,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             comboBoxCurrentLicense.Items.Add("");
 
             foreach (var i in Program.LocalContent.GetRemoteLocations())
-                if (!listBoxLicenses.Items.Contains((object)i) && i.Length > 1)
+                if (!listBoxLicenses.Items.Contains((object)i) && i.Length > 4)
                     comboBoxCurrentLicense.Items.Add(i);
             comboBoxCurrentLicense.SelectedIndex = 0;
             buttonGrant.Enabled = comboBoxCurrentLicense.SelectedItem == null || comboBoxCurrentLicense.SelectedItem?.ToString().Length > 1;
@@ -63,14 +64,14 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             if (TargetLicenses.Contains(license))
                 return;
             TargetLicenses.Add(license);
-            ReloadComboBox();
             ReloadLicenseList();
+            ReloadComboBox();
         }
         public void RemoveLicense(string license)
         {
             TargetLicenses.Remove(license);
-            ReloadComboBox();
             ReloadLicenseList();
+            ReloadComboBox();
         }
 
         private void comboBoxCurrentLicense_SelectedIndexChanged(object sender, EventArgs e)
@@ -90,12 +91,13 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 
         private void UserLicenceForm_Shown(object sender, EventArgs e)
         {
-            ReloadComboBox();
             ReloadLicenseList();
+            ReloadComboBox();
         }
 
         private void buttonPush_Click(object sender, EventArgs e)
         {
+            Enabled = false;
             var remove = new List<string>();
             var grant = new List<string>();
 
@@ -136,6 +138,12 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 i.Start();
             Task.WhenAll(taskList);
             Program.LocalContent.PullAccounts();
+            Close();
+        }
+
+        private void buttonRemoveLicense_Click(object sender, EventArgs e)
+        {
+            listBoxLicenses.Items.Remove(listBoxLicenses.SelectedItem);
         }
     }
 }
