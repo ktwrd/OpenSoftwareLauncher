@@ -254,6 +254,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
         public string[] GetRemoteLocations()
         {
             var lst = new List<string>();
+            if (ContentManagerAlias == null)
+                PullContentManager().Wait();
             foreach (var i in ContentManagerAlias.ReleaseInfoContent)
                 if (!lst.Contains(i.remoteLocation) && i.remoteLocation.Length > 4)
                     lst.Add(i.remoteLocation);
