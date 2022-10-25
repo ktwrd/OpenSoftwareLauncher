@@ -194,6 +194,7 @@
     <Content Include="Locale\en.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\briefcase.png" />
     <None Include="Resources\disk.png" />
     <None Include="Resources\minus.png" />
     <None Include="Resources\plus.png" />
