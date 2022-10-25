@@ -1,5 +1,8 @@
 ﻿using Google.Api.Gax.Grpc.Gcp;
+using Google.Cloud.Firestore.V1;
+using kate.shared.Helpers;
 using Nini.Config;
+using OSLCommon.AutoUpdater;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -62,7 +65,8 @@ namespace OpenSoftwareLauncher.Server
                         {"AllowAdminOverride", true },
                         {"AllowPermission_ReadReleaseBypass", true },
                         {"AllowGroupRestriction", false },
-                        {"RequireAuthentication", true }
+                        {"RequireAuthentication", true },
+                        {"DefaultSignatures", "" }
                     }
                 },
                 {"Authentication", new Dictionary<string, object>()
@@ -77,6 +81,18 @@ namespace OpenSoftwareLauncher.Server
                     }
                 }
             };
+
+            public static string[] Security_DefaultSignatures
+            {
+                get
+                {
+                    return GetString("Security", "DefaultSignatures", "").Split(' ');
+                }
+                set
+                {
+                    Set("Security", "DefaultSignatures", string.Join(' ', value));
+                }
+            }
 
             public delegate void ConfigSetDelegate(string group, string key, object value);
             public static ConfigSetDelegate OnWrite;

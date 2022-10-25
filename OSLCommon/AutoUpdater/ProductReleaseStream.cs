@@ -41,8 +41,6 @@ namespace OSLCommon.AutoUpdater
         public string RemoteSignature { get; set; }
         public ProductExecutable Executable { get; set; }
         public string CommitHash { get; set; }
-        public List<string> GroupWhitelist { get; set; }
-        public List<string> GroupBlacklist { get; set; }
 
         public ProductReleaseStream()
         {
@@ -56,8 +54,6 @@ namespace OSLCommon.AutoUpdater
             RemoteSignature = "";
             Executable = new ProductExecutable();
             CommitHash = "";
-            GroupWhitelist = new List<string>();
-            GroupBlacklist = new List<string>();
         }
 /*
         #region bFirebaseSerializable

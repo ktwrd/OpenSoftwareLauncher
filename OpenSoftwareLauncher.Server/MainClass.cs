@@ -65,6 +65,20 @@ namespace OpenSoftwareLauncher.Server
         {
             StartupTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             ServerConfig.Get();
+            ServerConfig.OnWrite += (group, key, value) =>
+            {
+                switch (group)
+                {
+                    case "Security":
+                        AccountManager.DefaultLicenses = ServerConfig.Security_DefaultSignatures;
+                        break;
+                    case "Provider":
+                        AccountManager.TokenGranters.Clear();
+                        AccountManager.TokenGranters.Add(new OSLCommon.AuthProviders.URLProvider(ServerConfig.GetString("Authentication", "Provider")));
+                        break;
+                }
+            };
+            AccountManager.DefaultLicenses = ServerConfig.Security_DefaultSignatures;
             AppDomain.CurrentDomain.ProcessExit += BeforeExit;
             serializerOptions.Converters.Add(new kate.shared.DateTimeConverterUsingDateTimeOffsetParse());
             serializerOptions.Converters.Add(new kate.shared.DateTimeConverterUsingDateTimeParse());

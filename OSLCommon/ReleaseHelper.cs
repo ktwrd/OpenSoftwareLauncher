@@ -81,10 +81,6 @@ namespace OSLCommon
                     ProductID = release.appID,
                     CommitHash = release.commitHash
                 };
-                foreach (var i in release.groupWhitelist)
-                    stream.GroupWhitelist.Add(i.ToUpper().Trim());
-                foreach (var i in release.groupBlacklist)
-                    stream.GroupBlacklist.Add(i.ToUpper().Trim());
                 if (!products.ContainsKey(release.appID))
                     products.Add(release.appID, new List<ProductReleaseStream>());
                 if (!productIDLink.ContainsKey(release.appID))

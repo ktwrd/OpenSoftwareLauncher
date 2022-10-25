@@ -108,50 +108,42 @@ namespace OpenSoftwareLauncher.Server.Controllers
             }
 
             var filteredReleases = new List<ProductRelease>();
-            var account = MainClass.contentManager.AccountManager.GetAccount(token);
-            if (account == null && token.Length > 0)
+            var account = MainClass.contentManager?.AccountManager.GetAccount(token);
+            foreach (var product in returnContent)
             {
-                returnContent.Clear();
-            }
-            else
-            {
-                foreach (var product in returnContent)
+                var newProduct = new ProductRelease()
                 {
-                    var newProduct = new ProductRelease()
+                    ProductName = product.ProductName,
+                    ProductID = product.ProductID,
+                    UID = product.UID
+                };
+                var filteredStreams = new List<ProductReleaseStream>();
+                foreach (var stream in product.Streams)
+                {
+                    bool isOtherBranch = true;
+                    switch (stream.BranchName.ToLower())
                     {
-                        ProductName = product.ProductName,
-                        ProductID = product.ProductID,
-                        UID = product.UID
-                    };
-                    var filteredStreams = new List<ProductReleaseStream>();
-                    foreach (var stream in product.Streams)
+                        case "nightly":
+                        case "beta":
+                        case "stable":
+                            isOtherBranch = false;
+                            break;
+                    }
+                    bool allowStream = false;
+                    /*if (ServerConfig.GetBoolean("Security", "AllowGroupRestriction", false))
                     {
-                        bool isOtherBranch = true;
-                        switch (stream.BranchName.ToLower())
-                        {
-                            case "nightly":
-                                isOtherBranch = false;
-                                break;
-                            case "beta":
-                                isOtherBranch = false;
-                                break;
-                            case "stable":
-                                isOtherBranch = false;
-                                break;
-                        }
-                        bool allowStream = false;
-                        if (ServerConfig.GetBoolean("Security", "AllowGroupRestriction", false))
-                        {
-                            if (account == null)
-                                allowStream = false;
-                            else
-                                allowStream = MainClass.CanUserGroupsAccessStream(stream.GroupBlacklist.ToArray(), stream.GroupWhitelist.ToArray(), account);
-                        }
+                        if (account == null)
+                            allowStream = false;
                         else
-                        {
-                            allowStream = true;
-                        }
+                            allowStream = MainClass.CanUserGroupsAccessStream(stream.GroupBlacklist.ToArray(), stream.GroupWhitelist.ToArray(), account);
+                    }
+                    else
+                    {
+                        allowStream = true;
+                    }*/
 
+                    if (account != null)
+                    {
                         if (ServerConfig.GetBoolean("Security", "AllowAdminOverride", true))
                         {
                             if (account != null && account.HasPermission(AccountPermission.ADMINISTRATOR))
@@ -167,15 +159,22 @@ namespace OpenSoftwareLauncher.Server.Controllers
                                     allowStream = false;
                         }
 
-                        
-                        if (allowStream)
-                            filteredStreams.Add(stream);
+                        if (account != null && account.HasLicense(stream.RemoteSignature))
+                        {
+                            allowStream = true;
+                        }
                     }
-                    newProduct.Streams = filteredStreams.ToArray();
-                    filteredReleases.Add(newProduct);
+
+                    if (AccountManager.DefaultLicenses.Contains(stream.RemoteSignature))
+                        allowStream = true;
+
+                    if (allowStream)
+                        filteredStreams.Add(stream);
                 }
-                returnContent = filteredReleases;
+                newProduct.Streams = filteredStreams.ToArray();
+                filteredReleases.Add(newProduct);
             }
+            returnContent = filteredReleases;
 
             return returnContent.Where(v => v.Streams.Length > 0).ToList();
         }

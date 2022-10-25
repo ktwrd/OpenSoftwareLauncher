@@ -18,5 +18,6 @@ namespace OSLCommon.Authorization
         ANNOUNCEMENT_MANAGE,
         RELEASE_MANAGE,
         USER_DISABLE_MODIFY,
+        USER_LICENSE_MODIFY,
     }
 }
