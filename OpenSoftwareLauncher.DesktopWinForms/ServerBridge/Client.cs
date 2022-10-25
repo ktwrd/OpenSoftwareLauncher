@@ -286,7 +286,6 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
 
             var response = HttpClient.GetAsync(targetURL).Result;
             var stringContent = response.Content.ReadAsStringAsync().Result;
-            var dynamicDeserialized = JsonSerializer.Deserialize<ObjectResponse<dynamic>>(stringContent, Program.serializerOptions);
 
             if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
