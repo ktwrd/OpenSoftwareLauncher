@@ -78,6 +78,10 @@ namespace OpenSoftwareLauncher.Server
                 }
             };
 
+            public delegate void ConfigSetDelegate(string group, string key, object value);
+            public static ConfigSetDelegate OnWrite;
+            public static VoidDelegate OnSave;
+
             public static void Save()
             {
                 var startTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
@@ -86,6 +90,7 @@ namespace OpenSoftwareLauncher.Server
                 Source.Save();
                 Console.WriteLine($"[ServerConfig] Saved {DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - startTimestamp}");
                 HasChanges = false;
+                OnSave?.Invoke();
             }
 
             public static Dictionary<string, Dictionary<string, object>> Get()
@@ -128,6 +133,7 @@ namespace OpenSoftwareLauncher.Server
                 var cfg = Get(group);
                 cfg.Set(key, value);
                 HasChanges = true;
+                OnWrite?.Invoke(group, key, value);
             }
 
             private static bool HasChanges = false;
