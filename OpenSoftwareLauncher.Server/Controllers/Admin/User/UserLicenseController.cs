@@ -20,33 +20,11 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
         [ProducesResponseType(409, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult Grant(string token, string username, string license)
         {
-            if (!MainClass.contentManager.AccountManager.AccountHasPermission(token, RequiredPermissions))
+            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
+            if (authRes != null)
             {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
-                }, MainClass.serializerOptions);
-            }
-            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
-            if (tokenAccount == null)
-            {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
-                }, MainClass.serializerOptions);
-            }
-            if (!tokenAccount.Enabled)
-            {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(401, ServerStringResponse.AccountDisabled)
-                }, MainClass.serializerOptions);
+                Response.StatusCode = authRes?.Data.Code ?? 0;
+                return Json(authRes, MainClass.serializerOptions);
             }
 
             var account = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
@@ -83,33 +61,11 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
         [ProducesResponseType(409, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult Revoke(string token, string username, string license)
         {
-            if (!MainClass.contentManager.AccountManager.AccountHasPermission(token, RequiredPermissions))
+            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
+            if (authRes != null)
             {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
-                }, MainClass.serializerOptions);
-            }
-            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
-            if (tokenAccount == null)
-            {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
-                }, MainClass.serializerOptions);
-            }
-            if (!tokenAccount.Enabled)
-            {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(401, ServerStringResponse.AccountDisabled)
-                }, MainClass.serializerOptions);
+                Response.StatusCode = authRes?.Data.Code ?? 0;
+                return Json(authRes, MainClass.serializerOptions);
             }
 
             var account = MainClass.contentManager.AccountManager.GetAccountByUsername(username);

@@ -26,33 +26,11 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult TokenPurgeAll(string token, bool includeGivenToken=false)
         {
-            if (!MainClass.contentManager.AccountManager.AccountHasPermission(token, RequiredPermissions, bumpLastUsed: true))
+            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
+            if (authRes != null)
             {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
-                }, MainClass.serializerOptions);
-            }
-            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
-            if (tokenAccount == null)
-            {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
-                }, MainClass.serializerOptions);
-            }
-            if (!tokenAccount.Enabled)
-            {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(401, ServerStringResponse.AccountDisabled)
-                }, MainClass.serializerOptions);
+                Response.StatusCode = authRes?.Data.Code ?? 0;
+                return Json(authRes, MainClass.serializerOptions);
             }
             var usernameDict = new Dictionary<string, int>();
             foreach (var user in MainClass.contentManager.AccountManager.AccountList)
@@ -78,33 +56,11 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult TokenPurge(string token, string? username = null, bool? isUsernameFieldRegexPattern = false)
         {
-            if (!MainClass.contentManager.AccountManager.AccountHasPermission(token, RequiredPermissions, bumpLastUsed: true))
+            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
+            if (authRes != null)
             {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
-                }, MainClass.serializerOptions);
-            }
-            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
-            if (tokenAccount == null)
-            {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
-                }, MainClass.serializerOptions);
-            }
-            if (!tokenAccount.Enabled)
-            {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(401, ServerStringResponse.AccountDisabled)
-                }, MainClass.serializerOptions);
+                Response.StatusCode = authRes?.Data.Code ?? 0;
+                return Json(authRes, MainClass.serializerOptions);
             }
 
             OSLCommon.Authorization.Account[] accountArray;

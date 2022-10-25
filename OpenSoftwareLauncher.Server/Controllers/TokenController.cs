@@ -88,35 +88,13 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult Details(string token)
         {
-            if (token == null || token.Length < 32 || token.Length > 32)
+            var authRes = MainClass.Validate(token);
+            if (authRes != null)
             {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
-                }, MainClass.serializerOptions);
+                Response.StatusCode = authRes?.Data.Code ?? 0;
+                return Json(authRes, MainClass.serializerOptions);
             }
-
-            var account = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
-            if (account == null)
-            {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
-                }, MainClass.serializerOptions);
-            }
-            if (!account.Enabled)
-            {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(401, ServerStringResponse.AccountDisabled)
-                }, MainClass.serializerOptions);
-            }
+            var account = MainClass.contentManager.AccountManager.GetAccount(token, true);
 
             var details = account.GetTokenDetails(token);
             if (details == null)
@@ -141,35 +119,13 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult Reset(string token, bool? all = false)
         {
-            if (token == null || token.Length < 32 || token.Length > 32)
+            var authRes = MainClass.Validate(token);
+            if (authRes != null)
             {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
-                }, MainClass.serializerOptions);
+                Response.StatusCode = authRes?.Data.Code ?? 0;
+                return Json(authRes, MainClass.serializerOptions);
             }
-
-            var account = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
-            if (account == null)
-            {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
-                }, MainClass.serializerOptions);
-            }
-            if (!account.Enabled)
-            {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(StatusCodes.Status401Unauthorized, ServerStringResponse.AccountDisabled)
-                }, MainClass.serializerOptions);
-            }
+            var account = MainClass.contentManager.AccountManager.GetAccount(token, true);
 
             if (all ?? false)
             {

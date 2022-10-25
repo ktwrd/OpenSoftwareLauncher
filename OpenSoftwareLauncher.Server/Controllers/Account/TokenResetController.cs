@@ -14,25 +14,13 @@ namespace OpenSoftwareLauncher.Server.Controllers.Account
         [ProducesResponseType(200, Type = typeof(ObjectResponse<int>))]
         public ActionResult TokenReset(string token, bool allButSupplied=true, bool all=false)
         {
+            var authRes = MainClass.Validate(token);
+            if (authRes != null)
+            {
+                Response.StatusCode = authRes?.Data.Code ?? 0;
+                return Json(authRes, MainClass.serializerOptions);
+            }
             var account = MainClass.contentManager.AccountManager.GetAccount(token, true);
-            if (account == null)
-            {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(StatusCodes.Status401Unauthorized, ServerStringResponse.InvalidCredential)
-                }, MainClass.serializerOptions);
-            }
-            if (!account.Enabled)
-            {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(StatusCodes.Status401Unauthorized, ServerStringResponse.AccountDisabled)
-                }, MainClass.serializerOptions);
-            }
 
             int tokensRemoved = 0;
 
