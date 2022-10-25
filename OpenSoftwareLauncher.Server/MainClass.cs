@@ -18,6 +18,7 @@ using System.Text;
 using System.Text.Json;
 using Prometheus;
 using static Google.Rpc.Context.AttributeContext.Types;
+using OSLCommon.Licensing;
 
 namespace OpenSoftwareLauncher.Server
 {
@@ -194,10 +195,99 @@ namespace OpenSoftwareLauncher.Server
             ServerConfig.Save();
         }
 
+        private static string generateKey()
+        {
+            int len = 5;
+            string[] arr = new string[5];
+            for (int i = 0; i < arr.Length; i++)
+                arr[i] = GeneralHelper.GenerateToken(len);
+            return string.Join('-', arr);
+        }
+
+        public static LicenseKeyMetadata? GetLicenseKey(string key)
+        {
+            foreach (var i in contentManager.LicenseKeys.ToArray())
+                if (i.Key == key)
+                    return i;
+            return null;
+        }
+
+        public static bool DisableLicenseKey(string keyId)
+        {
+            foreach (var item in contentManager.LicenseKeys.ToArray())
+            {
+                if (item.UID != keyId) continue;
+                item.Enable = false;
+                return true;
+            }
+            return false;
+        }
+
+        public static CreateLicenseKeyResponse CreateLicenseKeys(string author, string[] products, int count = 1, string note ="", long activateBy=-1, string groupLabel="")
+        {
+            var licenseArray = new LicenseKeyMetadata[count];
+            long timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            string groupId = GeneralHelper.GenerateToken(18);
+            for (int i = 0; i < count; i++)
+            {
+                licenseArray[i] = new LicenseKeyMetadata
+                {
+                    UID = GeneralHelper.GenerateToken(16),
+                    Enable = true,
+                    Activated = false,
+                    ActivateByTimestamp = activateBy,
+                    ActivatedBy = "",
+                    ActivateTimestamp = 0,
+                    InternalNote = note,
+                    Key = generateKey(),
+                    Products = products,
+                    CreatedTimestamp = timestamp,
+                    CreatedBy = author,
+                    GroupId = groupId
+                };
+            }
+            contentManager.LicenseKeys = contentManager.LicenseKeys.Concat(licenseArray).ToList();
+            if (contentManager.LicenseKeyGroupNote.ContainsKey(groupId))
+                contentManager.LicenseKeyGroupNote.Add(groupId, groupLabel);
+
+            contentManager.LicenseKeyGroupNote[groupId] = groupLabel;
+
+            return new CreateLicenseKeyResponse
+            {
+                Keys = licenseArray,
+                GroupId = groupId
+            };
+        }
+
+        public static GrantLicenseKeyResponseCode GrantLicenseKey(string username, string licenseKey)
+        {
+            long currentTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            foreach (var i in contentManager.LicenseKeys)
+            {
+                if (i.Key == licenseKey && !i.Activated && i.Enable)
+                {
+                    if (i.ActivateByTimestamp > 1 && currentTimestamp >= i.ActivateByTimestamp)
+                        return GrantLicenseKeyResponseCode.Invalid;
+                    var account = contentManager.AccountManager.GetAccountByUsername(username);
+                    if (account == null)
+                        return GrantLicenseKeyResponseCode.Invalid;
+                    int existCount = 0;
+                    foreach (var l in i.Products)
+                        existCount += (account.GrantLicense(l) ? 0 : 1);
+                    if (existCount == i.Products.Length)
+                        return GrantLicenseKeyResponseCode.AlreadyRedeemed;
+                    i.Activated = true;
+                    i.ActivatedBy = username;
+                    i.ActivateTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                    return GrantLicenseKeyResponseCode.Granted;
+                }
+            }
+            return GrantLicenseKeyResponseCode.Invalid;
+        }
+        
+
         public static bool CanUserGroupsAccessStream(string[] blacklist, string[] whitelist, Account account)
         {
-            bool allow = false;
-            
             if (ServerConfig.GetBoolean("Security", "EnableGroupRestriction", false))
             {
                 bool userHasWhitelist = false;
@@ -223,10 +313,8 @@ namespace OpenSoftwareLauncher.Server
             }
             else
             {
-                allow = true;
+                return true;
             }
-
-            return allow;
         }
 
         internal static List<AuthenticatedUser> Accounts = new List<AuthenticatedUser>();
