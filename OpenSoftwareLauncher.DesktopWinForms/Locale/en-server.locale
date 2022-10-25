@@ -1,0 +1,23 @@
+// NOTE: Please order everything alphabetically in their sections please!
+
+// broken response (usually when a field is missing)
+ServerResponse_Invalid=Invalid Response from Server
+
+// general http exception
+ServerResponse_HttpException=Recieved HttpException from Server
+
+// mostly used in post requests
+ServerResponse_BodySerializationFailure=Failed to serialize request body
+ServerResponse_BodyDeserializationFailure=Failed to deserialize request body
+ServerResponse_InvalidBody=Invalid Request Body
+ServerResponse_MediaTypeUnsupported=Media Type provided is unsupported by the server
+
+// permission/credentials
+ServerResponse_InvalidCredentials=Invalid Credentials
+ServerResponse_InvalidPermission=Account does not have permission
+
+// account responses
+ServerResponse_AccountDisabled=Your account has been disabled. Please contact the server administrator for more details.
+ServerResponse_Account_NotFound=Account does not exist.
+ServerResponse_Account_TokenGrantFailed=Failed to grant token.
+ServerResponse_Account_TokenGranted=Token granted successfully

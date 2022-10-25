@@ -11,6 +11,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
         All,
         Account,
         Announcement,
-        ContentManager
+        ContentManager,
+        LicenseKey
     }
 }

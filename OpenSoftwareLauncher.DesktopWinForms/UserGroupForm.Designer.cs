@@ -130,7 +130,7 @@
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(91, 23);
             this.buttonSave.TabIndex = 4;
-            this.buttonSave.Text = "FieldSave";
+            this.buttonSave.Text = "Save";
             this.buttonSave.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.buttonSave.UseVisualStyleBackColor = true;
             this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
@@ -143,7 +143,7 @@
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(85, 23);
             this.button2.TabIndex = 4;
-            this.button2.Text = "FieldPush";
+            this.button2.Text = "Push";
             this.button2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.button2.UseVisualStyleBackColor = true;
             // 
@@ -155,7 +155,7 @@
             this.buttonRemoveSelected.Name = "buttonRemoveSelected";
             this.buttonRemoveSelected.Size = new System.Drawing.Size(94, 23);
             this.buttonRemoveSelected.TabIndex = 3;
-            this.buttonRemoveSelected.Text = "FieldRemove";
+            this.buttonRemoveSelected.Text = "Remove";
             this.buttonRemoveSelected.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.buttonRemoveSelected.UseVisualStyleBackColor = true;
             this.buttonRemoveSelected.Click += new System.EventHandler(this.buttonRemoveSelected_Click);

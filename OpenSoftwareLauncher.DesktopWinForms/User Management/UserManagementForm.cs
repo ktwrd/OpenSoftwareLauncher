@@ -52,7 +52,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                     {
                         item.Username,
                         item.Enabled.ToString(),
-                        string.Join(", ", item.Groups),
+                        item.Licenses.Length > 1 ? $"{item.Licenses.Length} " + LocaleManager.Get("License_Plural") : string.Join(", ", item.Licenses),
                         string.Join(", ", permissionString)
                     });
                     lvitem.Name = item.Username;
@@ -102,23 +102,22 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 SelectedAccounts = l.ToArray();
             }
 
+            toolStripButtonPermissionTool.Enabled = false;
+            toolStripButtonBanTool.Enabled = false;
+            toolStripButtonLicense.Enabled = false;
+            toolStripButtonGroupTool.Enabled = false;
+            toolStripButtonEdit.Enabled = false;
             if (SelectedAccounts.Length > 0)
             {
                 if (SelectedAccounts.Length < 2)
                 {
                     toolStripButtonPermissionTool.Enabled = true;
                     toolStripButtonBanTool.Enabled = true;
+                    toolStripButtonLicense.Enabled = true;
+                    toolStripButtonEdit.Enabled = true;
                 }
                 toolStripButtonGroupTool.Enabled = true;
-                toolStripButtonEdit.Enabled = true;
                 toolStripButtonUnban.Enabled = true;
-            }
-            else
-            {
-                toolStripButtonPermissionTool.Enabled = false;
-                toolStripButtonBanTool.Enabled = false;
-                toolStripButtonGroupTool.Enabled = false;
-                toolStripButtonEdit.Enabled = false;
             }
         }
 
@@ -151,6 +150,24 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             var form = new UserDisableForm(SelectedAccounts[0]);
             form.MdiParent = MdiParent;
             form.Show();
+        }
+
+        private void toolStripButtonLicense_Click(object sender, EventArgs e)
+        {
+            if (SelectedAccounts.Length > 1 || SelectedAccounts.Length < 1) return;
+            var form = new UserLicenceForm(SelectedAccounts[0]);
+            form.MdiParent = MdiParent;
+            form.Show();
+        }
+
+        private void listViewAccounts_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            listViewAccounts_SelectedIndexChanged(null, null);
+        }
+
+        private void listViewAccounts_MouseUp(object sender, MouseEventArgs e)
+        {
+            listViewAccounts_SelectedIndexChanged(null, null);
         }
     }
 }

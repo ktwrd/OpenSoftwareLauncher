@@ -1,4 +1,5 @@
-﻿using System;
+﻿using kate.shared.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -26,8 +27,9 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         }
         static LocaleManager()
         {
-            Load();
+            SetLocale(UserConfig.GetString("General", "Language"));
         }
+        public static event VoidDelegate OnUpdate;
         public static void Load()
         {
             var files = Directory.GetFiles(LocaleDirectory);
@@ -40,8 +42,10 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 if (!LanguageDatabase.ContainsKey(langName))
                     LanguageDatabase.Add(langName, new Dictionary<string, string>());
                 var count = 0;
-                foreach (var fileLine in File.ReadLines(location))
+                foreach (var _line in File.ReadLines(location))
                 {
+                    string fileLine = _line.Split(new string[] { "//" }, StringSplitOptions.None)[0];
+                    if (fileLine.Length < 1) continue;
                     var key = fileLine.Split('=')[0];
                     if (key.Length < 1) continue;
                     var value = fileLine.Substring(fileLine.IndexOf('=') + 1);
@@ -53,10 +57,22 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 Trace.WriteLine($"[LocaleManager] {Path.GetFileName(location)} has {count} entries");
             }
         }
-
-        public static string Get(string key, string lang="", string fallback=null, Dictionary<string, object> inject = null)
+        public static void SetLocale(string code)
         {
-            var targetLang = LanguageDatabase.ContainsKey(lang) ? lang : FallbackLanguage;
+            Load();
+            if (!LanguageDatabase.ContainsKey(code))
+            {
+                throw new Exception($"Locale \"{code}\" not found");
+            }
+
+            Language = code;
+            UserConfig.Set("General", "Language", code);
+            UserConfig.Save();
+        }
+
+        public static string Get(string key, string lang = "", string fallback = null, Dictionary<string, object> inject = null)
+        {
+            var targetLang = LanguageDatabase.ContainsKey(lang) ? lang : Language;
             if (fallback == null)
                 fallback = key;
 
@@ -89,13 +105,13 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             };
 
             if (inject != null)
-            foreach (var item in inject)
-            {
-                if (!dictReplace.ContainsKey(item.Key))
-                    dictReplace.Add(item.Key, item.Value);
-                else
-                    dictReplace[item.Key] = item.Value;
-            }
+                foreach (var item in inject)
+                {
+                    if (!dictReplace.ContainsKey(item.Key))
+                        dictReplace.Add(item.Key, item.Value);
+                    else
+                        dictReplace[item.Key] = item.Value;
+                }
 
             foreach (var pair in dictReplace)
             {

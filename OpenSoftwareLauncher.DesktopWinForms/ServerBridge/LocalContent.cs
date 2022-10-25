@@ -1,5 +1,6 @@
 ﻿using OSLCommon;
 using OSLCommon.Authorization;
+using OSLCommon.Licensing;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -46,7 +47,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
             {
                 new Task(delegate { PullAccounts(false).Wait(); }),
                 new Task(delegate { PullAnnouncements(false).Wait(); }),
-                new Task(delegate { PullContentManager(false).Wait(); })
+                new Task(delegate { PullContentManager(false).Wait(); }),
+                new Task(delegate { PullLicenceKeys(false).Wait(); })
             };
 
             foreach (var item in taskList)
@@ -56,6 +58,32 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
 
             return Task.CompletedTask;
         }
+
+        #region License Keys
+        public List<LicenseKeyMetadata> LicenseKeyList = new List<LicenseKeyMetadata>();
+        public Task PullLicenceKeys(bool emit=true)
+        {
+            if (Program.Client == null) return Task.CompletedTask;
+            LicenseKeyList.Clear();
+            if (!Client.HasPermission(AccountPermission.LICENSE_MANAGE)) return Task.CompletedTask;
+
+            var targetURL = Endpoint.GetLicenseKeys(Client.Token);
+            var response = Client.HttpClient.GetAsync(targetURL).Result;
+            var stringContent = response.Content.ReadAsStringAsync().Result;
+            if ((int)response.StatusCode != 200)
+            {
+                Program.MessageBoxShow(stringContent, "Failed to pull license keys");
+                Trace.WriteLine($"[LocalContent->PullLicenseKeys] Failed to fetch license keys\n--------\n{stringContent}\n--------\n");
+                return Task.CompletedTask;
+            }
+
+            var content = JsonSerializer.Deserialize<ObjectResponse<LicenseKeyMetadata[]>>(stringContent, Program.serializerOptions);
+            LicenseKeyList = content.Data.ToList();
+            if (emit)
+                OnPull?.Invoke(ContentField.LicenseKey);
+            return Task.CompletedTask;
+        }
+        #endregion
 
         #region Account
         public List<AccountDetailsResponse> AccountDetailList = new List<AccountDetailsResponse>();
@@ -221,6 +249,15 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
             if (emit)
                 OnPush?.Invoke(ContentField.ContentManager);
             return Task.CompletedTask;
+        }
+
+        public string[] GetRemoteLocations()
+        {
+            var lst = new List<string>();
+            foreach (var i in ContentManagerAlias.ReleaseInfoContent)
+                if (!lst.Contains(i.remoteLocation) && i.remoteLocation.Length > 4)
+                    lst.Add(i.remoteLocation);
+            return lst.ToArray();
         }
         #endregion
     }

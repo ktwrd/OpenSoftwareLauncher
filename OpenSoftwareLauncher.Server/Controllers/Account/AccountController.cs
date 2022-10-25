@@ -16,25 +16,13 @@ namespace OpenSoftwareLauncher.Server.Controllers.Account
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult AccountDetails(string token)
         {
-            var account = MainClass.contentManager.AccountManager.GetAccount(token ?? "", true);
-            if (account == null)
+            var authRes = MainClass.Validate(token);
+            if (authRes != null)
             {
-                Response.StatusCode = 401;
-                return Json(new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
-                }, MainClass.serializerOptions);
+                Response.StatusCode = authRes?.Data.Code ?? 0;
+                return Json(authRes, MainClass.serializerOptions);
             }
-            if (!account.Enabled)
-            {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(StatusCodes.Status401Unauthorized, ServerStringResponse.AccountDisabled)
-                }, MainClass.serializerOptions);
-            }
+            var account = MainClass.contentManager.AccountManager.GetAccount(token, true);
 
             return Json(new ObjectResponse<AccountDetailsResponse>()
             {

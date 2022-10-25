@@ -87,16 +87,15 @@ namespace OpenSoftwareLauncher.Server.Controllers
         {
             var returnContent = new List<PublishedReleaseFile>();
             var contentManager = MainClass.contentManager;
-            var account = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
-            if (account != null && !account.Enabled)
+
+            var authRes = MainClass.Validate(token);
+            if (authRes != null)
             {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(StatusCodes.Status401Unauthorized, ServerStringResponse.AccountDisabled)
-                }, MainClass.serializerOptions);
+                Response.StatusCode = authRes?.Data.Code ?? 0;
+                return Json(authRes, MainClass.serializerOptions);
             }
+            var account = MainClass.contentManager.AccountManager.GetAccount(token, true);
+
             if (contentManager != null)
             {
                 if (contentManager.Published.ContainsKey(hash))

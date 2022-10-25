@@ -65,6 +65,11 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 {
                     {"Endpoint", "" }
                 }
+            },
+            {"General", new Dictionary<string, object>()
+                {
+                    {"Language", "en" }
+                }
             }
         };
 

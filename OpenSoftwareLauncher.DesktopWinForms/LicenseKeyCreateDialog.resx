@@ -117,62 +117,27 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="gear" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\gear.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="users" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\users.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="drill" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\drill.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="quill" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\quill.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="megaphone" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\megaphone.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="pencil" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\pencil.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="door_open_in" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\door-open-in.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="arrow-circle" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\arrow-circle.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="hammer" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\hammer.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="category_group_select" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\category-group-select.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="box" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\box.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="key" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\key.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="upload-cloud" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\upload-cloud.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="hammer__minus" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\hammer--minus.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="plus" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\plus.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="minus" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\minus.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="disk" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\disk.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="briefcase" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\briefcase.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_lock" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\lock.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        AAABAAIACgoAAAAAIACrAQAAJgAAABAQAAAAACAAXwIAANEBAACJUE5HDQoaCgAAAA1JSERSAAAACgAA
+        AAoIBgAAAI0yz70AAAFySURBVHicTco9T1NhGIDh+yk9nI+WyilEiBWs0fhFdTMuxj/gR5wY+Ac6mLAY
+        JwcnY4yTv4GFxeggMw5NRBpsqiREEjVqU2mhUg+np6fv+zgQjfd6X8J/vbjF2PglygDdOp9vv6T394kq
+        AsrSgkxUrl97mEh4Q1XFs91XjderjxaWtANCZnmejIho7vTURXVn7tTWNp7U1uuPbTB7t3BmoiIiujxP
+        JvvhAvrmAWF1szUTHG0Ntta+NFRxyidOJY2PnfLKIsVqga4AvHtevhfO3bxvUy+39/Pr8Fe36YbFIybM
+        x3F7e+PplcX2syzAUPK5yamTpWgvwp89j5cP8J2U46Xp8d1vnwJocwiNMXE/NkNjNOlHkvRjyYJGB7Gk
+        iTHAIWzuYCuuN0IqoBbP93Bdq0EwKj925R90qu/3p89ebR04aiM7iEab33d811Xt9TLZt/Xfk4AjQHiu
+        yGU/xisU2D9Wwt3cZswMwCojaY72VofaH2Vnngg2vpTYAAAAAElFTkSuQmCCiVBORw0KGgoAAAANSUhE
+        UgAAABAAAAAQCAYAAAAf8/9hAAACJklEQVR4nKWSTWsTURSGn3NzZzppk2pToRJpwY2oVAQluilWrRWk
+        P0Cwi+JGFIS6cOFWF25ciTsFRUFQNwoKQkFtqSgSLGj9KBQNxBr6YYjptJ0kM+l10aQ2cRPwwLu5HN7z
+        nPceMcbwPyWneoQ9XUJ319pDSAmOzX6BXqCj0jdnYKxQ4n15dW3gpzRMpg3y9JKqcVQiiWh7/MyuI6eP
+        Z2Z/hQHiW7d4X1/dGXGzmZurxiQ39muvVA9l+vf1DA28fTGS+/Lh3ROA3XsPHkscGhoYf3Q1BdQYKFsL
+        VbkeuB6dRpyO9PTEjK0ZtjXD6emJGSNOh+vR6XqgQ4JVkd7cUpkLiAipudXIcn5RYfxiJAzZRbAtv+i5
+        S8r1TCQeE6JhUFJZYQPNubDNjpWisfK/c2iFr4SHQdls10p+TH2eZKVoLFvLLeAjcANARi+HqgTXDp+9
+        d9Ff8SgVCpS8AqWiRy47TZMNzc6awhHN6IO715VwoZ6A5NgYWim01ogoyuWAXM4jFALHgrANLVGrJvIa
+        g0RvL/UETfbSPwTf3mww8IP1EE2jBH6AWQ9xZm79lMv95xsjeLlgfKkSXHlsGDwAgN0oQeqnsQS4nwSd
+        WjDcfi2c2El7oq+PcsknKBQIvAJB0aO1NcC2wXH+ajZL2/MpyOQNGohl8ib+fR41ePTks2aHhdgmWY61
+        oSItRMeTZlvlzqhizy/jZfJ0AxkBwkC0/kcaqABw/wA7QvuqEoPweQAAAABJRU5ErkJggg==
+</value>
   </data>
 </root>

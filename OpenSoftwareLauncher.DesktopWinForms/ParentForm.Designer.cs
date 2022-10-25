@@ -30,12 +30,13 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ParentForm));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonUsers = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonAnnouncements = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonReleases = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonSettings = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonLogs = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonLicenceKeyCreator = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -46,6 +47,7 @@
             this.toolStripButtonUsers,
             this.toolStripButtonAnnouncements,
             this.toolStripButtonReleases,
+            this.toolStripButtonLicenceKeyCreator,
             this.toolStripSeparator1,
             this.toolStripButtonSettings,
             this.toolStripButtonLogs});
@@ -56,6 +58,11 @@
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(29, 6);
+            // 
             // toolStripButtonUsers
             // 
             this.toolStripButtonUsers.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -63,7 +70,7 @@
             this.toolStripButtonUsers.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonUsers.Name = "toolStripButtonUsers";
             this.toolStripButtonUsers.Size = new System.Drawing.Size(29, 20);
-            this.toolStripButtonUsers.Text = "WindowTitle_UserManagement";
+            this.toolStripButtonUsers.Text = "TitleUserManagement";
             this.toolStripButtonUsers.Click += new System.EventHandler(this.toolStripButtonUsers_Click);
             // 
             // toolStripButtonAnnouncements
@@ -73,7 +80,7 @@
             this.toolStripButtonAnnouncements.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonAnnouncements.Name = "toolStripButtonAnnouncements";
             this.toolStripButtonAnnouncements.Size = new System.Drawing.Size(29, 20);
-            this.toolStripButtonAnnouncements.Text = "FieldAnnouncementPlural";
+            this.toolStripButtonAnnouncements.Text = "Announcement_Plural";
             // 
             // toolStripButtonReleases
             // 
@@ -82,12 +89,7 @@
             this.toolStripButtonReleases.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonReleases.Name = "toolStripButtonReleases";
             this.toolStripButtonReleases.Size = new System.Drawing.Size(29, 20);
-            this.toolStripButtonReleases.Text = "FieldPackagePlural";
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(29, 6);
+            this.toolStripButtonReleases.Text = "Package_Plural";
             // 
             // toolStripButtonSettings
             // 
@@ -96,7 +98,7 @@
             this.toolStripButtonSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonSettings.Name = "toolStripButtonSettings";
             this.toolStripButtonSettings.Size = new System.Drawing.Size(29, 20);
-            this.toolStripButtonSettings.Text = "FieldSettingPlural";
+            this.toolStripButtonSettings.Text = "Setting_Plural";
             // 
             // toolStripButtonLogs
             // 
@@ -105,7 +107,17 @@
             this.toolStripButtonLogs.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonLogs.Name = "toolStripButtonLogs";
             this.toolStripButtonLogs.Size = new System.Drawing.Size(29, 20);
-            this.toolStripButtonLogs.Text = "FieldLogPlural";
+            this.toolStripButtonLogs.Text = "Log_Plural";
+            // 
+            // toolStripButtonLicenceKeyCreator
+            // 
+            this.toolStripButtonLicenceKeyCreator.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonLicenceKeyCreator.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources._lock;
+            this.toolStripButtonLicenceKeyCreator.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonLicenceKeyCreator.Name = "toolStripButtonLicenceKeyCreator";
+            this.toolStripButtonLicenceKeyCreator.Size = new System.Drawing.Size(29, 20);
+            this.toolStripButtonLicenceKeyCreator.Text = "License Key Creator";
+            this.toolStripButtonLicenceKeyCreator.Click += new System.EventHandler(this.toolStripButtonLicenceKeyCreator_Click);
             // 
             // ParentForm
             // 
@@ -116,7 +128,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.IsMdiContainer = true;
             this.Name = "ParentForm";
-            this.Text = "WindowTitle_ParentForm";
+            this.Text = "Title_ParentForm";
             this.Shown += new System.EventHandler(this.ParentForm_Shown);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
@@ -134,5 +146,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton toolStripButtonSettings;
         private System.Windows.Forms.ToolStripButton toolStripButtonLogs;
+        private System.Windows.Forms.ToolStripButton toolStripButtonLicenceKeyCreator;
     }
 }
