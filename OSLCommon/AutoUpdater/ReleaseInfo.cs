@@ -46,7 +46,7 @@ namespace OSLCommon.AutoUpdater
         public string commitHashShort { get; set; }
         public ReleaseType releaseType { get; set; }
         public Dictionary<string, string> files { get; set; }
-        public Dictionary<string, string> executable { get; set; 
+        public Dictionary<string, string> executable { get; set; }
 /*
         #region bFirebaseSerializable
         public Task FromFirebase(DocumentSnapshot document, VoidDelegate completeIncrement)
