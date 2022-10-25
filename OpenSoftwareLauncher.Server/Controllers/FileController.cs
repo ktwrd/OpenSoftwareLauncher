@@ -119,6 +119,11 @@ namespace OpenSoftwareLauncher.Server.Controllers
                                 allow = true;
                     }
 
+                    if (account.HasLicense(commit.Release.remoteLocation))
+                    {
+                        allow = true;
+                    }
+
                     if (allow)
                         returnContent = new List<PublishedReleaseFile>(commit.Files);
                 }

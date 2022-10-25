@@ -163,6 +163,10 @@ namespace OpenSoftwareLauncher.Server.Controllers
                                     allowStream = false;
                         }
 
+                        if (account != null && account.HasLicense(stream.RemoteSignature))
+                        {
+                            allowStream = true;
+                        }
                         
                         if (allowStream)
                             filteredStreams.Add(stream);
