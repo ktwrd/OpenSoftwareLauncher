@@ -78,6 +78,7 @@ namespace OpenSoftwareLauncher.Server
                         break;
                 }
             };
+            AccountManager.DefaultLicenses = ServerConfig.Security_DefaultSignatures;
             AppDomain.CurrentDomain.ProcessExit += BeforeExit;
             serializerOptions.Converters.Add(new kate.shared.DateTimeConverterUsingDateTimeOffsetParse());
             serializerOptions.Converters.Add(new kate.shared.DateTimeConverterUsingDateTimeParse());
