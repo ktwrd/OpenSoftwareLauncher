@@ -136,7 +136,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
                                 break;
                         }
                         bool allowStream = false;
-                        if (ServerConfig.GetBoolean("Security", "AllowGroupRestriction", false))
+                        /*if (ServerConfig.GetBoolean("Security", "AllowGroupRestriction", false))
                         {
                             if (account == null)
                                 allowStream = false;
@@ -146,7 +146,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
                         else
                         {
                             allowStream = true;
-                        }
+                        }*/
 
                         if (ServerConfig.GetBoolean("Security", "AllowAdminOverride", true))
                         {

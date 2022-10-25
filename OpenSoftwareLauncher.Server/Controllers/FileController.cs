@@ -102,10 +102,10 @@ namespace OpenSoftwareLauncher.Server.Controllers
                 {
                     var allow = false;
                     var commit = contentManager.Published[hash];
-                    if (commit.Release.releaseType != ReleaseType.Other)
+                    /*if (commit.Release.releaseType != ReleaseType.Other)
                     {
                         allow = MainClass.CanUserGroupsAccessStream(commit.Release.groupBlacklist.ToArray(), commit.Release.groupWhitelist.ToArray(), account);
-                    }
+                    }*/
                     if (ServerConfig.GetBoolean("Security", "AllowAdminOverride", true))
                     {
                         if (account.HasPermission(OSLCommon.Authorization.AccountPermission.ADMINISTRATOR))
