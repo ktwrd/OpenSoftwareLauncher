@@ -9,6 +9,8 @@ using System;
 using System.Diagnostics;
 using OSLCommon.Authorization;
 using OpenSoftwareLauncher.Server.OpenSoftwareLauncher.Server;
+using OSLCommon.Licensing;
+using System.Linq;
 
 namespace OpenSoftwareLauncher.Server
 {
@@ -19,6 +21,8 @@ namespace OpenSoftwareLauncher.Server
         public Dictionary<string, PublishedRelease> Published = new();
         public AccountManager AccountManager = new();
         public SystemAnnouncement SystemAnnouncement = new();
+        public List<LicenseKeyMetadata> LicenseKeys = new();
+        public Dictionary<string, string> LicenseKeyGroupNote = new();
 
         /*internal List<string> LoadedFirebaseAssets = new();
          * internal FirestoreDb database;*/
@@ -69,6 +73,8 @@ namespace OpenSoftwareLauncher.Server
             public List<ReleaseInfo> ReleaseInfoContent = new();
             public Dictionary<string, ProductRelease> Releases = new();
             public Dictionary<string, PublishedRelease> Published = new();
+            public List<LicenseKeyMetadata> LicenseKeyMetadata = new();
+            public Dictionary<string, string> LicenseKeyGroupNote = new();
         }
         private void databaseDeserialize()
         {
@@ -141,6 +147,8 @@ namespace OpenSoftwareLauncher.Server
             ReleaseInfoContent = deserialized.ReleaseInfoContent;
             Releases = ReleaseHelper.TransformReleaseList(ReleaseInfoContent.ToArray());
             Published = deserialized.Published;
+            LicenseKeys = deserialized.LicenseKeyMetadata;
+            LicenseKeyGroupNote = deserialized.LicenseKeyGroupNote;
             System.Threading.Thread.Sleep(500);
             DatabaseSerialize();
         }
@@ -169,11 +177,13 @@ namespace OpenSoftwareLauncher.Server
         }
         private void CreateJSONBackup()
         {
-            var data = new Dictionary<string, object>()
+            var data = new JSONBackupContent
             {
-                {"ReleaseInfoContent", ReleaseInfoContent },
-                {"Releases", Releases },
-                {"Published", Published }
+                ReleaseInfoContent = ReleaseInfoContent.ToArray().ToList(),
+                Releases = Releases,
+                Published = Published,
+                LicenseKeyMetadata = this.LicenseKeys.ToArray().ToList(),
+                LicenseKeyGroupNote = LicenseKeyGroupNote
             };
             File.WriteAllText(JSONBACKUP_FILENAME, JsonSerializer.Serialize(data, MainClass.serializerOptions));
         }
