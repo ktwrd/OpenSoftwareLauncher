@@ -29,6 +29,7 @@ namespace OSLCommon.Authorization
         public bool Enabled { get; set; }
         public AccountPermission[] Permissions { get; set; }
         public AccountDisableReason[] DisableReasons { get; set; }
+        public string[] Licenses { get; set; }
         public string[] Groups { get; set; }
         public long FirstSeenTimestamp { get; set; }
         public long LastSeenTimestamp { get; set; }
@@ -121,6 +122,38 @@ namespace OSLCommon.Authorization
         }
         private bool _pendingWrite = false;
 
+        #endregion
+
+        #region License Management
+        public List<string> Licenses { get; set; } = new List<string>();
+
+        /// <returns>true: License exists. false: License does not exist</returns>
+        public bool HasLicense(string remoteSignature, bool ignoreAdmin = false)
+        {
+            if (AccountManager.DefaultLicenses.Contains(remoteSignature))
+                return true;
+            if (!ignoreAdmin && Permissions.Contains(AccountPermission.ADMINISTRATOR))
+                return true;
+            return Licenses.Contains(remoteSignature);
+        }
+        /// <returns>true: License does not exist and was added. false: Licence already exists, ignoring.</returns>
+        public bool GrantLicense(string remoteSignature)
+        {
+            if (Licenses.Contains(remoteSignature))
+                return false;
+            Licenses.Add(remoteSignature);
+            PendingWrite = true;
+            return true;
+        }
+        /// <returns>true: License does not exist and was added. false: Licence already exists, ignoring.</returns>
+        public bool RevokeLicense(string remoteSignature)
+        {
+            if (!Licenses.Contains(remoteSignature))
+                return false;
+            Licenses.Remove(remoteSignature);
+            PendingWrite = true;
+            return true;
+        }
         #endregion
 
         #region Group Management
@@ -416,6 +449,7 @@ namespace OSLCommon.Authorization
                 Enabled = this.Enabled,
                 Permissions = this.Permissions.ToArray(),
                 DisableReasons = this.DisableReasons.ToArray(),
+                Licenses = this.Licenses.ToArray(),
                 Groups = this.Groups.ToArray(),
                 FirstSeenTimestamp = this.FirstSeenTimestamp,
                 LastSeenTimestamp = this.LastSeenTimestamp,
