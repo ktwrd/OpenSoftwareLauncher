@@ -1,0 +1,122 @@
+﻿// NOTE: Please order everything alphabetically in their sections please!
+
+
+// basic keywords
+Account=Account
+AutoLaunch=Launch on boot
+AutoLogin=Auto Login
+AutoUpdate=Auto Update
+Available=Available
+Banish=Ban
+Changelog=Changelog
+Complete=Complete
+Discard=Discard
+DownloadFile=Download File
+Edit=Edit
+EditingPermissionFor=Editing permissions for ${username}
+Executable=Executable
+Exit=Exit
+Explore=Explore
+File=File
+HardwareDrawing=Hardware Rendering
+Install=Install
+LastSeen=Last Seen
+Log=Log
+Login=Login
+Logout=Logout
+Modify=Modify
+Other=Other
+Parameters=Parameters
+Password=Password
+Product=Product
+Ready=Ready
+Refresh=Refresh
+Remember=Remember
+Remove=Remove
+Save=Save
+Server=Server
+ShortcutCreate=Create Shortcut
+Show=Show
+Start=Start
+TermsOfService=Terms of Service
+Upload=Upload
+Username=Username
+Uninstall=Uninstall
+Validate_CurrentTense=Validating
+Version=Version
+View=View
+
+// plural keywords (including tense)
+Announcement_Plural=Announcements
+Download_Plural=Downloading
+Expire_Plural=Expires
+Group_Plural=Groups
+Instance_Plural=Instances
+Launch_ParameterPlural=Launch Parameters
+License_Plural=Licenses
+LineCount_Plural=${count} Lines
+Log_Plural=Logs
+Option_Plural=Options
+Parameter_Plural=Parameters
+Permission_Plural=Permissions
+RememberDetail_Plural=Remember Details
+Save_GroupPlural=Save Groups
+Setting_Plural=Settings
+
+// tenses (past, present, current)
+Enable_PastTense=Enabled
+Install_Doing=Installing
+Install_Doing_Inject=Installing ${name}
+Install_PastTense=Installed
+Install_PastTense_WithName=Installed ${name}
+Update_PastTense=Updated
+
+Btn_AccountCreate=Create Account
+Btn_ScrollToBottom=Scroll to Bottom
+
+Title=${product.name} v${version}
+Title_ChangelogViewer=Changelog
+Title_Brand=Minalyze Launcher
+Title_BrandWithVersion=Minalyze Launcher v${version}
+Title_Changelog=Version Changelog
+Title_Debug=Debug Tools
+Title_DownloadFileManual=Manual Download
+Title_GroupUtility=Group Editor Tools
+Title_InstallComplete=Install Complete
+Title_InstancePlural=Instances
+Title_LogOutput=Trace Log
+Title_LoginForm=${product.name.short} v${version}
+Title_ParentForm=${product.name} v${version}
+Title_ProductSettingPlural=Product Settings
+Title_SystemAnnouncement=System Announcement
+Title_UserManagement=User Management
+
+Label_DownloadFail=Failed to Download (${state})
+Label_EnforceMemoryLimit=Enforce Product Memory Limit
+Label_ExtractPlural_Release=Extracting Release
+Label_FetchReleaseInfoPlural=Fetching Release Information
+Label_LoginFieldDescription=Login with Minalogger.com Credentials
+Label_LaunchSettingPlural=Launch Settings
+Label_StartPlural_Download=Starting Download
+Label_ShowOther_BranchPlural=Show Other Branches
+Label_CleanupTemporary_FilePlural=Delete Temporary Files
+
+MessageBox_ConfirmRememberDetails=By enabling "Remember Details" this will save your username and password. This is not suggested on shared computers.${nl}${nl}Are you sure you would like to save your details?
+MessageBox_LaunchExecutableNotFound=Instance executable could not be found. Your install may be corrupt.${nl}${nl}File not found;${nl}${file}
+MessageBox_UninstallSuccess="${name}" has been removed.
+MessageBox_ProductNotInstalled=Product "${name}" is not installed
+MessageBox_ProductInstalled=${name} has been installed.
+
+// Errors
+Client_TokenGrantFailed=Failed to authenticate with server.
+Client_TokenGrantFailed_Title=Authentication Failure
+UncaughtException=Uncaught Exception
+UncaughtException_SpecialContent=Looks like I've done a fucky wucky uwu${nl}${content}
+FatalFailure_Exception=Fatal Error${nl}${nl}${exception}
+FatalError_WithProductName=${product.name.short} - Fatal Error
+FailedToLaunch_Message=Failed to launch ${produce.name}.${nl}${nl}Log written to ${logLocation}
+
+// Client Context
+ClientContext_ConstructorFail=ClientContext Fatal Failure.${nl}${nl}${exception}
+ClientContext_LoginFormFail=Failed to open login window.${nl}${nl}${exception}
+ClientContext_ParentFormFail=Failed to initialize ParentForm.${nl}${nl}${exception}
