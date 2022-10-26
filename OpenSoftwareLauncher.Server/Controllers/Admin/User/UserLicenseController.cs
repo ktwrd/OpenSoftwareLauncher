@@ -38,7 +38,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                 }, MainClass.serializerOptions);
             }
 
-            bool didItWork = account.GrantLicense(license);
+            bool didItWork = account.GrantLicense(license).Result;
             if (!didItWork)
             {
                 return Json(new ObjectResponse<HttpException>()
@@ -79,7 +79,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                 }, MainClass.serializerOptions);
             }
 
-            bool didItWork = account.RevokeLicense(license);
+            bool didItWork = account.RevokeLicense(license).Result;
             if (!didItWork)
             {
                 return Json(new ObjectResponse<HttpException>()

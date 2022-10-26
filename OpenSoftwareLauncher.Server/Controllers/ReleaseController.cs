@@ -159,7 +159,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
                                     allowStream = false;
                         }
 
-                        if (account != null && account.HasLicense(stream.RemoteSignature))
+                        if (account != null && account.HasLicense(stream.RemoteSignature).Result)
                         {
                             allowStream = true;
                         }

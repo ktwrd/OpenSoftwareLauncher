@@ -121,7 +121,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
                                     allow = true;
                         }
 
-                        if (account.HasLicense(commit.Release.remoteLocation))
+                        if (account.HasLicense(commit.Release.remoteLocation).Result)
                         {
                             allow = true;
                         }

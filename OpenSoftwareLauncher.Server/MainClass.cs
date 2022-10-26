@@ -275,7 +275,7 @@ namespace OpenSoftwareLauncher.Server
                         return GrantLicenseKeyResponseCode.Invalid;
                     int existCount = 0;
                     foreach (var l in i.Products)
-                        existCount += (account.GrantLicense(l) ? 0 : 1);
+                        existCount += (account.GrantLicense(l).Result ? 0 : 1);
                     if (existCount == i.Products.Length)
                         return GrantLicenseKeyResponseCode.AlreadyRedeemed;
                     i.Activated = true;
