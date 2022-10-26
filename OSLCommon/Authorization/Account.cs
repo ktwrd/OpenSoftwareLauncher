@@ -38,18 +38,18 @@ namespace OSLCommon.Authorization
     }
     public interface IAccount
     {
-        public string Username { get; set; }
-        public List<AccountToken> Tokens { get; set; }
-        public List<AccountPermission> Permissions { get; set; }
-        public List<string> Licenses { get; set; }
-        public bool Enabled { get; set; }
-        public List<AccountDisableReason> DisableReasons { get; set; }
-        public long FirstSeenTimestamp { get; set; }
-        public long LastSeenTimestamp { get; set; }
+        string Username { get; set; }
+        List<AccountToken> Tokens { get; set; }
+        List<AccountPermission> Permissions { get; set; }
+        List<string> Licenses { get; set; }
+        bool Enabled { get; set; }
+        List<AccountDisableReason> DisableReasons { get; set; }
+        long FirstSeenTimestamp { get; set; }
+        long LastSeenTimestamp { get; set; }
 
-        public Task<bool> HasLicense(string remoteSignature, bool ignoreAdmin = false);
-        public Task<bool> GrantLicense(string remoteSignature);
-        public Task<bool> RevokeLicense(string remoteSignature);
+        Task<bool> HasLicense(string remoteSignature, bool ignoreAdmin = false);
+        Task<bool> GrantLicense(string remoteSignature);
+        Task<bool> RevokeLicense(string remoteSignature);
 
     }
     public class Account : IAccount
@@ -104,6 +104,7 @@ namespace OSLCommon.Authorization
                 }
                 return timestamp;
             }
+            set { }
         }
         /// <summary>
         /// Timestamp of the token that was last created.
@@ -122,6 +123,7 @@ namespace OSLCommon.Authorization
                 }
                 return timestamp;
             }
+            set { }
         }
 
         /// <summary>
