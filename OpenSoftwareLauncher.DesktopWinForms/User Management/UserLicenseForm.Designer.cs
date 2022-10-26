@@ -1,6 +1,6 @@
 ﻿namespace OpenSoftwareLauncher.DesktopWinForms
 {
-    partial class UserLicenceForm
+    partial class UserLicenseForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserLicenceForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserLicenseForm));
             this.comboBoxCurrentLicense = new System.Windows.Forms.ComboBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.buttonGrant = new System.Windows.Forms.Button();
@@ -173,7 +173,7 @@
             this.buttonPush.UseVisualStyleBackColor = true;
             this.buttonPush.Click += new System.EventHandler(this.buttonPush_Click);
             // 
-            // UserLicenceForm
+            // UserLicenseForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -181,9 +181,9 @@
             this.Controls.Add(this.tableLayoutPanel3);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(460, 326);
-            this.Name = "UserLicenceForm";
+            this.Name = "UserLicenseForm";
             this.Text = "Licenses - jane.doe@example.com";
-            this.Shown += new System.EventHandler(this.UserLicenceForm_Shown);
+            this.Shown += new System.EventHandler(this.UserLicenseForm_Shown);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();

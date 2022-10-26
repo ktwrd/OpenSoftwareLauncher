@@ -12,14 +12,14 @@ using System.Windows.Forms;
 
 namespace OpenSoftwareLauncher.DesktopWinForms
 {
-    public partial class UserLicenceForm : Form
+    public partial class UserLicenseForm : Form
     {
-        public UserLicenceForm()
+        public UserLicenseForm()
         {
             InitializeComponent();
         }
         public AccountDetailsResponse Account;
-        public UserLicenceForm(AccountDetailsResponse account)
+        public UserLicenseForm(AccountDetailsResponse account)
         {
             InitializeComponent();
             Account = account;
@@ -89,7 +89,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             buttonRemoveLicense.Enabled = listBoxLicenses.SelectedIndex >= 0;
         }
 
-        private void UserLicenceForm_Shown(object sender, EventArgs e)
+        private void UserLicenseForm_Shown(object sender, EventArgs e)
         {
             ReloadLicenseList();
             ReloadComboBox();
