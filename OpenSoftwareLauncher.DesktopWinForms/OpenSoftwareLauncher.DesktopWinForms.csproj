@@ -88,18 +88,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LicenseKeyCreateDialog.cs">
+    <Compile Include="AnnouncementManagementForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LicenseKeyCreateDialog.Designer.cs">
+    <Compile Include="AnnouncementManagementForm.Designer.cs">
+      <DependentUpon>AnnouncementManagementForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LicenseManagement\LicenseKeyCreateDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LicenseManagement\LicenseKeyCreateDialog.Designer.cs">
       <DependentUpon>LicenseKeyCreateDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="LicenseManagmentForm.cs">
+    <Compile Include="LicenseManagement\LicenseManagmentForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LicenseManagmentForm.Designer.cs">
+    <Compile Include="LicenseManagement\LicenseManagmentForm.Designer.cs">
       <DependentUpon>LicenseManagmentForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ServerBridge\ContentField.cs" />
+    <Compile Include="ServerBridge\LocalContent.cs" />
+    <Compile Include="ServerBridge\SystemAnnouncementSummaryAsList.cs" />
     <Compile Include="User Management\PermissionEditForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -159,14 +168,20 @@
     <Compile Include="User Management\UserLicenseForm.Designer.cs">
       <DependentUpon>UserLicenseForm.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="LicenseKeyCreateDialog.resx">
+    <EmbeddedResource Include="AnnouncementManagementForm.resx">
+      <DependentUpon>AnnouncementManagementForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LicenseManagement\LicenseKeyCreateDialog.resx">
       <DependentUpon>LicenseKeyCreateDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LicenseManagmentForm.resx">
+    <EmbeddedResource Include="LicenseManagement\LicenseManagmentForm.resx">
       <DependentUpon>LicenseManagmentForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ParentForm.resx">
+      <DependentUpon>ParentForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ParentForm.resx">
       <DependentUpon>ParentForm.cs</DependentUpon>
