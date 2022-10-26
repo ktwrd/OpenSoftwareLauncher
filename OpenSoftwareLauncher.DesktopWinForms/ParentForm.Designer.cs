@@ -28,14 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ParentForm));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonUsers = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonAnnouncements = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonReleases = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonLicenceManagement = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonLicenseKeyCreator = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonSettings = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonLogs = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
@@ -62,11 +61,6 @@
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(30, 6);
-            // 
             // toolStripButtonUsers
             // 
             this.toolStripButtonUsers.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -85,6 +79,7 @@
             this.toolStripButtonAnnouncements.Name = "toolStripButtonAnnouncements";
             this.toolStripButtonAnnouncements.Size = new System.Drawing.Size(30, 20);
             this.toolStripButtonAnnouncements.Text = "Announcement_Plural";
+            this.toolStripButtonAnnouncements.Click += new System.EventHandler(this.toolStripButtonAnnouncements_Click);
             // 
             // toolStripButtonReleases
             // 
@@ -115,6 +110,11 @@
             this.toolStripButtonLicenseKeyCreator.Text = "License Key Creator";
             this.toolStripButtonLicenseKeyCreator.Click += new System.EventHandler(this.toolStripButtonLicenseKeyCreator_Click);
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(30, 6);
+            // 
             // toolStripButtonSettings
             // 
             this.toolStripButtonSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -139,7 +139,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1584, 861);
             this.Controls.Add(this.toolStrip1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.IsMdiContainer = true;
             this.Name = "ParentForm";
             this.Text = "Title_ParentForm";

@@ -41,6 +41,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         }
 
         public UserManagementForm UserManagementForm;
+        public LicenseManagmentForm LicenseManagmentForm;
+        public AnnouncementManagementForm AnnouncementManagementForm;
 
         private void ParentForm_Shown(object sender, EventArgs e)
         {
@@ -63,7 +65,6 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             form.Show();
         }
 
-        public LicenseManagmentForm LicenseManagmentForm;
 
         private void toolStripButtonLicenceManagement_Click(object sender, EventArgs e)
         {
@@ -73,6 +74,16 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             }
             LicenseManagmentForm.MdiParent = this;
             LicenseManagmentForm.Show();
+        }
+
+        private void toolStripButtonAnnouncements_Click(object sender, EventArgs e)
+        {
+            if (AnnouncementManagementForm == null || AnnouncementManagementForm.IsDisposed)
+            {
+                AnnouncementManagementForm = new AnnouncementManagementForm();
+            }
+            AnnouncementManagementForm.MdiParent = this;
+            AnnouncementManagementForm.Show();
         }
     }
 }
