@@ -67,4 +67,13 @@
     </Compile>
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="account.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="content.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
