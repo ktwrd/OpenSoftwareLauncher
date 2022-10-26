@@ -7,6 +7,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -122,6 +123,31 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 FilterProduct = splitted[1];
             }
             ReloadKeyList();
+        }
+
+        public LicenseKeyMetadata SelectedLicenseKey = null;
+
+        private void listViewKeys_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SelectedLicenseKey = null;
+            if (listViewKeys.SelectedItems.Count > 0 && listViewKeys.SelectedItems.Count < 2)
+            {
+                string targetUID = ((ListViewItem)listViewKeys.SelectedItems[0]).Name;
+                foreach (var item in Program.LocalContent.LicenseKeyList)
+                {
+                    if (item.UID == targetUID)
+                    {
+                        SelectedLicenseKey = item;
+                        break;
+                    }
+                }
+            }
+            RedrawProps();
+        }
+
+        public void RedrawProps()
+        {
+            propertyGridSelectedKey.SelectedObject = JsonSerializer.Deserialize<LicenseKeyMetadata>(JsonSerializer.Serialize(SelectedLicenseKey, Program.serializerOptions), Program.serializerOptions);
         }
     }
 }

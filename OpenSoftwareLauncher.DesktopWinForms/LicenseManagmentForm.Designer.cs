@@ -102,6 +102,7 @@
             this.listViewKeys.TabIndex = 2;
             this.listViewKeys.UseCompatibleStateImageBehavior = false;
             this.listViewKeys.View = System.Windows.Forms.View.Details;
+            this.listViewKeys.SelectedIndexChanged += new System.EventHandler(this.listViewKeys_SelectedIndexChanged);
             // 
             // columnHeaderUID
             // 
