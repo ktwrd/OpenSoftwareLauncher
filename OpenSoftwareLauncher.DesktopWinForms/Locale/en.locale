@@ -3,6 +3,7 @@
 
 // basic keywords
 Account=Account
+Add=Add
 AutoLaunch=Launch on boot
 AutoLogin=Auto Login
 AutoUpdate=Auto Update
@@ -10,6 +11,7 @@ Available=Available
 Banish=Ban
 Changelog=Changelog
 Complete=Complete
+Delete=Delete
 Discard=Discard
 DownloadFile=Download File
 Edit=Edit
@@ -68,6 +70,7 @@ Setting_Plural=Settings
 
 // tenses (past, present, current)
 Enable_PastTense=Enabled
+EnableAnnouncement_Plural=Enable Announcements
 Install_Doing=Installing
 Install_Doing_Inject=Installing ${name}
 Install_PastTense=Installed
@@ -78,6 +81,7 @@ Btn_AccountCreate=Create Account
 Btn_ScrollToBottom=Scroll to Bottom
 
 Title=${product.name} v${version}
+Title_AnnouncementManagementForm=Announcement Management
 Title_ChangelogViewer=Changelog
 Title_Brand=Minalyze Launcher
 Title_BrandWithVersion=Minalyze Launcher v${version}
