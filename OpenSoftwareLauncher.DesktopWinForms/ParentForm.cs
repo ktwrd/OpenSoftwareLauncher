@@ -62,5 +62,17 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             form.MdiParent = this;
             form.Show();
         }
+
+        public LicenseManagmentForm LicenseManagmentForm;
+
+        private void toolStripButtonLicenceManagement_Click(object sender, EventArgs e)
+        {
+            if (LicenseManagmentForm == null || LicenseManagmentForm.IsDisposed)
+            {
+                LicenseManagmentForm = new LicenseManagmentForm();
+            }
+            LicenseManagmentForm.MdiParent = this;
+            LicenseManagmentForm.Show();
+        }
     }
 }
