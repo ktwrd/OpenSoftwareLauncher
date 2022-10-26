@@ -61,7 +61,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 MessageBox.Show("Password is required", "Error");
                 return;
             }
-            var serverUrlRegex = new Regex(@"^http(s|)://([a-zA-Z_\-0-9\+]\.){0,}[a-zA-Z]{1,63}$", RegexOptions.IgnoreCase);
+            var serverUrlRegex = new Regex(@"^http(s|)://([a-zA-Z_\-0-9\+]\.){0,}[a-zA-Z]{1,63}(:[0-9]{1,6})$", RegexOptions.IgnoreCase);
             if (textBoxServer.Text.Length < 1)
             {
                 MessageBox.Show("Server is required", "Error");
