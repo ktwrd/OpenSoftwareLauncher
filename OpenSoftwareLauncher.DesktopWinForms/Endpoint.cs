@@ -112,6 +112,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             string username)
             => $"{Base}/admin/user/pardon?token={encode(token)}&username={encode(username)}";
 
+        #region Account Licence Management
         public static string UserLicenseGrant(
             string token,
             string username,
@@ -122,7 +123,9 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             string username,
             string license)
             => $"{Base}/admin/user/license/revoke?token={encode(token)}&username={encode(username)}&license={encode(license)}";
+        #endregion
 
+        #region Licence Keys
         public static string CreateLicenseKeys(
             string token)
             => $"{Base}/admin/license/generateProductKey?token={encode(token)}";
@@ -133,6 +136,11 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             string token,
             string remoteLocation)
             => $"{Base}/admin/license/getKeys?token={encode(token)}&remoteLocation={encode(remoteLocation)}";
+        public static string LicenceKeyRedeem(
+            string token,
+            string licenceKey)
+            => $"{Base}/licence/redeem?token={encode(token)}&key={encode(licenceKey)}";
+        #endregion
 
     }
 }
