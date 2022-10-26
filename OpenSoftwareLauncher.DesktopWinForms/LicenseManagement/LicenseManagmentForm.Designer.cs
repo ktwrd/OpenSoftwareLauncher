@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewGroup listViewGroup5 = new System.Windows.Forms.ListViewGroup("Activate_PastTense", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup6 = new System.Windows.Forms.ListViewGroup("Diable_PastTense", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Activate_PastTense", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("Diable_PastTense", System.Windows.Forms.HorizontalAlignment.Left);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LicenseManagmentForm));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonCreateKeys = new System.Windows.Forms.ToolStripButton();
@@ -42,9 +42,9 @@
             this.columnHeaderNote = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.propertyGridSelectedKey = new System.Windows.Forms.PropertyGrid();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
+            this.labelGroups = new System.Windows.Forms.Label();
+            this.labelKeys = new System.Windows.Forms.Label();
+            this.labelDetails = new System.Windows.Forms.Label();
             this.imageListKeyState = new System.Windows.Forms.ImageList(this.components);
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -88,13 +88,13 @@
             this.columnHeaderExpiry,
             this.columnHeaderNote});
             this.listViewKeys.Dock = System.Windows.Forms.DockStyle.Fill;
-            listViewGroup5.Header = "Activate_PastTense";
-            listViewGroup5.Name = "listViewGroup1";
-            listViewGroup6.Header = "Diable_PastTense";
-            listViewGroup6.Name = "listViewGroup2";
+            listViewGroup3.Header = "Activate_PastTense";
+            listViewGroup3.Name = "listViewGroup1";
+            listViewGroup4.Header = "Diable_PastTense";
+            listViewGroup4.Name = "listViewGroup2";
             this.listViewKeys.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup5,
-            listViewGroup6});
+            listViewGroup3,
+            listViewGroup4});
             this.listViewKeys.HideSelection = false;
             this.listViewKeys.Location = new System.Drawing.Point(159, 16);
             this.listViewKeys.Name = "listViewKeys";
@@ -140,12 +140,12 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 66.92222F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.07778F));
-            this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.labelGroups, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.treeViewGroups, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.listViewKeys, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.propertyGridSelectedKey, 2, 1);
-            this.tableLayoutPanel1.Controls.Add(this.label2, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.label3, 2, 0);
+            this.tableLayoutPanel1.Controls.Add(this.labelKeys, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.labelDetails, 2, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 25);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -155,32 +155,32 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(1170, 425);
             this.tableLayoutPanel1.TabIndex = 4;
             // 
-            // label1
+            // labelGroups
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(68, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Group_Plural";
+            this.labelGroups.AutoSize = true;
+            this.labelGroups.Location = new System.Drawing.Point(3, 0);
+            this.labelGroups.Name = "labelGroups";
+            this.labelGroups.Size = new System.Drawing.Size(68, 13);
+            this.labelGroups.TabIndex = 0;
+            this.labelGroups.Text = "Group_Plural";
             // 
-            // label2
+            // labelKeys
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(159, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(57, 13);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Key_Plural";
+            this.labelKeys.AutoSize = true;
+            this.labelKeys.Location = new System.Drawing.Point(159, 0);
+            this.labelKeys.Name = "labelKeys";
+            this.labelKeys.Size = new System.Drawing.Size(57, 13);
+            this.labelKeys.TabIndex = 1;
+            this.labelKeys.Text = "Key_Plural";
             // 
-            // label3
+            // labelDetails
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(837, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(66, 13);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "Detail_Plural";
+            this.labelDetails.AutoSize = true;
+            this.labelDetails.Location = new System.Drawing.Point(837, 0);
+            this.labelDetails.Name = "labelDetails";
+            this.labelDetails.Size = new System.Drawing.Size(66, 13);
+            this.labelDetails.TabIndex = 2;
+            this.labelDetails.Text = "Detail_Plural";
             // 
             // imageListKeyState
             // 
@@ -223,9 +223,9 @@
         private System.Windows.Forms.ColumnHeader columnHeaderNote;
         private System.Windows.Forms.PropertyGrid propertyGridSelectedKey;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label labelGroups;
+        private System.Windows.Forms.Label labelKeys;
+        private System.Windows.Forms.Label labelDetails;
         private System.Windows.Forms.ImageList imageListKeyState;
     }
 }
