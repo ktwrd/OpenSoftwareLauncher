@@ -87,6 +87,7 @@ Title_DownloadFileManual=Manual Download
 Title_GroupUtility=Group Editor Tools
 Title_InstallComplete=Install Complete
 Title_InstancePlural=Instances
+Title_LicenseManagement=Licence Management
 Title_LogOutput=Trace Log
 Title_LoginForm=${product.name.short} v${version}
 Title_ParentForm=${product.name} v${version}
