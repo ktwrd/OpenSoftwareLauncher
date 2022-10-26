@@ -183,9 +183,6 @@
     <EmbeddedResource Include="ParentForm.resx">
       <DependentUpon>ParentForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ParentForm.resx">
-      <DependentUpon>ParentForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="User Management\PermissionEditForm.resx">
       <DependentUpon>PermissionEditForm.cs</DependentUpon>
     </EmbeddedResource>
