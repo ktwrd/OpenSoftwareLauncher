@@ -32,7 +32,7 @@ Password=Password
 Product=Product
 Ready=Ready
 Redeem=Redeem
-RedeemLicence=Redeem License
+RedeemLicense=Redeem License
 Refresh=Refresh
 Remember=Remember
 Remove=Remove
@@ -91,7 +91,7 @@ Title_LogOutput=Trace Log
 Title_LoginForm=${product.name.short} v${version}
 Title_ParentForm=${product.name} v${version}
 Title_ProductSettingPlural=Product Settings
-Title_LicenceRedeemForm=Redeem License Key
+Title_LicenseRedeemForm=Redeem License Key
 Title_SystemAnnouncement=System Announcement
 Title_UserManagement=User Management
 
