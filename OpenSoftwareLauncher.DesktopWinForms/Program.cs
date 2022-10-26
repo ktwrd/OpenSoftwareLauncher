@@ -27,7 +27,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         public static string SoftwareVersion => Assembly.GetExecutingAssembly().GetName().Version.ToString();
         public static string ProductName = @"Open Software Launcher";
         public static string ProductNameAcronym = "OSL";
-
+        public static readonly DateTime Epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
