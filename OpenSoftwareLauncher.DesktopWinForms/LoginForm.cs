@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -17,10 +18,12 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         public LoginForm()
         {
             InitializeComponent();
-            Locale();
         }
+        private bool localeApplied = false;
         public void Locale()
         {
+            if (localeApplied) return;
+            localeApplied = true;
             labelServer.Text = LocaleManager.Get("Server");
             labelUsername.Text = LocaleManager.Get("Username");
             labelPassword.Text = LocaleManager.Get("Password");
@@ -63,7 +66,6 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             }
             else
             {
-
                 string errContent = JsonSerializer.Serialize(response, new JsonSerializerOptions()
                 {
                     IncludeFields = true,
@@ -81,15 +83,18 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 
         private void LoginForm_Shown(object sender, EventArgs e)
         {
+            Locale();
+
             textBoxUsername.Text = UserConfig.Auth_Username;
             checkBoxRemember.Checked = UserConfig.Auth_Remember;
             textBoxServer.Text = UserConfig.Connection_Endpoint;
 
-            if (textBoxUsername.Text.Length > 0)
+            textBoxUsername.Focus();
+            if (textBoxUsername.Text.Length > 3 && textBoxPassword.Text.Length < 1)
             {
                 textBoxPassword.Focus();
             }
-            else
+            else if (textBoxUsername.Text.Length < 3 && textBoxPassword.Text.Length < 1)
             {
                 textBoxUsername.Focus();
             }
@@ -108,6 +113,14 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                     return;
                 }
                 Enabled = true;
+            }
+        }
+
+        private void textBoxPassword_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                buttonLogin.PerformClick();
             }
         }
     }
