@@ -53,9 +53,9 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             string[] streams = new string[listBoxRelease.Items.Count];
             for (int i = 0; i < streams.Length; i++)
                 streams[i] = listBoxRelease.Items[i].ToString();
-            AccountPermission[] permissions = new AccountPermission[checkedListBoxPermissions.Items.Count];
+            AccountPermission[] permissions = new AccountPermission[checkedListBoxPermissions.CheckedItems.Count];
             for (int i = 0; i < permissions.Length; i++)
-                permissions[i] = (AccountPermission)Enum.Parse(typeof(AccountPermission), checkedListBoxPermissions.Items[i].ToString());
+                permissions[i] = (AccountPermission)Enum.Parse(typeof(AccountPermission), checkedListBoxPermissions.CheckedItems[i].ToString());
             var data = new CreateProductKeyRequest
             {
                 Count = int.Parse(numericUpDownLicenseCount.Value.ToString()),
