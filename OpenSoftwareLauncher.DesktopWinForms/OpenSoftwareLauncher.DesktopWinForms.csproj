@@ -94,11 +94,11 @@
     <Compile Include="LicenseKeyCreateDialog.Designer.cs">
       <DependentUpon>LicenseKeyCreateDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="LicenseManager.cs">
+    <Compile Include="LicenseManagmentForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="LicenseManager.Designer.cs">
-      <DependentUpon>LicenseManager.cs</DependentUpon>
+    <Compile Include="LicenseManagmentForm.Designer.cs">
+      <DependentUpon>LicenseManagmentForm.cs</DependentUpon>
     </Compile>
     <Compile Include="User Management\PermissionEditForm.cs">
       <SubType>Form</SubType>
@@ -162,8 +162,8 @@
     <EmbeddedResource Include="LicenseKeyCreateDialog.resx">
       <DependentUpon>LicenseKeyCreateDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="LicenseManager.resx">
-      <DependentUpon>LicenseManager.cs</DependentUpon>
+    <EmbeddedResource Include="LicenseManagmentForm.resx">
+      <DependentUpon>LicenseManagmentForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
