@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Activate_PastTense", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Diable_PastTense", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Activate_PastTense", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("Diable_PastTense", System.Windows.Forms.HorizontalAlignment.Left);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LicenseManagmentForm));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonCreateKeys = new System.Windows.Forms.ToolStripButton();
@@ -56,7 +56,7 @@
             this.toolStripButtonCreateKeys});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(881, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(1170, 25);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -78,6 +78,7 @@
             this.treeViewGroups.Name = "treeViewGroups";
             this.treeViewGroups.Size = new System.Drawing.Size(150, 406);
             this.treeViewGroups.TabIndex = 1;
+            this.treeViewGroups.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewGroups_AfterSelect);
             // 
             // listViewKeys
             // 
@@ -87,17 +88,17 @@
             this.columnHeaderExpiry,
             this.columnHeaderNote});
             this.listViewKeys.Dock = System.Windows.Forms.DockStyle.Fill;
-            listViewGroup1.Header = "Activate_PastTense";
-            listViewGroup1.Name = "listViewGroup1";
-            listViewGroup2.Header = "Diable_PastTense";
-            listViewGroup2.Name = "listViewGroup2";
+            listViewGroup3.Header = "Activate_PastTense";
+            listViewGroup3.Name = "listViewGroup1";
+            listViewGroup4.Header = "Diable_PastTense";
+            listViewGroup4.Name = "listViewGroup2";
             this.listViewKeys.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup1,
-            listViewGroup2});
+            listViewGroup3,
+            listViewGroup4});
             this.listViewKeys.HideSelection = false;
             this.listViewKeys.Location = new System.Drawing.Point(159, 16);
             this.listViewKeys.Name = "listViewKeys";
-            this.listViewKeys.Size = new System.Drawing.Size(479, 406);
+            this.listViewKeys.Size = new System.Drawing.Size(672, 406);
             this.listViewKeys.TabIndex = 2;
             this.listViewKeys.UseCompatibleStateImageBehavior = false;
             this.listViewKeys.View = System.Windows.Forms.View.Details;
@@ -105,31 +106,31 @@
             // columnHeaderUID
             // 
             this.columnHeaderUID.Text = "UID";
-            this.columnHeaderUID.Width = 90;
+            this.columnHeaderUID.Width = 120;
             // 
             // columnHeaderCreated
             // 
             this.columnHeaderCreated.Text = "Created";
-            this.columnHeaderCreated.Width = 120;
+            this.columnHeaderCreated.Width = 170;
             // 
             // columnHeaderExpiry
             // 
             this.columnHeaderExpiry.Text = "Activation Expiry";
             this.columnHeaderExpiry.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.columnHeaderExpiry.Width = 100;
+            this.columnHeaderExpiry.Width = 170;
             // 
             // columnHeaderNote
             // 
             this.columnHeaderNote.Text = "Note";
             this.columnHeaderNote.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.columnHeaderNote.Width = 150;
+            this.columnHeaderNote.Width = 200;
             // 
             // propertyGridSelectedKey
             // 
             this.propertyGridSelectedKey.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propertyGridSelectedKey.Location = new System.Drawing.Point(644, 16);
+            this.propertyGridSelectedKey.Location = new System.Drawing.Point(837, 16);
             this.propertyGridSelectedKey.Name = "propertyGridSelectedKey";
-            this.propertyGridSelectedKey.Size = new System.Drawing.Size(234, 406);
+            this.propertyGridSelectedKey.Size = new System.Drawing.Size(330, 406);
             this.propertyGridSelectedKey.TabIndex = 3;
             // 
             // tableLayoutPanel1
@@ -150,7 +151,7 @@
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(881, 425);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1170, 425);
             this.tableLayoutPanel1.TabIndex = 4;
             // 
             // label1
@@ -174,7 +175,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(644, 0);
+            this.label3.Location = new System.Drawing.Point(837, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(66, 13);
             this.label3.TabIndex = 2;
@@ -186,17 +187,20 @@
             this.imageListKeyState.TransparentColor = System.Drawing.Color.Transparent;
             this.imageListKeyState.Images.SetKeyName(0, "tick.ico");
             this.imageListKeyState.Images.SetKeyName(1, "fire.ico");
+            this.imageListKeyState.Images.SetKeyName(2, "cross.ico");
             // 
             // LicenseManagmentForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(881, 450);
+            this.ClientSize = new System.Drawing.Size(1170, 450);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.toolStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MinimumSize = new System.Drawing.Size(1186, 489);
             this.Name = "LicenseManagmentForm";
             this.Text = "LicenseManager";
+            this.Shown += new System.EventHandler(this.LicenseManagmentForm_Shown);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
