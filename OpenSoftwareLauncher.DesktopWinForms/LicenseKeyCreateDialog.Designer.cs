@@ -303,7 +303,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(482, 439);
             this.Name = "LicenseKeyCreateDialog";
-            this.Text = "Create Licence Keys";
+            this.Text = "Create License Keys";
             this.Shown += new System.EventHandler(this.LicenseKeyCreateDialog_Shown);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();

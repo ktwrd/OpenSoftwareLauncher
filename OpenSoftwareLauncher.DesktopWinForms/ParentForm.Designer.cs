@@ -36,7 +36,7 @@
             this.toolStripButtonReleases = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonSettings = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonLogs = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonLicenceKeyCreator = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonLicenseKeyCreator = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -47,7 +47,7 @@
             this.toolStripButtonUsers,
             this.toolStripButtonAnnouncements,
             this.toolStripButtonReleases,
-            this.toolStripButtonLicenceKeyCreator,
+            this.toolStripButtonLicenseKeyCreator,
             this.toolStripSeparator1,
             this.toolStripButtonSettings,
             this.toolStripButtonLogs});
@@ -109,15 +109,15 @@
             this.toolStripButtonLogs.Size = new System.Drawing.Size(29, 20);
             this.toolStripButtonLogs.Text = "Log_Plural";
             // 
-            // toolStripButtonLicenceKeyCreator
+            // toolStripButtonLicenseKeyCreator
             // 
-            this.toolStripButtonLicenceKeyCreator.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonLicenceKeyCreator.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources._lock;
-            this.toolStripButtonLicenceKeyCreator.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonLicenceKeyCreator.Name = "toolStripButtonLicenceKeyCreator";
-            this.toolStripButtonLicenceKeyCreator.Size = new System.Drawing.Size(29, 20);
-            this.toolStripButtonLicenceKeyCreator.Text = "License Key Creator";
-            this.toolStripButtonLicenceKeyCreator.Click += new System.EventHandler(this.toolStripButtonLicenceKeyCreator_Click);
+            this.toolStripButtonLicenseKeyCreator.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonLicenseKeyCreator.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources._lock;
+            this.toolStripButtonLicenseKeyCreator.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonLicenseKeyCreator.Name = "toolStripButtonLicenseKeyCreator";
+            this.toolStripButtonLicenseKeyCreator.Size = new System.Drawing.Size(29, 20);
+            this.toolStripButtonLicenseKeyCreator.Text = "License Key Creator";
+            this.toolStripButtonLicenseKeyCreator.Click += new System.EventHandler(this.toolStripButtonLicenseKeyCreator_Click);
             // 
             // ParentForm
             // 
@@ -146,6 +146,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton toolStripButtonSettings;
         private System.Windows.Forms.ToolStripButton toolStripButtonLogs;
-        private System.Windows.Forms.ToolStripButton toolStripButtonLicenceKeyCreator;
+        private System.Windows.Forms.ToolStripButton toolStripButtonLicenseKeyCreator;
     }
 }

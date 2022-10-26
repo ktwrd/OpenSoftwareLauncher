@@ -81,7 +81,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         {
             var dialog = new SaveFileDialog
             {
-                Title = "Save Licence Keys",
+                Title = "Save License Keys",
                 Filter = "Text File|*.txt|Any|*.*",
                 FilterIndex = 0
             };

@@ -155,7 +155,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         private void toolStripButtonLicense_Click(object sender, EventArgs e)
         {
             if (SelectedAccounts.Length > 1 || SelectedAccounts.Length < 1) return;
-            var form = new UserLicenceForm(SelectedAccounts[0]);
+            var form = new UserLicenseForm(SelectedAccounts[0]);
             form.MdiParent = MdiParent;
             form.Show();
         }
