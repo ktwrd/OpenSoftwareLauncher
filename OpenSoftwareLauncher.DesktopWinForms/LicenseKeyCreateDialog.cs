@@ -69,7 +69,9 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             var res = Program.Client.CreateLicenseKeys(data);
             List<string> fileLines = new List<string>();
             fileLines.Add($"{res.Keys.Length} Keys");
-            fileLines.Add($"Created at; {DateTimeOffset.UtcNow.ToString()} (UTC+00:00)");
+            fileLines.Add($"Created at; {DateTimeOffset.UtcNow}");
+            fileLines.Add($"Group Id: {res.GroupId}");
+            fileLines.Add("=".PadRight(32, '='));
             foreach (var item in res.Keys)
                 fileLines.Add(item.Key);
 
