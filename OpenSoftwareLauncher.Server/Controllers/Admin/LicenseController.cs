@@ -72,6 +72,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 account.Username,
                 decodedBody.RemoteLocations,
                 decodedBody.Count,
+                decodedBody.Permissions,
                 decodedBody.Note,
                 decodedBody.ExpiryTimestamp,
                 decodedBody.GroupLabel);

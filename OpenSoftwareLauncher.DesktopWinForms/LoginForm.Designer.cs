@@ -110,6 +110,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             this.textBoxPassword.Size = new System.Drawing.Size(177, 20);
             this.textBoxPassword.TabIndex = 4;
             this.textBoxPassword.UseSystemPasswordChar = true;
+            this.textBoxPassword.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBoxPassword_KeyUp);
             // 
             // tableLayoutPanel2
             // 
@@ -238,6 +239,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             // 
             // buttonOptions
             // 
+            this.buttonOptions.Enabled = false;
             this.buttonOptions.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.gear;
             this.buttonOptions.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonOptions.Location = new System.Drawing.Point(3, 3);

@@ -87,7 +87,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
             }
 
             var deser = JsonSerializer.Deserialize<ObjectResponse<CreateLicenseKeyResponse>>(stringContent, Program.serializerOptions);
-            Program.LocalContent.PullLicenceKeys().Wait();
+            Program.LocalContent.PullLicenseKeys().Wait();
             return deser.Data;
         }
 

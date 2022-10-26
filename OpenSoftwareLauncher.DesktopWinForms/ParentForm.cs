@@ -44,7 +44,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             UserManagementForm.Show();
         }
 
-        private void toolStripButtonLicenceKeyCreator_Click(object sender, EventArgs e)
+        private void toolStripButtonLicenseKeyCreator_Click(object sender, EventArgs e)
         {
             var form = new LicenseKeyCreateDialog();
             form.MdiParent = this;

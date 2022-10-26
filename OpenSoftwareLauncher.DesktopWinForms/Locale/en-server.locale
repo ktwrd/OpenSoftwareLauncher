@@ -21,3 +21,7 @@ ServerResponse_AccountDisabled=Your account has been disabled. Please contact th
 ServerResponse_Account_NotFound=Account does not exist.
 ServerResponse_Account_TokenGrantFailed=Failed to grant token.
 ServerResponse_Account_TokenGranted=Token granted successfully
+
+ServerResponse_License_Exists=You already have redeemed this license.
+ServerResponse_License_NotFound=License does not exist.
+ServerResponse_License_Invalid=License is invalid or has alrady been redeemed.

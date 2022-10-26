@@ -48,7 +48,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
                 new Task(delegate { PullAccounts(false).Wait(); }),
                 new Task(delegate { PullAnnouncements(false).Wait(); }),
                 new Task(delegate { PullContentManager(false).Wait(); }),
-                new Task(delegate { PullLicenceKeys(false).Wait(); })
+                new Task(delegate { PullLicenseKeys(false).Wait(); })
             };
 
             foreach (var item in taskList)
@@ -61,7 +61,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
 
         #region License Keys
         public List<LicenseKeyMetadata> LicenseKeyList = new List<LicenseKeyMetadata>();
-        public Task PullLicenceKeys(bool emit=true)
+        public Task PullLicenseKeys(bool emit=true)
         {
             if (Program.Client == null) return Task.CompletedTask;
             LicenseKeyList.Clear();

@@ -158,7 +158,7 @@
             this.toolStripButtonLicense.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonLicense.Name = "toolStripButtonLicense";
             this.toolStripButtonLicense.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonLicense.Text = "LicenceUtility";
+            this.toolStripButtonLicense.Text = "LicenseUtility";
             this.toolStripButtonLicense.Click += new System.EventHandler(this.toolStripButtonLicense_Click);
             // 
             // listViewAccounts
