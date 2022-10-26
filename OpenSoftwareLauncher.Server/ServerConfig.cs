@@ -100,11 +100,11 @@ namespace OpenSoftwareLauncher.Server
 
             public static void Save()
             {
-                var startTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                var startNS = GeneralHelper.GetNanoseconds();
                 if (!File.Exists(ConfigLocation))
                     File.WriteAllText(ConfigLocation, "");
                 Source.Save();
-                Console.WriteLine($"[ServerConfig] Saved {DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - startTimestamp}");
+                Console.WriteLine($"[ServerConfig] Saved {GeneralHelper.GetNanoseconds() - startNS}ns");
                 HasChanges = false;
                 OnSave?.Invoke();
             }
