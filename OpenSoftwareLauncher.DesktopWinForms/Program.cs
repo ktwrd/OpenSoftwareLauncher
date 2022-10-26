@@ -34,6 +34,9 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         [STAThread]
         static void Main()
         {
+#if DEBUG
+            System.Threading.Thread.Sleep(2000);
+#endif
             UserConfig.Get();
             LocaleManager.Load();
             try
