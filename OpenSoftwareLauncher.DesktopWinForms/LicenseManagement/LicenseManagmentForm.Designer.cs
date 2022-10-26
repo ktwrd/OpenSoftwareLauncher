@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Activate_PastTense", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("Diable_PastTense", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup5 = new System.Windows.Forms.ListViewGroup("Activate_PastTense", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup6 = new System.Windows.Forms.ListViewGroup("Diable_PastTense", System.Windows.Forms.HorizontalAlignment.Left);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LicenseManagmentForm));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonCreateKeys = new System.Windows.Forms.ToolStripButton();
@@ -88,13 +88,13 @@
             this.columnHeaderExpiry,
             this.columnHeaderNote});
             this.listViewKeys.Dock = System.Windows.Forms.DockStyle.Fill;
-            listViewGroup3.Header = "Activate_PastTense";
-            listViewGroup3.Name = "listViewGroup1";
-            listViewGroup4.Header = "Diable_PastTense";
-            listViewGroup4.Name = "listViewGroup2";
+            listViewGroup5.Header = "Activate_PastTense";
+            listViewGroup5.Name = "listViewGroup1";
+            listViewGroup6.Header = "Diable_PastTense";
+            listViewGroup6.Name = "listViewGroup2";
             this.listViewKeys.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup3,
-            listViewGroup4});
+            listViewGroup5,
+            listViewGroup6});
             this.listViewKeys.HideSelection = false;
             this.listViewKeys.Location = new System.Drawing.Point(159, 16);
             this.listViewKeys.Name = "listViewKeys";
