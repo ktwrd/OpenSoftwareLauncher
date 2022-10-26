@@ -50,6 +50,33 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         }
         private void buttonLogin_Click(object sender, EventArgs e)
         {
+
+            if (textBoxUsername.Text.Length < 1)
+            {
+                MessageBox.Show("Username is required", "Error");
+                return;
+            }
+            if (textBoxPassword.Text.Length < 1)
+            {
+                MessageBox.Show("Password is required", "Error");
+                return;
+            }
+            var serverUrlRegex = new Regex(@"^http(s|)://([a-zA-Z_\-0-9\+]\.){0,}[a-zA-Z]{1,63}$", RegexOptions.IgnoreCase);
+            if (textBoxServer.Text.Length < 1)
+            {
+                MessageBox.Show("Server is required", "Error");
+                return;
+            }
+            else
+            {
+                var match = serverUrlRegex.Match(textBoxServer.Text);
+                if (!match.Success)
+                {
+                    MessageBox.Show("Invalid server URL", "Error");
+                    return;
+                }
+            }
+
             Enabled = false;
             SaveFields();
             var response = Program.Client.ValidateCredentials(textBoxUsername.Text, textBoxPassword.Text, textBoxServer.Text);
