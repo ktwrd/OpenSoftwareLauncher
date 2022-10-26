@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace OpenSoftwareLauncher.DesktopWinForms
 {
-    public partial class LicenseManager : Form
+    public partial class LicenseManagmentForm : Form
     {
-        public LicenseManager()
+        public LicenseManagmentForm()
         {
             InitializeComponent();
         }
