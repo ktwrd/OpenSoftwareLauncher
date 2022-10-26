@@ -16,5 +16,18 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         {
             InitializeComponent();
         }
+        public void Locale()
+        {
+            checkBoxEnableAnnouncements.Text = LocaleManager.Get("EnableAnnouncement_Plural");
+            toolStripButtonAdd.Text = LocaleManager.Get("Add");
+            toolStripButtonEdit.Text = LocaleManager.Get("Edit");
+            toolStripButtonDelete.Text = LocaleManager.Get("Delete");
+            Text = LocaleManager.Get("Title_AnnouncementManagementForm");
+        }
+
+        private void AnnouncementManagementForm_Shown(object sender, EventArgs e)
+        {
+            Locale();
+        }
     }
 }
