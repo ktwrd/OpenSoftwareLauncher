@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -65,7 +67,33 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             };
 
             var res = Program.Client.CreateLicenseKeys(data);
-            Console.WriteLine();
+            List<string> fileLines = new List<string>();
+            fileLines.Add($"{res.Keys.Length} Keys");
+            fileLines.Add($"Created at; {DateTimeOffset.UtcNow.ToString()} (UTC+00:00)");
+            foreach (var item in res.Keys)
+                fileLines.Add(item.Key);
+
+            var location = ShowFileDialog();
+            File.WriteAllLines(location, fileLines);
+            Process.Start("explorer", $"/select,\"{location}\"");
+        }
+        public string ShowFileDialog()
+        {
+            var dialog = new SaveFileDialog
+            {
+                Title = "Save Licence Keys",
+                Filter = "Text File|*.txt|Any|*.*",
+                FilterIndex = 0
+            };
+            var result = dialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                return dialog.FileName;
+            }
+            else
+            {
+                return ShowFileDialog();
+            }
         }
 
         private void buttonReleaseRemove_Click(object sender, EventArgs e)
