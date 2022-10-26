@@ -252,6 +252,7 @@ namespace OpenSoftwareLauncher.Server
                 contentManager.LicenseKeyGroupNote.Add(groupId, groupLabel);
 
             contentManager.LicenseKeyGroupNote[groupId] = groupLabel;
+            contentManager.DatabaseSerialize();
 
             return new CreateLicenseKeyResponse
             {
@@ -282,6 +283,7 @@ namespace OpenSoftwareLauncher.Server
                     i.ActivateTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
                     foreach (var perm in i.Permissions)
                         account.GrantPermission(perm);
+                    contentManager.DatabaseSerialize();
                     return GrantLicenseKeyResponseCode.Granted;
                 }
             }
