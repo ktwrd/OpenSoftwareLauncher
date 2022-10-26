@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace OSLCommon.Authorization
 {
@@ -35,7 +36,23 @@ namespace OSLCommon.Authorization
         public long LastSeenTimestamp { get; set; }
         public AccountTokenDetailsResponse[] Tokens { get; set; }
     }
-    public class Account
+    public interface IAccount
+    {
+        public string Username { get; set; }
+        public List<AccountToken> Tokens { get; set; }
+        public List<AccountPermission> Permissions { get; set; }
+        public List<string> Licenses { get; set; }
+        public bool Enabled { get; set; }
+        public List<AccountDisableReason> DisableReasons { get; set; }
+        public long FirstSeenTimestamp { get; set; }
+        public long LastSeenTimestamp { get; set; }
+
+        public Task<bool> HasLicense(string remoteSignature, bool ignoreAdmin = false);
+        public Task<bool> GrantLicense(string remoteSignature);
+        public Task<bool> RevokeLicense(string remoteSignature);
+
+    }
+    public class Account : IAccount
     {
         #region Constructors
         public Account(AccountManager accountManager)
@@ -60,6 +77,7 @@ namespace OSLCommon.Authorization
         public List<AccountToken> Tokens { get; set; }
         public List<AccountPermission> Permissions { get; set; }
         public List<string> Groups { get; set; }
+        public List<string> Licenses { get; set; } = new List<string>();
 
         /// <summary>
         /// Setting this to false will deny this account from accessing any endpoints.
@@ -106,18 +124,18 @@ namespace OSLCommon.Authorization
             }
         }
 
-
         /// <summary>
         /// Is there new data that doesn't exist locally.
         /// </summary>
         public bool PendingWrite
         {
             get => _pendingWrite;
-            private set
+            internal set
             {
                 _pendingWrite = value;
                 if (value)
                     accountManager.OnPendingWrite();
+                accountManager.OnAccountModify(this);
             }
         }
         private bool _pendingWrite = false;
@@ -125,34 +143,44 @@ namespace OSLCommon.Authorization
         #endregion
 
         #region License Management
-        public List<string> Licenses { get; set; } = new List<string>();
 
         /// <returns>true: License exists. false: License does not exist</returns>
-        public bool HasLicense(string remoteSignature, bool ignoreAdmin = false)
+        public Task<bool> HasLicense(string remoteSignature, bool ignoreAdmin = false)
         {
-            if (AccountManager.DefaultLicenses.Contains(remoteSignature))
-                return true;
-            if (!ignoreAdmin && Permissions.Contains(AccountPermission.ADMINISTRATOR))
-                return true;
-            return Licenses.Contains(remoteSignature);
+            return new Task<bool>(() =>
+            {
+                if (AccountManager.DefaultLicenses.Contains(remoteSignature))
+                    return true;
+                if (!ignoreAdmin && Permissions.Contains(AccountPermission.ADMINISTRATOR))
+                    return true;
+                return Licenses.Contains(remoteSignature);
+            });
         }
         /// <returns>true: License does not exist and was added. false: Licence already exists, ignoring.</returns>
-        public bool GrantLicense(string remoteSignature)
+        public Task<bool> GrantLicense(string remoteSignature)
         {
-            if (Licenses.ToArray().Contains(remoteSignature))
-                return false;
-            Licenses.Add(remoteSignature);
-            PendingWrite = true;
-            return true;
+            return new Task<bool>(() =>
+            {
+                if (Licenses.ToArray().Contains(remoteSignature))
+                    return false;
+                Licenses.Add(remoteSignature);
+                PendingWrite = true;
+                accountManager.OnAccountFieldUpdate(this, AccountField.License);
+                return true;
+            });
         }
         /// <returns>true: License does not exist and was added. false: Licence already exists, ignoring.</returns>
-        public bool RevokeLicense(string remoteSignature)
+        public Task<bool> RevokeLicense(string remoteSignature)
         {
-            if (!Licenses.ToArray().Contains(remoteSignature))
-                return false;
-            Licenses.Remove(remoteSignature);
-            PendingWrite = true;
-            return true;
+            return new Task<bool>(() =>
+            {
+                if (!Licenses.ToArray().Contains(remoteSignature))
+                    return false;
+                Licenses.Remove(remoteSignature);
+                PendingWrite = true;
+                accountManager.OnAccountFieldUpdate(this, AccountField.License);
+                return true;
+            });
         }
         #endregion
 
@@ -169,6 +197,7 @@ namespace OSLCommon.Authorization
                     return true;
             Groups.Add(group.ToUpper().Trim());
             PendingWrite = true;
+            accountManager.OnAccountFieldUpdate(this, AccountField.Group);
             return false;
         }
         /// <summary>
@@ -188,6 +217,7 @@ namespace OSLCommon.Authorization
         {
             var res = Groups.Remove(group.ToUpper().Trim());
             PendingWrite = res;
+            accountManager.OnAccountFieldUpdate(this, AccountField.Group);
             return res;
         }
         #endregion
@@ -213,6 +243,7 @@ namespace OSLCommon.Authorization
             }
             Tokens = newTokenList;
             PendingWrite = true;
+            accountManager.OnAccountFieldUpdate(this, AccountField.Token);
 
         }
 
@@ -225,6 +256,7 @@ namespace OSLCommon.Authorization
             int count = Tokens.Count;
             Tokens = new List<AccountToken>();
             PendingWrite = true;
+            accountManager.OnAccountFieldUpdate(this, AccountField.Token);
             return count;
         }
 
@@ -246,6 +278,7 @@ namespace OSLCommon.Authorization
             }
             Tokens = newTokenList;
             PendingWrite = true;
+            accountManager.OnAccountFieldUpdate(this, AccountField.Token);
             return count - newTokenList.Count;
         }
 
@@ -268,6 +301,7 @@ namespace OSLCommon.Authorization
                 targetToken.CreatedTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
                 Tokens.Add(targetToken);
                 PendingWrite = true;
+                accountManager.OnAccountFieldUpdate(this, AccountField.Token);
                 Trace.WriteLine($"[Account->AddToken:{GeneralHelper.GetNanoseconds()}] Granted token for {Username}");
                 return targetToken;
             }
@@ -349,6 +383,7 @@ namespace OSLCommon.Authorization
                 Message = reason,
                 Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
             });
+            accountManager.OnAccountFieldUpdate(this, AccountField.DisableReason);
         }
 
         /// <summary>
@@ -358,6 +393,7 @@ namespace OSLCommon.Authorization
         {
             Enabled = true;
             CleanDisableReasons();
+            accountManager.OnAccountFieldUpdate(this, AccountField.DisableReason);
         }
 
         /// <summary>
@@ -368,6 +404,7 @@ namespace OSLCommon.Authorization
             Trace.WriteLine($"[Account->CleanDisableReasons:{GeneralHelper.GetNanoseconds()}] {Username}");
             DisableReasons.Clear();
             PendingWrite = true;
+            accountManager.OnAccountFieldUpdate(this, AccountField.DisableReason);
         }
         #endregion
 
@@ -384,6 +421,7 @@ namespace OSLCommon.Authorization
                     return true;
             Permissions.Add(target);
             PendingWrite = true;
+            accountManager.OnAccountFieldUpdate(this, AccountField.Permission);
             return false;
         }
 
@@ -422,6 +460,7 @@ namespace OSLCommon.Authorization
             }
             Permissions = newPermissionArray;
             PendingWrite = true;
+            accountManager.OnAccountFieldUpdate(this, AccountField.Permission);
             return found;
         }
         #endregion

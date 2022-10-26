@@ -54,7 +54,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
         [HttpGet("purge")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<Dictionary<string, int>>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
-        public ActionResult TokenPurge(string token, string? username = null, bool? isUsernameFieldRegexPattern = false)
+        public ActionResult TokenPurge(string token, string? username = null)
         {
             var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
             if (authRes != null)
@@ -65,35 +65,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
 
             OSLCommon.Authorization.Account[] accountArray;
 
-            if ((isUsernameFieldRegexPattern ?? false) && username != null && username.Length > 0)
-            {
-                if (username == null)
-                {
-                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    return Json(new ObjectResponse<string>()
-                    {
-                        Success = false,
-                    }, MainClass.serializerOptions);
-                }
-                Regex expression;
-                try
-                {
-                    expression = new Regex(username);
-                }
-                catch (Exception except)
-                {
-                    Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    return Json(new ObjectResponse<HttpException>()
-                    {
-                        Success = false,
-                        Data = new HttpException((int)HttpStatusCode.InternalServerError, @"Failed to create expression", except)
-                    }, MainClass.serializerOptions);
-                }
-
-                accountArray = MainClass.contentManager.AccountManager.GetAccountsByRegex(expression, AccountField.Username).ToArray();
-            }
-            // When username is null, that means we want to purge our own tokens.
-            else if (username == null)
+            if (username == null)
             {
                 accountArray = new OSLCommon.Authorization.Account[]
                 {

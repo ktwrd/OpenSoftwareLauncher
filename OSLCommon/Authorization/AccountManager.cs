@@ -28,6 +28,10 @@ namespace OSLCommon.Authorization
 
         public bool IsPendingWrite { get; private set; }
         public event VoidDelegate PendingWrite;
+        public delegate void AccountFieldUpdateDelegate(Account account, AccountField field);
+        public event AccountFieldUpdateDelegate AccountFieldUpdate;
+        public delegate void AccountDelegate(Account account);
+        public event AccountDelegate AccountModify;
         public void ForcePendingWrite()
         {
             IsPendingWrite = true;
@@ -39,6 +43,16 @@ namespace OSLCommon.Authorization
             IsPendingWrite = true;
             if (PendingWrite != null)
                 PendingWrite?.Invoke();
+        }
+        internal void OnAccountModify(Account account)
+        {
+            if (AccountModify != null)
+                AccountModify?.Invoke(account);
+        }
+        internal void OnAccountFieldUpdate(Account account, AccountField field)
+        {
+            if (AccountFieldUpdate != null)
+                AccountFieldUpdate?.Invoke(account, field);
         }
         public void ClearPendingWrite()
         {
@@ -93,10 +107,6 @@ namespace OSLCommon.Authorization
             }
             return null;
         }
-        public enum AccountField
-        {
-            Username
-        }
         public LinkedList<Account> GetAccountsByRegex(Regex expression, AccountField field=AccountField.Username)
         {
             var list = new LinkedList<Account>();
@@ -131,7 +141,7 @@ namespace OSLCommon.Authorization
 
             for (int i = 0; i < account.Tokens.Count; i++)
             {
-                if (account.Tokens[i] != null)
+                if (account.Tokens[i] != null && account.Tokens[i].Token == token)
                     account.Tokens[i] = TokenMarkLastUsedTimestamp(account.Tokens[i]);
             }
             if (!IsPendingWrite)
@@ -182,6 +192,7 @@ namespace OSLCommon.Authorization
                                     thing.Host = host;
                                 }
                             }
+                            account.PendingWrite = true;
                             return new GrantTokenResponse(ServerStringResponse.AccountTokenGranted, true, success, account.Groups.ToArray(), account.Permissions.ToArray());
                         }
                     }
