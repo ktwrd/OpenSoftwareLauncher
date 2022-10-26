@@ -95,7 +95,7 @@ namespace OSLCommon.Authorization
             get
             {
                 long timestamp = long.MinValue;
-                foreach (var token in Tokens)
+                foreach (var token in Tokens.ToArray())
                 {
                     if (token.CreatedTimestamp > timestamp)
                         timestamp = token.CreatedTimestamp;
@@ -139,7 +139,7 @@ namespace OSLCommon.Authorization
         /// <returns>true: License does not exist and was added. false: Licence already exists, ignoring.</returns>
         public bool GrantLicense(string remoteSignature)
         {
-            if (Licenses.Contains(remoteSignature))
+            if (Licenses.ToArray().Contains(remoteSignature))
                 return false;
             Licenses.Add(remoteSignature);
             PendingWrite = true;
@@ -148,7 +148,7 @@ namespace OSLCommon.Authorization
         /// <returns>true: License does not exist and was added. false: Licence already exists, ignoring.</returns>
         public bool RevokeLicense(string remoteSignature)
         {
-            if (!Licenses.Contains(remoteSignature))
+            if (!Licenses.ToArray().Contains(remoteSignature))
                 return false;
             Licenses.Remove(remoteSignature);
             PendingWrite = true;
@@ -379,7 +379,7 @@ namespace OSLCommon.Authorization
         /// <returns>If the user has the permission already</returns>
         public bool GrantPermission(AccountPermission target)
         {
-            foreach (var perm in Permissions)
+            foreach (var perm in Permissions.ToArray())
                 if (perm == target)
                     return true;
             Permissions.Add(target);
@@ -394,7 +394,7 @@ namespace OSLCommon.Authorization
         /// <returns><see cref="true"/> if the account has the permission, <see cref="false"/> if they do not have it.</returns>
         public bool HasPermission(AccountPermission target)
         {
-            foreach (var item in Permissions)
+            foreach (var item in Permissions.ToArray())
                 if (item == target)
                     return true;
             return false;
@@ -409,7 +409,7 @@ namespace OSLCommon.Authorization
         {
             bool found = false;
             var newPermissionArray = new List<AccountPermission>();
-            foreach (var item in Permissions)
+            foreach (var item in Permissions.ToArray())
             {
                 if (item != target)
                 {
