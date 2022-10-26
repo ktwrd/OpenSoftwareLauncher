@@ -234,6 +234,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <None Include="Resources\bin.png" />
     <None Include="Resources\lock--plus.png" />
     <None Include="Resources\lock.png" />
     <None Include="Locale\en.locale">
