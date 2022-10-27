@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AnnouncementEditDialog));
             this.textBoxCode = new System.Windows.Forms.TextBox();
             this.webBrowserPreview = new System.Windows.Forms.WebBrowser();
             this.buttonOpen = new System.Windows.Forms.Button();
@@ -181,6 +182,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(574, 443);
             this.Controls.Add(this.tableLayoutPanel1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "AnnouncementEditDialog";
             this.Text = "Title_AnnouncementEditDialog";
             this.Shown += new System.EventHandler(this.AnnouncementEditDialog_Shown);
