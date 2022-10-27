@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.textBoxCode = new System.Windows.Forms.TextBox();
             this.webBrowserPreview = new System.Windows.Forms.WebBrowser();
             this.buttonOpen = new System.Windows.Forms.Button();
@@ -38,6 +39,7 @@
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.buttonPush = new System.Windows.Forms.Button();
             this.buttonSave = new System.Windows.Forms.Button();
+            this.timerTypeUpdate = new System.Windows.Forms.Timer(this.components);
             this.flowLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -155,6 +157,7 @@
             this.buttonPush.Text = "Push";
             this.buttonPush.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.buttonPush.UseVisualStyleBackColor = true;
+            this.buttonPush.Click += new System.EventHandler(this.buttonPush_Click);
             // 
             // buttonSave
             // 
@@ -164,6 +167,11 @@
             this.buttonSave.Size = new System.Drawing.Size(46, 23);
             this.buttonSave.TabIndex = 3;
             this.buttonSave.UseVisualStyleBackColor = true;
+            // 
+            // timerTypeUpdate
+            // 
+            this.timerTypeUpdate.Enabled = true;
+            this.timerTypeUpdate.Tick += new System.EventHandler(this.timerTypeUpdate_Tick);
             // 
             // AnnouncementEditDialog
             // 
@@ -199,5 +207,6 @@
         private System.Windows.Forms.CheckBox checkBoxEnable;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
         private System.Windows.Forms.Button buttonPush;
+        private System.Windows.Forms.Timer timerTypeUpdate;
     }
 }

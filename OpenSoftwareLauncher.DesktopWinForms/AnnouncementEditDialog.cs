@@ -16,6 +16,11 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         {
             InitializeComponent();
         }
+        public AnnouncementEditDialog(AnnouncementManagementForm manform)
+        {
+            Manager = manform;
+        }
+        private AnnouncementManagementForm Manager;
         public void Locale()
         {
             Text = LocaleManager.Get("Title_AnnouncementEditDialog");
@@ -26,6 +31,17 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         private void AnnouncementEditDialog_Shown(object sender, EventArgs e)
         {
             Locale();
+        }
+
+        private void timerTypeUpdate_Tick(object sender, EventArgs e)
+        {
+            webBrowserPreview.DocumentText = textBoxCode.Text;
+        }
+
+        private void buttonPush_Click(object sender, EventArgs e)
+        {
+            Manager.SetTargetContent(textBoxCode.Text, checkBoxEnable.Checked);
+            Close();
         }
     }
 }
