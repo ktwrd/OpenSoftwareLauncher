@@ -161,10 +161,10 @@
     <Compile Include="User Management\UserDisableForm.Designer.cs">
       <DependentUpon>UserDisableForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UserGroupForm.cs">
+    <Compile Include="User Management\UserGroupForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UserGroupForm.Designer.cs">
+    <Compile Include="User Management\UserGroupForm.Designer.cs">
       <DependentUpon>UserGroupForm.cs</DependentUpon>
     </Compile>
     <Compile Include="User Management\UserLicenseForm.cs">
@@ -210,7 +210,7 @@
     <EmbeddedResource Include="User Management\UserDisableForm.resx">
       <DependentUpon>UserDisableForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UserGroupForm.resx">
+    <EmbeddedResource Include="User Management\UserGroupForm.resx">
       <DependentUpon>UserGroupForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="User Management\UserLicenseForm.resx">
