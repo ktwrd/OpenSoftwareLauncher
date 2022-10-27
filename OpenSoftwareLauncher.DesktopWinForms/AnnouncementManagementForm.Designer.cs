@@ -28,17 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AnnouncementManagementForm));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.listView1 = new System.Windows.Forms.ListView();
-            this.columnHeaderMessage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.checkBoxEnableAnnouncements = new System.Windows.Forms.CheckBox();
             this.toolStripButtonAdd = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonEdit = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonDelete = new System.Windows.Forms.ToolStripButton();
+            this.listViewAnnouncement = new System.Windows.Forms.ListView();
+            this.columnHeaderMessage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.checkBoxEnableAnnouncements = new System.Windows.Forms.CheckBox();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
@@ -58,19 +60,51 @@
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // listView1
+            // toolStripButtonAdd
             // 
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.toolStripButtonAdd.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonAdd.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.plus;
+            this.toolStripButtonAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonAdd.Name = "toolStripButtonAdd";
+            this.toolStripButtonAdd.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonAdd.Text = "Add";
+            // 
+            // toolStripButtonEdit
+            // 
+            this.toolStripButtonEdit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonEdit.Enabled = false;
+            this.toolStripButtonEdit.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.pencil;
+            this.toolStripButtonEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonEdit.Name = "toolStripButtonEdit";
+            this.toolStripButtonEdit.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonEdit.Text = "Edit";
+            // 
+            // toolStripButtonDelete
+            // 
+            this.toolStripButtonDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonDelete.Enabled = false;
+            this.toolStripButtonDelete.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.bin;
+            this.toolStripButtonDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonDelete.Name = "toolStripButtonDelete";
+            this.toolStripButtonDelete.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonDelete.Text = "Delete";
+            // 
+            // listViewAnnouncement
+            // 
+            this.listViewAnnouncement.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderMessage,
             this.columnHeader1});
-            this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(3, 3);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(794, 390);
-            this.listView1.TabIndex = 1;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Details;
+            this.listViewAnnouncement.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewAnnouncement.HideSelection = false;
+            this.listViewAnnouncement.LargeImageList = this.imageList1;
+            this.listViewAnnouncement.Location = new System.Drawing.Point(3, 3);
+            this.listViewAnnouncement.Name = "listViewAnnouncement";
+            this.listViewAnnouncement.Size = new System.Drawing.Size(794, 390);
+            this.listViewAnnouncement.SmallImageList = this.imageList1;
+            this.listViewAnnouncement.TabIndex = 1;
+            this.listViewAnnouncement.UseCompatibleStateImageBehavior = false;
+            this.listViewAnnouncement.View = System.Windows.Forms.View.Details;
+            this.listViewAnnouncement.SelectedIndexChanged += new System.EventHandler(this.listViewAnnouncement_SelectedIndexChanged);
             // 
             // columnHeaderMessage
             // 
@@ -83,12 +117,18 @@
             this.columnHeader1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.columnHeader1.Width = 150;
             // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "tick.ico");
+            // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.listView1, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.listViewAnnouncement, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 25);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -118,33 +158,6 @@
             this.checkBoxEnableAnnouncements.Text = "EnableAnnouncement_Plural";
             this.checkBoxEnableAnnouncements.UseVisualStyleBackColor = true;
             // 
-            // toolStripButtonAdd
-            // 
-            this.toolStripButtonAdd.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonAdd.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.plus;
-            this.toolStripButtonAdd.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonAdd.Name = "toolStripButtonAdd";
-            this.toolStripButtonAdd.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonAdd.Text = "Add";
-            // 
-            // toolStripButtonEdit
-            // 
-            this.toolStripButtonEdit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonEdit.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.pencil;
-            this.toolStripButtonEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonEdit.Name = "toolStripButtonEdit";
-            this.toolStripButtonEdit.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonEdit.Text = "Edit";
-            // 
-            // toolStripButtonDelete
-            // 
-            this.toolStripButtonDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonDelete.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.bin;
-            this.toolStripButtonDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonDelete.Name = "toolStripButtonDelete";
-            this.toolStripButtonDelete.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonDelete.Text = "Delete";
-            // 
             // AnnouncementManagementForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -170,7 +183,7 @@
         #endregion
 
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ListView listViewAnnouncement;
         private System.Windows.Forms.ColumnHeader columnHeaderMessage;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ToolStripButton toolStripButtonAdd;
@@ -179,5 +192,6 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.CheckBox checkBoxEnableAnnouncements;
+        private System.Windows.Forms.ImageList imageList1;
     }
 }
