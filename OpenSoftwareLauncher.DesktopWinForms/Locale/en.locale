@@ -54,10 +54,12 @@ View=View
 
 // plural keywords (including tense)
 Announcement_Plural=Announcements
+Detail_Plural=Details
 Download_Plural=Downloading
 Expire_Plural=Expires
 Group_Plural=Groups
 Instance_Plural=Instances
+Key_Plural=Keys
 Launch_ParameterPlural=Launch Parameters
 License_Plural=Licenses
 LineCount_Plural=${count} Lines
