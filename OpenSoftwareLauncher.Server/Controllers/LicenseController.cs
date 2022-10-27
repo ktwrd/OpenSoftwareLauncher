@@ -36,7 +36,8 @@ namespace OpenSoftwareLauncher.Server.Controllers
             var response = new GrantLicenseKeyResponse
             {
                 Code = responseCode,
-                Products = data.Products
+                Products = data.ProductsApplied,
+                Permissions = data.PermissionsApplied
             };
 
             return Json(new ObjectResponse<GrantLicenseKeyResponse>
