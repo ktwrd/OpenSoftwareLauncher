@@ -203,16 +203,6 @@ namespace OpenSoftwareLauncher.DesktopWinForms.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        public static System.Drawing.Bitmap lock__check {
-            get {
-                object obj = ResourceManager.GetObject("lock__check", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         public static System.Drawing.Bitmap lock__cross {
             get {
                 object obj = ResourceManager.GetObject("lock__cross", resourceCulture);
@@ -226,6 +216,16 @@ namespace OpenSoftwareLauncher.DesktopWinForms.Properties {
         public static System.Drawing.Bitmap lock__plus {
             get {
                 object obj = ResourceManager.GetObject("lock__plus", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap lock__tick {
+            get {
+                object obj = ResourceManager.GetObject("lock__tick", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
