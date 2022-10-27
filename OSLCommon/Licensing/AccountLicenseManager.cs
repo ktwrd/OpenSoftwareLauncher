@@ -20,7 +20,7 @@ namespace OSLCommon.Licensing
         /// <param name="license">Nullable <see cref="LicenseKeyMetadata"/></param>
         public delegate void LicenseFieldDelegate(LicenseField field, LicenseKeyMetadata license);
         public event LicenseFieldDelegate Update;
-        internal void OnUpdate(LicenseField field, LicenseKeyMetadata license)
+        public void OnUpdate(LicenseField field, LicenseKeyMetadata license)
         {
             if (Update != null)
                 Update?.Invoke(field, license);
