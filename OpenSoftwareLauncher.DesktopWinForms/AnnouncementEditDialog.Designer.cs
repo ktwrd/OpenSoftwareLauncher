@@ -31,13 +31,13 @@
             this.textBoxCode = new System.Windows.Forms.TextBox();
             this.webBrowserPreview = new System.Windows.Forms.WebBrowser();
             this.buttonOpen = new System.Windows.Forms.Button();
-            this.buttonSave = new System.Windows.Forms.Button();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.checkBoxEnable = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.buttonPush = new System.Windows.Forms.Button();
+            this.buttonSave = new System.Windows.Forms.Button();
             this.flowLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -68,20 +68,12 @@
             // 
             // buttonOpen
             // 
+            this.buttonOpen.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.folder_horizontal_open;
             this.buttonOpen.Location = new System.Drawing.Point(3, 3);
             this.buttonOpen.Name = "buttonOpen";
             this.buttonOpen.Size = new System.Drawing.Size(46, 23);
             this.buttonOpen.TabIndex = 2;
             this.buttonOpen.UseVisualStyleBackColor = true;
-            // 
-            // buttonSave
-            // 
-            this.buttonSave.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.disk;
-            this.buttonSave.Location = new System.Drawing.Point(55, 3);
-            this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(46, 23);
-            this.buttonSave.TabIndex = 3;
-            this.buttonSave.UseVisualStyleBackColor = true;
             // 
             // flowLayoutPanel1
             // 
@@ -163,6 +155,15 @@
             this.buttonPush.Text = "Push";
             this.buttonPush.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.buttonPush.UseVisualStyleBackColor = true;
+            // 
+            // buttonSave
+            // 
+            this.buttonSave.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.disk;
+            this.buttonSave.Location = new System.Drawing.Point(55, 3);
+            this.buttonSave.Name = "buttonSave";
+            this.buttonSave.Size = new System.Drawing.Size(46, 23);
+            this.buttonSave.TabIndex = 3;
+            this.buttonSave.UseVisualStyleBackColor = true;
             // 
             // AnnouncementEditDialog
             // 

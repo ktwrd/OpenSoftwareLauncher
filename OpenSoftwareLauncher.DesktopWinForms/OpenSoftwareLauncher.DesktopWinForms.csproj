@@ -243,6 +243,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <None Include="Resources\folder-horizontal-open.png" />
     <None Include="Resources\bin.png" />
     <None Include="Resources\lock--plus.png" />
     <None Include="Resources\lock.png" />
