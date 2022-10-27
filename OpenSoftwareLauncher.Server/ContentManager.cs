@@ -19,22 +19,37 @@ namespace OpenSoftwareLauncher.Server
         public List<ReleaseInfo> ReleaseInfoContent = new();
         public Dictionary<string, ProductRelease> Releases = new();
         public Dictionary<string, PublishedRelease> Published = new();
-        public AccountManager AccountManager = new();
+        public AccountManager AccountManager;
         public SystemAnnouncement SystemAnnouncement = new();
-        public List<LicenseKeyMetadata> LicenseKeys = new();
-        public Dictionary<string, string> LicenseKeyGroupNote = new();
+        public AccountLicenseManager AccountLicenseManager;
 
         /*internal List<string> LoadedFirebaseAssets = new();
          * internal FirestoreDb database;*/
-         
+
         public ContentManager()
         {
+            AccountManager = new AccountManager();
+            AccountLicenseManager = new AccountLicenseManager(AccountManager);
             databaseDeserialize();
 
             AccountManager.PendingWrite += AccountManager_PendingWrite;
             SystemAnnouncement.Update += SystemAnnouncement_Update;
+            AccountLicenseManager.Update += AccountLicenseManager_Update;
         }
-        
+
+        private void AccountLicenseManager_Update(LicenseField field, LicenseKeyMetadata license)
+        {
+            if (field == LicenseField.All || field == LicenseField.AllGroups)
+            {
+                File.WriteAllText(JSON_LICENSEGROUP_FILENAME,
+                    JsonSerializer.Serialize(AccountLicenseManager.LicenseGroups, MainClass.serializerOptions));
+            }
+            if (field == LicenseField.AllGroups)
+            {
+                File.WriteAllText(JSON_LICENSE_FILENAME,
+                    JsonSerializer.Serialize(AccountLicenseManager.LicenseKeys, MainClass.serializerOptions));
+            }
+        }
 
         private void SystemAnnouncement_Update()
         {
@@ -67,14 +82,18 @@ namespace OpenSoftwareLauncher.Server
         private readonly string JSON_SYSANNOUNCE_FILENAME = Path.Combine(
             MainClass.DataDirectory,
             "systemAnnouncement.json");
+        private readonly string JSON_LICENSE_FILENAME = Path.Combine(
+            MainClass.DataDirectory,
+            "licenses.json");
+        private readonly string JSON_LICENSEGROUP_FILENAME = Path.Combine(
+            MainClass.DataDirectory,
+            "licenseGroups.json");
         private int DatabaseVersion;
         private class JSONBackupContent
         {
             public List<ReleaseInfo> ReleaseInfoContent = new();
             public Dictionary<string, ProductRelease> Releases = new();
             public Dictionary<string, PublishedRelease> Published = new();
-            public List<LicenseKeyMetadata> LicenseKeyMetadata = new();
-            public Dictionary<string, string> LicenseKeyGroupNote = new();
         }
         private void databaseDeserialize()
         {
@@ -104,22 +123,32 @@ namespace OpenSoftwareLauncher.Server
             {
                 RestoreFromJSON();
             }
-            /*DatabaseHelper.Read(DATABASE_FILENAME, sr =>
+            try
             {
-                DatabaseVersion = sr.ReadInt32(); // ContainsKey
-                ReleaseInfoContent = (List<ReleaseInfo>)sr.ReadBList<ReleaseInfo>();
-                Releases = (Dictionary<string, ProductRelease>)sr.ReadDictionary<string, ProductRelease>();
-                Published = (Dictionary<string, PublishedRelease>)sr.ReadDictionary<string, PublishedRelease>();
-                Console.WriteLine($"[ContentManager->databaseDeserialize] Read {Path.GetRelativePath(Directory.GetCurrentDirectory(), DATABASE_FILENAME)}");
-            }, (e) =>
+                if (File.Exists(JSON_LICENSE_FILENAME))
+                    AccountLicenseManager.LicenseKeys = JsonSerializer.Deserialize<Dictionary<string, LicenseKeyMetadata>>(
+                        File.ReadAllText(JSON_LICENSE_FILENAME),
+                        MainClass.serializerOptions);
+            }
+            catch (Exception except)
             {
-                Console.WriteLine(@"//-- content.db is corrupt...".PadLeft(Console.BufferWidth));
-                Console.Error.WriteLine(e);
-                Console.WriteLine(@"//-- content.db is corrupt...".PadLeft(Console.BufferWidth));
-                File.Copy("content.db", $"content.{DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()}.bak.db");
-                if (File.Exists(JSONBACKUP_FILENAME))
-                    RestoreFromJSON();
-            });*/
+                string txt = $"[ContentManager->databaseSerialize:{GeneralHelper.GetNanoseconds()}] [ERR] Failed to read Licenses\n--------\n{except}\n--------\n";
+                Trace.WriteLine(txt);
+                Console.Error.WriteLine(txt);
+            }
+            try
+            {
+                if (File.Exists(JSON_LICENSEGROUP_FILENAME))
+                    AccountLicenseManager.LicenseGroups = JsonSerializer.Deserialize<Dictionary<string, LicenseGroup>>(
+                        File.ReadAllText(JSON_LICENSEGROUP_FILENAME),
+                        MainClass.serializerOptions);
+            }
+            catch (Exception except)
+            {
+                string txt = $"[ContentManager->databaseSerialize:{GeneralHelper.GetNanoseconds()}] [ERR] Failed to read License Groups\n--------\n{except}\n--------\n";
+                Trace.WriteLine(txt);
+                Console.Error.WriteLine(txt);
+            }
         }
         private void RestoreFromJSON()
         {
@@ -147,8 +176,6 @@ namespace OpenSoftwareLauncher.Server
             ReleaseInfoContent = deserialized.ReleaseInfoContent;
             Releases = ReleaseHelper.TransformReleaseList(ReleaseInfoContent.ToArray());
             Published = deserialized.Published;
-            LicenseKeys = deserialized.LicenseKeyMetadata;
-            LicenseKeyGroupNote = deserialized.LicenseKeyGroupNote;
             System.Threading.Thread.Sleep(500);
             DatabaseSerialize();
         }
@@ -172,6 +199,7 @@ namespace OpenSoftwareLauncher.Server
             }*/
             SystemAnnouncement.OnUpdate();
             AccountManager.ForcePendingWrite();
+            AccountLicenseManager.OnUpdate(LicenseField.All, null);
             CreateJSONBackup();
             ServerConfig.Save();
         }
@@ -181,9 +209,7 @@ namespace OpenSoftwareLauncher.Server
             {
                 ReleaseInfoContent = ReleaseInfoContent.ToArray().ToList(),
                 Releases = Releases,
-                Published = Published,
-                LicenseKeyMetadata = this.LicenseKeys.ToArray().ToList(),
-                LicenseKeyGroupNote = LicenseKeyGroupNote
+                Published = Published
             };
             File.WriteAllText(JSONBACKUP_FILENAME, JsonSerializer.Serialize(data, MainClass.serializerOptions));
         }

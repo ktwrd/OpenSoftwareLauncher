@@ -21,7 +21,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
                 return Json(authRes, MainClass.serializerOptions);
             }
             var account = MainClass.contentManager.AccountManager.GetAccount(token);
-            var data = MainClass.GetLicenseKey(key);
+            var data = MainClass.contentManager.AccountLicenseManager.GetLicenseKey(key).Result;
             if (data == null)
             {
                 Response.StatusCode = 400;
@@ -32,7 +32,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
                 });
             }
 
-            var responseCode = MainClass.GrantLicenseKey(account.Username, key);
+            var responseCode = MainClass.contentManager.AccountLicenseManager.GrantLicenseKey(account.Username, key).Result;
             var response = new GrantLicenseKeyResponse
             {
                 Code = responseCode,

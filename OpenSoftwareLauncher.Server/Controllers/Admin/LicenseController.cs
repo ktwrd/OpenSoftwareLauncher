@@ -9,6 +9,8 @@ using System.Text.Json;
 using Licensing = OSLCommon.Licensing;
 using OSLCommon.Licensing;
 using System.Linq;
+using static OSLCommon.Licensing.AccountLicenseManager;
+using System.Reflection;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Admin
 {
@@ -68,14 +70,14 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 }, MainClass.serializerOptions);
             }
 
-            var res = MainClass.CreateLicenseKeys(
+            var res = MainClass.contentManager.AccountLicenseManager.CreateLicenseKeys(
                 account.Username,
                 decodedBody.RemoteLocations,
                 decodedBody.Count,
                 decodedBody.Permissions,
                 decodedBody.Note,
                 decodedBody.ExpiryTimestamp,
-                decodedBody.GroupLabel);
+                decodedBody.GroupLabel).Result;
 
             return Json(new ObjectResponse<CreateLicenseKeyResponse>
             {
@@ -99,7 +101,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
             return Json(new ObjectResponse<LicenseKeyMetadata[]>
             {
                 Success = true,
-                Data = MainClass.contentManager.LicenseKeys.ToArray()
+                Data = MainClass.contentManager.AccountLicenseManager.LicenseKeys.Select(v => v.Value).ToArray()
             }, MainClass.serializerOptions);
         }
 
@@ -115,7 +117,8 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 return Json(authRes, MainClass.serializerOptions);
             }
 
-            var keys = MainClass.contentManager.LicenseKeys
+            var keys = MainClass.contentManager.AccountLicenseManager.LicenseKeys
+                .Select(v => v.Value)
                 .Where(v => v.Products.Contains(remoteLocation))
                 .ToArray();
 
@@ -135,7 +138,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         }*/
 
         [HttpGet("disableKey")]
-        [ProducesResponseType(200, Type = typeof(ObjectResponse<bool>))]
+        [ProducesResponseType(200, Type = typeof(ObjectResponse<LicenseKeyActionResult>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult DisableKey(string token, string keyId)
         {
@@ -146,9 +149,30 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 return Json(authRes, MainClass.serializerOptions);
             }
 
-            bool response = MainClass.DisableLicenseKey(keyId);
+            LicenseKeyActionResult response = MainClass.contentManager.AccountLicenseManager.DisableLicenseKey(keyId).Result;
 
-            return Json(new ObjectResponse<bool>
+            return Json(new ObjectResponse<LicenseKeyActionResult>
+            {
+                Success = true,
+                Data = response
+            }, MainClass.serializerOptions);
+        }
+
+        [HttpGet("enableKey")]
+        [ProducesResponseType(200, Type = typeof(ObjectResponse<LicenseKeyActionResult>))]
+        [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
+        public ActionResult EnableKey(string token, string keyId)
+        {
+            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
+            if (authRes != null)
+            {
+                Response.StatusCode = authRes?.Data.Code ?? 0;
+                return Json(authRes, MainClass.serializerOptions);
+            }
+
+            LicenseKeyActionResult response = MainClass.contentManager.AccountLicenseManager.EnableLicenseKey(keyId).Result;
+
+            return Json(new ObjectResponse<LicenseKeyActionResult>
             {
                 Success = true,
                 Data = response
