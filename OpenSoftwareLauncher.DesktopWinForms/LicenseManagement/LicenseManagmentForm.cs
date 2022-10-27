@@ -26,6 +26,11 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             labelKeys.Text = LocaleManager.Get("Key_Plural");
             labelDetails.Text = LocaleManager.Get("Detail_Plural");
 
+            foreach (ListViewGroup group in listViewKeys.Groups)
+            {
+                group.Header = LocaleManager.Get(group.Header);
+            }
+
             Text = LocaleManager.Get("Title_LicenseManagement");
         }
         public void RefreshControls()
@@ -177,7 +182,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             }
             foreach (var i in taskList)
                 i.Start();
-            Task.WhenAll(taskList);
+            Task.WhenAll(taskList).Wait();
             RefreshControls();
         }
 
@@ -193,7 +198,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             }
             foreach (var i in taskList)
                 i.Start();
-            Task.WhenAll(taskList);
+            Task.WhenAll(taskList).Wait();
             RefreshControls();
         }
     }

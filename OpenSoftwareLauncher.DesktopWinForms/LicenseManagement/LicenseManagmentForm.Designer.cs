@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Activate_PastTense", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Diable_PastTense", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Disable_PastTense", System.Windows.Forms.HorizontalAlignment.Left);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LicenseManagmentForm));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonCreateKeys = new System.Windows.Forms.ToolStripButton();
@@ -121,7 +121,7 @@
             this.listViewKeys.Dock = System.Windows.Forms.DockStyle.Fill;
             listViewGroup1.Header = "Activate_PastTense";
             listViewGroup1.Name = "listViewGroup1";
-            listViewGroup2.Header = "Diable_PastTense";
+            listViewGroup2.Header = "Disable_PastTense";
             listViewGroup2.Name = "listViewGroup2";
             this.listViewKeys.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
             listViewGroup1,
