@@ -32,7 +32,7 @@ namespace OSLCommon.Licensing
             string[] arr = new string[LicenseKeyItemCount];
             for (int i = 0; i < arr.Length; i++)
                 arr[i] = GeneralHelper.GenerateToken(LicenseKeyItemLength);
-            return string.Join('-', arr);
+            return string.Join("-", arr);
         }
     }
 }
