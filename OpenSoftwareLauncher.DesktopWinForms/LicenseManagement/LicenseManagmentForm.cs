@@ -24,7 +24,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         {
             labelGroups.Text = LocaleManager.Get("Group_Plural");
             labelKeys.Text = LocaleManager.Get("Key_Plural");
-            labelDetails.Text = LocaleManager.Get("Detail_Plural;");
+            labelDetails.Text = LocaleManager.Get("Detail_Plural");
 
             Text = LocaleManager.Get("Title_LicenseManagement");
         }
