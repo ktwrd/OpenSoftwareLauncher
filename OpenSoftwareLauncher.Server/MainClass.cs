@@ -290,61 +290,7 @@ namespace OpenSoftwareLauncher.Server
             return GrantLicenseKeyResponseCode.Invalid;
         }
         
-
-        public static bool CanUserGroupsAccessStream(string[] blacklist, string[] whitelist, Account account)
-        {
-            if (ServerConfig.GetBoolean("Security", "EnableGroupRestriction", false))
-            {
-                bool userHasWhitelist = false;
-                bool userHasBlacklist = false;
-                foreach (var group in blacklist)
-                {
-                    if (account.Groups.Contains(group))
-                        userHasBlacklist = true;
-                }
-                foreach (var group in whitelist)
-                {
-                    if (account.Groups.Contains(group))
-                        userHasWhitelist = true;
-                }
-
-                if (blacklist.Length > 0 && userHasBlacklist)
-                    return false;
-                if (whitelist.Length > 0 && userHasWhitelist)
-                    return true;
-                if (whitelist.Length > 0 && userHasWhitelist == false)
-                    return false;
-                return true;
-            }
-            else
-            {
-                return true;
-            }
-        }
-
-        internal static List<AuthenticatedUser> Accounts = new List<AuthenticatedUser>();
-        public static AuthenticatedUser? FetchUser(string username, string password)
-        {
-            SHA256 sha256Instance = SHA256.Create();
-            var computedHash = sha256Instance.ComputeHash(Encoding.UTF8.GetBytes($"{username}{password}"));
-            var hash = GeneralHelper.Base62Encode(computedHash);
-            foreach (var account in Accounts)
-            {
-                if (account.ValidateHash(hash))
-                    return account;
-            }
-            return null;
-        }
-        public static AuthenticatedUser? FetchUserByToken(string token)
-        {
-            foreach (var account in Accounts)
-            {
-                if (account.Token == token)
-                    return account;
-            }
-            return null;
-        }
-        public static bool UserHasService(AuthenticatedUser user, string service) => user.AvailableServices.Contains(service);
+        
 
         public static void LoadTokens()
         {
@@ -372,24 +318,6 @@ namespace OpenSoftwareLauncher.Server
                     dict.Add(i, "");
                 ValidTokens = dict;
             }
-        }
-        public static bool UserByTokenHasService(string token, string service)
-        {
-            if (token.Length < 1)
-                return false;
-            var targetAccount = FetchUserByToken(token);
-            if (targetAccount == null)
-                return false;
-            if (targetAccount.IsAdmin)
-                return true;
-            return targetAccount.AvailableServices.Contains(service);
-        }
-        public static bool UserByTokenIsAdmin(string token)
-        {
-            var targetAccount = FetchUserByToken(token);
-            if (targetAccount == null)
-                return false;
-            return targetAccount.IsAdmin;
         }
 
         public static JsonSerializerOptions serializerOptions = new JsonSerializerOptions()
