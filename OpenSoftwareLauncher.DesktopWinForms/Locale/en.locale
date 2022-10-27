@@ -19,6 +19,7 @@ EditingPermissionFor=Editing permissions for ${username}
 Executable=Executable
 Exit=Exit
 Explore=Explore
+EnableAnnouncement=Enable Announcement
 File=File
 HardwareDrawing=Hardware Rendering
 Install=Install
@@ -81,6 +82,7 @@ Btn_AccountCreate=Create Account
 Btn_ScrollToBottom=Scroll to Bottom
 
 Title=${product.name} v${version}
+Title_AnnouncementEditDialog=Announcement Editor
 Title_AnnouncementManagementForm=Announcement Management
 Title_ChangelogViewer=Changelog
 Title_Brand=Minalyze Launcher
