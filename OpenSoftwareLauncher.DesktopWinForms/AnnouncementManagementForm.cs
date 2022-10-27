@@ -62,5 +62,10 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             toolStripButtonDelete.Enabled = listViewAnnouncement.SelectedItems.Count > 0;
             toolStripButtonEdit.Enabled = listViewAnnouncement.SelectedItems.Count > 0 && listViewAnnouncement.SelectedItems.Count < 2;
         }
+
+        public void SetTargetContent(string content, bool active)
+        {
+            
+        }
     }
 }
