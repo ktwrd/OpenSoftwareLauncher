@@ -88,6 +88,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnnouncementEditDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AnnouncementEditDialog.Designer.cs">
+      <DependentUpon>AnnouncementEditDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="AnnouncementManagementForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -168,6 +174,9 @@
     <Compile Include="User Management\UserLicenseForm.Designer.cs">
       <DependentUpon>UserLicenseForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="AnnouncementEditDialog.resx">
+      <DependentUpon>AnnouncementEditDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AnnouncementManagementForm.resx">
       <DependentUpon>AnnouncementManagementForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -258,6 +267,9 @@
     <None Include="Resources\hammer.png" />
     <None Include="Resources\arrow-circle.png" />
     <None Include="Resources\pencil.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Announcement Management\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Text.Json.6.0.6\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.6\build\System.Text.Json.targets')" />
