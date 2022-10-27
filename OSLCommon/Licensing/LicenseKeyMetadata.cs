@@ -37,9 +37,17 @@ namespace OSLCommon.Licensing
         /// </summary>
         public string[] Products { get; set; } = Array.Empty<string>();
         /// <summary>
+        /// Products applied to user when licence is redeemed
+        /// </summary>
+        public string[] ProductsApplied { get; set; } = Array.Empty<string>();
+        /// <summary>
         /// Accounts to grant the accont on activation.
         /// </summary>
         public AccountPermission[] Permissions { get; set; } = Array.Empty<AccountPermission>();
+        /// <summary>
+        /// Permissions applied to user when licence is redeemed
+        /// </summary>
+        public AccountPermission[] PermissionsApplied { get; set; } = Array.Empty<AccountPermission>();
         /// <summary>
         /// Timestamp when the license key expires (milliseconds, UTC unix epoch)
         /// </summary>
