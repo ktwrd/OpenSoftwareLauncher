@@ -68,6 +68,7 @@
             this.toolStripButtonAdd.Name = "toolStripButtonAdd";
             this.toolStripButtonAdd.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonAdd.Text = "Add";
+            this.toolStripButtonAdd.Click += new System.EventHandler(this.toolStripButtonAdd_Click);
             // 
             // toolStripButtonEdit
             // 
@@ -78,6 +79,7 @@
             this.toolStripButtonEdit.Name = "toolStripButtonEdit";
             this.toolStripButtonEdit.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonEdit.Text = "Edit";
+            this.toolStripButtonEdit.Click += new System.EventHandler(this.toolStripButtonEdit_Click);
             // 
             // toolStripButtonDelete
             // 
@@ -88,6 +90,7 @@
             this.toolStripButtonDelete.Name = "toolStripButtonDelete";
             this.toolStripButtonDelete.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonDelete.Text = "Delete";
+            this.toolStripButtonDelete.Click += new System.EventHandler(this.toolStripButtonDelete_Click);
             // 
             // listViewAnnouncement
             // 
@@ -157,6 +160,7 @@
             this.checkBoxEnableAnnouncements.TabIndex = 0;
             this.checkBoxEnableAnnouncements.Text = "EnableAnnouncement_Plural";
             this.checkBoxEnableAnnouncements.UseVisualStyleBackColor = true;
+            this.checkBoxEnableAnnouncements.CheckedChanged += new System.EventHandler(this.checkBoxEnableAnnouncements_CheckedChanged);
             // 
             // AnnouncementManagementForm
             // 
