@@ -33,19 +33,22 @@
             System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Diable_PastTense", System.Windows.Forms.HorizontalAlignment.Left);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LicenseManagmentForm));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripButtonCreateKeys = new System.Windows.Forms.ToolStripButton();
             this.treeViewGroups = new System.Windows.Forms.TreeView();
             this.listViewKeys = new System.Windows.Forms.ListView();
             this.columnHeaderUID = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderCreated = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderExpiry = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderNote = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.imageListKeyState = new System.Windows.Forms.ImageList(this.components);
             this.propertyGridSelectedKey = new System.Windows.Forms.PropertyGrid();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.labelGroups = new System.Windows.Forms.Label();
             this.labelKeys = new System.Windows.Forms.Label();
             this.labelDetails = new System.Windows.Forms.Label();
-            this.imageListKeyState = new System.Windows.Forms.ImageList(this.components);
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonKeyDisable = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonCreateKeys = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonKeyEnable = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -53,22 +56,15 @@
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButtonCreateKeys});
+            this.toolStripButtonCreateKeys,
+            this.toolStripSeparator1,
+            this.toolStripButtonKeyEnable,
+            this.toolStripButtonKeyDisable});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(1170, 25);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
-            // 
-            // toolStripButtonCreateKeys
-            // 
-            this.toolStripButtonCreateKeys.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonCreateKeys.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.plus;
-            this.toolStripButtonCreateKeys.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonCreateKeys.Name = "toolStripButtonCreateKeys";
-            this.toolStripButtonCreateKeys.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonCreateKeys.Text = "Create";
-            this.toolStripButtonCreateKeys.Click += new System.EventHandler(this.toolStripButtonCreateKeys_Click);
             // 
             // treeViewGroups
             // 
@@ -128,6 +124,14 @@
             this.columnHeaderNote.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.columnHeaderNote.Width = 200;
             // 
+            // imageListKeyState
+            // 
+            this.imageListKeyState.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListKeyState.ImageStream")));
+            this.imageListKeyState.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageListKeyState.Images.SetKeyName(0, "tick.ico");
+            this.imageListKeyState.Images.SetKeyName(1, "fire.ico");
+            this.imageListKeyState.Images.SetKeyName(2, "cross.ico");
+            // 
             // propertyGridSelectedKey
             // 
             this.propertyGridSelectedKey.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -184,13 +188,37 @@
             this.labelDetails.TabIndex = 2;
             this.labelDetails.Text = "Detail_Plural";
             // 
-            // imageListKeyState
+            // toolStripSeparator1
             // 
-            this.imageListKeyState.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListKeyState.ImageStream")));
-            this.imageListKeyState.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageListKeyState.Images.SetKeyName(0, "tick.ico");
-            this.imageListKeyState.Images.SetKeyName(1, "fire.ico");
-            this.imageListKeyState.Images.SetKeyName(2, "cross.ico");
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButtonKeyDisable
+            // 
+            this.toolStripButtonKeyDisable.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonKeyDisable.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonKeyDisable.Name = "toolStripButtonKeyDisable";
+            this.toolStripButtonKeyDisable.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonKeyDisable.Text = "Disable";
+            // 
+            // toolStripButtonCreateKeys
+            // 
+            this.toolStripButtonCreateKeys.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonCreateKeys.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.plus;
+            this.toolStripButtonCreateKeys.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonCreateKeys.Name = "toolStripButtonCreateKeys";
+            this.toolStripButtonCreateKeys.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonCreateKeys.Text = "Create";
+            this.toolStripButtonCreateKeys.Click += new System.EventHandler(this.toolStripButtonCreateKeys_Click);
+            // 
+            // toolStripButtonKeyEnable
+            // 
+            this.toolStripButtonKeyEnable.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonKeyEnable.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.lock__tick;
+            this.toolStripButtonKeyEnable.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonKeyEnable.Name = "toolStripButtonKeyEnable";
+            this.toolStripButtonKeyEnable.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonKeyEnable.Text = "Enable";
             // 
             // LicenseManagmentForm
             // 
@@ -229,5 +257,8 @@
         private System.Windows.Forms.Label labelKeys;
         private System.Windows.Forms.Label labelDetails;
         private System.Windows.Forms.ImageList imageListKeyState;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripButton toolStripButtonKeyDisable;
+        private System.Windows.Forms.ToolStripButton toolStripButtonKeyEnable;
     }
 }
