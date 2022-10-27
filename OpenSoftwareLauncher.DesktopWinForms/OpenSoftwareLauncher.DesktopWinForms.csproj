@@ -88,16 +88,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AnnouncementEditDialog.cs">
+    <Compile Include="Announcement Management\AnnouncementEditDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AnnouncementEditDialog.Designer.cs">
+    <Compile Include="Announcement Management\AnnouncementEditDialog.Designer.cs">
       <DependentUpon>AnnouncementEditDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="AnnouncementManagementForm.cs">
+    <Compile Include="Announcement Management\AnnouncementManagementForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AnnouncementManagementForm.Designer.cs">
+    <Compile Include="Announcement Management\AnnouncementManagementForm.Designer.cs">
       <DependentUpon>AnnouncementManagementForm.cs</DependentUpon>
     </Compile>
     <Compile Include="LicenseManagement\LicenseKeyCreateDialog.cs">
@@ -148,7 +148,6 @@
     <Compile Include="ServerBridge\ContentField.cs" />
     <Compile Include="Delegates.cs" />
     <Compile Include="ServerBridge\LocalContent.cs" />
-    <Compile Include="ServerBridge\SystemAnnouncementSummaryAsList.cs" />
     <Compile Include="UserConfig.cs" />
     <Compile Include="User Management\UserManagementForm.cs">
       <SubType>Form</SubType>
@@ -174,10 +173,10 @@
     <Compile Include="User Management\UserLicenseForm.Designer.cs">
       <DependentUpon>UserLicenseForm.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="AnnouncementEditDialog.resx">
+    <EmbeddedResource Include="Announcement Management\AnnouncementEditDialog.resx">
       <DependentUpon>AnnouncementEditDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="AnnouncementManagementForm.resx">
+    <EmbeddedResource Include="Announcement Management\AnnouncementManagementForm.resx">
       <DependentUpon>AnnouncementManagementForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LicenseManagement\LicenseKeyCreateDialog.resx">
@@ -269,9 +268,7 @@
     <None Include="Resources\arrow-circle.png" />
     <None Include="Resources\pencil.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Announcement Management\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Text.Json.6.0.6\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.6\build\System.Text.Json.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
