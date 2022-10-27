@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static OSLCommon.Licensing.AccountLicenseManager;
 
 namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
 {
@@ -89,6 +90,54 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
             var deser = JsonSerializer.Deserialize<ObjectResponse<CreateLicenseKeyResponse>>(stringContent, Program.serializerOptions);
             Program.LocalContent.PullLicenseKeys().Wait();
             return deser.Data;
+        }
+        public Task<LicenseKeyActionResult> EnableLicenseKey(string uid)
+        {
+            return new Task<LicenseKeyActionResult>(delegate
+            {
+                if (!HasPermission(AccountPermission.LICENSE_MANAGE))
+                    return LicenseKeyActionResult.Failure;
+
+                var url = Endpoint.LicenseKeyEnable(Token, uid);
+                var response = HttpClient.GetAsync(url).Result;
+                var stringContent = response.Content.ReadAsStringAsync().Result;
+
+                if ((int)response.StatusCode == 200)
+                {
+                    var deser = JsonSerializer.Deserialize<ObjectResponse<LicenseKeyActionResult>>(stringContent, Program.serializerOptions);
+
+                    if (deser.Data == LicenseKeyActionResult.Success)
+                        foreach (var item in Program.LocalContent.LicenseKeyList)
+                            if (item.UID == uid)
+                                item.Enable = true;
+                    return deser.Data;
+                }
+                return LicenseKeyActionResult.Failure;
+            });
+        }
+        public Task<LicenseKeyActionResult> DisableLicenseKey(string uid)
+        {
+            return new Task<LicenseKeyActionResult>(delegate
+            {
+                if (!HasPermission(AccountPermission.LICENSE_MANAGE))
+                    return LicenseKeyActionResult.Failure;
+
+                var url = Endpoint.LicenseKeyDisable(Token, uid);
+                var response = HttpClient.GetAsync(url).Result;
+                var stringContent = response.Content.ReadAsStringAsync().Result;
+
+                if ((int)response.StatusCode == 200)
+                {
+                    var deser = JsonSerializer.Deserialize<ObjectResponse<LicenseKeyActionResult>>(stringContent, Program.serializerOptions);
+
+                    if (deser.Data == LicenseKeyActionResult.Success)
+                        foreach (var item in Program.LocalContent.LicenseKeyList)
+                            if (item.UID == uid)
+                                item.Enable = false;
+                    return deser.Data;
+                }
+                return LicenseKeyActionResult.Failure;
+            });
         }
 
         #region ValidateCredentials

@@ -140,6 +140,14 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             string token,
             string LicenseKey)
             => $"{Base}/license/redeem?token={encode(token)}&key={encode(LicenseKey)}";
+        public static string LicenseKeyDisable(
+            string token,
+            string keyId)
+            => $"{Base}/admin/license/disableKey?token={encode(token)}&keyId={encode(keyId)}";
+        public static string LicenseKeyEnable(
+            string token,
+            string keyId)
+            => $"{Base}/admin/license/enableKey?token={encode(token)}&keyId={encode(keyId)}";
         #endregion
 
     }

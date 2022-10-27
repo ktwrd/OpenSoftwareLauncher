@@ -34,6 +34,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 
             ReloadGroupList();
             ReloadKeyList();
+            RedrawProps();
         }
         public void ReloadGroupList()
         {
@@ -71,6 +72,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 
                 treeViewGroups.Nodes.Add(parentNode);
             }
+            RedrawProps();
         }
         public string FilterGroup = "";
         public string FilterProduct = "";
@@ -99,6 +101,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                     node.Group = listViewKeys.Groups[0];
                 listViewKeys.Items.Add(node);
             }
+            RedrawProps();
         }
         private void toolStripButtonCreateKeys_Click(object sender, EventArgs e)
         {
@@ -157,6 +160,41 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         public void RedrawProps()
         {
             propertyGridSelectedKey.SelectedObject = JsonSerializer.Deserialize<LicenseKeyMetadata>(JsonSerializer.Serialize(SelectedLicenseKey, Program.serializerOptions), Program.serializerOptions);
+
+            toolStripButtonKeyEnable.Enabled = listViewKeys.SelectedItems.Count > 0;
+            toolStripButtonKeyDisable.Enabled = listViewKeys.SelectedItems.Count > 0;
+        }
+
+        private void toolStripButtonKeyEnable_Click(object sender, EventArgs e)
+        {
+            var taskList = new List<Task>();
+            foreach (ListViewItem item in listViewKeys.SelectedItems)
+            {
+                taskList.Add(new Task(delegate
+                {
+                    Program.Client.EnableLicenseKey(item.Name).Wait();
+                }));
+            }
+            foreach (var i in taskList)
+                i.Start();
+            Task.WhenAll(taskList);
+            RefreshControls();
+        }
+
+        private void toolStripButtonKeyDisable_Click(object sender, EventArgs e)
+        {
+            var taskList = new List<Task>();
+            foreach (ListViewItem item in listViewKeys.SelectedItems)
+            {
+                taskList.Add(new Task(delegate
+                {
+                    Program.Client.DisableLicenseKey(item.Name).Wait();
+                }));
+            }
+            foreach (var i in taskList)
+                i.Start();
+            Task.WhenAll(taskList);
+            RefreshControls();
         }
     }
 }
