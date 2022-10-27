@@ -15,13 +15,7 @@ namespace OSLCommon.Licensing
         {
             get
             {
-                string keyItemPattern = "[A-Z]{"+LicenseKeyItemLength+"}";
-                string keySepPattern = "[\\-]{1}";
-                string regexPattern = 
-                    "((" 
-                        + keyItemPattern + keySepPattern + "{" + (LicenseKeyItemCount - 1).ToString() + "}" +
-                        ")" + keyItemPattern + ")";
-                return new Regex(regexPattern);
+                return new Regex(@"(([A-Z0-9]{5}\-){4}[A-Z0-9]{5})");
             }
         }
         public static Regex LicenseIdRegex => new Regex(@"[A-Z0-9]{16}");
