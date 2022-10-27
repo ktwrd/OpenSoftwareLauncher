@@ -33,12 +33,12 @@
             this.webBrowserPreview = new System.Windows.Forms.WebBrowser();
             this.buttonOpen = new System.Windows.Forms.Button();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.buttonSave = new System.Windows.Forms.Button();
             this.checkBoxEnable = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.buttonPush = new System.Windows.Forms.Button();
-            this.buttonSave = new System.Windows.Forms.Button();
             this.timerTypeUpdate = new System.Windows.Forms.Timer(this.components);
             this.flowLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -76,6 +76,7 @@
             this.buttonOpen.Size = new System.Drawing.Size(46, 23);
             this.buttonOpen.TabIndex = 2;
             this.buttonOpen.UseVisualStyleBackColor = true;
+            this.buttonOpen.Click += new System.EventHandler(this.buttonOpen_Click);
             // 
             // flowLayoutPanel1
             // 
@@ -88,6 +89,16 @@
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(568, 29);
             this.flowLayoutPanel1.TabIndex = 4;
+            // 
+            // buttonSave
+            // 
+            this.buttonSave.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.disk;
+            this.buttonSave.Location = new System.Drawing.Point(55, 3);
+            this.buttonSave.Name = "buttonSave";
+            this.buttonSave.Size = new System.Drawing.Size(46, 23);
+            this.buttonSave.TabIndex = 3;
+            this.buttonSave.UseVisualStyleBackColor = true;
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
             // 
             // checkBoxEnable
             // 
@@ -158,15 +169,6 @@
             this.buttonPush.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.buttonPush.UseVisualStyleBackColor = true;
             this.buttonPush.Click += new System.EventHandler(this.buttonPush_Click);
-            // 
-            // buttonSave
-            // 
-            this.buttonSave.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.disk;
-            this.buttonSave.Location = new System.Drawing.Point(55, 3);
-            this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(46, 23);
-            this.buttonSave.TabIndex = 3;
-            this.buttonSave.UseVisualStyleBackColor = true;
             // 
             // timerTypeUpdate
             // 
