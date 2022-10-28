@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Runtime.Serialization;
+using OpenSoftwareLauncher.Server.OpenSoftwareLauncher.Server;
+using System.Linq;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Admin
 {
@@ -118,7 +120,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 Response.StatusCode = authRes?.Data.Code ?? 0;
                 return Json(authRes, MainClass.serializerOptions);
             }
-
+            var bannerAccount = MainClass.contentManager.AccountManager.GetAccount(token);
             var targetAccount = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
             if (targetAccount == null)
             {
@@ -129,7 +131,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                     Data = new HttpException(404, ServerStringResponse.AccountNotFound)
                 }, MainClass.serializerOptions);
             }
-            if (!targetAccount.HasPermission(AccountPermission.ADMINISTRATOR))
+            if (!ServerConfig.Security_ImmuneUsers.Contains(targetAccount.Username) && username != bannerAccount.Username)
             {
                 if (reason != null)
                     targetAccount.DisableAccount(reason);
