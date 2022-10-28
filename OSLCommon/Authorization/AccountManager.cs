@@ -70,6 +70,15 @@ namespace OSLCommon.Authorization
             OnPendingWrite();
         }
 
+        /// <summary>
+        /// Check if account is invulnerable.
+        /// </summary>
+        /// <param name="account">Is <see cref="Nullable{Account}"/></param>
+        public bool IsInvulnerable(Account account)
+        {
+            return account == null ? false : account.HasPermission(AccountPermission.INVULNERABLE);
+        }
+
         #region Get Account
         public Account GetAccount(string token, bool bumpLastUsed=false)
         { 
