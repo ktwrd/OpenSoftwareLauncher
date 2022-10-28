@@ -129,10 +129,13 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                     Data = new HttpException(404, ServerStringResponse.AccountNotFound)
                 }, MainClass.serializerOptions);
             }
-            if (reason != null)
-                targetAccount.DisableAccount(reason);
-            else
-                targetAccount.DisableAccount();
+            if (!targetAccount.HasPermission(AccountPermission.ADMINISTRATOR))
+            {
+                if (reason != null)
+                    targetAccount.DisableAccount(reason);
+                else
+                    targetAccount.DisableAccount();
+            }
 
 
             return Json(new ObjectResponse<AccountDetailsResponse>()
