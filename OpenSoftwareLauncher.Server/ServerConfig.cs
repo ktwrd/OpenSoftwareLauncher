@@ -66,7 +66,8 @@ namespace OpenSoftwareLauncher.Server
                         {"AllowPermission_ReadReleaseBypass", true },
                         {"AllowGroupRestriction", false },
                         {"RequireAuthentication", true },
-                        {"DefaultSignatures", "" }
+                        {"DefaultSignatures", "" },
+                        {"ImmuneUsers", "" }
                     }
                 },
                 {"Authentication", new Dictionary<string, object>()
@@ -91,6 +92,20 @@ namespace OpenSoftwareLauncher.Server
                 set
                 {
                     Set("Security", "DefaultSignatures", string.Join(' ', value));
+                }
+            }
+            /// <summary>
+            /// Immune users are users who cannot be banned.
+            /// </summary>
+            public static string[] Security_ImmuneUsers
+            {
+                get
+                {
+                    return GetString("Security", "ImmuneUsers", "").Split(',');
+                }
+                set
+                {
+                    Set("Security", "ImmuneUsers", string.Join(',', value));
                 }
             }
 
