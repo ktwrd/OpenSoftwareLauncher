@@ -17,6 +17,6 @@ Copy-Item bin\Release\* BuildScripts\release\
 # . $PSScriptRoot\Build-ILMerge.ps1
 
 Set-Location $env:BuildScriptDirectory
+pause
 
 . $PSScriptRoot\Build-Installer.ps1
-pause
