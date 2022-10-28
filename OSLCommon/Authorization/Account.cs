@@ -128,9 +128,9 @@ namespace OSLCommon.Authorization
         public List<string> Licenses { get; set; } = new List<string>();
 
         /// <returns>true: License exists. false: License does not exist</returns>
-        public bool HasLicense(string remoteSignature, bool ignoreAdmin = false)
+        public bool HasLicense(string remoteSignature, bool ignoreAdmin = false, bool ignoreDefault = false)
         {
-            if (AccountManager.DefaultLicenses.Contains(remoteSignature))
+            if (!ignoreDefault && AccountManager.DefaultLicenses.Contains(remoteSignature))
                 return true;
             if (!ignoreAdmin && Permissions.Contains(AccountPermission.ADMINISTRATOR))
                 return true;
