@@ -20,6 +20,6 @@ namespace OSLCommon.Authorization
         USER_DISABLE_MODIFY,
         USER_LICENSE_MODIFY,
         LICENSE_MANAGE,
-        
+        INVULNERABLE
     }
 }
