@@ -153,7 +153,7 @@ namespace OSLCommon.Licensing
                 List<string> productsGranted = new List<string>();
                 foreach (var product in targetKey.Products)
                 {
-                    if (!account.HasLicense(product))
+                    if (!account.HasLicense(product, true, true))
                     {
                         productsGranted.Add(product);
                         account.GrantLicense(product);

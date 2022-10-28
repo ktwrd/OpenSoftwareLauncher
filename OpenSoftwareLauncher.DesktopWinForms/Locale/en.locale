@@ -53,6 +53,7 @@ Version=Version
 View=View
 
 // plural keywords (including tense)
+Activate_PastTense=Activated
 Announcement_Plural=Announcements
 Detail_Plural=Details
 Download_Plural=Downloading
