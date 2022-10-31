@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using static Google.Rpc.Context.AttributeContext.Types;
+using ZstdSharp.Unsafe;
 
 namespace OSLCommon.Authorization
 {
@@ -52,6 +52,25 @@ namespace OSLCommon.Authorization
 
 
         #region Get Account
+        public override Account[] GetAllAccounts()
+        {
+            var db = mongoClient.GetDatabase(DatabaseName);
+            var collection = db.GetCollection<Account>(Collections.Accounts);
+            var filter = Builders<Account>.Filter.Where(v => v.Username.Length > 1);
+            var result = collection.Find(filter).ToList();
+
+            foreach (var item in result)
+                item.accountManager = this;
+            return result.ToArray();
+        }
+        public Account[] GetAllAccounts(bool hookEvent = true)
+        {
+            var accounts = GetAllAccounts();
+            if (hookEvent)
+                foreach (var i in accounts)
+                    HookAccountEvent(i);
+            return accounts;
+        }
         public Account GetAccount(string token, bool bumpLastUsed = false, bool hookEvent = true)
         {
             var db = mongoClient.GetDatabase(DatabaseName);
@@ -62,6 +81,7 @@ namespace OSLCommon.Authorization
 
             if (result == null)
                 return null;
+            result.accountManager = this;
             if (bumpLastUsed)
                 TokenUsed(token);
             if (hookEvent)
@@ -107,6 +127,7 @@ namespace OSLCommon.Authorization
 
             foreach (var item in result)
             {
+                item.accountManager = this;
                 HookAccountEvent(item);
             }
 
@@ -114,7 +135,6 @@ namespace OSLCommon.Authorization
         }
         #endregion
 
-        #region Token Management
 
         public override void TokenUsed(string token)
         {
@@ -130,6 +150,7 @@ namespace OSLCommon.Authorization
                     tokenList.Add(TokenMarkLastUsedTimestamp(account.Tokens[i]));
                 }
             }
+            account.accountManager = this;
             account.Tokens = tokenList.ToArray();
         }
         public override bool AccountHasPermission(string token, AccountPermission[] permissions, bool ignoreAdmin = false, bool bumpLastUsed = false)
@@ -138,9 +159,8 @@ namespace OSLCommon.Authorization
             if (account == null || !account.enabled) return false;
             if (bumpLastUsed)
                 TokenUsed(token);
+            account.accountManager = this;
             return AccountHasPermission(account, permissions, ignoreAdmin);
         }
-
-        #endregion
     }
 }

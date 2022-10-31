@@ -89,6 +89,10 @@ namespace OSLCommon.Authorization
         }
 
         #region Get Account
+        public virtual Account[] GetAllAccounts()
+        {
+            return AccountList.ToArray();
+        }
         public virtual Account GetAccount(string token, bool bumpLastUsed=false)
         { 
             foreach (var account in AccountList)
