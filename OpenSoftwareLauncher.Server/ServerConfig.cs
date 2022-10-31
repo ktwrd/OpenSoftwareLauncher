@@ -80,6 +80,11 @@ namespace OpenSoftwareLauncher.Server
                     {
                         {"Prometheus", false }
                     }
+                },
+                {"Connection", new Dictionary<string, object>()
+                    {
+                        {"MongoDBServer", "" }
+                    }
                 }
             };
 
