@@ -10,6 +10,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.IO;
+using System.Linq;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Admin
 {
@@ -130,7 +131,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
             {
                 content = new DataJSON()
                 {
-                    Account = MainClass.contentManager.AccountManager.AccountList,
+                    Account = MainClass.contentManager.AccountManager.GetAllAccounts().ToList(),
                     SystemAnnouncement = MainClass.contentManager.SystemAnnouncement.GetSummary(),
                     Content = new ContentJSON()
                     {

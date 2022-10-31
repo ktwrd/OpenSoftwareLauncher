@@ -33,7 +33,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                 return Json(authRes, MainClass.serializerOptions);
             }
             var usernameDict = new Dictionary<string, int>();
-            foreach (var user in MainClass.contentManager.AccountManager.AccountList)
+            foreach (var user in MainClass.contentManager.AccountManager.GetAllAccounts())
             {
                 string[] exclude = Array.Empty<string>();
                 if (includeGivenToken)
