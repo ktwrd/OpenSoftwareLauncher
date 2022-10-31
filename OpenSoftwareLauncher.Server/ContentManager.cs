@@ -20,7 +20,7 @@ namespace OpenSoftwareLauncher.Server
         public List<ReleaseInfo> ReleaseInfoContent = new();
         public Dictionary<string, ProductRelease> Releases = new();
         public Dictionary<string, PublishedRelease> Published = new();
-        public AccountManager AccountManager;
+        public MongoAccountManager AccountManager;
         public SystemAnnouncement SystemAnnouncement = new();
         public AccountLicenseManager AccountLicenseManager;
 
@@ -33,7 +33,8 @@ namespace OpenSoftwareLauncher.Server
         {
             this.MongoClient = new MongoClient(ServerConfig.GetString("Connection", "MongoDBServer"));
 
-            AccountManager = new AccountManager();
+            AccountManager = new MongoAccountManager(MongoClient);
+            
             AccountLicenseManager = new AccountLicenseManager(AccountManager);
             databaseDeserialize();
 
