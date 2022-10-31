@@ -47,7 +47,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
             return Json(new ObjectResponse<string[]>()
             {
                 Success = true,
-                Data = targetAccount.Groups.ToArray()
+                Data = targetAccount.Groups
             }, MainClass.serializerOptions);
         }
 

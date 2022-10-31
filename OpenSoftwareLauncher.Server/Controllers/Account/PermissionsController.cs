@@ -24,7 +24,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Account
             return Json(new ObjectResponse<AccountPermission[]>()
             {
                 Success = true,
-                Data = account.Permissions.ToArray()
+                Data = account.Permissions
             }, MainClass.serializerOptions);
         }
     }

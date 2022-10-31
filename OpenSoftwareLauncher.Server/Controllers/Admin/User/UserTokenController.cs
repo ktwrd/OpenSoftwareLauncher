@@ -90,7 +90,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                     }, MainClass.serializerOptions);
                 }
 
-                accountArray = MainClass.contentManager.AccountManager.GetAccountsByRegex(expression, AccountField.Username).ToArray();
+                accountArray = MainClass.contentManager.AccountManager.GetAccountsByRegex(expression, AccountField.Username);
             }
             // When username is null, that means we want to purge our own tokens.
             else if (username == null)

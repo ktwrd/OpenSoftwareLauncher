@@ -87,7 +87,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
 
             try
             {
-                MainClass.contentManager.AccountManager.Read(JsonSerializer.Serialize(expectedResponse.Data.Account, MainClass.serializerOptions));
+                MainClass.contentManager.AccountManager.ReadJSON(JsonSerializer.Serialize(expectedResponse.Data.Account, MainClass.serializerOptions));
                 MainClass.contentManager.SystemAnnouncement.Read(JsonSerializer.Serialize(expectedResponse.Data.SystemAnnouncement, MainClass.serializerOptions));
                 MainClass.contentManager.ReleaseInfoContent = expectedResponse.Data.Content.ReleaseInfoContent;
                 MainClass.contentManager.Releases = expectedResponse.Data.Content.Releases;

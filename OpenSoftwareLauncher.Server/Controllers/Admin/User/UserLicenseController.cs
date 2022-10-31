@@ -50,7 +50,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
             return Json(new ObjectResponse<string[]>()
             {
                 Success = true,
-                Data = account.Licenses.ToArray()
+                Data = account.Licenses
             }, MainClass.serializerOptions);
         }
 
@@ -91,7 +91,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
             return Json(new ObjectResponse<string[]>()
             {
                 Success = true,
-                Data = account.Licenses.ToArray()
+                Data = account.Licenses
             }, MainClass.serializerOptions);
         }
     }
