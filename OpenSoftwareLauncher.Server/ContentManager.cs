@@ -11,6 +11,7 @@ using OSLCommon.Authorization;
 using OpenSoftwareLauncher.Server.OpenSoftwareLauncher.Server;
 using OSLCommon.Licensing;
 using System.Linq;
+using MongoDB.Driver;
 
 namespace OpenSoftwareLauncher.Server
 {
@@ -26,8 +27,12 @@ namespace OpenSoftwareLauncher.Server
         /*internal List<string> LoadedFirebaseAssets = new();
          * internal FirestoreDb database;*/
 
+        public MongoClient MongoClient;
+
         public ContentManager()
         {
+            this.MongoClient = new MongoClient(ServerConfig.GetString("Connection", "MongoDBServer"));
+
             AccountManager = new AccountManager();
             AccountLicenseManager = new AccountLicenseManager(AccountManager);
             databaseDeserialize();
@@ -57,6 +62,7 @@ namespace OpenSoftwareLauncher.Server
             string txt = $"[ContentManager->SystemAnnouncement_Update]  {Path.GetRelativePath(Directory.GetCurrentDirectory(), JSON_SYSANNOUNCE_FILENAME)}";
             Trace.WriteLine(txt);
             Console.WriteLine(txt);
+            ServerConfig.Set("Announcement", "Enable", SystemAnnouncement.Active);
             ServerConfig.Save();
         }
 
@@ -100,7 +106,7 @@ namespace OpenSoftwareLauncher.Server
             try
             {
                 if (File.Exists(JSON_ACCOUNT_FILENAME))
-                    AccountManager.Read(File.ReadAllText(JSON_ACCOUNT_FILENAME));
+                    AccountManager.ReadJSON(File.ReadAllText(JSON_ACCOUNT_FILENAME));
             }
             catch (Exception except)
             {
@@ -112,6 +118,7 @@ namespace OpenSoftwareLauncher.Server
             {
                 if (File.Exists(JSON_SYSANNOUNCE_FILENAME))
                     SystemAnnouncement.Read(File.ReadAllText(JSON_SYSANNOUNCE_FILENAME));
+                SystemAnnouncement.Active = ServerConfig.GetBoolean("Announcement", "Enable", true);
             }
             catch (Exception except)
             {
