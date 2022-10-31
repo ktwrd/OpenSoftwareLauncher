@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 
 namespace OSLCommon.Authorization
 {
-    public class AccountManager
+    public delegate void AccountDelegate(Account account);
+    public partial class AccountManager
     {
         public List<Account> AccountList = new List<Account>();
 
@@ -26,8 +27,15 @@ namespace OSLCommon.Authorization
             TokenGranters.Add(granter);
         }
 
+        #region Events
         public bool IsPendingWrite { get; private set; }
         public event VoidDelegate PendingWrite;
+        public event AccountDelegate AccountUpdated;
+        internal void OnAccountUpdate(Account account)
+        {
+            if (AccountUpdated != null)
+                AccountUpdated?.Invoke(account);
+        }
         public void ForcePendingWrite()
         {
             IsPendingWrite = true;
@@ -46,8 +54,9 @@ namespace OSLCommon.Authorization
                 item.ClearPendingWrite();
             IsPendingWrite = false;
         }
+        #endregion
 
-        public bool ValidateToken(string token)
+        public virtual bool ValidateToken(string token)
         {
             foreach (var account in AccountList)
             {
@@ -58,13 +67,13 @@ namespace OSLCommon.Authorization
             return false;
         }
 
-        public void SetUserGroups(Dictionary<string, string[]> dict)
+        public virtual void SetUserGroups(Dictionary<string, string[]> dict)
         {
             foreach (var acc in this.AccountList)
             {
                 if (dict.ContainsKey(acc.Username))
                 {
-                    acc.Groups = new List<string>(dict[acc.Username]);
+                    acc.Groups = new List<string>(dict[acc.Username]).ToArray();
                 }
             }
             OnPendingWrite();
@@ -74,13 +83,13 @@ namespace OSLCommon.Authorization
         /// Check if account is invulnerable.
         /// </summary>
         /// <param name="account">Is <see cref="Nullable{Account}"/></param>
-        public bool IsInvulnerable(Account account)
+        public virtual bool IsInvulnerable(Account account)
         {
             return account == null ? false : account.HasPermission(AccountPermission.INVULNERABLE);
         }
 
         #region Get Account
-        public Account GetAccount(string token, bool bumpLastUsed=false)
+        public virtual Account GetAccount(string token, bool bumpLastUsed=false)
         { 
             foreach (var account in AccountList)
             {
@@ -93,7 +102,7 @@ namespace OSLCommon.Authorization
             }
             return null;
         }
-        public Account GetAccountByUsername(string username)
+        public virtual Account GetAccountByUsername(string username)
         {
             foreach (var account in AccountList)
             {
@@ -106,7 +115,7 @@ namespace OSLCommon.Authorization
         {
             Username
         }
-        public LinkedList<Account> GetAccountsByRegex(Regex expression, AccountField field=AccountField.Username)
+        public virtual Account[] GetAccountsByRegex(Regex expression, AccountField field=AccountField.Username)
         {
             var list = new LinkedList<Account>();
             foreach (var account in AccountList)
@@ -124,7 +133,7 @@ namespace OSLCommon.Authorization
 
                 list.AddLast(account);
             }
-            return list;
+            return list.ToArray();
         }
         #endregion
 
@@ -133,12 +142,12 @@ namespace OSLCommon.Authorization
         /// Used to mark <see cref="AccountToken.LastUsed"/> to the current Unix Epoch
         /// </summary>
         /// <param name="token">Token to set <see cref="AccountToken.LastUsed"/></param>
-        public void TokenUsed(string token)
+        public virtual void TokenUsed(string token)
         {
             var account = GetAccount(token);
             if (account == null) return;
 
-            for (int i = 0; i < account.Tokens.Count; i++)
+            for (int i = 0; i < account.Tokens.Length; i++)
             {
                 if (account.Tokens[i] != null)
                     account.Tokens[i] = TokenMarkLastUsedTimestamp(account.Tokens[i]);
@@ -146,13 +155,18 @@ namespace OSLCommon.Authorization
             if (!IsPendingWrite)
                 OnPendingWrite();
         }
-        internal AccountToken TokenMarkLastUsedTimestamp(AccountToken token)
+        internal virtual AccountToken TokenMarkLastUsedTimestamp(AccountToken token)
         {
             if (token.Allow)
             {
                 token.LastUsed = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             }
             return token;
+        }
+
+        internal virtual Account CreateAccount()
+        {
+            return new Account(this);
         }
 
         /// <summary>
@@ -179,9 +193,9 @@ namespace OSLCommon.Authorization
                             if (!IsPendingWrite)
                                 OnPendingWrite();
                             if (account.Groups == null)
-                                account.Groups = new List<string>();
+                                account.Groups = Array.Empty<string>();
                             if (account.Permissions == null)
-                                account.Permissions = new List<AccountPermission>();
+                                account.Permissions = Array.Empty<AccountPermission>();
                             TokenUsed(success.Token);
                             foreach (var thing in account.Tokens)
                             {
@@ -245,7 +259,7 @@ namespace OSLCommon.Authorization
             }
 
             // Create account
-            var accountInstance = new Account(this);
+            var accountInstance = CreateAccount();
             accountInstance.Username = username;
             AccountList.Add(accountInstance);
             var response = GrantToken(accountInstance, username, password, userAgent: userAgent, host: host);
@@ -263,7 +277,7 @@ namespace OSLCommon.Authorization
         /// <param name="permissions">Array of permissions to check</param>
         /// <param name="ignoreAdmin">When <see cref="Account"/> has the <see cref="AccountPermission.ADMINISTRATOR"/> permission, then <see cref="true"/> is always returned.</param>
         /// <returns></returns>
-        public bool AccountHasPermission(Account account, AccountPermission[] permissions, bool ignoreAdmin=false)
+        public virtual bool AccountHasPermission(Account account, AccountPermission[] permissions, bool ignoreAdmin=false)
         {
             bool match = false;
             foreach (var target in account.Permissions)
@@ -289,7 +303,7 @@ namespace OSLCommon.Authorization
         /// <summary>
         /// Token overload for <see cref="AccountHasPermission(Account, AccountPermission[], bool)"/>
         /// </summary>
-        public bool AccountHasPermission(string token, AccountPermission[] permissions, bool ignoreAdmin=false, bool bumpLastUsed=false)
+        public virtual bool AccountHasPermission(string token, AccountPermission[] permissions, bool ignoreAdmin=false, bool bumpLastUsed=false)
         {
             if (token == null || token.Length < AccountToken.TokenLength || token.Length > AccountToken.TokenLength) return false;
             var account = GetAccount(token);
@@ -312,7 +326,7 @@ namespace OSLCommon.Authorization
         #endregion
 
         #region JSON (Des|S)erialization
-        public void Read(string jsonContent)
+        public void ReadJSON(string jsonContent)
         {
             if (jsonContent.Length < 1)
                 Trace.WriteLine($"[AccountManager->Read:{GeneralHelper.GetNanoseconds()}] [ERR] Argument jsonContent has invalid length of {jsonContent.Length}");
