@@ -1,10 +1,13 @@
 ﻿using kate.shared.Helpers;
+using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json.Schema;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace OSLCommon.Authorization
 {
@@ -41,35 +44,91 @@ namespace OSLCommon.Authorization
         public Account(AccountManager accountManager)
         {
             this.accountManager = accountManager;
-
-            Username = "";
-            Tokens = new List<AccountToken>();
-            Permissions = new List<AccountPermission>();
-            Groups = new List<string>();
-            DisableReasons = new List<AccountDisableReason>();
-            Enabled = true;
-            PendingWrite = false;
         }
         public Account() : this(null)
         { }
         #endregion
 
+
+        /// <summary>
+        /// Merge account data into this one.
+        /// </summary>
+        public void Merge(Account sourceAccount)
+        {
+            tokens = sourceAccount.tokens;
+            permissions = sourceAccount.permissions;
+            groups = sourceAccount.groups;
+            enabled = sourceAccount.enabled;
+            disableReasons = sourceAccount.disableReasons;
+            licenses = sourceAccount.licenses;
+        }
+
         #region Fields
         internal AccountManager accountManager = null;
-        public string Username { get; set; }
-        public List<AccountToken> Tokens { get; set; }
-        public List<AccountPermission> Permissions { get; set; }
-        public List<string> Groups { get; set; }
+        public string Username { get; set; } = "";
+        private AccountToken[] tokens = Array.Empty<AccountToken>();
+        public AccountToken[] Tokens
+        {
+            get => tokens;
+            set
+            {
+                if (accountManager != null)
+                    accountManager.OnAccountUpdate(this);
+                tokens = value;
+            }
+        }
+        internal AccountPermission[] permissions = Array.Empty<AccountPermission>();
+        public AccountPermission[] Permissions
+        {
+            get => permissions;
+            set
+            {
+                if (accountManager != null)
+                    accountManager.OnAccountUpdate(this);
+                permissions = value;
+            }
+        }
+        internal string[] groups = Array.Empty<string>();
+        public string[] Groups
+        {
+            get => groups;
+            set
+            {
+                if (accountManager != null)
+                    accountManager.OnAccountUpdate(this);
+                groups = value;
+            }
+        }
 
+        internal bool enabled = true;
         /// <summary>
         /// Setting this to false will deny this account from accessing any endpoints.
         /// </summary>
-        public bool Enabled { get; set; }
+        public bool Enabled
+        {
+            get => enabled;
+            set
+            {
+                if (accountManager != null)
+                    accountManager.OnAccountUpdate(this);
+                enabled = value;
+            }
+        }
 
+        internal AccountDisableReason[] disableReasons = Array.Empty<AccountDisableReason>();
         /// <summary>
         /// Reasons why this account was disabled.
         /// </summary>
-        public List<AccountDisableReason> DisableReasons { get; set; }
+        public AccountDisableReason[] DisableReasons
+        {
+            get => disableReasons;
+            set
+            {
+                if (accountManager != null)
+                    accountManager.OnAccountUpdate(this);
+                disableReasons = value;
+            }
+        }
 
         /// <summary>
         /// Timestamp of the first token for this account.
@@ -79,7 +138,7 @@ namespace OSLCommon.Authorization
             get
             {
                 long timestamp = long.MaxValue;
-                foreach (var token in Tokens.ToArray())
+                foreach (var token in Tokens)
                 {
                     if (token.CreatedTimestamp < timestamp)
                         timestamp = token.CreatedTimestamp;
@@ -95,7 +154,7 @@ namespace OSLCommon.Authorization
             get
             {
                 long timestamp = long.MinValue;
-                foreach (var token in Tokens.ToArray())
+                foreach (var token in Tokens)
                 {
                     if (token.CreatedTimestamp > timestamp)
                         timestamp = token.CreatedTimestamp;
@@ -110,6 +169,8 @@ namespace OSLCommon.Authorization
         /// <summary>
         /// Is there new data that doesn't exist locally.
         /// </summary>
+        [JsonIgnore]
+        [BsonIgnore]
         public bool PendingWrite
         {
             get => _pendingWrite;
@@ -121,11 +182,23 @@ namespace OSLCommon.Authorization
             }
         }
         private bool _pendingWrite = false;
-
+        internal string[] licenses;
+        public string[] Licenses
+        {
+            get
+            {
+                return licenses;
+            }
+            set
+            {
+                licenses = value;
+                if (this.accountManager != null)
+                    this.accountManager.OnAccountUpdate(this);
+            }
+        }
         #endregion
 
         #region License Management
-        public List<string> Licenses { get; set; } = new List<string>();
 
         /// <returns>true: License exists. false: License does not exist</returns>
         public bool HasLicense(string remoteSignature, bool ignoreAdmin = false, bool ignoreDefault = false)
@@ -139,18 +212,20 @@ namespace OSLCommon.Authorization
         /// <returns>true: License does not exist and was added. false: Licence already exists, ignoring.</returns>
         public bool GrantLicense(string remoteSignature)
         {
-            if (Licenses.ToArray().Contains(remoteSignature))
+            if (Licenses.Contains(remoteSignature))
                 return false;
-            Licenses.Add(remoteSignature);
+            Licenses = Licenses.Concat(new string[] { remoteSignature }).ToArray();
             PendingWrite = true;
             return true;
         }
         /// <returns>true: License does not exist and was added. false: Licence already exists, ignoring.</returns>
         public bool RevokeLicense(string remoteSignature)
         {
-            if (!Licenses.ToArray().Contains(remoteSignature))
+            if (!Licenses.Contains(remoteSignature))
                 return false;
-            Licenses.Remove(remoteSignature);
+            var tmpList = new List<string>(Licenses);
+            tmpList.Remove(remoteSignature);
+            Licenses = tmpList.ToArray();
             PendingWrite = true;
             return true;
         }
@@ -167,7 +242,7 @@ namespace OSLCommon.Authorization
             foreach (var item in Groups.ToArray())
                 if (item == group.ToUpper().Trim())
                     return true;
-            Groups.Add(group.ToUpper().Trim());
+            Groups = Groups.Concat(new string[] { group.ToUpper().Trim() }).ToArray();
             PendingWrite = true;
             return false;
         }
@@ -186,9 +261,10 @@ namespace OSLCommon.Authorization
 
         public bool RevokeGroup(string group)
         {
-            var res = Groups.Remove(group.ToUpper().Trim());
-            PendingWrite = res;
-            return res;
+            int previousLength = Groups.Length;
+            var res = Groups.Where(v => v != group.ToUpper().Trim()).ToArray();
+            Groups = res;
+            return previousLength != Groups.Length;
         }
         #endregion
 
@@ -211,7 +287,7 @@ namespace OSLCommon.Authorization
                 if (!tokens.Contains(item.Token))
                     newTokenList.Add(item);
             }
-            Tokens = newTokenList;
+            Tokens = newTokenList.ToArray();
             PendingWrite = true;
 
         }
@@ -222,8 +298,8 @@ namespace OSLCommon.Authorization
         /// <returns>Amount of tokens that were removed.</returns>
         public int RemoveTokens()
         {
-            int count = Tokens.Count;
-            Tokens = new List<AccountToken>();
+            int count = Tokens.Length;
+            Tokens = Array.Empty<AccountToken>();
             PendingWrite = true;
             return count;
         }
@@ -235,7 +311,7 @@ namespace OSLCommon.Authorization
         /// <returns>Amount of tokens that were removed</returns>
         public int RemoveTokens(string[] exclude=null)
         {
-            int count = Tokens.Count;
+            int count = Tokens.Length;
             var newTokenList = new List<AccountToken>();
             foreach (var item in Tokens.ToArray())
             {
@@ -244,7 +320,7 @@ namespace OSLCommon.Authorization
                     newTokenList.Add(item);
                 }
             }
-            Tokens = newTokenList;
+            Tokens = newTokenList.ToArray();
             PendingWrite = true;
             return count - newTokenList.Count;
         }
@@ -266,7 +342,10 @@ namespace OSLCommon.Authorization
                         return token;
                 }
                 targetToken.CreatedTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-                Tokens.Add(targetToken);
+                Tokens = Tokens.Concat(new AccountToken[]
+                {
+                    targetToken
+                }).ToArray();
                 PendingWrite = true;
                 Trace.WriteLine($"[Account->AddToken:{GeneralHelper.GetNanoseconds()}] Granted token for {Username}");
                 return targetToken;
@@ -344,11 +423,14 @@ namespace OSLCommon.Authorization
         public void DisableAccount(string reason = "No reason")
         {
             Enabled = false;
-            DisableReasons.Add(new AccountDisableReason()
+            DisableReasons = DisableReasons.Concat(new AccountDisableReason[]
             {
-                Message = reason,
-                Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
-            });
+                new AccountDisableReason()
+                {
+                    Message = reason,
+                    Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+                }
+            }).ToArray();
         }
 
         /// <summary>
@@ -366,7 +448,7 @@ namespace OSLCommon.Authorization
         public void CleanDisableReasons()
         {
             Trace.WriteLine($"[Account->CleanDisableReasons:{GeneralHelper.GetNanoseconds()}] {Username}");
-            DisableReasons.Clear();
+            DisableReasons = Array.Empty<AccountDisableReason>();
             PendingWrite = true;
         }
         #endregion
@@ -382,7 +464,9 @@ namespace OSLCommon.Authorization
             foreach (var perm in Permissions.ToArray())
                 if (perm == target)
                     return true;
-            Permissions.Add(target);
+            var tmpList = new List<AccountPermission>(Permissions);
+            tmpList.Add(target);
+            Permissions = tmpList.ToArray();
             PendingWrite = true;
             return false;
         }
@@ -420,7 +504,7 @@ namespace OSLCommon.Authorization
                     found = true;
                 }
             }
-            Permissions = newPermissionArray;
+            Permissions = newPermissionArray.ToArray();
             PendingWrite = true;
             return found;
         }
@@ -440,8 +524,7 @@ namespace OSLCommon.Authorization
         {
             if (Groups == null)
             {
-                Groups = new List<string>();
-                PendingWrite = true;
+                Groups = Array.Empty<string>();
             }
             return new AccountDetailsResponse()
             {
@@ -449,7 +532,7 @@ namespace OSLCommon.Authorization
                 Enabled = this.Enabled,
                 Permissions = this.Permissions.ToArray(),
                 DisableReasons = this.DisableReasons.ToArray(),
-                Licenses = this.Licenses.ToArray(),
+                Licenses = this.Licenses,
                 Groups = this.Groups.ToArray(),
                 FirstSeenTimestamp = this.FirstSeenTimestamp,
                 LastSeenTimestamp = this.LastSeenTimestamp,
