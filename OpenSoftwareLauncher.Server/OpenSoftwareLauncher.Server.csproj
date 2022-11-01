@@ -9,6 +9,10 @@
 	  <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	<EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
 	<Configurations>Debug;Release</Configurations>
+	  <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	  <TransformOnBuild>true</TransformOnBuild>
+	  <OverwriteReadOnlyOutputFiles>true</OverwriteReadOnlyOutputFiles>
+	  <TransformOutOfDateOnly>false</TransformOutOfDateOnly>
   </PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -19,10 +23,20 @@
 		<TransformOnBuild>true</TransformOnBuild>
 		<OverwriteReadOnlyOutputFiles>true</OverwriteReadOnlyOutputFiles>
 		<TransformOutOfDateOnly>false</TransformOutOfDateOnly>
-		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	</PropertyGroup>
+	<PropertyGroup>
+		<VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+		<VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+		<TransformOnBuild>true</TransformOnBuild>
+		<OverwriteReadOnlyOutputFiles>true</OverwriteReadOnlyOutputFiles>
+		<TransformOutOfDateOnly>false</TransformOutOfDateOnly>
 	</PropertyGroup>
 
-  <ItemGroup>
+	<!-- This is the important line: -->
+	<Import Project="$(VSToolsPath)\TextTemplating\Microsoft.TextTemplating.targets" />
+
+
+	<ItemGroup>
     <None Include="Properties\VersionAutoIncrement.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
