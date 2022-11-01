@@ -1,10 +1,13 @@
-﻿using MongoDB.Bson;
+﻿using kate.shared.Helpers;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using ZstdSharp.Unsafe;
 
@@ -96,21 +99,20 @@ namespace OSLCommon.Authorization
 
         #region Get Account
         public override Account[] GetAllAccounts()
+            => GetAllAccounts(true);
+        public Account[] GetAllAccounts(bool hookEvent = true)
         {
+
             var collection = GetAccountCollection<Account>();
-            var result = collection.Find(Builders<Account>.Filter.Empty).ToList();
+            var result = collection.Find(Builders<Account>.Filter.Where(v => v.Username.Length > 0)).ToList();
 
             foreach (var item in result)
                 item.accountManager = this;
-            return result.ToArray();
-        }
-        public Account[] GetAllAccounts(bool hookEvent = true)
-        {
-            var accounts = GetAllAccounts();
+            var accounts = result;
             if (hookEvent)
                 foreach (var i in accounts)
                     HookAccountEvent(i);
-            return accounts;
+            return accounts.ToArray();
         }
         public Account GetAccount(string token, bool bumpLastUsed = false, bool hookEvent = true)
         {
@@ -145,18 +147,19 @@ namespace OSLCommon.Authorization
             => GetAccountByUsername(username, true);
         public Account GetAccountByUsername(string username, bool hookEvent = true)
         {
-            var collection = GetAccountCollection<BsonDocument>();
+            var collection = GetAccountCollection<Account>();
 
-            var filter = Builders<BsonDocument>.Filter.Eq("Username", username);
+            var filter = Builders<Account>
+                .Filter
+                .Where(v => v.Username == username);
             var result = collection.Find(filter).FirstOrDefault();
 
-            var deser = BsonSerializer.Deserialize<Account>(result);
-            if (deser != null)
+            if (result != null)
             {
                 if (hookEvent)
-                    HookAccountEvent(deser);
-                deser.accountManager = this;
-                return deser;
+                    HookAccountEvent(result);
+                result.accountManager = this;
+                return result;
             }
             return null;
         }

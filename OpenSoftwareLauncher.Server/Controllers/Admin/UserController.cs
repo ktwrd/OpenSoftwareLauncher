@@ -35,7 +35,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
             }
 
             var detailList = new List<AccountDetailsResponse>();
-            foreach (var account in MainClass.contentManager.AccountManager.GetAllAccounts())
+            foreach (var account in MainClass.contentManager.AccountManager.GetAllAccounts(false))
             {
                 if (account.FirstSeenTimestamp >= firstSeenTimestamp
                     && account.LastSeenTimestamp <= lastSeenTimestamp)
