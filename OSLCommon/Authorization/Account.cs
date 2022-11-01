@@ -74,9 +74,9 @@ namespace OSLCommon.Authorization
             get => tokens;
             set
             {
+                tokens = value;
                 if (accountManager != null)
                     accountManager.OnAccountUpdate(this);
-                tokens = value;
             }
         }
         internal AccountPermission[] permissions = Array.Empty<AccountPermission>();
@@ -85,9 +85,9 @@ namespace OSLCommon.Authorization
             get => permissions;
             set
             {
+                permissions = value;
                 if (accountManager != null)
                     accountManager.OnAccountUpdate(this);
-                permissions = value;
             }
         }
         internal string[] groups = Array.Empty<string>();
@@ -96,9 +96,9 @@ namespace OSLCommon.Authorization
             get => groups;
             set
             {
+                groups = value;
                 if (accountManager != null)
                     accountManager.OnAccountUpdate(this);
-                groups = value;
             }
         }
 
@@ -111,9 +111,9 @@ namespace OSLCommon.Authorization
             get => enabled;
             set
             {
+                enabled = value;
                 if (accountManager != null)
                     accountManager.OnAccountUpdate(this);
-                enabled = value;
             }
         }
 
@@ -126,9 +126,9 @@ namespace OSLCommon.Authorization
             get => disableReasons;
             set
             {
+                disableReasons = value;
                 if (accountManager != null)
                     accountManager.OnAccountUpdate(this);
-                disableReasons = value;
             }
         }
 
@@ -337,7 +337,6 @@ namespace OSLCommon.Authorization
         public AccountToken AddToken(AccountToken targetToken)
         {
             if (targetToken == null) return null;
-            if (targetToken.parentAccount != this) return null;
             if (Enabled)
             {
                 foreach (var token in Tokens.ToArray())
@@ -346,10 +345,11 @@ namespace OSLCommon.Authorization
                         return token;
                 }
                 targetToken.CreatedTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-                Tokens = Tokens.Concat(new AccountToken[]
+                var newTokens = Tokens.Concat(new AccountToken[]
                 {
                     targetToken
                 }).ToArray();
+                Tokens = newTokens;
                 PendingWrite = true;
                 Trace.WriteLine($"[Account->AddToken:{GeneralHelper.GetNanoseconds()}] Granted token for {Username}");
                 return targetToken;
