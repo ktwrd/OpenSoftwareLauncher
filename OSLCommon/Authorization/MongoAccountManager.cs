@@ -10,15 +10,11 @@ using ZstdSharp.Unsafe;
 
 namespace OSLCommon.Authorization
 {
-    public class MongoAccountManagerCollections
-    {
-        public string Accounts { get; set; } = "accounts";
-    }
     public class MongoAccountManager : AccountManager
     {
         public MongoClient mongoClient;
         public string DatabaseName = "opensoftwarelauncher";
-        public MongoAccountManagerCollections Collections = new MongoAccountManagerCollections();
+        public string CollectionName = "accounts";
         public MongoAccountManager(MongoClient client)
             : base()
         {
@@ -34,7 +30,7 @@ namespace OSLCommon.Authorization
         }
         private IMongoCollection<T> GetAccountCollection<T>()
         {
-            return mongoClient.GetDatabase(DatabaseName).GetCollection<T>(Collections.Accounts);
+            return mongoClient.GetDatabase(DatabaseName).GetCollection<T>(CollectionName);
         }
         internal void HookAccountEvent(Account account)
         {
