@@ -25,13 +25,16 @@ namespace OSLCommon.Authorization
             mongoClient = client;
             AccountUpdated += (eventAccount) =>
             {
-                var db = mongoClient.GetDatabase(DatabaseName);
-                var collection = db.GetCollection<Account>(Collections.Accounts);
+                var collection = GetAccountCollection<Account>();
 
                 var filter = Builders<Account>.Filter.Where(v => v.Username == eventAccount.Username);
 
                 collection.ReplaceOne(filter, eventAccount);
             };
+        }
+        private IMongoCollection<T> GetAccountCollection<T>()
+        {
+            return mongoClient.GetDatabase(DatabaseName).GetCollection<T>(Collections.Accounts);
         }
         internal void HookAccountEvent(Account account)
         {
@@ -56,8 +59,7 @@ namespace OSLCommon.Authorization
             var instance = new Account(this);
             instance.Username = username;
 
-            var db = mongoClient.GetDatabase(DatabaseName);
-            var collection = db.GetCollection<Account>(Collections.Accounts);
+            var collection = GetAccountCollection<Account>();
 
             collection.InsertOne(instance);
 
@@ -76,8 +78,7 @@ namespace OSLCommon.Authorization
         }
         public override void RemoveAccount(string username)
         {
-            var db = mongoClient.GetDatabase(DatabaseName);
-            var collection = db.GetCollection<BsonDocument>(Collections.Accounts);
+            var collection = GetAccountCollection<BsonDocument>();
 
             var filter = Builders<BsonDocument>.Filter.Eq("Username", username);
 
@@ -85,8 +86,7 @@ namespace OSLCommon.Authorization
         }
         public override void SetAccount(Account account)
         {
-            var db = mongoClient.GetDatabase(DatabaseName);
-            var collection = db.GetCollection<Account>(Collections.Accounts);
+            var collection = GetAccountCollection<Account>();
 
             var filter = Builders<Account>.Filter.Eq("Username", account.Username);
 
@@ -98,8 +98,7 @@ namespace OSLCommon.Authorization
         #region Get Account
         public override Account[] GetAllAccounts()
         {
-            var db = mongoClient.GetDatabase(DatabaseName);
-            var collection = db.GetCollection<Account>(Collections.Accounts);
+            var collection = GetAccountCollection<Account>();
             var filter = Builders<Account>.Filter.Where(v => v.Username.Length > 1);
             var result = collection.Find(filter).ToList();
 
@@ -117,8 +116,7 @@ namespace OSLCommon.Authorization
         }
         public Account GetAccount(string token, bool bumpLastUsed = false, bool hookEvent = true)
         {
-            var db = mongoClient.GetDatabase(DatabaseName);
-            var collection = db.GetCollection<Account>(Collections.Accounts);
+            var collection = GetAccountCollection<Account>();
 
             var filter = Builders<Account>.Filter.Where(v => v.HasToken(token));
             var result = collection.Find(filter).FirstOrDefault();
@@ -136,8 +134,7 @@ namespace OSLCommon.Authorization
             => GetAccount(token, bumpLastUsed);
         public override Account GetAccountByUsername(string username)
         {
-            var db = mongoClient.GetDatabase(DatabaseName);
-            var collection = db.GetCollection<BsonDocument>(Collections.Accounts);
+            var collection = GetAccountCollection<BsonDocument>();
 
             var filter = Builders<BsonDocument>.Filter.Eq("Username", username);
             var result = collection.Find(filter).FirstOrDefault();
@@ -153,8 +150,7 @@ namespace OSLCommon.Authorization
         }
         public override Account[] GetAccountsByRegex(Regex expression, AccountField field = AccountField.Username)
         {
-            var db = mongoClient.GetDatabase(DatabaseName);
-            var collection = db.GetCollection<Account>(Collections.Accounts);
+            var collection = GetAccountCollection<Account>();
 
             FilterDefinition<Account> filter;
             if (field == AccountField.Username)
@@ -182,7 +178,6 @@ namespace OSLCommon.Authorization
         {
             var account = GetAccount(token, hookEvent: false);
             if (account == null) return;
-
 
             var tokenList = new List<AccountToken>();
             for (int i = 0; i < account.Tokens.Length; i++)
