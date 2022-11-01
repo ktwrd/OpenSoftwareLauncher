@@ -58,6 +58,7 @@ namespace OSLCommon.Authorization
 
             var instance = new Account(this);
             instance.Username = username;
+            HookAccountEvent(instance);
 
             var collection = GetAccountCollection<Account>();
 
@@ -122,14 +123,15 @@ namespace OSLCommon.Authorization
 
             var accountList = collection.Find(filter).ToList();
 
-            var response =
+            /*var response =
                           from item   in accountList.AsQueryable()
                           from tk     in    item.Tokens 
                                       where tk.Token == token
                                       &&    tk.Allow
-                          select item.Username;
+                          select item.Username;*/
+            var response = accountList.Where(v => v.Tokens.Where(t => t.Token == token && t.Allow).Count() > 0).ToList();
 
-            Account result = response.Count() == 1 ? GetAccountByUsername(response.First(), false) : null;
+            Account result = response.Count() == 1 ? GetAccountByUsername(response.First().Username, false) : null;
 
             if (result == null)
                 return null;
