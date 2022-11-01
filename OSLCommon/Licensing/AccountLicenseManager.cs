@@ -30,7 +30,7 @@ namespace OSLCommon.Licensing
         public Dictionary<string, LicenseGroup> LicenseGroups { get; set; } = new Dictionary<string, LicenseGroup>();
 
         /// <returns>Nullable <see cref="LicenseKeyMetadata"/></returns>
-        public async Task<LicenseKeyMetadata> GetLicenseKey(string key)
+        public virtual async Task<LicenseKeyMetadata> GetLicenseKey(string key)
         {
             var match = LicenseHelper.LicenseKeyRegex.Match(key);
             if (!match.Success) return null;
@@ -45,7 +45,7 @@ namespace OSLCommon.Licensing
             Failure  = 0,
             Success  = 1,
         }
-        public async Task<LicenseKeyActionResult> DisableLicenseKey(string keyId)
+        public virtual async Task<LicenseKeyActionResult> DisableLicenseKey(string keyId)
         {
             var match = LicenseHelper.LicenseIdRegex.Match(keyId);
             if (!match.Success) return LicenseKeyActionResult.Invalid;
@@ -56,7 +56,7 @@ namespace OSLCommon.Licensing
             OnUpdate(LicenseField.Enable, LicenseKeys[keyId]);
             return LicenseKeyActionResult.Success;
         }
-        public async Task<LicenseKeyActionResult> EnableLicenseKey(string keyId)
+        public virtual async Task<LicenseKeyActionResult> EnableLicenseKey(string keyId)
         {
             var match = LicenseHelper.LicenseIdRegex.Match(keyId);
             if (!match.Success) return LicenseKeyActionResult.Invalid;
@@ -67,8 +67,66 @@ namespace OSLCommon.Licensing
             OnUpdate(LicenseField.Enable, LicenseKeys[keyId]);
             return LicenseKeyActionResult.Success;
         }
+        public class CreateLicenseKeyMetadata
+        {
+            public LicenseKeyMetadata[] keys;
+            public LicenseGroup group;
+        }
+        private CreateLicenseKeyMetadata createLicenseKeyContent(
+            string author,
+            string[] products,
+            int count = 1,
+            AccountPermission[] permissions = null,
+            string note = "",
+            long activateBy = -1,
+            string groupLabel = "")
+        {
 
-        public async Task<CreateLicenseKeyResponse> CreateLicenseKeys(
+            var licenseArray = new LicenseKeyMetadata[count];
+            string[] licenseIds = new string[count];
+            long createTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            string groupId = GeneralHelper.GenerateToken(LicenseHelper.GroupIdLength);
+            for (int i = 0; i < count; i++)
+            {
+                licenseArray[i] = new LicenseKeyMetadata
+                {
+                    UID = GeneralHelper.GenerateToken(LicenseHelper.LicenseIdLength),
+                    Enable = true,
+                    Activated = false,
+                    ActivatedBy = "",
+                    InternalNote = note,
+                    Key = LicenseHelper.GenerateLicenseKeyString(),
+                    Products = products,
+                    ProductsApplied = Array.Empty<string>(),
+                    Permissions = permissions ?? Array.Empty<AccountPermission>(),
+                    PermissionsApplied = Array.Empty<AccountPermission>(),
+                    ActivateByTimestamp = activateBy,
+                    CreatedTimestamp = createTimestamp,
+
+                    CreatedBy = author,
+                    GroupId = groupId
+                };
+                licenseIds[i] = licenseArray[i].UID;
+            }
+
+            var group = new LicenseGroup
+            {
+                UID = groupId,
+                DisplayName = groupLabel,
+                LicenseIds = licenseIds,
+                CreatedTimestamp = createTimestamp,
+                CreatedBy = author
+            };
+
+
+            return new CreateLicenseKeyMetadata
+            {
+                group = group,
+                keys = licenseArray
+            };
+        }
+
+        public virtual async Task<CreateLicenseKeyResponse> CreateLicenseKeys(
             string author,
             string[] products,
             int count = 1,
@@ -112,14 +170,13 @@ namespace OSLCommon.Licensing
                 CreatedTimestamp = createTimestamp,
                 CreatedBy = author
             };
+            LicenseGroups.Add(groupId, group);
             foreach (var item in licenseArray)
             {
                 LicenseKeys.Add(item.UID, item);
+                OnUpdate(LicenseField.License, item);
             }
             OnUpdate(LicenseField.All, null);
-
-            LicenseGroups.Add(groupId, group);
-            OnUpdate(LicenseField.AllGroups, null);
 
             return new CreateLicenseKeyResponse
             {
@@ -128,7 +185,7 @@ namespace OSLCommon.Licensing
             };
         }
 
-        public async Task<GrantLicenseKeyResponseCode> GrantLicenseKey(string username, string licenseKey)
+        public virtual async Task<GrantLicenseKeyResponseCode> GrantLicenseKey(string username, string licenseKey)
         {
             var licenseKeyMatch = LicenseHelper.LicenseKeyRegex.Match(licenseKey);
             if (!licenseKeyMatch.Success)
