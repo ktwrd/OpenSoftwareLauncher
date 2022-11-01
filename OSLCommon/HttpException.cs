@@ -4,6 +4,9 @@ namespace OSLCommon
 {
     public class HttpException
     {
+        public HttpException()
+            : this(0, "", null)
+            { }
         public HttpException(int code, string message)
             : this(code, message, null)
             { }
