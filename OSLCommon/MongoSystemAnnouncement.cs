@@ -1,8 +1,10 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 
 namespace OSLCommon
 {
@@ -73,6 +75,31 @@ namespace OSLCommon
                     collection.FindOneAndReplace(filter, item);
             }
         }
+        public override void Set(string id, SystemAnnouncementEntry entry)
+        {
+            var collection = GetAnnouncementCollection<SystemAnnouncementEntry>();
+            var filter = Builders<SystemAnnouncementEntry>
+                .Filter
+                .Eq("ID", id);
+            var get = collection.Find(filter).ToList();
+            if (get.Count > 0)
+            {
+                entry._id = get[0]._id;
+                collection.FindOneAndReplace(filter, entry);
+            }
+            else if (get.Count < 1)
+            {
+                collection.InsertOne(entry);
+            }
+        }
+        public override void RemoveId(string id)
+        {
+            var collection = GetAnnouncementCollection<SystemAnnouncementEntry>();
+            var filter = Builders<SystemAnnouncementEntry>
+                .Filter
+                .Eq("ID", id);
+            collection.DeleteMany(filter);
+        }
         public override void Add(SystemAnnouncementEntry entry)
         {
             var collection = GetAnnouncementCollection<SystemAnnouncementEntry>();
@@ -84,6 +111,35 @@ namespace OSLCommon
                 collection.FindOneAndReplace(filter, entry);
             else
                 collection.InsertOne(entry);
+        }
+
+        public override SystemAnnouncementSummary GetSummary()
+        {
+            var instance = new SystemAnnouncementSummary();
+
+            var collection = GetAnnouncementCollection<SystemAnnouncementEntry>();
+            var filter = Builders<SystemAnnouncementEntry>
+                .Filter
+                .Where(v => v.ID.Length > 1);
+            instance.Entries = collection.Find(filter).ToList().OrderBy(o => o.timestamp).ToArray();
+            instance.Active = Active;
+            return instance;
+        }
+        public override void Read(string content)
+        {
+            var serializerOptions = new JsonSerializerOptions
+            {
+                IgnoreReadOnlyFields = true,
+                IgnoreReadOnlyProperties = true,
+                IncludeFields = true,
+                WriteIndented = true
+            };
+            var summary = JsonSerializer.Deserialize<SystemAnnouncementSummary>(content, serializerOptions);
+            if (summary != null)
+            {
+                Set(summary.Entries);
+                Active = summary.Active;
+            }
         }
     }
 }
