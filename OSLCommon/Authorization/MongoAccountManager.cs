@@ -118,8 +118,18 @@ namespace OSLCommon.Authorization
         {
             var collection = GetAccountCollection<Account>();
 
-            var filter = Builders<Account>.Filter.Where(v => v.Tokens.Where(t => t.Token == token).Where(t => t.Allow).Count() > 0);
-            var result = collection.Find(filter).FirstOrDefault();
+            var filter = Builders<Account>.Filter.Where(v => v.Username.Length > 1);
+
+            var accountList = collection.Find(filter).ToList();
+
+            var response =
+                          from item   in accountList.AsQueryable()
+                          from tk     in    item.Tokens 
+                                      where tk.Token == token
+                                      &&    tk.Allow
+                          select item.Username;
+
+            Account result = response.Count() == 1 ? GetAccountByUsername(response.First(), false) : null;
 
             if (result == null)
                 return null;
@@ -133,6 +143,8 @@ namespace OSLCommon.Authorization
         public override Account GetAccount(string token, bool bumpLastUsed = false)
             => GetAccount(token, bumpLastUsed, true);
         public override Account GetAccountByUsername(string username)
+            => GetAccountByUsername(username, true);
+        public Account GetAccountByUsername(string username, bool hookEvent = true)
         {
             var collection = GetAccountCollection<BsonDocument>();
 
@@ -142,7 +154,8 @@ namespace OSLCommon.Authorization
             var deser = BsonSerializer.Deserialize<Account>(result);
             if (deser != null)
             {
-                HookAccountEvent(deser);
+                if (hookEvent)
+                    HookAccountEvent(deser);
                 deser.accountManager = this;
                 return deser;
             }
