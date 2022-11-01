@@ -12,7 +12,7 @@ namespace OSLCommon.Authorization
 {
     public class MongoAccountManagerCollections
     {
-        public string Accounts { get; set; } = "";
+        public string Accounts { get; set; } = "accounts";
     }
     public class MongoAccountManager : AccountManager
     {
@@ -118,7 +118,7 @@ namespace OSLCommon.Authorization
         {
             var collection = GetAccountCollection<Account>();
 
-            var filter = Builders<Account>.Filter.Where(v => v.HasToken(token));
+            var filter = Builders<Account>.Filter.Where(v => v.Tokens.Where(t => t.Token == token).Where(t => t.Allow).Count() > 0);
             var result = collection.Find(filter).FirstOrDefault();
 
             if (result == null)
@@ -131,7 +131,7 @@ namespace OSLCommon.Authorization
             return result;
         }
         public override Account GetAccount(string token, bool bumpLastUsed = false)
-            => GetAccount(token, bumpLastUsed);
+            => GetAccount(token, bumpLastUsed, true);
         public override Account GetAccountByUsername(string username)
         {
             var collection = GetAccountCollection<BsonDocument>();
@@ -198,6 +198,11 @@ namespace OSLCommon.Authorization
                 TokenUsed(token);
             account.accountManager = this;
             return AccountHasPermission(account, permissions, ignoreAdmin);
+        }
+
+        public override void ReadJSON(string jsonContent)
+        {
+            Console.WriteLine($"[MongoAccountManager] ReadJSON disabled.");
         }
     }
 }
