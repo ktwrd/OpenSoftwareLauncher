@@ -1,0 +1,1 @@
+docker run --name mongodb-osl -d -e MONGO_INITDB_ROOT_USERNAME=user -e MONGO_INITDB_ROOT_PASSWORD=password mongo
