@@ -1,4 +1,5 @@
-﻿using kate.shared.Helpers;
+﻿using Google.Cloud.Firestore.V1;
+using kate.shared.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -206,37 +207,38 @@ namespace OSLCommon.Authorization
         public GrantTokenResponse CreateToken(Account account, string userAgent = "", string host = "")
         {
             bool accountFound = false;
-            foreach (var item in AccountList)
+            var targetAccount = GetAccountByUsername(account.Username);
+            if (targetAccount != null && account != null)
             {
-                if (item == account && account != null)
+                accountFound = true;
+                if (targetAccount.Enabled)
                 {
-                    accountFound = true;
-                    if (item.Enabled)
+                    var token = new AccountToken(targetAccount);
+                    AccountToken success = targetAccount.AddToken(token);
+                    if (success == null)
+                        return new GrantTokenResponse(ServerStringResponse.AccountTokenGrantFailed, false);
+                    else
                     {
-                        var token = new AccountToken(item);
-                        AccountToken success = item.AddToken(token);
-                        if (success == null)
-                            return new GrantTokenResponse(ServerStringResponse.AccountTokenGrantFailed, false);
-                        else
+                        if (!IsPendingWrite)
+                            OnPendingWrite();
+                        if (account.Groups == null)
+                            account.Groups = Array.Empty<string>();
+                        if (account.Permissions == null)
+                            account.Permissions = Array.Empty<AccountPermission>();
+                        TokenUsed(success.Token);
+                        foreach (var thing in account.Tokens)
                         {
-                            if (!IsPendingWrite)
-                                OnPendingWrite();
-                            if (account.Groups == null)
-                                account.Groups = Array.Empty<string>();
-                            if (account.Permissions == null)
-                                account.Permissions = Array.Empty<AccountPermission>();
-                            TokenUsed(success.Token);
-                            foreach (var thing in account.Tokens)
+                            if (thing.Token == success.Token)
                             {
-                                if (thing.Token == success.Token)
-                                {
-                                    thing.UserAgent = userAgent;
-                                    thing.Host = host;
-                                }
+                                thing.UserAgent = userAgent;
+                                thing.Host = host;
                             }
-                            return new GrantTokenResponse(ServerStringResponse.AccountTokenGranted, true, success, account.Groups.ToArray(), account.Permissions.ToArray());
                         }
+                        return new GrantTokenResponse(ServerStringResponse.AccountTokenGranted, true, success, account.Groups.ToArray(), account.Permissions.ToArray());
                     }
+                }
+                else
+                {
                     return new GrantTokenResponse(ServerStringResponse.AccountDisabled, false);
                 }
             }
@@ -278,17 +280,12 @@ namespace OSLCommon.Authorization
 
         public GrantTokenResponse GrantTokenAndOrAccount(string username, string password, string userAgent="", string host="")
         {
-            foreach (var account in AccountList)
-            {
-                // Found our account
-                if (account.Username == username)
-                {
-                    return GrantToken(account, username, password, userAgent: userAgent, host: host);
-                }
-            }
+            Account accountInstance = GetAccountByUsername(username);
+            if (accountInstance != null)
+                return GrantToken(accountInstance, username, password, userAgent: userAgent, host: host);
 
             // Create account
-            var accountInstance = CreateNewAccount(username);
+            accountInstance = CreateNewAccount(username);
             var response = GrantToken(accountInstance, username, password, userAgent: userAgent, host: host);
             return response;
         }
@@ -301,18 +298,22 @@ namespace OSLCommon.Authorization
         /// <param name="account">Account to check</param>
         /// <param name="permissions">Array of permissions to check</param>
         /// <param name="ignoreAdmin">When <see cref="Account"/> has the <see cref="AccountPermission.ADMINISTRATOR"/> permission, then <see cref="true"/> is always returned.</param>
-        /// <returns></returns>
-        public virtual bool AccountHasPermission(Account account, AccountPermission[] permissions, bool ignoreAdmin=false)
+        /// <param name="condition">If true then account must have all permissions. If false, user must have one or more of the permissions given.</param>
+        /// <returns>Does the account have the requested permissions?</returns>
+        public virtual bool AccountHasPermission(Account account, AccountPermission[] permissions, bool ignoreAdmin=false, bool condition=false)
         {
-            bool match = false;
+            int count = 0;
             foreach (var target in account.Permissions)
             {
                 if (permissions.Contains(target))
-                    match = true;
+                    count++;
             }
             if (account.Permissions.Contains(AccountPermission.ADMINISTRATOR) && !ignoreAdmin)
                 return true;
-            return match;
+            else if (condition)
+                return count == permissions.Length;
+            else
+                return count > 0;
         }
         /// <summary>
         /// Singular Permission overload for <see cref="AccountHasPermission(Account, AccountPermission[], bool)"/>
@@ -351,7 +352,7 @@ namespace OSLCommon.Authorization
         #endregion
 
         #region JSON (Des|S)erialization
-        public void ReadJSON(string jsonContent)
+        public virtual void ReadJSON(string jsonContent)
         {
             if (jsonContent.Length < 1)
                 Trace.WriteLine($"[AccountManager->Read:{GeneralHelper.GetNanoseconds()}] [ERR] Argument jsonContent has invalid length of {jsonContent.Length}");
@@ -377,7 +378,7 @@ namespace OSLCommon.Authorization
             Trace.WriteLine($"[AccountManager->Read:{GeneralHelper.GetNanoseconds()}] Deserialized Accounts ({AccountList.Count} Accounts)");
         }
 
-        public string ToJSON()
+        public virtual string ToJSON()
         {
             var jsonOptions = new JsonSerializerOptions()
             {
@@ -388,7 +389,7 @@ namespace OSLCommon.Authorization
             };
             try
             {
-                var serialized = JsonSerializer.Serialize(AccountList, jsonOptions);
+                var serialized = JsonSerializer.Serialize(GetAllAccounts(), jsonOptions);
                 return serialized;
             }
             catch (Exception except)
