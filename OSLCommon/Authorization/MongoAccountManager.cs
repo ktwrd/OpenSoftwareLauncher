@@ -100,8 +100,7 @@ namespace OSLCommon.Authorization
         public override Account[] GetAllAccounts()
         {
             var collection = GetAccountCollection<Account>();
-            var filter = Builders<Account>.Filter.Where(v => v.Username.Length > 1);
-            var result = collection.Find(filter).ToList();
+            var result = collection.Find(Builders<Account>.Filter.Empty).ToList();
 
             foreach (var item in result)
                 item.accountManager = this;

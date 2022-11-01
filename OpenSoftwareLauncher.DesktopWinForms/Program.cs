@@ -46,6 +46,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 ClientContext = new ClientContext();
                 Application.Run(ClientContext);
             }
+            
             catch (Exception e)
             {
                 Program.MessageBoxShow(LocaleManager.Get("FatalFailure_Exception", inject: new Dictionary<string, object>()
