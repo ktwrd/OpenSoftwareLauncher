@@ -217,7 +217,31 @@ namespace OSLCommon.Authorization
 
         public override void ReadJSON(string jsonContent)
         {
-            Console.WriteLine($"[MongoAccountManager] ReadJSON disabled.");
+            if (jsonContent.Length < 1)
+                Trace.WriteLine($"[AccountManager->Read:{GeneralHelper.GetNanoseconds()}] [ERR] Argument jsonContent has invalid length of {jsonContent.Length}");
+            if (!RegExStatements.JSON.Match(jsonContent).Success)
+                Trace.WriteLine($"[AccountManager->Read:{GeneralHelper.GetNanoseconds()}] [ERR] Argument jsonContent failed RegExp validation\n--------\n{jsonContent}\n--------\n");
+            var jsonOptions = new JsonSerializerOptions()
+            {
+                IgnoreReadOnlyFields = false,
+                IgnoreReadOnlyProperties = false,
+                IncludeFields = true
+            };
+            var deserialized = JsonSerializer.Deserialize<List<Account>>(jsonContent, jsonOptions);
+            if (deserialized == null)
+            {
+                Trace.WriteLine($"[AccountManager->Read:{GeneralHelper.GetNanoseconds()}] [WARN] Deserialized List<Account> is null. Content is\n--------\n{jsonContent}\n--------\n");
+            }
+
+            foreach (var item in deserialized)
+            {
+                var collection = GetAccountCollection<Account>();
+                var filter = Builders<Account>.Filter.Where(v => v.Username == item.Username);
+
+                if (collection.Find(filter).ToList().Count < 1)
+                    collection.InsertOne(item);
+            }
+            Console.WriteLine($"[MongoAccountManager->Read] Imported {deserialized.Count} Account(s)");
         }
     }
 }
