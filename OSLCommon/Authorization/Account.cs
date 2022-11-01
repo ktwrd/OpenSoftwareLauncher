@@ -30,6 +30,18 @@ namespace OSLCommon.Authorization
     }
     public class AccountDetailsResponse
     {
+        public AccountDetailsResponse()
+        {
+            Username = "";
+            Enabled = true;
+            Permissions = Array.Empty<AccountPermission>();
+            DisableReasons = Array.Empty<AccountDisableReason>();
+            Licenses = Array.Empty<string>();
+            Groups = Array.Empty<string>();
+            FirstSeenTimestamp = 0;
+            LastSeenTimestamp = 0;
+            Tokens = Array.Empty<AccountTokenDetailsResponse>();
+        }
         public string Username { get; set; }
         public bool Enabled { get; set; }
         public AccountPermission[] Permissions { get; set; }
@@ -174,7 +186,7 @@ namespace OSLCommon.Authorization
             set { }
         }
 
-        internal string[] licenses;
+        internal string[] licenses = Array.Empty<string>();
         public string[] Licenses
         {
             get
