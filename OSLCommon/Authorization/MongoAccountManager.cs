@@ -20,13 +20,48 @@ namespace OSLCommon.Authorization
         public string DatabaseName = "opensoftwarelauncher";
         public MongoAccountManagerCollections Collections = new MongoAccountManagerCollections();
         public MongoAccountManager(MongoClient client)
+            : base()
         {
             mongoClient = client;
+            AccountUpdated += (eventAccount) =>
+            {
+                var db = mongoClient.GetDatabase(DatabaseName);
+                var collection = db.GetCollection<Account>(Collections.Accounts);
+
+                var filter = Builders<Account>.Filter.Where(v => v.Username == eventAccount.Username);
+
+                collection.ReplaceOne(filter, eventAccount);
+            };
+        }
+        internal void HookAccountEvent(Account account)
+        {
+            AccountUpdated += (eventAccount) =>
+            {
+                if (eventAccount.Username == account.Username)
+                {
+                    account.Merge(eventAccount);
+                }
+            };
         }
 
-        internal override Account CreateAccount()
+        #region Account Boilerplate
+
+        internal override Account CreateAccount() => this.CreateAccount(true);
+        internal override Account CreateNewAccount(string username)
         {
-            return this.CreateAccount(true);
+            var check = GetAccountByUsername(username);
+            if (check != null)
+                return check;
+
+            var instance = new Account(this);
+            instance.Username = username;
+
+            var db = mongoClient.GetDatabase(DatabaseName);
+            var collection = db.GetCollection<Account>(Collections.Accounts);
+
+            collection.InsertOne(instance);
+
+            return instance;
         }
         internal Account CreateAccount(bool enableEvent=true)
         {
@@ -39,16 +74,25 @@ namespace OSLCommon.Authorization
 
             return account;
         }
-        internal void HookAccountEvent(Account account)
+        public override void RemoveAccount(string username)
         {
-            AccountUpdated += (eventAccount) =>
-            {
-                if (eventAccount.Username == account.Username)
-                {
-                    account.Merge(eventAccount);
-                }
-            };
+            var db = mongoClient.GetDatabase(DatabaseName);
+            var collection = db.GetCollection<BsonDocument>(Collections.Accounts);
+
+            var filter = Builders<BsonDocument>.Filter.Eq("Username", username);
+
+            collection.DeleteOne(filter);
         }
+        public override void SetAccount(Account account)
+        {
+            var db = mongoClient.GetDatabase(DatabaseName);
+            var collection = db.GetCollection<Account>(Collections.Accounts);
+
+            var filter = Builders<Account>.Filter.Eq("Username", account.Username);
+
+            collection.ReplaceOne(filter, account);
+        }
+        #endregion
 
 
         #region Get Account
@@ -106,8 +150,6 @@ namespace OSLCommon.Authorization
                 return deser;
             }
             return null;
-
-
         }
         public override Account[] GetAccountsByRegex(Regex expression, AccountField field = AccountField.Username)
         {

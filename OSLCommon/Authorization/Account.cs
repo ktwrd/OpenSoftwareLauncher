@@ -165,6 +165,20 @@ namespace OSLCommon.Authorization
             }
         }
 
+        internal string[] licenses;
+        public string[] Licenses
+        {
+            get
+            {
+                return licenses;
+            }
+            set
+            {
+                licenses = value;
+                if (this.accountManager != null)
+                    this.accountManager.OnAccountUpdate(this);
+            }
+        }
 
         /// <summary>
         /// Is there new data that doesn't exist locally.
@@ -182,20 +196,7 @@ namespace OSLCommon.Authorization
             }
         }
         private bool _pendingWrite = false;
-        internal string[] licenses;
-        public string[] Licenses
-        {
-            get
-            {
-                return licenses;
-            }
-            set
-            {
-                licenses = value;
-                if (this.accountManager != null)
-                    this.accountManager.OnAccountUpdate(this);
-            }
-        }
+        
         #endregion
 
         #region License Management

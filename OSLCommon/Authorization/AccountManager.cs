@@ -56,16 +56,35 @@ namespace OSLCommon.Authorization
         }
         #endregion
 
-        public virtual bool ValidateToken(string token)
+        #region Account Boilerplate
+        internal virtual Account CreateAccount()
         {
-            foreach (var account in AccountList)
-            {
-                foreach (var item in account.Tokens)
-                    if (item.Token == token && account.Enabled)
-                        return true;
-            }
-            return false;
+            return new Account(this);
         }
+        internal virtual Account CreateNewAccount(string username)
+        {
+            var check = GetAccountByUsername(username);
+            if (check != null)
+                return check;
+            var account = new Account(this);
+            account.Username = username;
+            AccountList.Add(account);
+            return account;
+        }
+        public virtual void RemoveAccount(string username)
+        {
+            foreach (var item in AccountList.ToArray())
+                if (item.Username == username)
+                    AccountList.Remove(item);
+        }
+        public virtual void SetAccount(Account account)
+        {
+            foreach (var item in AccountList.ToArray())
+                if (item.Username == account.Username)
+                    item.Merge(account);
+        }
+        #endregion
+
 
         public virtual void SetUserGroups(Dictionary<string, string[]> dict)
         {
@@ -142,6 +161,17 @@ namespace OSLCommon.Authorization
         #endregion
 
         #region Token Management
+        public virtual bool ValidateToken(string token)
+        {
+            foreach (var account in AccountList)
+            {
+                foreach (var item in account.Tokens)
+                    if (item.Token == token && account.Enabled)
+                        return true;
+            }
+            return false;
+        }
+
         /// <summary>
         /// Used to mark <see cref="AccountToken.LastUsed"/> to the current Unix Epoch
         /// </summary>
@@ -166,11 +196,6 @@ namespace OSLCommon.Authorization
                 token.LastUsed = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             }
             return token;
-        }
-
-        internal virtual Account CreateAccount()
-        {
-            return new Account(this);
         }
 
         /// <summary>
@@ -263,12 +288,8 @@ namespace OSLCommon.Authorization
             }
 
             // Create account
-            var accountInstance = CreateAccount();
-            accountInstance.Username = username;
-            AccountList.Add(accountInstance);
+            var accountInstance = CreateNewAccount(username);
             var response = GrantToken(accountInstance, username, password, userAgent: userAgent, host: host);
-            if (!response.Success)
-                AccountList.Remove(accountInstance);
             return response;
         }
         #endregion
