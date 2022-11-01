@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Xml.Serialization;
 
 namespace OSLCommon.Authorization
 {
@@ -50,7 +51,11 @@ namespace OSLCommon.Authorization
         { }
         #endregion
 
-
+        [BsonIgnore]
+        [JsonIgnore]
+        [SoapIgnore]
+        [XmlIgnore]
+        internal bool eventHook = false;
         /// <summary>
         /// Merge account data into this one.
         /// </summary>

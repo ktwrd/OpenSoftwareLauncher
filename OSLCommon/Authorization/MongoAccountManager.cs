@@ -38,6 +38,8 @@ namespace OSLCommon.Authorization
         }
         internal void HookAccountEvent(Account account)
         {
+            if (account == null || account.eventHook) return;
+            account.eventHook = true;
             AccountUpdated += (eventAccount) =>
             {
                 if (eventAccount.Username == account.Username)
