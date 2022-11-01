@@ -21,7 +21,7 @@ namespace OpenSoftwareLauncher.Server
         public Dictionary<string, ProductRelease> Releases = new();
         public Dictionary<string, PublishedRelease> Published = new();
         public MongoAccountManager AccountManager;
-        public SystemAnnouncement SystemAnnouncement = new();
+        public MongoSystemAnnouncement SystemAnnouncement;
         public AccountLicenseManager AccountLicenseManager;
 
         /*internal List<string> LoadedFirebaseAssets = new();
@@ -34,7 +34,8 @@ namespace OpenSoftwareLauncher.Server
             this.MongoClient = new MongoClient(ServerConfig.GetString("Connection", "MongoDBServer"));
 
             AccountManager = new MongoAccountManager(MongoClient);
-            
+            SystemAnnouncement = new MongoSystemAnnouncement(MongoClient);
+
             AccountLicenseManager = new AccountLicenseManager(AccountManager);
             databaseDeserialize();
 
@@ -59,16 +60,18 @@ namespace OpenSoftwareLauncher.Server
 
         private void SystemAnnouncement_Update()
         {
+            ServerConfig.Set("Announcement", "Enable", SystemAnnouncement.Active);
+            return;
             File.WriteAllText(JSON_SYSANNOUNCE_FILENAME, SystemAnnouncement.ToJSON());
             string txt = $"[ContentManager->SystemAnnouncement_Update]  {Path.GetRelativePath(Directory.GetCurrentDirectory(), JSON_SYSANNOUNCE_FILENAME)}";
             Trace.WriteLine(txt);
             Console.WriteLine(txt);
-            ServerConfig.Set("Announcement", "Enable", SystemAnnouncement.Active);
             ServerConfig.Save();
         }
 
         private void AccountManager_PendingWrite()
         {
+            return;
             File.WriteAllText(JSON_ACCOUNT_FILENAME, AccountManager.ToJSON());
             AccountManager.ClearPendingWrite();
             string txt = $"[ContentManager->AccountManager_PendingWrite] {Path.GetRelativePath(Directory.GetCurrentDirectory(), JSON_ACCOUNT_FILENAME)}";
@@ -104,28 +107,36 @@ namespace OpenSoftwareLauncher.Server
         }
         private void databaseDeserialize()
         {
-            try
+            if (!ServerConfig.GetBoolean("Migrated", "Account", false))
             {
-                if (File.Exists(JSON_ACCOUNT_FILENAME))
-                    AccountManager.ReadJSON(File.ReadAllText(JSON_ACCOUNT_FILENAME));
+                try
+                {
+                    if (File.Exists(JSON_ACCOUNT_FILENAME))
+                        AccountManager.ReadJSON(File.ReadAllText(JSON_ACCOUNT_FILENAME));
+                }
+                catch (Exception except)
+                {
+                    string txt = $"[ContentManager->databaseSerialize:{GeneralHelper.GetNanoseconds()}] [ERR] Failed to read Account Details\n--------\n{except}\n--------\n";
+                    Trace.WriteLine(txt);
+                    Console.Error.WriteLine(txt);
+                }
+                ServerConfig.Set("Migrated", "Account", true);
             }
-            catch (Exception except)
+            if (!ServerConfig.GetBoolean("Migrated", "Announcement", false))
             {
-                string txt = $"[ContentManager->databaseSerialize:{GeneralHelper.GetNanoseconds()}] [ERR] Failed to read Account Details\n--------\n{except}\n--------\n";
-                Trace.WriteLine(txt);
-                Console.Error.WriteLine(txt);
-            }
-            try
-            {
-                if (File.Exists(JSON_SYSANNOUNCE_FILENAME))
-                    SystemAnnouncement.Read(File.ReadAllText(JSON_SYSANNOUNCE_FILENAME));
-                SystemAnnouncement.Active = ServerConfig.GetBoolean("Announcement", "Enable", true);
-            }
-            catch (Exception except)
-            {
-                string txt = $"[ContentManager->databaseSerialize:{GeneralHelper.GetNanoseconds()}] [ERR] Failed to read Announcement Details\n--------\n{except}\n--------\n";
-                Trace.WriteLine(txt);
-                Console.Error.WriteLine(txt);
+                try
+                {
+                    if (File.Exists(JSON_SYSANNOUNCE_FILENAME))
+                        SystemAnnouncement.Read(File.ReadAllText(JSON_SYSANNOUNCE_FILENAME));
+                    SystemAnnouncement.Active = ServerConfig.GetBoolean("Announcement", "Enable", true);
+                }
+                catch (Exception except)
+                {
+                    string txt = $"[ContentManager->databaseSerialize:{GeneralHelper.GetNanoseconds()}] [ERR] Failed to read Announcement Details\n--------\n{except}\n--------\n";
+                    Trace.WriteLine(txt);
+                    Console.Error.WriteLine(txt);
+                }
+                ServerConfig.Set("Migrated", "Announcement", true);
             }
             if (File.Exists(JSONBACKUP_FILENAME))
             {

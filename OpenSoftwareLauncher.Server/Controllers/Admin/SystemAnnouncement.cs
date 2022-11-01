@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
+using System.Linq;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Admin
 {
@@ -23,7 +24,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         {
             var item = MainClass.contentManager.SystemAnnouncement.GetLatest();
             var list = new List<SystemAnnouncementEntry>();
-            if (item != null && MainClass.contentManager.SystemAnnouncement.Active)
+            if (item != null)
                 list.Add(item);
             return Json(new ObjectResponse<SystemAnnouncementEntry[]>()
             {
@@ -132,8 +133,16 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 }, MainClass.serializerOptions);
             }
 
-            MainClass.contentManager.SystemAnnouncement.Read(WebUtility.UrlDecode(content));
-            MainClass.contentManager.SystemAnnouncement.OnUpdate();
+            var idList = new List<string>();
+            foreach (var item in attemptedDeserialized.Entries)
+            {
+                MainClass.contentManager.SystemAnnouncement.Set(item.ID, item);
+                idList.Add(item.ID);
+            }
+            foreach (var item in MainClass.contentManager.SystemAnnouncement.GetAll().Where(v => !idList.Contains(v.ID)))
+            {
+                MainClass.contentManager.SystemAnnouncement.RemoveId(item.ID);
+            }
 
             return Json(new ObjectResponse<SystemAnnouncementSummary>()
             {
