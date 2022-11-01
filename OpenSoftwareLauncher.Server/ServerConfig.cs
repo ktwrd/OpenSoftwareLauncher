@@ -85,6 +85,23 @@ namespace OpenSoftwareLauncher.Server
                     {
                         {"MongoDBServer", "" }
                     }
+                },
+                {"MongoDB", new Dictionary<string, object>
+                    {
+                        {"DatabaseName", "opensoftwarelauncher" },
+                        {"Collection_Account", "accounts" },
+                        {"Collection_Announcement", "announcements" }
+                    }
+                },
+                {"Migrated", new Dictionary<string, object>
+                    {
+                        {"Account", false },
+                        {"Announcement", false },
+                        {"License", false },
+                        {"ReleaseInfo", false },
+                        {"Published", false },
+                        {"Product", false }
+                    }
                 }
             };
 

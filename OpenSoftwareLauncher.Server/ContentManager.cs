@@ -31,7 +31,11 @@ namespace OpenSoftwareLauncher.Server
             this.MongoClient = new MongoClient(ServerConfig.GetString("Connection", "MongoDBServer"));
 
             AccountManager = new MongoAccountManager(MongoClient);
+            AccountManager.DatabaseName = ServerConfig.GetString("MongoDB", "DatabaseName");
+            AccountManager.CollectionName = ServerConfig.GetString("MongoDB", "Collection_Account");
             SystemAnnouncement = new MongoSystemAnnouncement(MongoClient);
+            SystemAnnouncement.DatabaseName = ServerConfig.GetString("MongoDB", "DatabaseName");
+            SystemAnnouncement.CollectionName = ServerConfig.GetString("MongoDB", "Collection_Announcement");
 
             AccountLicenseManager = new AccountLicenseManager(AccountManager);
             databaseDeserialize();
