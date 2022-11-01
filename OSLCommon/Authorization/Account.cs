@@ -1,4 +1,5 @@
 ﻿using kate.shared.Helpers;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json.Schema;
 using System;
@@ -65,6 +66,7 @@ namespace OSLCommon.Authorization
 
         #region Fields
         internal AccountManager accountManager = null;
+        public ObjectId _id { get; set; }
         public string Username { get; set; } = "";
         private AccountToken[] tokens = Array.Empty<AccountToken>();
         public AccountToken[] Tokens
@@ -145,6 +147,7 @@ namespace OSLCommon.Authorization
                 }
                 return timestamp;
             }
+            set { }
         }
         /// <summary>
         /// Timestamp of the token that was last created.
@@ -163,6 +166,7 @@ namespace OSLCommon.Authorization
                 }
                 return timestamp;
             }
+            set { }
         }
 
         internal string[] licenses;
@@ -184,11 +188,10 @@ namespace OSLCommon.Authorization
         /// Is there new data that doesn't exist locally.
         /// </summary>
         [JsonIgnore]
-        [BsonIgnore]
         public bool PendingWrite
         {
             get => _pendingWrite;
-            private set
+            set
             {
                 _pendingWrite = value;
                 if (value)
@@ -363,7 +366,7 @@ namespace OSLCommon.Authorization
         {
             foreach (var item in Tokens.ToArray())
             {
-                if (item.Token == token)
+                if (item.Token == token && item.Allow)
                     return true;
             }
             return false;
