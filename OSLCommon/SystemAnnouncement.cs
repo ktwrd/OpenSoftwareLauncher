@@ -146,6 +146,14 @@ namespace OSLCommon
             Add(entry);
             return entry;
         }
+        public virtual void Set(string id, SystemAnnouncementEntry entry)
+        {
+            throw new NotImplementedException();
+        }
+        public virtual void RemoveId(string id)
+        {
+            Entries = Entries.Where(v => v.ID != id).ToList();
+        }
         public virtual void Add(SystemAnnouncementEntry entry)
         {
             Entries.Add(entry);
@@ -174,7 +182,7 @@ namespace OSLCommon
                 AnnouncementUpdate.Invoke(entry);
         }
 
-        public SystemAnnouncementSummary GetSummary()
+        public virtual SystemAnnouncementSummary GetSummary()
         {
             SystemAnnouncementSummary instance = new SystemAnnouncementSummary()
             {
@@ -183,7 +191,7 @@ namespace OSLCommon
             };
             return instance;
         }
-        public void Read(string content)
+        public virtual void Read(string content)
         {
             var serializerOptions = new JsonSerializerOptions()
             {
@@ -199,7 +207,7 @@ namespace OSLCommon
                 Active = summary.Active;
             }
         }
-        public string ToJSON()
+        public virtual string ToJSON()
         {
             var serializerOptions = new JsonSerializerOptions()
             {
