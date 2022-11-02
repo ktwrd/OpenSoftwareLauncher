@@ -17,6 +17,8 @@ namespace OSLCommon.Licensing
             AccountManager = accountManager;
         }
 
+        #region Events
+
         /// <param name="license">Nullable <see cref="LicenseKeyMetadata"/></param>
         public delegate void LicenseFieldDelegate(LicenseField field, LicenseKeyMetadata license);
         public delegate void LicenseGroupDelegate(LicenseGroup group);
@@ -27,7 +29,15 @@ namespace OSLCommon.Licensing
         public void OnUpdate(LicenseField field, LicenseKeyMetadata license)
         {
             if (Update != null)
+            {
+                if (license != null)
+                {
+                    HookLicenseEvent(license);
+                    if (LicenseUpdate != null)
+                        LicenseUpdate?.Invoke(license);
+                }
                 Update?.Invoke(field, license);
+            }
         }
         public void OnGroupUpdate(LicenseGroup group)
         {
