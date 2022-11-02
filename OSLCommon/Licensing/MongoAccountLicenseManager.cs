@@ -104,6 +104,22 @@ namespace OSLCommon.Licensing
                 HookLicenseEvent(deser);
             return deser;
         }
+        public async Task<LicenseKeyMetadata> GetLicenseKeyById(string id, bool hook = true)
+        {
+            var collection = GetLicenseCollection<BsonDocument>();
+            var filter = Builders<BsonDocument>
+                .Filter
+                .Eq("UID", id);
+            var result = collection.Find(filter).FirstOrDefault();
+            if (result == null)
+                return null;
+
+            var deser = BsonSerializer.Deserialize<LicenseKeyMetadata>(result);
+            deser.manager = this;
+            if (hook)
+                HookLicenseEvent(deser);
+            return deser;
+        }
         public override async Task<LicenseKeyMetadata[]> GetLicenseKeys(bool hook = true)
         {
             var collection = GetLicenseCollection<LicenseKeyMetadata>();
