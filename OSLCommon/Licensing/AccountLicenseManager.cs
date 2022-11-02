@@ -108,6 +108,20 @@ namespace OSLCommon.Licensing
         public Dictionary<string, LicenseGroup> LicenseGroups { get; set; } = new Dictionary<string, LicenseGroup>();
 
         #region Get/Set License/Groups
+        /// <returns>Nullable <see cref="LicenseKeyMetadata"/></returns>
+        public virtual async Task<LicenseKeyMetadata> GetLicenseKey(string key, bool hook = true)
+        {
+            var match = LicenseHelper.LicenseKeyRegex.Match(key);
+            if (!match.Success) return null;
+            foreach (var item in LicenseKeys)
+                if (item.Value.Key == key)
+                {
+                    if (hook)
+                        HookLicenseEvent(item.Value);
+                    return item.Value;
+                }
+            return null;
+        }
         public virtual async Task<LicenseKeyMetadata[]> GetLicenseKeys(bool hook = true)
         {
             var list = new List<LicenseKeyMetadata>();
@@ -136,6 +150,7 @@ namespace OSLCommon.Licensing
                 }
             }
             LicenseKeys = newDictionary;
+            OnUpdate(LicenseField.All, null);
         }
         public virtual async Task DeleteLicenseKey(string keyId)
         {
@@ -145,6 +160,45 @@ namespace OSLCommon.Licensing
             {
                 item.Value.LicenseIds = item.Value.LicenseIds.Where(v => v != keyId).ToArray();
             }
+            OnUpdate(LicenseField.All, null);
+        }
+
+        public virtual async Task<LicenseGroup[]> GetGroups(bool hook = true)
+        {
+            var list = new List<LicenseGroup>();
+            foreach (var pair in LicenseGroups)
+            {
+                if (hook)
+                    HookLicenseGroupEvent(pair.Value);
+                list.Add(pair.Value);
+            }
+            return list.ToArray();
+        }
+        public virtual async Task SetGroups(LicenseGroup[] groups, bool overwrite = true, bool deleteKeys = true)
+        {
+            Dictionary<string, LicenseGroup> dict = new Dictionary<string, LicenseGroup>();
+            if (!overwrite)
+                dict = LicenseGroups;
+            var groupIdList = new List<string>();
+            foreach (var item in groups)
+            {
+                groupIdList.Add(item.UID);
+                if (dict.ContainsKey(item.UID))
+                    dict[item.UID].Merge(item);
+                else
+                {
+                    HookLicenseGroupEvent(item);
+                    dict.Add(item.UID, item);
+                }
+            }
+            LicenseGroups = dict;
+            if (deleteKeys)
+            {
+                LicenseKeys = LicenseKeys
+                    .Where(v => groupIdList.Contains(v.Value.GroupId))
+                    .ToDictionary(x => x.Key, v => v.Value);
+            }
+            OnUpdate(LicenseField.All, null);
         }
         /// <param name="includeKeys">Delete License Keys associated with group</param>
         public virtual async Task DeleteGroup(string groupId, bool includeKeys = true)
@@ -162,35 +216,7 @@ namespace OSLCommon.Licensing
                 foreach (var item in keyList)
                     await DeleteLicenseKey(item);
             }
-        }
-
-        public virtual async Task<LicenseGroup[]> GetGroups(bool hook = true)
-        {
-            var list = new List<LicenseGroup>();
-            foreach (var pair in LicenseGroups)
-            {
-                if (hook)
-                    HookLicenseGroupEvent(pair.Value);
-                list.Add(pair.Value);
-            }
-            return list.ToArray();
-        }
-        public virtual async void SetGroups(LicenseGroup[] groups, bool overwrite = true)
-        {
-            Dictionary<string, LicenseGroup> dict = new Dictionary<string, LicenseGroup>();
-            if (!overwrite)
-                dict = LicenseGroups;
-            foreach (var item in groups)
-            {
-                if (dict.ContainsKey(item.UID))
-                    dict[item.UID].Merge(item);
-                else
-                {
-                    HookLicenseGroupEvent(item);
-                    dict.Add(item.UID, item);
-                }
-            }
-            LicenseGroups = dict;
+            OnUpdate(LicenseField.All, null);
         }
 
         public virtual async Task<AccountLicenseManagerSummary> GetSummary()
@@ -203,20 +229,6 @@ namespace OSLCommon.Licensing
         }
         #endregion
 
-        /// <returns>Nullable <see cref="LicenseKeyMetadata"/></returns>
-        public virtual async Task<LicenseKeyMetadata> GetLicenseKey(string key, bool hook = true)
-        {
-            var match = LicenseHelper.LicenseKeyRegex.Match(key);
-            if (!match.Success) return null;
-            foreach (var item in LicenseKeys)
-                if (item.Value.Key == key)
-                {
-                    if (hook)
-                        HookLicenseEvent(item.Value);
-                    return item.Value;
-                }
-            return null;
-        }
         public enum LicenseKeyActionResult
         {
             Invalid = -1,
