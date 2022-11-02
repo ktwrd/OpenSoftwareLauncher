@@ -91,7 +91,8 @@ namespace OpenSoftwareLauncher.Server
                         {"DatabaseName", "opensoftwarelauncher" },
                         {"Collection_Account", "accounts" },
                         {"Collection_Announcement", "announcements" },
-                        {"Collection_License", "licenses" }
+                        {"Collection_License", "licenses" },
+                        {"Collection_GroupLicense", "licenseGroups" }
                     }
                 },
                 {"Migrated", new Dictionary<string, object>
