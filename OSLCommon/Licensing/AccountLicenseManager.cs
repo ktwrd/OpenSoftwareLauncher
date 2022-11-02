@@ -89,6 +89,28 @@ namespace OSLCommon.Licensing
         public Dictionary<string, LicenseKeyMetadata> LicenseKeys { get; set; } = new Dictionary<string, LicenseKeyMetadata>();
         public Dictionary<string, LicenseGroup> LicenseGroups { get; set; } = new Dictionary<string, LicenseGroup>();
 
+        public virtual async Task<LicenseKeyMetadata[]> GetLicenseKeys(bool hook = true)
+        {
+            var list = new List<LicenseKeyMetadata>();
+            foreach (var pair in LicenseKeys)
+            {
+                if (hook)
+                    HookLicenseEvent(pair.Value);
+                list.Add(pair.Value);
+            }
+            return list.ToArray();
+        }
+        public virtual async Task<LicenseGroup[]> GetGroups(bool hook = true)
+        {
+            var list = new List<LicenseGroup>();
+            foreach (var pair in LicenseGroups)
+            {
+                if (hook)
+                    HookLicenseGroupEvent(pair.Value);
+                list.Add(pair.Value);
+            }
+            return list.ToArray();
+        }
         /// <returns>Nullable <see cref="LicenseKeyMetadata"/></returns>
         public virtual async Task<LicenseKeyMetadata> GetLicenseKey(string key, bool hook = true)
         {
