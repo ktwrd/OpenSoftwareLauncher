@@ -153,43 +153,10 @@ namespace OSLCommon.Licensing
             long activateBy = -1,
             string groupLabel = "")
         {
-            var licenseArray = new LicenseKeyMetadata[count];
-            string[] licenseIds = new string[count];
-            long createTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            string groupId = GeneralHelper.GenerateToken(LicenseHelper.GroupIdLength);
-            for (int i = 0; i < count; i++)
-            {
-                licenseArray[i] = new LicenseKeyMetadata
-                {
-                    UID = GeneralHelper.GenerateToken(LicenseHelper.LicenseIdLength),
-                    Enable = true,
-                    Activated = false,
-                    ActivatedBy = "",
-                    InternalNote = note,
-                    Key = LicenseHelper.GenerateLicenseKeyString(),
-                    Products = products,
-                    ProductsApplied = Array.Empty<string>(),
-                    Permissions = permissions ?? Array.Empty<AccountPermission>(),
-                    PermissionsApplied = Array.Empty<AccountPermission>(),
-                    ActivateByTimestamp = activateBy,
-                    CreatedTimestamp = createTimestamp,
+            var createdKeys = createLicenseKeyContent(author, products, count, permissions, note, activateBy, groupLabel);
 
-                    CreatedBy = author,
-                    GroupId = groupId
-                };
-                licenseIds[i] = licenseArray[i].UID;
-            }
-
-            var group = new LicenseGroup
-            {
-                UID = groupId,
-                DisplayName = groupLabel,
-                LicenseIds = licenseIds,
-                CreatedTimestamp = createTimestamp,
-                CreatedBy = author
-            };
-            LicenseGroups.Add(groupId, group);
-            foreach (var item in licenseArray)
+            LicenseGroups.Add(createdKeys.id, createdKeys.group);
+            foreach (var item in createdKeys.keys)
             {
                 LicenseKeys.Add(item.UID, item);
                 OnUpdate(LicenseField.License, item);
@@ -198,8 +165,8 @@ namespace OSLCommon.Licensing
 
             return new CreateLicenseKeyResponse
             {
-                Keys = licenseArray,
-                GroupId = groupId
+                Keys = createdKeys.keys,
+                GroupId = createdKeys.id
             };
         }
 
