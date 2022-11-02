@@ -66,6 +66,7 @@ namespace OSLCommon.Licensing
         #region License (|Group) Merge/Hook
         protected virtual void HookLicenseEvent(LicenseKeyMetadata target)
         {
+            target.manager = this;
             if (target == null || target.eventHook) return;
             target.eventHook = true;
             LicenseUpdate += (source) =>
@@ -86,6 +87,7 @@ namespace OSLCommon.Licensing
         }
         protected virtual void HookLicenseGroupEvent(LicenseGroup target)
         {
+            target.manager = this;
             if (target == null || target.eventHook) return;
             target.eventHook = true;
             GroupUpdate += (source) =>
@@ -117,6 +119,7 @@ namespace OSLCommon.Licensing
             }
             return list.ToArray();
         }
+        /// <param name="overwrite">Delete license keys not given.</param>
         public virtual async Task SetLicenseKeys(LicenseKeyMetadata[] keys, bool overwrite = true)
         {
             Dictionary<string, LicenseKeyMetadata> newDictionary = new Dictionary<string, LicenseKeyMetadata>();
