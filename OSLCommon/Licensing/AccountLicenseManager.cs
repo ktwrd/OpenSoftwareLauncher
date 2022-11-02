@@ -89,6 +89,7 @@ namespace OSLCommon.Licensing
         public Dictionary<string, LicenseKeyMetadata> LicenseKeys { get; set; } = new Dictionary<string, LicenseKeyMetadata>();
         public Dictionary<string, LicenseGroup> LicenseGroups { get; set; } = new Dictionary<string, LicenseGroup>();
 
+        #region Get/Set License/Groups
         public virtual async Task<LicenseKeyMetadata[]> GetLicenseKeys(bool hook = true)
         {
             var list = new List<LicenseKeyMetadata>();
@@ -111,6 +112,16 @@ namespace OSLCommon.Licensing
             }
             return list.ToArray();
         }
+        public virtual async Task<AccountLicenseManagerSummary> GetSummary()
+        {
+            return new AccountLicenseManagerSummary
+            {
+                Keys = GetLicenseKeys().Result,
+                Groups = GetGroups().Result
+            };
+        }
+        #endregion
+
         /// <returns>Nullable <see cref="LicenseKeyMetadata"/></returns>
         public virtual async Task<LicenseKeyMetadata> GetLicenseKey(string key, bool hook = true)
         {
