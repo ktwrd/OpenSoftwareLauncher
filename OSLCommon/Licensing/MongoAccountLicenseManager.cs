@@ -83,9 +83,34 @@ namespace OSLCommon.Licensing
                     HookLicenseEvent(item);
             return result.ToArray();
         }
-        public virtual async void SetLicenseKeys(LicenseKeyMetadata[] keys, bool overwrite = true)
+        public virtual async Task SetLicenseKeys(LicenseKeyMetadata[] keys, bool overwrite = true)
         {
-            List<string> keyIds = new List<string>();
+            List<StringOrRegularExpression> keyIds = new List<StringOrRegularExpression>();
+            var collection = GetLicenseCollection<LicenseKeyMetadata>();
+            foreach (var item in keys)
+            {
+                keyIds.Add(new StringOrRegularExpression(item.UID));
+
+                var filter = Builders<LicenseKeyMetadata>
+                    .Filter
+                    .Where(v => v.UID == item.UID);
+
+                var found = await collection.FindAsync(filter);
+                var count = found.ToList().Count;
+                if (count < 1)
+                    collection.InsertOne(item);
+                else
+                    await collection.FindOneAndReplaceAsync(filter, item);
+            }
+
+            if (overwrite)
+            {
+                var deleteFilter = Builders<BsonDocument>
+                    .Filter
+                    .StringNin("UID", keyIds);
+                await GetLicenseCollection<BsonDocument>().DeleteManyAsync(deleteFilter);
+            }
+        }
         }
 
         #region Enable/Disable
