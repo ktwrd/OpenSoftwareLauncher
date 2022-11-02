@@ -88,7 +88,7 @@ namespace OSLCommon.Licensing
             public string id;
             public long timestamp;
         }
-        private CreateLicenseKeyMetadata createLicenseKeyContent(
+        protected CreateLicenseKeyMetadata createLicenseKeyContent(
             string author,
             string[] products,
             int count = 1,
