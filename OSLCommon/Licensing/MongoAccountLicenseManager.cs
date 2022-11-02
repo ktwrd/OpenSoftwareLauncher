@@ -49,6 +49,11 @@ namespace OSLCommon.Licensing
         }
         #endregion
 
+        public override void RefreshHook()
+        {
+            Console.WriteLine("[WARN] [MongoAccountLicenseManager] RefreshHook is disabled since hooks are automatically injected when required.");
+        }
+
         public override async Task<LicenseKeyMetadata> GetLicenseKey(string key, bool hook = true)
         {
             var match = LicenseHelper.LicenseKeyRegex.Match(key);
