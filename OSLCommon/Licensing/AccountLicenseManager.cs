@@ -85,6 +85,8 @@ namespace OSLCommon.Licensing
         {
             public LicenseKeyMetadata[] keys;
             public LicenseGroup group;
+            public string id;
+            public long timestamp;
         }
         private CreateLicenseKeyMetadata createLicenseKeyContent(
             string author,
@@ -136,7 +138,9 @@ namespace OSLCommon.Licensing
             return new CreateLicenseKeyMetadata
             {
                 group = group,
-                keys = licenseArray
+                keys = licenseArray,
+                id = groupId,
+                timestamp = createTimestamp
             };
         }
 
