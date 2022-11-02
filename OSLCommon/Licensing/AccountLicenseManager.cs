@@ -19,7 +19,14 @@ namespace OSLCommon.Licensing
 
         /// <param name="license">Nullable <see cref="LicenseKeyMetadata"/></param>
         public delegate void LicenseFieldDelegate(LicenseField field, LicenseKeyMetadata license);
+        public delegate void LicenseGroupDelegate(LicenseGroup group);
         public event LicenseFieldDelegate Update;
+        public event LicenseGroupDelegate GroupUpdate;
+        public void OnGroupUpdate(LicenseGroup group)
+        {
+            if (GroupUpdate != null)
+                GroupUpdate?.Invoke(group);
+        }
         public void OnUpdate(LicenseField field, LicenseKeyMetadata license)
         {
             if (Update != null)
