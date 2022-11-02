@@ -46,21 +46,9 @@ namespace OSLCommon.Licensing
         {
             return mongoClient.GetDatabase(DatabaseName).GetCollection<T>(GroupCollectionName);
         }
+        #endregion
 
-        internal void HookLicenseEvent(LicenseKeyMetadata license)
-        {
-            if (license == null || license.eventHook) return;
-            license.eventHook = true;
-            Update += (field, eventItem) =>
-            {
-                if (eventItem != null && eventItem.UID == license.UID)
-                {
-                    license.Merge(eventItem);
-                }
-            };
-        }
-
-        public override async Task<LicenseKeyMetadata> GetLicenseKey(string key)
+        public override async Task<LicenseKeyMetadata> GetLicenseKey(string key, bool hook = true)
         {
             var match = LicenseHelper.LicenseKeyRegex.Match(key);
             if (!match.Success) return null;
@@ -75,7 +63,8 @@ namespace OSLCommon.Licensing
 
             var deser = BsonSerializer.Deserialize<LicenseKeyMetadata>(result);
             deser.manager = this;
-            HookLicenseEvent(deser);
+            if (hook)
+                HookLicenseEvent(deser);
             return deser;
         }
 

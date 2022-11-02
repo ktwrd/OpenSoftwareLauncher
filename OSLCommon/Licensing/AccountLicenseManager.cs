@@ -40,17 +40,57 @@ namespace OSLCommon.Licensing
                 LicenseUpdate?.Invoke(license);
         }
 
+        public virtual void RefreshHook()
+        {
+            foreach (var pair in LicenseKeys)
+            {
+                HookLicenseEvent(pair.Value);
+            }
+            foreach (var pair in LicenseGroups)
+            {
+                HookLicenseGroupEvent(pair.Value);
+            }
+        }
+        #endregion
+
+        #region License (|Group) Merge/Hook
+        protected virtual void HookLicenseEvent(LicenseKeyMetadata target)
+        {
+            if (target == null || target.eventHook) return;
+            target.eventHook = true;
+            LicenseUpdate += (source) =>
+            {
+                LicenseMerge(source, target);
+            };
+            Update += (field, source) =>
+            {
+                LicenseMerge(source, target);
+            };
+        }
+        protected virtual void LicenseMerge(LicenseKeyMetadata source, LicenseKeyMetadata target)
+        {
+            if (source != null && source.UID == target.UID)
+            {
+                source.Merge(target);
+            }
+        }
+        #endregion
+
         public Dictionary<string, LicenseKeyMetadata> LicenseKeys { get; set; } = new Dictionary<string, LicenseKeyMetadata>();
         public Dictionary<string, LicenseGroup> LicenseGroups { get; set; } = new Dictionary<string, LicenseGroup>();
 
         /// <returns>Nullable <see cref="LicenseKeyMetadata"/></returns>
-        public virtual async Task<LicenseKeyMetadata> GetLicenseKey(string key)
+        public virtual async Task<LicenseKeyMetadata> GetLicenseKey(string key, bool hook = true)
         {
             var match = LicenseHelper.LicenseKeyRegex.Match(key);
             if (!match.Success) return null;
             foreach (var item in LicenseKeys)
                 if (item.Value.Key == key)
+                {
+                    if (hook)
+                        HookLicenseEvent(item.Value);
                     return item.Value;
+                }
             return null;
         }
         public enum LicenseKeyActionResult
