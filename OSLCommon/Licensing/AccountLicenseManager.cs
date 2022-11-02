@@ -134,6 +134,33 @@ namespace OSLCommon.Licensing
             }
             LicenseKeys = newDictionary;
         }
+        public virtual async Task DeleteLicenseKey(string keyId)
+        {
+            if (LicenseKeys.ContainsKey(keyId))
+                LicenseKeys.Remove(keyId);
+            foreach (var item in LicenseGroups)
+            {
+                item.Value.LicenseIds = item.Value.LicenseIds.Where(v => v != keyId).ToArray();
+            }
+        }
+        /// <param name="includeKeys">Delete License Keys associated with group</param>
+        public virtual async Task DeleteGroup(string groupId, bool includeKeys = true)
+        {
+            if (LicenseGroups.ContainsKey(groupId))
+                LicenseGroups.Remove(groupId);
+            if (includeKeys)
+            {
+                var keyList = new List<string>();
+                foreach (var pair in LicenseKeys)
+                {
+                    if (pair.Value.GroupId == groupId)
+                        keyList.Add(pair.Key);
+                }
+                foreach (var item in keyList)
+                    await DeleteLicenseKey(item);
+            }
+        }
+
         public virtual async Task<LicenseGroup[]> GetGroups(bool hook = true)
         {
             var list = new List<LicenseGroup>();
