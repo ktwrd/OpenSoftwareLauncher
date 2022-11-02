@@ -131,6 +131,43 @@ namespace OSLCommon.Licensing
                 }
             }
         }
+        public override async Task SetGroups(LicenseGroup[] groups, bool overwrite = true, bool deleteKeys = true)
+        {
+            var groupIds = new List<StringOrRegularExpression>();
+            var groupCollection = GetGroupCollection<LicenseGroup>();
+            foreach (var item in groups)
+            {
+                groupIds.Add(new StringOrRegularExpression(item.UID));
+
+                var filter = Builders<LicenseGroup>
+                    .Filter
+                    .Eq("UID", item.UID);
+                var found = await groupCollection.FindAsync(filter);
+                var count = found.ToList().Count;
+                if (count < 1)
+                    await groupCollection.InsertOneAsync(item);
+                else
+                    await groupCollection.FindOneAndReplaceAsync(filter, item);
+            }
+
+            if (deleteKeys)
+            {
+                var keyIds = new List<string>();
+                var licenseCollection = GetLicenseCollection<LicenseKeyMetadata>();
+                var filter = Builders<LicenseKeyMetadata>
+                    .Filter
+                    .Nin("GroupId", groupIds);
+                await licenseCollection.DeleteManyAsync(filter);
+            }
+
+            if (overwrite)
+            {
+                var notFilter = Builders<BsonDocument>
+                    .Filter
+                    .Nin("UID", groupIds);
+                await GetGroupCollection<BsonDocument>().DeleteManyAsync(notFilter);
+            }
+        }
         public override async Task DeleteGroup(string groupId, bool includeKeys = true)
         {
             if (includeKeys)
