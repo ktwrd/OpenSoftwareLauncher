@@ -5,6 +5,7 @@ using OSLCommon.Authorization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -105,10 +106,10 @@ namespace OSLCommon.Licensing
 
             if (overwrite)
             {
-                var deleteFilter = Builders<BsonDocument>
-                    .Filter
-                    .StringNin("UID", keyIds);
-                await GetLicenseCollection<BsonDocument>().DeleteManyAsync(deleteFilter);
+                foreach (var item in keyIds)
+                {
+                    await DeleteLicenseKey(item.ToString());
+                }
             }
         }
         public override async Task DeleteLicenseKey(string keyId)
