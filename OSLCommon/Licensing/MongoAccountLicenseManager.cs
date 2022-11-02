@@ -131,6 +131,18 @@ namespace OSLCommon.Licensing
                 }
             }
         }
+        public override async Task DeleteGroup(string groupId, bool includeKeys = true)
+        {
+            if (includeKeys)
+            {
+                var licenseCollection = GetLicenseCollection<BsonDocument>();
+                var licenseFilter = Builders<BsonDocument>
+                    .Filter
+                    .Eq("GroupId", groupId);
+                await licenseCollection.DeleteManyAsync(licenseFilter);
+            }
+        }
+
 
         #region Enable/Disable
         public override async Task<LicenseKeyActionResult> DisableLicenseKey(string keyId)
