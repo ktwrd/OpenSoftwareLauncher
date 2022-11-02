@@ -117,6 +117,23 @@ namespace OSLCommon.Licensing
             }
             return list.ToArray();
         }
+        public virtual async Task SetLicenseKeys(LicenseKeyMetadata[] keys, bool overwrite = true)
+        {
+            Dictionary<string, LicenseKeyMetadata> newDictionary = new Dictionary<string, LicenseKeyMetadata>();
+            if (!overwrite)
+                newDictionary = LicenseKeys;
+            foreach (var item in keys)
+            {
+                if (newDictionary.ContainsKey(item.UID))
+                    newDictionary[item.UID].Merge(item);
+                else
+                {
+                    HookLicenseEvent(item);
+                    newDictionary.Add(item.UID, item);
+                }
+            }
+            LicenseKeys = newDictionary;
+        }
         public virtual async Task<LicenseGroup[]> GetGroups(bool hook = true)
         {
             var list = new List<LicenseGroup>();
@@ -128,6 +145,24 @@ namespace OSLCommon.Licensing
             }
             return list.ToArray();
         }
+        public virtual async void SetGroups(LicenseGroup[] groups, bool overwrite = true)
+        {
+            Dictionary<string, LicenseGroup> dict = new Dictionary<string, LicenseGroup>();
+            if (!overwrite)
+                dict = LicenseGroups;
+            foreach (var item in groups)
+            {
+                if (dict.ContainsKey(item.UID))
+                    dict[item.UID].Merge(item);
+                else
+                {
+                    HookLicenseGroupEvent(item);
+                    dict.Add(item.UID, item);
+                }
+            }
+            LicenseGroups = dict;
+        }
+
         public virtual async Task<AccountLicenseManagerSummary> GetSummary()
         {
             return new AccountLicenseManagerSummary
@@ -232,6 +267,7 @@ namespace OSLCommon.Licensing
                 CreatedTimestamp = createTimestamp,
                 CreatedBy = author
             };
+            group.manager = this;
 
 
             return new CreateLicenseKeyMetadata
