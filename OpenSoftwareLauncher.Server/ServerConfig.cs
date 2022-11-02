@@ -1,4 +1,5 @@
-﻿using Google.Api.Gax.Grpc.Gcp;
+﻿using Amazon.Runtime.Internal.Transform;
+using Google.Api.Gax.Grpc.Gcp;
 using Google.Cloud.Firestore.V1;
 using kate.shared.Helpers;
 using Nini.Config;

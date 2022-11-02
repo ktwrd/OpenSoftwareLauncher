@@ -22,7 +22,7 @@ namespace OpenSoftwareLauncher.Server
         public Dictionary<string, PublishedRelease> Published = new();
         public MongoAccountManager AccountManager;
         public MongoSystemAnnouncement SystemAnnouncement;
-        public AccountLicenseManager AccountLicenseManager;
+        public MongoAccountLicenseManager AccountLicenseManager;
 
         public MongoClient MongoClient;
 
@@ -38,7 +38,11 @@ namespace OpenSoftwareLauncher.Server
             SystemAnnouncement.DatabaseName = ServerConfig.GetString("MongoDB", "DatabaseName");
             SystemAnnouncement.CollectionName = ServerConfig.GetString("MongoDB", "Collection_Announcement");
 
-            AccountLicenseManager = new AccountLicenseManager(AccountManager);
+            AccountLicenseManager = new MongoAccountLicenseManager(AccountManager, MongoClient);
+            AccountLicenseManager.DatabaseName = ServerConfig.GetString("MongoDB", "DatabaseName");
+            AccountLicenseManager.CollectionName = ServerConfig.GetString("MongoDB", "Collection_License");
+            AccountLicenseManager.GroupCollectionName = ServerConfig.GetString("MongoDB", "Collection_GroupLicense");
+
             databaseDeserialize();
 
             AccountManager.PendingWrite += AccountManager_PendingWrite;
@@ -48,6 +52,7 @@ namespace OpenSoftwareLauncher.Server
 
         private void AccountLicenseManager_Update(LicenseField field, LicenseKeyMetadata license)
         {
+            return;
             if (field == LicenseField.All || field == LicenseField.AllGroups)
             {
                 File.WriteAllText(JSON_LICENSEGROUP_FILENAME,
@@ -143,31 +148,40 @@ namespace OpenSoftwareLauncher.Server
             {
                 RestoreFromJSON();
             }
-            try
+            if (!ServerConfig.GetBoolean("Migrated", "License", false))
             {
-                if (File.Exists(JSON_LICENSE_FILENAME))
-                    AccountLicenseManager.LicenseKeys = JsonSerializer.Deserialize<Dictionary<string, LicenseKeyMetadata>>(
-                        File.ReadAllText(JSON_LICENSE_FILENAME),
-                        MainClass.serializerOptions);
-            }
-            catch (Exception except)
-            {
-                string txt = $"[ContentManager->databaseSerialize:{GeneralHelper.GetNanoseconds()}] [ERR] Failed to read Licenses\n--------\n{except}\n--------\n";
-                Trace.WriteLine(txt);
-                Console.Error.WriteLine(txt);
-            }
-            try
-            {
-                if (File.Exists(JSON_LICENSEGROUP_FILENAME))
-                    AccountLicenseManager.LicenseGroups = JsonSerializer.Deserialize<Dictionary<string, LicenseGroup>>(
-                        File.ReadAllText(JSON_LICENSEGROUP_FILENAME),
-                        MainClass.serializerOptions);
-            }
-            catch (Exception except)
-            {
-                string txt = $"[ContentManager->databaseSerialize:{GeneralHelper.GetNanoseconds()}] [ERR] Failed to read License Groups\n--------\n{except}\n--------\n";
-                Trace.WriteLine(txt);
-                Console.Error.WriteLine(txt);
+                try
+                {
+                    if (File.Exists(JSON_LICENSE_FILENAME))
+                    {
+                        var deser = JsonSerializer.Deserialize<Dictionary<string, LicenseKeyMetadata>>(
+                            File.ReadAllText(JSON_LICENSE_FILENAME),
+                            MainClass.serializerOptions);
+                        AccountLicenseManager.SetLicenseKeys(deser.Select(v => v.Value).ToArray(), false).Wait();
+                    }
+                }
+                catch (Exception except)
+                {
+                    string txt = $"[ContentManager->databaseSerialize:{GeneralHelper.GetNanoseconds()}] [ERR] Failed to read Licenses\n--------\n{except}\n--------\n";
+                    Trace.WriteLine(txt);
+                    Console.Error.WriteLine(txt);
+                }
+                try
+                {
+                    if (File.Exists(JSON_LICENSEGROUP_FILENAME))
+                    {
+                        var deser = JsonSerializer.Deserialize<Dictionary<string, LicenseGroup>>(
+                            File.ReadAllText(JSON_LICENSEGROUP_FILENAME),
+                            MainClass.serializerOptions);
+                        AccountLicenseManager.SetGroups(deser.Select(v => v.Value).ToArray(), false, false).Wait();
+                    }
+                }
+                catch (Exception except)
+                {
+                    string txt = $"[ContentManager->databaseSerialize:{GeneralHelper.GetNanoseconds()}] [ERR] Failed to read License Groups\n--------\n{except}\n--------\n";
+                    Trace.WriteLine(txt);
+                    Console.Error.WriteLine(txt);
+                }
             }
         }
         private void RestoreFromJSON()
