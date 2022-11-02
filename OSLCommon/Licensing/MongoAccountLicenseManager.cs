@@ -15,6 +15,7 @@ namespace OSLCommon.Licensing
         public MongoClient mongoClient;
         public string DatabaseName = "opensoftwarelauncher";
         public string CollectionName = "licenses";
+        public string GroupCollectionName = "licenseGroups";
         public MongoAccountLicenseManager(AccountManager accountManager, MongoClient client)
             : base(accountManager)
         {
@@ -40,6 +41,10 @@ namespace OSLCommon.Licensing
         private IMongoCollection<T> GetLicenseCollection<T>()
         {
             return mongoClient.GetDatabase(DatabaseName).GetCollection<T>(CollectionName);
+        }
+        private IMongoCollection<T> GetGroupCollection<T>()
+        {
+            return mongoClient.GetDatabase(DatabaseName).GetCollection<T>(GroupCollectionName);
         }
 
         internal void HookLicenseEvent(LicenseKeyMetadata license)
@@ -95,6 +100,37 @@ namespace OSLCommon.Licensing
                 return LicenseKeyActionResult.Invalid;
             license.Enable = true;
             return LicenseKeyActionResult.Success;
+        }
+
+        public override async Task<CreateLicenseKeyResponse> CreateLicenseKeys(
+            string author,
+            string[] products,
+            int count = 1,
+            AccountPermission[] permissions = null,
+            string note = "",
+            long activateBy = -1,
+            string groupLabel = "")
+        {
+            var createdKeys = createLicenseKeyContent(author, products, count, permissions, note, activateBy, groupLabel);
+
+
+            var licenseCollection = GetLicenseCollection<LicenseKeyMetadata>();
+            foreach (var key in createdKeys.keys)
+            {
+                HookLicenseEvent(key);
+                licenseCollection.InsertOne(key);
+            }
+
+            var groupCollection = GetGroupCollection<LicenseGroup>();
+            await groupCollection.InsertOneAsync(createdKeys.group);
+
+            OnUpdate(LicenseField.All, null);
+
+            return new CreateLicenseKeyResponse
+            {
+                Keys = createdKeys.keys,
+                GroupId = createdKeys.id
+            };
         }
     }
 }
