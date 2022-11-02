@@ -48,7 +48,7 @@ namespace OSLCommon.Licensing
                     .Filter
                     .Where(v => v.UID == license.UID);
 
-                long count = collection.Find(filter)?.CountDocuments() ?? 0;
+                long count = collection.Find(filter).CountDocuments();
                 if (count < 1)
                     collection.InsertOne(license);
                 else
@@ -258,10 +258,20 @@ namespace OSLCommon.Licensing
             var match = LicenseHelper.LicenseIdRegex.Match(keyId);
             if (!match.Success) return LicenseKeyActionResult.Invalid;
 
-            var license = await GetLicenseKey(keyId);
+            var license = GetLicenseKeyById(keyId).Result;
             if (license == null)
                 return LicenseKeyActionResult.Invalid;
             license.Enable = false;
+
+            var filter = Builders<BsonDocument>
+                .Filter
+                .Eq("UID", keyId);
+            var collection = GetLicenseCollection<BsonDocument>();
+            await collection.UpdateManyAsync(filter,
+                Builders<BsonDocument>
+                .Update
+                .Set("Enable", false));
+
             return LicenseKeyActionResult.Success;
         }
         public override async Task<LicenseKeyActionResult> EnableLicenseKey(string keyId)
@@ -269,10 +279,20 @@ namespace OSLCommon.Licensing
             var match = LicenseHelper.LicenseIdRegex.Match(keyId);
             if (!match.Success) return LicenseKeyActionResult.Invalid;
 
-            var license = await GetLicenseKey(keyId);
+            var license = await GetLicenseKeyById(keyId);
             if (license == null)
                 return LicenseKeyActionResult.Invalid;
             license.Enable = true;
+
+            var filter = Builders<BsonDocument>
+                .Filter
+                .Eq("UID", keyId);
+            var collection = GetLicenseCollection<BsonDocument>();
+            await collection.UpdateManyAsync(filter,
+                Builders<BsonDocument>
+                .Update
+                .Set("Enable", true));
+
             return LicenseKeyActionResult.Success;
         }
         #endregion
