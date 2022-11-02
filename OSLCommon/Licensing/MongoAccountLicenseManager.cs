@@ -38,6 +38,7 @@ namespace OSLCommon.Licensing
                 }
             };
         }
+        #region MongoDB Boilerplate
         private IMongoCollection<T> GetLicenseCollection<T>()
         {
             return mongoClient.GetDatabase(DatabaseName).GetCollection<T>(CollectionName);
@@ -67,7 +68,22 @@ namespace OSLCommon.Licensing
                 HookLicenseEvent(deser);
             return deser;
         }
+        public virtual async Task<LicenseKeyMetadata[]> GetLicenseKeys(bool hook = true)
+        {
+            var collection = GetLicenseCollection<LicenseKeyMetadata>();
+            var filter = Builders<LicenseKeyMetadata>.Filter.Empty;
+            var result = collection.Find(filter).ToList();
+            if (hook)
+                foreach (var item in result)
+                    HookLicenseEvent(item);
+            return result.ToArray();
+        }
+        public virtual async void SetLicenseKeys(LicenseKeyMetadata[] keys, bool overwrite = true)
+        {
+            List<string> keyIds = new List<string>();
+        }
 
+        #region Enable/Disable
         public override async Task<LicenseKeyActionResult> DisableLicenseKey(string keyId)
         {
             var match = LicenseHelper.LicenseIdRegex.Match(keyId);
@@ -90,6 +106,7 @@ namespace OSLCommon.Licensing
             license.Enable = true;
             return LicenseKeyActionResult.Success;
         }
+        #endregion
 
         public override async Task<CreateLicenseKeyResponse> CreateLicenseKeys(
             string author,
