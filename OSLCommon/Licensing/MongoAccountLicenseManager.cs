@@ -5,6 +5,7 @@ using OSLCommon.Authorization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -106,9 +107,13 @@ namespace OSLCommon.Licensing
 
             if (overwrite)
             {
-                foreach (var item in keyIds)
+                var notfilter = Builders<LicenseKeyMetadata>
+                    .Filter
+                    .Nin("UID", keyIds);
+                var items = await collection.FindAsync(notfilter);
+                foreach (var i in items.ToList())
                 {
-                    await DeleteLicenseKey(item.ToString());
+                    await DeleteLicenseKey(i.UID);
                 }
             }
         }
