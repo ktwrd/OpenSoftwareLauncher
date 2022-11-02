@@ -182,6 +182,7 @@ namespace OpenSoftwareLauncher.Server
                     Trace.WriteLine(txt);
                     Console.Error.WriteLine(txt);
                 }
+                ServerConfig.Set("Migrated", "License", true);
             }
         }
         private void RestoreFromJSON()
