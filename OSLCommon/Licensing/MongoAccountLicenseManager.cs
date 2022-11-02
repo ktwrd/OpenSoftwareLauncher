@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,6 +39,34 @@ namespace OSLCommon.Licensing
                     else
                         collection.FindOneAndReplace(filter, license);
                 }
+            };
+            LicenseUpdate += (license) =>
+            {
+                var collection = GetLicenseCollection<LicenseKeyMetadata>();
+
+                var filter = Builders<LicenseKeyMetadata>
+                    .Filter
+                    .Where(v => v.UID == license.UID);
+
+                long count = collection.Find(filter)?.CountDocuments() ?? 0;
+                if (count < 1)
+                    collection.InsertOne(license);
+                else
+                    collection.FindOneAndReplace(filter, license);
+            };
+            GroupUpdate += (group) =>
+            {
+                var collection = GetLicenseCollection<LicenseGroup>();
+
+                var filter = Builders<LicenseGroup>
+                .Filter
+                    .Where(v => v.UID == group.UID);
+
+                long count = collection.Find(filter)?.CountDocuments() ?? 0;
+                if (count < 1)
+                    collection.InsertOne(group);
+                else
+                    collection.FindOneAndReplace(filter, group);
             };
         }
         #region MongoDB Boilerplate
@@ -75,7 +104,7 @@ namespace OSLCommon.Licensing
                 HookLicenseEvent(deser);
             return deser;
         }
-        public virtual async Task<LicenseKeyMetadata[]> GetLicenseKeys(bool hook = true)
+        public override async Task<LicenseKeyMetadata[]> GetLicenseKeys(bool hook = true)
         {
             var collection = GetLicenseCollection<LicenseKeyMetadata>();
             var filter = Builders<LicenseKeyMetadata>.Filter.Empty;
@@ -85,10 +114,13 @@ namespace OSLCommon.Licensing
                     HookLicenseEvent(item);
             return result.ToArray();
         }
-        public virtual async Task SetLicenseKeys(LicenseKeyMetadata[] keys, bool overwrite = true)
+        public override async Task SetLicenseKeys(LicenseKeyMetadata[] keys, bool overwrite = true)
         {
             List<StringOrRegularExpression> keyIds = new List<StringOrRegularExpression>();
             var collection = GetLicenseCollection<LicenseKeyMetadata>();
+            int insertCount = 0;
+            int replaceCount = 0;
+            int deleteCount = 0;
             foreach (var item in keys)
             {
                 keyIds.Add(new StringOrRegularExpression(item.UID));
@@ -100,9 +132,16 @@ namespace OSLCommon.Licensing
                 var found = await collection.FindAsync(filter);
                 var count = found.ToList().Count;
                 if (count < 1)
-                    collection.InsertOne(item);
+                {
+                    insertCount++;
+                    await collection.InsertOneAsync(item);
+                }
                 else
+                {
+                    replaceCount++;
                     await collection.FindOneAndReplaceAsync(filter, item);
+                }
+                
             }
 
             if (overwrite)
@@ -114,8 +153,11 @@ namespace OSLCommon.Licensing
                 foreach (var i in items.ToList())
                 {
                     await DeleteLicenseKey(i.UID);
+                    deleteCount++;
                 }
             }
+
+            Console.WriteLine($"[MongoAccountLicenseManager] Insert: {insertCount}, Replace: {replaceCount}, Delete: {deleteCount}");
         }
         public override async Task DeleteLicenseKey(string keyId)
         {
