@@ -26,7 +26,7 @@ namespace OSLCommon.Licensing
             activated = license.activated;
             activatedBy = license.activatedBy;
             activateTimestamp = license.activateTimestamp;
-            InternalNote = license.internalNote;
+            internalNote = license.internalNote;
             key = license.key;
             products = license.products;
             productsApplied = license.productsApplied;
