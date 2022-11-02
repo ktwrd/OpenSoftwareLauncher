@@ -84,6 +84,22 @@ namespace OSLCommon.Licensing
                 source.Merge(target);
             }
         }
+        protected virtual void HookLicenseGroupEvent(LicenseGroup target)
+        {
+            if (target == null || target.eventHook) return;
+            target.eventHook = true;
+            GroupUpdate += (source) =>
+            {
+                LicenseGroupMerge(source, target);
+            };
+        }
+        protected virtual void LicenseGroupMerge(LicenseGroup source, LicenseGroup target)
+        {
+            if (source != null && source.UID == target.UID)
+            {
+                target.Merge(source);
+            }
+        }
         #endregion
 
         public Dictionary<string, LicenseKeyMetadata> LicenseKeys { get; set; } = new Dictionary<string, LicenseKeyMetadata>();
