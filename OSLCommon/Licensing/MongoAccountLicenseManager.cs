@@ -131,6 +131,14 @@ namespace OSLCommon.Licensing
                 }
             }
         }
+        public override async Task<LicenseGroup[]> GetGroups(bool hook = true)
+        {
+            var filter = GetGroupCollection<LicenseGroup>().Find(Builders<LicenseGroup>.Filter.Empty).ToList();
+            if (hook)
+                foreach (var item in filter)
+                    HookLicenseGroupEvent(item);
+            return filter.ToArray();
+        }
         public override async Task SetGroups(LicenseGroup[] groups, bool overwrite = true, bool deleteKeys = true)
         {
             var groupIds = new List<StringOrRegularExpression>();
