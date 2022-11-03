@@ -4,17 +4,24 @@ using kate.shared.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MongoDB.Bson;
+using System.Text.Json.Serialization;
+using System.Xml.Serialization;
 
 namespace OSLCommon
 {
     [Serializable]
     public class PublishedRelease : bSerializable
     {
-        public string UID { get; set; } = GeneralHelper.GenerateUID();
-        public string CommitHash { get; set; } = "";
-        public long Timestamp { get; set; } = 0;
-        public ReleaseInfo Release { get; set; } = ReleaseInfo.Blank();
-        public PublishedReleaseFile[] Files { get; set; } = Array.Empty<PublishedReleaseFile>();
+        [JsonIgnore]
+        [XmlIgnore]
+        [SoapIgnore]
+        public ObjectId _id { get; set; }
+        public string UID { get; set; }
+        public string CommitHash { get; set; }
+        public long Timestamp { get; set; }
+        public ReleaseInfo Release { get; set; }
+        public PublishedReleaseFile[] Files { get; set; }
 
         public void ReadFromStream(SerializationReader sr)
         {
@@ -30,15 +37,27 @@ namespace OSLCommon
             sw.WriteObject(Release);
             sw.Write(new List<PublishedReleaseFile>(Files));
         }
+        public PublishedRelease()
+        {
+            UID = GeneralHelper.GenerateUID();
+            CommitHash = "";
+            Timestamp = 0;
+            Release = ReleaseInfo.Blank();
+            Files = Array.Empty<PublishedReleaseFile>();
+        }
     }
     [Serializable]
     public class PublishedReleaseFile : bSerializable
     {
-        public string UID { get; set; } = GeneralHelper.GenerateUID();
-        public string Location { get; set; } = "";
-        public string CommitHash { get; set; } = "";
-        public FilePlatform Platform { get; set; } = FilePlatform.Any;
-        public FileType Type { get; set; } = FileType.Other;
+        [JsonIgnore]
+        [XmlIgnore]
+        [SoapIgnore]
+        public ObjectId _id { get; set; }
+        public string UID { get; set; }
+        public string Location { get; set; }
+        public string CommitHash { get; set; }
+        public FilePlatform Platform { get; set; }
+        public FileType Type { get; set; }
         public void ReadFromStream(SerializationReader sr)
         {
             Location = sr.ReadString();

@@ -1,9 +1,11 @@
 ﻿using Google.Cloud.Firestore;
 using kate.shared.Helpers;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace OSLCommon.AutoUpdater
 {
@@ -34,6 +36,10 @@ namespace OSLCommon.AutoUpdater
     [Serializable]
     public class ReleaseInfo : IReleaseInfo, bSerializable
     {
+        [JsonIgnore]
+        [XmlIgnore]
+        [SoapIgnore]
+        public ObjectId _id { get; set; }
         public string UID { get; set; }
         public string version { get; set; }
         public string name { get; set; }
