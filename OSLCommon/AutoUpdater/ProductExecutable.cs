@@ -40,26 +40,5 @@ namespace OSLCommon.AutoUpdater
         }
         #endregion
 
-        /*#region bFirebaseSerializable
-        public Task FromFirebase(DocumentSnapshot document, VoidDelegate completeIncrement)
-        {
-            this.UID = document.Reference.Id;
-            this.Linux = FirebaseHelper.ParseString(document, "Linux");
-            this.Windows = FirebaseHelper.ParseString(document, "Windows");
-            completeIncrement();
-            return Task.CompletedTask;
-        }
-        public async Task ToFirebase(DocumentReference document, VoidDelegate completeIncrement)
-        {
-            Dictionary<string, object> content = new Dictionary<string, object>()
-            {
-                { "Linux", Linux },
-                { "Windows", Windows }
-            };
-            await document.SetAsync(content);
-            completeIncrement();
-        }
-        public DocumentReference GetFirebaseDocumentReference(FirestoreDb database) => database.Document(FirebaseHelper.FirebaseCollection[this.GetType()] + "/" + UID);
-        #endregion*/
     }
 }
