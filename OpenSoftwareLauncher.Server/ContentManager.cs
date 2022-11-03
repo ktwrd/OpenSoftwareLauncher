@@ -48,51 +48,14 @@ namespace OpenSoftwareLauncher.Server
 
             databaseDeserialize();
 
-            AccountManager.PendingWrite += AccountManager_PendingWrite;
             SystemAnnouncement.Update += SystemAnnouncement_Update;
-            AccountLicenseManager.Update += AccountLicenseManager_Update;
-        }
-
-        private void AccountLicenseManager_Update(LicenseField field, LicenseKeyMetadata license)
-        {
-            return;
-            if (field == LicenseField.All || field == LicenseField.AllGroups)
-            {
-                File.WriteAllText(JSON_LICENSEGROUP_FILENAME,
-                    JsonSerializer.Serialize(AccountLicenseManager.LicenseGroups, MainClass.serializerOptions));
-            }
-            if (field == LicenseField.AllGroups)
-            {
-                File.WriteAllText(JSON_LICENSE_FILENAME,
-                    JsonSerializer.Serialize(AccountLicenseManager.LicenseKeys, MainClass.serializerOptions));
-            }
         }
 
         private void SystemAnnouncement_Update()
         {
             ServerConfig.Set("Announcement", "Enable", SystemAnnouncement.Active);
-            return;
-            File.WriteAllText(JSON_SYSANNOUNCE_FILENAME, SystemAnnouncement.ToJSON());
-            string txt = $"[ContentManager->SystemAnnouncement_Update]  {Path.GetRelativePath(Directory.GetCurrentDirectory(), JSON_SYSANNOUNCE_FILENAME)}";
-            Trace.WriteLine(txt);
-            Console.WriteLine(txt);
-            ServerConfig.Save();
         }
 
-        private void AccountManager_PendingWrite()
-        {
-            return;
-            File.WriteAllText(JSON_ACCOUNT_FILENAME, AccountManager.ToJSON());
-            AccountManager.ClearPendingWrite();
-            string txt = $"[ContentManager->AccountManager_PendingWrite] {Path.GetRelativePath(Directory.GetCurrentDirectory(), JSON_ACCOUNT_FILENAME)}";
-            Trace.WriteLine(txt);
-            Console.WriteLine(txt);
-            ServerConfig.Save();
-        }
-
-        /*private readonly string DATABASE_FILENAME = Path.Combine(
-            MainClass.DataDirectory,
-            "content.db");*/
         private readonly string JSONBACKUP_FILENAME = Path.Combine(
             MainClass.DataDirectory,
             "content.json");
@@ -213,31 +176,23 @@ namespace OpenSoftwareLauncher.Server
 
             if (!ServerConfig.GetBoolean("Migrated", "ReleaseInfo", false))
             {
+                Console.WriteLine("[ContentManager] Importing ReleaseInfo");
                 SetReleaseInfoContent(deserialized.ReleaseInfoContent.ToArray());
                 ServerConfig.Set("Migrated", "ReleaseInfo", true);
             }
-            Published = deserialized.Published;
+            if (!ServerConfig.GetBoolean("Migrated", "Published", false))
+            {
+                Console.WriteLine("[ContentManager] Importing Published Releases");
+                ForceSetPublishedContent(deserialized.Published.Select(v => v.Value).ToArray());
+                ServerConfig.Set("Migrated", "Published", true);
+            }
             System.Threading.Thread.Sleep(500);
             DatabaseSerialize();
         }
         public void DatabaseSerialize()
         {
-            SystemAnnouncement.OnUpdate();
-            AccountManager.ForcePendingWrite();
-            AccountLicenseManager.OnUpdate(LicenseField.All, null);
-            CreateJSONBackup();
             ServerConfig.Save();
         }
-        private void CreateJSONBackup()
-        {
-            var data = new JSONBackupContent
-            {
-                ReleaseInfoContent = ReleaseInfoContent.ToArray().ToList(),
-                Published = Published
-            };
-            File.WriteAllText(JSONBACKUP_FILENAME, JsonSerializer.Serialize(data, MainClass.serializerOptions));
-        }
-
         public void SetReleaseInfoContent(ReleaseInfo[] items)
         {
             var uidList = new List<string>();
