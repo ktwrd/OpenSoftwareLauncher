@@ -150,7 +150,7 @@ namespace OpenSoftwareLauncher.Server
                 return new ObjectResponse<HttpException>()
                 {
                     Success = false,
-                    Data = new HttpException(StatusCodes.Status401Unauthorized, ServerStringResponse.AccountDisabled)
+                    Data = new HttpException(StatusCodes.Status401Unauthorized, ServerStringResponse.AccountDisabled + "\n====Reason====\n" + tokenAccount.DisableReasons.OrderBy(v => v.Timestamp).First()?.Message)
                 };
             }
             return null;
@@ -179,7 +179,7 @@ namespace OpenSoftwareLauncher.Server
                 return new ObjectResponse<HttpException>()
                 {
                     Success = false,
-                    Data = new HttpException(StatusCodes.Status401Unauthorized, ServerStringResponse.AccountDisabled)
+                    Data = new HttpException(StatusCodes.Status401Unauthorized, ServerStringResponse.AccountDisabled + "\n====Reason====\n" + tokenAccount.DisableReasons.OrderBy(v => v.Timestamp).First()?.Message)
                 };
             }
             return null;
