@@ -208,8 +208,11 @@ namespace OpenSoftwareLauncher.Server
             }
             Console.WriteLine($"[ContentManager->RestoreFromJSON] Restored from JSON.");
 
-            ReleaseInfoContent = deserialized.ReleaseInfoContent;
-            Releases = ReleaseHelper.TransformReleaseList(ReleaseInfoContent.ToArray());
+            if (!ServerConfig.GetBoolean("Migrated", "ReleaseInfo", false))
+            {
+                SetReleaseInfoContent(deserialized.ReleaseInfoContent.ToArray());
+                ServerConfig.Set("Migrated", "ReleaseInfo", true);
+            }
             Published = deserialized.Published;
             System.Threading.Thread.Sleep(500);
             DatabaseSerialize();
