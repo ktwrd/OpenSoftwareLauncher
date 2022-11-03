@@ -26,6 +26,7 @@ namespace OpenSoftwareLauncher.Server
 
         public MongoClient MongoClient;
         public static string ReleaseInfo_Collection = ServerConfig.GetString("MongoDB", "Collection_ReleaseInfo");
+        public static string Publised_Collection = ServerConfig.GetString("MongoDB", "Collection_Published");
         public static string DatabaseName = ServerConfig.GetString("MongoDB", "DatabaseName");
 
         public ContentManager()
@@ -265,6 +266,92 @@ namespace OpenSoftwareLauncher.Server
 
             var res = collection.Find(filter).ToList();
             return res.ToArray();
+        }
+
+        public PublishedRelease? GetPublishedReleaseByHash(string hash)
+        {
+            var db = MongoClient.GetDatabase(DatabaseName);
+            var collection = db.GetCollection<PublishedRelease>(Publised_Collection);
+
+            var filter = Builders<PublishedRelease>
+                .Filter
+                .Eq("CommitHash", hash);
+
+            return collection.Find(filter).FirstOrDefault();
+        }
+        public void SetPublishedRelease(PublishedRelease content)
+        {
+            var db = MongoClient.GetDatabase(DatabaseName);
+            var collection = db.GetCollection<PublishedRelease>(Publised_Collection);
+
+            var filter = Builders<PublishedRelease>
+                .Filter
+                .Eq("UID", content.UID);
+
+            if (collection.Find(filter).ToList().Count < 1)
+                collection.InsertOne(content);
+            else
+                collection.FindOneAndReplace(filter, content);
+        }
+        public void ForceSetPublishedContent(PublishedRelease[] items)
+        {
+            var uidList = new List<string>();
+            foreach (var i in items)
+            {
+                uidList.Add(i);
+                SetPublishedRelease(i);
+            }
+
+            var db = MongoClient.GetDatabase(DatabaseName);
+            var collection = db.GetCollection<PublishedRelease>(Publised_Collection);
+            var removeFilter = Builders<PublishedRelease>
+                .Filter
+                .Nin("UID", uidList);
+            collection.DeleteMany(removeFilter);
+        }
+        public PublishedReleaseFile[] GetPublishedFilesByHash(string hash)
+        {
+            var published = GetPublishedReleaseByHash(hash);
+            return published?.Files ?? Array.Empty<PublishedReleaseFile>();
+        }
+        public void SetPublishedFilesByHash(string hash, PublishedReleaseFile[] files)
+        {
+            var published = GetPublishedReleaseByHash(hash);
+            if (published == null)
+                return;
+            published.Files = files;
+            SetPublishedRelease(published);
+        }
+        public void AddPublishedFilesByHash(string hash, PublishedReleaseFile[] files)
+        {
+            var published = GetPublishedReleaseByHash(hash);
+            if (published == null)
+                return;
+
+            published.Files = published.Files.Concat(files).ToArray();
+            SetPublishedRelease(published);
+        }
+        public Dictionary<string, PublishedRelease> GetAllPublished()
+        {
+            var db = MongoClient.GetDatabase(DatabaseName);
+            var collection = db.GetCollection<PublishedRelease>(Publised_Collection);
+
+            var filter = Builders<PublishedRelease>
+                .Filter
+                .Empty;
+
+            return collection.Find(filter).ToList().ToDictionary(v => v.CommitHash, t => t);
+        }
+        public string[] GetAllProductIds()
+        {
+            var db = MongoClient.GetDatabase(DatabaseName);
+            var collection = db.GetCollection<PublishedRelease>(Publised_Collection);
+
+            var filter = Builders<PublishedRelease>
+                .Filter
+                .Empty;
+
+            return collection.Find(filter).ToList().Where(v => v.Release.appID.Length > 0).Select(v => v.Release.appID).ToArray();
         }
     }
 }
