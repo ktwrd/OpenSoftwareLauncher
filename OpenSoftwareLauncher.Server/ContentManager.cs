@@ -12,19 +12,21 @@ using OpenSoftwareLauncher.Server.OpenSoftwareLauncher.Server;
 using OSLCommon.Licensing;
 using System.Linq;
 using MongoDB.Driver;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace OpenSoftwareLauncher.Server
 {
     public class ContentManager
     {
         public List<ReleaseInfo> ReleaseInfoContent = new();
-        public Dictionary<string, ProductRelease> Releases = new();
         public Dictionary<string, PublishedRelease> Published = new();
         public MongoAccountManager AccountManager;
         public MongoSystemAnnouncement SystemAnnouncement;
         public MongoAccountLicenseManager AccountLicenseManager;
 
         public MongoClient MongoClient;
+        public static string ReleaseInfo_Collection = ServerConfig.GetString("MongoDB", "Collection_ReleaseInfo");
+        public static string DatabaseName = ServerConfig.GetString("MongoDB", "DatabaseName");
 
         public ContentManager()
         {
@@ -230,7 +232,6 @@ namespace OpenSoftwareLauncher.Server
             var data = new JSONBackupContent
             {
                 ReleaseInfoContent = ReleaseInfoContent.ToArray().ToList(),
-                Releases = Releases,
                 Published = Published
             };
             File.WriteAllText(JSONBACKUP_FILENAME, JsonSerializer.Serialize(data, MainClass.serializerOptions));

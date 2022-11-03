@@ -102,8 +102,7 @@ namespace OpenSoftwareLauncher.Server
                         {"Announcement", false },
                         {"License", false },
                         {"ReleaseInfo", false },
-                        {"Published", false },
-                        {"Product", false }
+                        {"Published", false }
                     }
                 }
             };

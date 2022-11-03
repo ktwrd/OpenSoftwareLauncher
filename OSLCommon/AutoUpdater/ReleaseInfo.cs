@@ -17,7 +17,7 @@ namespace OSLCommon.AutoUpdater
     }
     public interface IReleaseInfo
     {
-        string UID { get; }
+        string UID { get; set; }
         string version { get; set; }
         string name { get; set; }
         string productName { get; set; }
@@ -34,7 +34,7 @@ namespace OSLCommon.AutoUpdater
     [Serializable]
     public class ReleaseInfo : IReleaseInfo, bSerializable
     {
-        public string UID { get; private set; }
+        public string UID { get; set; }
         public string version { get; set; }
         public string name { get; set; }
         public string productName { get; set; }

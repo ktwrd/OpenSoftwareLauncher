@@ -9,6 +9,7 @@ using OpenSoftwareLauncher.Server.OpenSoftwareLauncher.Server;
 using System.Net;
 using System;
 using Microsoft.AspNetCore.Http;
+using MongoDB.Driver;
 
 namespace OpenSoftwareLauncher.Server.Controllers
 {
@@ -38,7 +39,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
                     return Json(new ObjectResponse<Dictionary<string, ProductRelease>>()
                     {
                         Success = true,
-                        Data = MainClass.contentManager?.Releases ?? new Dictionary<string, ProductRelease>()
+                        Data = ReleaseHelper.TransformReleaseList(MainClass.contentManager?.GetReleaseInfoContent())
                     }, MainClass.serializerOptions);
                 }
                 if (ServerConfig.GetBoolean("Security", "AllowAdminOverride", true) && account.HasPermission(AccountPermission.ADMINISTRATOR))
@@ -46,7 +47,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
                     return Json(new ObjectResponse<Dictionary<string, ProductRelease>>()
                     {
                         Success = true,
-                        Data = MainClass.contentManager?.Releases ?? new Dictionary<string, ProductRelease>()
+                        Data = ReleaseHelper.TransformReleaseList(MainClass.contentManager.GetReleaseInfoContent())
                     }, MainClass.serializerOptions);
                 }
             }
@@ -64,15 +65,28 @@ namespace OpenSoftwareLauncher.Server.Controllers
             var allowFetch = true;
             bool showExtraBuilds = MainClass.contentManager.AccountManager.AccountHasPermission(token, AccountPermission.READ_RELEASE_BYPASS)
                 && ServerConfig.GetBoolean("Security", "AllowPermission_ReadReleaseBypass", true);
-            if (allowFetch && (MainClass.contentManager?.Releases.ContainsKey(app) ?? false))
+            bool contains = MainClass.contentManager.MongoClient.GetDatabase(ContentManager.DatabaseName)
+                    .GetCollection<ReleaseInfo>(ContentManager.ReleaseInfo_Collection)
+                    .Find(Builders<ReleaseInfo>
+                        .Filter
+                        .Eq("appID", app))
+                    .ToList()
+                    .Count > 0;
+            if (allowFetch && contains)
             {
                 var toMap = new Dictionary<string, List<ReleaseInfo>>();
-                foreach (var release in MainClass.contentManager.ReleaseInfoContent)
+
+                var cnt = MainClass.contentManager.MongoClient.GetDatabase(ContentManager.DatabaseName)
+                    .GetCollection<ReleaseInfo>(ContentManager.ReleaseInfo_Collection)
+                    .Find(Builders<ReleaseInfo>
+                        .Filter
+                        .Eq("appID", app))
+                    .ToList();
+                foreach (var item in cnt)
                 {
-                    if (app != release.appID) continue;
-                    if (!toMap.ContainsKey(release.remoteLocation))
-                        toMap.Add(release.remoteLocation, new List<ReleaseInfo>());
-                    toMap[release.remoteLocation].Add(release);
+                    if (toMap.ContainsKey(item.remoteLocation))
+                        toMap.Add(item.remoteLocation, new List<ReleaseInfo>());
+                    toMap[item.remoteLocation].Add(item);
                 }
 
                 var sortedDictionary = new Dictionary<string, List<ReleaseInfo>>();
@@ -181,9 +195,13 @@ namespace OpenSoftwareLauncher.Server.Controllers
 
         private List<ProductRelease> fetchAllReleases(string token)
         {
-            var appIDlist = new List<string>();
-            foreach (var k in MainClass.contentManager.ReleaseInfoContent)
-                appIDlist.Add(k.appID);
+            var appIDlist = MainClass.contentManager.MongoClient.GetDatabase(ContentManager.DatabaseName)
+                    .GetCollection<ReleaseInfo>(ContentManager.ReleaseInfo_Collection)
+                    .Find(Builders<ReleaseInfo>.Filter.Empty)
+                    .ToList()
+                    .Select(v => v.appID)
+                    .Distinct()
+                    .ToList();
             appIDlist = appIDlist.Where(v => v.Length > 0).Distinct().ToList();
 
             var resultList = new List<ProductRelease>();

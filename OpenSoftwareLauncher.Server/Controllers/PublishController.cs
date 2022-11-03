@@ -9,6 +9,7 @@ using System.IO;
 using System;
 using System.Collections.Generic;
 using OSLCommon.Authorization;
+using System.Linq;
 
 namespace OpenSoftwareLauncher.Server.Controllers
 {
@@ -85,7 +86,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
                 { "attemptSave", false }
             };
             bool saveRelease = !MainClass.contentManager?.Published.ContainsKey(parameters.releaseInfo.commitHash) ?? false;
-            bool saveReleaseInfo = !MainClass.contentManager?.ReleaseInfoContent.Contains(parameters.releaseInfo) ?? false;
+            bool saveReleaseInfo = !MainClass.contentManager?.GetReleaseInfoContent().ToList().Contains(parameters.releaseInfo) ?? false;
             if (saveRelease)
             {
                 MainClass.contentManager?.Published.Add(parameters.releaseInfo.commitHash, publishedRelease);
@@ -93,11 +94,9 @@ namespace OpenSoftwareLauncher.Server.Controllers
             }
             if (saveReleaseInfo)
             {
-                MainClass.contentManager?.ReleaseInfoContent.Add(parameters.releaseInfo);
-                if (MainClass.contentManager != null)
-                {
-                    MainClass.contentManager.Releases = ReleaseHelper.TransformReleaseList(MainClass.contentManager.ReleaseInfoContent.ToArray());
-                }
+                var cnt = MainClass.contentManager.GetReleaseInfoContent().ToList();
+                cnt.Add(parameters.releaseInfo);
+                MainClass.contentManager.SetReleaseInfoContent(cnt.ToArray());
                 result["releaseAlreadyExists"] = false;
             }
             if (saveRelease || saveReleaseInfo)
