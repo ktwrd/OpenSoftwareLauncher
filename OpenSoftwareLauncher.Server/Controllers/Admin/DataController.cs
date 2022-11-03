@@ -91,7 +91,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 MainClass.contentManager.AccountManager.ReadJSON(JsonSerializer.Serialize(expectedResponse.Data.Account, MainClass.serializerOptions));
                 MainClass.contentManager.SystemAnnouncement.Read(JsonSerializer.Serialize(expectedResponse.Data.SystemAnnouncement, MainClass.serializerOptions));
                 MainClass.contentManager.SetReleaseInfoContent(expectedResponse.Data.Content.ReleaseInfoContent.ToArray());
-                MainClass.contentManager.Published = expectedResponse.Data.Content.Published;
+                MainClass.contentManager.ForceSetPublishedContent(expectedResponse.Data.Content.Published.Select(v => v.Value).ToArray());
                 MainClass.contentManager.DatabaseSerialize();
             }
             catch (Exception except)
@@ -135,7 +135,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                     Content = new ContentJSON()
                     {
                         ReleaseInfoContent = MainClass.contentManager.GetReleaseInfoContent().ToList(),
-                        Published = MainClass.contentManager.Published
+                        Published = MainClass.contentManager.GetAllPublished()
                     }
                 };
             }
@@ -178,7 +178,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                     Data = new AllDataResult()
                     {
                         ReleaseInfoContent = MainClass.contentManager.GetReleaseInfoContent().ToList(),
-                        Published = MainClass.contentManager.Published
+                        Published = MainClass.contentManager.GetAllPublished()
                     }
                 }, MainClass.serializerOptions);
             }
@@ -195,8 +195,8 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 return Json(new ObjectResponse<Dictionary<string, PublishedRelease>>()
                 {
                     Success = true,
-                    Data = MainClass.contentManager.Published
-                }, MainClass.serializerOptions);
+                    Data = MainClass.contentManager.GetAllPublished()
+                }, MainClass.serializerOptions); ;
             }
             else
             {
@@ -235,7 +235,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
             else if (targetType == MainClass.contentManager.Published.GetType())
             {
                 var des = JsonSerializer.Deserialize<ObjectResponse<Dictionary<string, PublishedRelease>>>(content, MainClass.serializerOptions);
-                MainClass.contentManager.Published = des.Data;
+                MainClass.contentManager?.ForceSetPublishedContent(des.Data.Select(v => v.Value).ToArray());
                 success = true;
             }
             else if (targetType == typeof(AllDataResult))
@@ -244,7 +244,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
 
                 var c = des.Data;
                 MainClass.contentManager.SetReleaseInfoContent(new List<ReleaseInfo>(c.ReleaseInfoContent).ToArray());
-                MainClass.contentManager.Published = c.Published;
+                MainClass.contentManager?.ForceSetPublishedContent(c.Published.Select(v => v.Value).ToArray());
                 success = true;
             }
 

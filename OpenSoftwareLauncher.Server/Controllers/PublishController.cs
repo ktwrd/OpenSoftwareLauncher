@@ -85,24 +85,19 @@ namespace OpenSoftwareLauncher.Server.Controllers
                 { "releaseAlreadyExists", true },
                 { "attemptSave", false }
             };
-            bool saveRelease = !MainClass.contentManager?.Published.ContainsKey(parameters.releaseInfo.commitHash) ?? false;
+            bool saveRelease = MainClass.contentManager?.GetPublishedReleaseByHash(parameters.releaseInfo.commitHash) == null;
             bool saveReleaseInfo = !MainClass.contentManager?.GetReleaseInfoContent().ToList().Contains(parameters.releaseInfo) ?? false;
             if (saveRelease)
             {
-                MainClass.contentManager?.Published.Add(parameters.releaseInfo.commitHash, publishedRelease);
+                MainClass.contentManager?.SetPublishedRelease(publishedRelease);
                 result["alreadyPublished"] = false;
             }
             if (saveReleaseInfo)
             {
-                var cnt = MainClass.contentManager.GetReleaseInfoContent().ToList();
+                var cnt = MainClass.contentManager?.GetReleaseInfoContent().ToList() ?? new List<ReleaseInfo>();
                 cnt.Add(parameters.releaseInfo);
                 MainClass.contentManager.SetReleaseInfoContent(cnt.ToArray());
                 result["releaseAlreadyExists"] = false;
-            }
-            if (saveRelease || saveReleaseInfo)
-            {
-                MainClass.contentManager?.DatabaseSerialize();
-                result["attemptSave"] = true;
             }
             return Json(result, MainClass.serializerOptions);
         }
@@ -145,7 +140,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
             }
             return Json(new ObjectResponse<Dictionary<string, PublishedRelease>>()
             {
-                Data = MainClass.contentManager?.Published,
+                Data = MainClass.contentManager?.GetAllPublished() ?? new Dictionary<string, PublishedRelease>(),
                 Success = true
             }, MainClass.serializerOptions);
         }
@@ -167,22 +162,12 @@ namespace OpenSoftwareLauncher.Server.Controllers
                 return Json(new HttpException(401, @"Missing permissions"), MainClass.serializerOptions);
             }
 
-            if (MainClass.contentManager?.Published.ContainsKey(hash) ?? false)
+            PublishedRelease? commit = MainClass.contentManager?.GetPublishedReleaseByHash(hash);
+            return Json(new ObjectResponse<PublishedRelease?>()
             {
-                return Json(new ObjectResponse<PublishedRelease>()
-                {
-                    Data = MainClass.contentManager.Published[hash],
-                    Success = true
-                }, MainClass.serializerOptions);
-            }
-            else
-            {
-                return Json(new ObjectResponse<PublishedRelease>()
-                {
-                    Data = null,
-                    Success = false
-                }, MainClass.serializerOptions);
-            }
+                Data = commit,
+                Success = true
+            }, MainClass.serializerOptions);
         }
 
         [HttpGet("hash/{hash}")]
