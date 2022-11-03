@@ -232,5 +232,35 @@ namespace OpenSoftwareLauncher.Server
             };
             File.WriteAllText(JSONBACKUP_FILENAME, JsonSerializer.Serialize(data, MainClass.serializerOptions));
         }
+
+        public void SetReleaseInfoContent(ReleaseInfo[] items)
+        {
+            var uidList = new List<string>();
+
+            var db = MongoClient.GetDatabase(DatabaseName);
+            var collection = db.GetCollection<ReleaseInfo>(ReleaseInfo_Collection);
+            foreach (var item in items)
+            {
+                collection.InsertOne(item);
+                uidList.Add(item.UID);
+            }
+
+            var removeFilter = Builders<ReleaseInfo>
+                .Filter
+                .Nin("UID", uidList);
+            collection.DeleteMany(removeFilter);
+        }
+        public ReleaseInfo[] GetReleaseInfoContent()
+        {
+            var db = MongoClient.GetDatabase(DatabaseName);
+            var collection = db.GetCollection<ReleaseInfo>(ReleaseInfo_Collection);
+
+            var filter = Builders<ReleaseInfo>
+                .Filter
+                .Empty;
+
+            var res = collection.Find(filter).ToList();
+            return res.ToArray();
+        }
     }
 }
