@@ -67,6 +67,11 @@ namespace OpenSoftwareLauncher.Server
         {
             StartupTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             ServerConfig.Get();
+            if (ServerConfig.GetString("Connection", "MongoDB", "").Length < 1)
+            {
+                Console.WriteLine("[ERROR] MongoDB Connection URL is invalid. Please set it in `config.ini`");
+                Environment.Exit(1);
+            }
             ServerConfig.OnWrite += (group, key, value) =>
             {
                 switch (group)
