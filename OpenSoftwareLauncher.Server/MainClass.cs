@@ -120,7 +120,7 @@ namespace OpenSoftwareLauncher.Server
                 else if (context.Request.Headers.ContainsKey("X-Real-IP"))
                     possibleAddress = context.Request.Headers["X-Real-IP"];
                 var query = context.Request.Path.ToString();
-                if (!query.StartsWith("/token/grant"))
+                if (!query.Contains("&password"))
                     query += context.Request.QueryString.ToString();
                Console.WriteLine($"[OpenSoftwareLauncher.Server] {context.Request.Method} {possibleAddress} \"{query}\" \"{context.Request.Headers.UserAgent}\"");
                 return next();
