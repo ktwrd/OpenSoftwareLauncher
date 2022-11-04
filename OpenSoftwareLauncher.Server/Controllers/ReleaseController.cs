@@ -84,7 +84,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
                     .ToList();
                 foreach (var item in cnt)
                 {
-                    if (toMap.ContainsKey(item.remoteLocation))
+                    if (!toMap.ContainsKey(item.remoteLocation))
                         toMap.Add(item.remoteLocation, new List<ReleaseInfo>());
                     toMap[item.remoteLocation].Add(item);
                 }

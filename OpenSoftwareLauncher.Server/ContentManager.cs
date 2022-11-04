@@ -199,9 +199,16 @@ namespace OpenSoftwareLauncher.Server
 
             var db = MongoClient.GetDatabase(DatabaseName);
             var collection = db.GetCollection<ReleaseInfo>(ReleaseInfo_Collection);
-            foreach (var item in items)
+            foreach (ReleaseInfo item in items)
             {
-                collection.InsertOne(item);
+                var filterCount = Builders<ReleaseInfo>
+                    .Filter
+                    .Eq("UID", item.UID);
+                var count = collection.Find(filterCount).ToList().Count;
+                if (count < 1)
+                    collection.InsertOne(item);
+                else
+                    collection.FindOneAndReplace(filterCount, item);
                 uidList.Add(item.UID);
             }
 
@@ -253,7 +260,7 @@ namespace OpenSoftwareLauncher.Server
             var uidList = new List<string>();
             foreach (var i in items)
             {
-                uidList.Add(i);
+                uidList.Add(i.UID);
                 SetPublishedRelease(i);
             }
 
