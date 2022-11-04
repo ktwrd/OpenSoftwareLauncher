@@ -37,6 +37,7 @@ namespace OSLCommon.AutoUpdater
                     dict.Add(key, value);
             }
 
+            LaunchArguments = dict["LaunchArguments"];
             AutoUpdate = Convert.ToInt32(dict["AutoUpdate"]) == 1;
             HardwareAcceleration = Convert.ToInt16(dict["HardwareAcceleration"]) == 1;
             LaunchArguments = dict["LaunchArguments"];
