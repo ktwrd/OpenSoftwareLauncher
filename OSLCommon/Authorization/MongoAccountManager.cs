@@ -1,15 +1,12 @@
 ﻿using kate.shared.Helpers;
 using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using ZstdSharp.Unsafe;
 
 namespace OSLCommon.Authorization
 {

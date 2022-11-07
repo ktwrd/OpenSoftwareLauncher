@@ -4,9 +4,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Runtime.Serialization;
-using OpenSoftwareLauncher.Server.OpenSoftwareLauncher.Server;
 using System.Linq;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Admin

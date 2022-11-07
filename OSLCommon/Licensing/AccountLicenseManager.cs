@@ -3,9 +3,7 @@ using OSLCommon.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using static OSLCommon.Licensing.AccountLicenseManager;
 
 namespace OSLCommon.Licensing
 {

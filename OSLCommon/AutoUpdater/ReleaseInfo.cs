@@ -1,11 +1,8 @@
-﻿using Google.Cloud.Firestore;
-using kate.shared.Helpers;
+﻿using kate.shared.Helpers;
 using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace OSLCommon.AutoUpdater

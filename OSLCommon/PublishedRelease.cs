@@ -1,9 +1,7 @@
 ﻿using OSLCommon.AutoUpdater;
-using Google.Cloud.Firestore;
 using kate.shared.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using MongoDB.Bson;
 using System.Text.Json.Serialization;
 using System.Xml.Serialization;

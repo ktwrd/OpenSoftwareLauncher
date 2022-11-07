@@ -1,11 +1,9 @@
-﻿using Google.Cloud.Firestore.V1;
-using kate.shared.Helpers;
+﻿using kate.shared.Helpers;
 using OSLCommon.AuthProviders;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;

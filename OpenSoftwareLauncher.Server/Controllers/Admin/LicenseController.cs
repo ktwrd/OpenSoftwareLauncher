@@ -10,7 +10,6 @@ using Licensing = OSLCommon.Licensing;
 using OSLCommon.Licensing;
 using System.Linq;
 using static OSLCommon.Licensing.AccountLicenseManager;
-using System.Reflection;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Admin
 {

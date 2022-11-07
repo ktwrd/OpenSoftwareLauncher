@@ -1,7 +1,4 @@
-﻿using OSLCommon;
-using OSLCommon.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace OpenSoftwareLauncher.Server.Controllers
 {

@@ -7,8 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Filters;
 using System.IO;
 using System.Linq;
 

@@ -1,10 +1,5 @@
-﻿using Google.Cloud.Firestore;
-using kate.shared.Helpers;
-using kate.shared.Extensions;
+﻿using kate.shared.Helpers;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OSLCommon.AutoUpdater
 {

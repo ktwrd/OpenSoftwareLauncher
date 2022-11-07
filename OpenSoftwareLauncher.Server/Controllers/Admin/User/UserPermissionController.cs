@@ -2,9 +2,6 @@
 using OSLCommon.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Net;
-using System.Security;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
 {

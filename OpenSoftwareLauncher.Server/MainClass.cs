@@ -1,11 +1,8 @@
-using OpenSoftwareLauncher.Server.OpenSoftwareLauncher.Server;
 using OSLCommon;
 using OSLCommon.Authorization;
-using OSLCommon.AutoUpdater;
 using kate.shared.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -13,12 +10,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using Prometheus;
-using static Google.Rpc.Context.AttributeContext.Types;
-using OSLCommon.Licensing;
 using OSLCommon.AuthProviders;
 
 namespace OpenSoftwareLauncher.Server

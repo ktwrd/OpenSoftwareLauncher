@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using OSLCommon;
 using OSLCommon.Authorization;
-using OpenSoftwareLauncher.Server.OpenSoftwareLauncher.Server;
-using System.Net;
 using System;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;

@@ -1,5 +1,4 @@
-﻿using OpenSoftwareLauncher.Server.OpenSoftwareLauncher.Server;
-using OSLCommon;
+﻿using OSLCommon;
 using OSLCommon.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace OSLCommon.Authorization
+﻿namespace OSLCommon.Authorization
 {
 
     public class AccountTokenDetailsResponse

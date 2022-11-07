@@ -8,7 +8,6 @@ using System.IO;
 using System;
 using System.Diagnostics;
 using OSLCommon.Authorization;
-using OpenSoftwareLauncher.Server.OpenSoftwareLauncher.Server;
 using OSLCommon.Licensing;
 using System.Linq;
 using MongoDB.Driver;

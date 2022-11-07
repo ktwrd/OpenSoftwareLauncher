@@ -1,14 +1,11 @@
 ﻿using OSLCommon;
 using OSLCommon.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using static OSLCommon.Authorization.AccountManager;
-using Account = OSLCommon.Authorization.Account;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
 {
