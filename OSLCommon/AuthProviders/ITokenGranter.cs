@@ -1,6 +1,6 @@
 ﻿using System.Net.Http;
 
-namespace OSLCommon
+namespace OSLCommon.AuthProviders
 {
     public interface ITokenGranter
     {

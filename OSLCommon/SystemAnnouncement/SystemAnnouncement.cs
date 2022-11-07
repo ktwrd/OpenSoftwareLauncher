@@ -1,6 +1,7 @@
 ﻿using kate.shared.Helpers;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,7 @@ namespace OSLCommon
         internal bool hooked = false;
         [JsonIgnore]
         public ObjectId _id { get; set; }
-        public string Message 
+        public string Message
         {
             get => message;
             set
@@ -186,8 +187,8 @@ namespace OSLCommon
         {
             SystemAnnouncementSummary instance = new SystemAnnouncementSummary()
             {
-                Entries = this.Entries.OrderBy(o => o.Timestamp).ToArray(),
-                Active = this.Active
+                Entries = Entries.OrderBy(o => o.Timestamp).ToArray(),
+                Active = Active
             };
             return instance;
         }

@@ -1,9 +1,8 @@
-﻿using OSLCommon.AutoUpdater;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace OSLCommon
+namespace OSLCommon.AutoUpdater
 {
     public class ReleaseStreamUpdateDetails
     {

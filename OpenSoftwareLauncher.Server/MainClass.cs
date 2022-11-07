@@ -19,6 +19,7 @@ using System.Text.Json;
 using Prometheus;
 using static Google.Rpc.Context.AttributeContext.Types;
 using OSLCommon.Licensing;
+using OSLCommon.AuthProviders;
 
 namespace OpenSoftwareLauncher.Server
 {

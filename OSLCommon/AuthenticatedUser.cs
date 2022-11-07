@@ -1,4 +1,5 @@
 ﻿using kate.shared.Helpers;
+using OSLCommon.AuthProviders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
