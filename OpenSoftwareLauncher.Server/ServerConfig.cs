@@ -11,17 +11,38 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace OpenSoftwareLauncher.Server
 {
     public static class ServerConfig
     {
         public static string ConfigFilename => "config.ini";
-        public static string ConfigLocation => Path.Combine(MainClass.DataDirectory, ConfigFilename);
+        public static string ConfigLocation
+        => Path.Combine(
+            MainClass.DataDirectory,
+            "Config",
+            ConfigFilename);
+        public static string OldConfigLocation
+        => Path.Combine(
+                MainClass.DataDirectory,
+                ConfigFilename);
         public static IniConfigSource Source;
         private static Timer BusStationTimer;
         static ServerConfig()
         {
+            if (!Directory.Exists(Path.GetDirectoryName(ConfigLocation)))
+                Directory.CreateDirectory(Path.GetDirectoryName(ConfigLocation));
+            if (File.Exists(OldConfigLocation) && !File.Exists(ConfigLocation))
+            {
+                File.Move(OldConfigLocation, ConfigLocation);
+                Console.WriteLine($"[ServerConfig] Moved config to {ConfigLocation}");
+            }
+
+            if (!File.Exists(ConfigLocation))
+                File.WriteAllText(ConfigLocation, "");
+
+
             var resetEvent = new AutoResetEvent(false);
             BusStationTimer = new Timer(delegate
             {
@@ -32,10 +53,6 @@ namespace OpenSoftwareLauncher.Server
                 }
                 resetEvent.Set();
             }, resetEvent, 0, 1000);
-            if (!File.Exists(ConfigLocation))
-            {
-                File.WriteAllText(ConfigLocation, "");
-            }
             Source = new IniConfigSource(ConfigLocation);
             MergeDefaultData();
             resetEvent.WaitOne(1);
