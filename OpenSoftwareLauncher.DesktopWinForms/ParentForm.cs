@@ -22,17 +22,20 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             toolStripButtonLicenceManagement.Text = LocaleManager.Get(toolStripButtonLicenceManagement.Text);
             toolStripButtonLicenceManagement.ToolTipText = toolStripButtonLicenceManagement.Text;
 
-            toolStripButtonLogs.Text = LocaleManager.Get(toolStripButtonLogs.Text);
-            toolStripButtonLogs.ToolTipText = toolStripButtonLogs.Text;
             Text = LocaleManager.Get(Text);
         }
 
         public UserManagementForm UserManagementForm;
         public LicenseManagmentForm LicenseManagmentForm;
         public AnnouncementManagementForm AnnouncementManagementForm;
+        public LogForm LogForm;
 
         private void ParentForm_Shown(object sender, EventArgs e)
         {
+            LogForm = new LogForm();
+            LogForm.MdiParent = this;
+            LogForm.Show();
+            LogForm.WindowState = FormWindowState.Minimized;
         }
 
         private void toolStripButtonUsers_Click(object sender, EventArgs e)

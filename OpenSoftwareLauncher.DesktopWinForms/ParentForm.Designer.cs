@@ -34,8 +34,6 @@
             this.toolStripButtonAnnouncements = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonLicenceManagement = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonLicenseKeyCreator = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButtonLogs = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -46,9 +44,7 @@
             this.toolStripButtonUsers,
             this.toolStripButtonAnnouncements,
             this.toolStripButtonLicenceManagement,
-            this.toolStripButtonLicenseKeyCreator,
-            this.toolStripSeparator1,
-            this.toolStripButtonLogs});
+            this.toolStripButtonLicenseKeyCreator});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
             this.toolStrip1.Name = "toolStrip1";
@@ -98,20 +94,6 @@
             this.toolStripButtonLicenseKeyCreator.Text = "License Key Creator";
             this.toolStripButtonLicenseKeyCreator.Click += new System.EventHandler(this.toolStripButtonLicenseKeyCreator_Click);
             // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(30, 6);
-            // 
-            // toolStripButtonLogs
-            // 
-            this.toolStripButtonLogs.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonLogs.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.quill;
-            this.toolStripButtonLogs.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonLogs.Name = "toolStripButtonLogs";
-            this.toolStripButtonLogs.Size = new System.Drawing.Size(30, 20);
-            this.toolStripButtonLogs.Text = "Log_Plural";
-            // 
             // ParentForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -135,8 +117,6 @@
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton toolStripButtonUsers;
         private System.Windows.Forms.ToolStripButton toolStripButtonAnnouncements;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripButton toolStripButtonLogs;
         private System.Windows.Forms.ToolStripButton toolStripButtonLicenseKeyCreator;
         private System.Windows.Forms.ToolStripButton toolStripButtonLicenceManagement;
     }
