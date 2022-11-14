@@ -28,7 +28,7 @@ jobs:
       run: dotnet publish OpenSoftwareLauncher.Server -p:PublishProfile=Windows -p:Configuration=Release
     - run: sudo apt install zip -y
     - name: Compress
-      run: cd ./OpenSoftwareLauncher.Server/bin/Release/net6.0/win-x64/publish/ && zip -r ../../../../../../OpenSoftwareLauncher.Server-linux-x64.zip ./* && cd ../../../../../../
+      run: cd ./OpenSoftwareLauncher.Server/bin/Release/net6.0/linux-x64/publish/ && zip -r ../../../../../../OpenSoftwareLauncher.Server-linux-x64.zip ./* && cd ../../../../../../
     - name: Upload to release
       uses: softprops/action-gh-release@v1
       with:
