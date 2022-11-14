@@ -10,7 +10,6 @@ using Licensing = OSLCommon.Licensing;
 using OSLCommon.Licensing;
 using System.Linq;
 using static OSLCommon.Licensing.AccountLicenseManager;
-using System.Reflection;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Admin
 {
@@ -101,7 +100,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
             return Json(new ObjectResponse<LicenseKeyMetadata[]>
             {
                 Success = true,
-                Data = MainClass.contentManager.AccountLicenseManager.LicenseKeys.Select(v => v.Value).ToArray()
+                Data = MainClass.contentManager.AccountLicenseManager.GetLicenseKeys().Result
             }, MainClass.serializerOptions);
         }
 
@@ -117,8 +116,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 return Json(authRes, MainClass.serializerOptions);
             }
 
-            var keys = MainClass.contentManager.AccountLicenseManager.LicenseKeys
-                .Select(v => v.Value)
+            var keys = MainClass.contentManager.AccountLicenseManager.GetLicenseKeys().Result
                 .Where(v => v.Products.Contains(remoteLocation))
                 .ToArray();
 

@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace OSLCommon.AutoUpdater
 {
@@ -29,7 +28,7 @@ namespace OSLCommon.AutoUpdater
             var lines = File.ReadAllLines(location);
             foreach (var line in lines)
             {
-                var key = line.Split("=")[0];
+                var key = line.Split(new string[] { "=" }, StringSplitOptions.None)[0];
                 var value = line.Replace($"{key}=", "");
                 if (dict.ContainsKey(key))
                     dict[key] = value;
@@ -37,6 +36,7 @@ namespace OSLCommon.AutoUpdater
                     dict.Add(key, value);
             }
 
+            LaunchArguments = dict["LaunchArguments"];
             AutoUpdate = Convert.ToInt32(dict["AutoUpdate"]) == 1;
             HardwareAcceleration = Convert.ToInt16(dict["HardwareAcceleration"]) == 1;
             LaunchArguments = dict["LaunchArguments"];

@@ -1,11 +1,8 @@
-using OpenSoftwareLauncher.Server.OpenSoftwareLauncher.Server;
 using OSLCommon;
 using OSLCommon.Authorization;
-using OSLCommon.AutoUpdater;
 using kate.shared.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -13,12 +10,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using Prometheus;
-using static Google.Rpc.Context.AttributeContext.Types;
-using OSLCommon.Licensing;
+using OSLCommon.AuthProviders;
+using System.CommandLine;
+using System.CommandLine.Invocation;
+using System.Runtime.CompilerServices;
+using Google.Cloud.Firestore;
 
 namespace OpenSoftwareLauncher.Server
 {
@@ -53,20 +52,88 @@ namespace OpenSoftwareLauncher.Server
 
         public static ContentManager contentManager;
 
+        private static string? dataDirectory = null;
         public static string DataDirectory
         {
             get
             {
-                string target = Assembly.GetExecutingAssembly().Location ?? Path.Combine(Directory.GetCurrentDirectory(), "config.ini");
-                return Path.GetDirectoryName(target) ?? Directory.GetCurrentDirectory();
+                string target = dataDirectory ?? Directory.GetCurrentDirectory();
+                return target;
             }
         }
 
         public static long StartupTimestamp { get; private set; }
-        public static void Main(string[] args)
+        private static void SetupOptions(params string[] args)
         {
+
+            Option<string> dataDirOption = new Option<string>(
+                aliases: new string[] { "--dataDirectory", "-d" },
+                description: "Set the data directory. Default is working directory.");
+
+            Option<bool>? migrateOption = new Option<bool>(
+                aliases: new string[] { "--databaseMigrate" },
+                description: "Force a database migration, from JSON to MongoDB.");
+
+            RootCommand rootCommand = new RootCommand(
+                description: "Open Software Launcher Backend Server");
+            rootCommand.TreatUnmatchedTokensAsErrors = false;
+
+            rootCommand.AddOption(dataDirOption);
+            rootCommand.AddOption(migrateOption);
+            rootCommand.SetHandler(SetDataDirectory, dataDirOption);
+            bool forceMigrate = false;
+            rootCommand.SetHandler((opt) =>
+            {
+                if (opt != null && opt)
+                {
+                    forceMigrate = true;
+                }
+            }, migrateOption);
+            rootCommand.Invoke(args);
+
+            if (forceMigrate)
+            {
+                foreach (var parent in ServerConfig.DefaultData)
+                {
+                    if (parent.Key != "Migrated")
+                        continue;
+                    foreach (var child in parent.Value)
+                    {
+                        ServerConfig.Set(parent.Key, child.Key, child.Value);
+                    }
+                }
+                Console.WriteLine("[INFO] Enforced Mirgration");
+            }
+        }
+        public static void SetDataDirectory(string dataDirectory)
+        {
+            if (dataDirectory == null) return;
+            MainClass.dataDirectory = dataDirectory.Trim('"');
+            Console.WriteLine($"[OSLServer] Set data directory to \"{MainClass.dataDirectory}\"");
+        }
+        private static void PrintConfig()
+        {
+            foreach (var parent in ServerConfig.Get())
+            {
+                foreach (var child in parent.Value)
+                {
+                    Console.WriteLine($"[Config] {parent.Key}.{child.Key} = {child.Value}");
+                }
+            }
+        }
+        public static void Main(params string[] args)
+        {
+            SetupOptions(args);
             StartupTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+#if DEBUG
+            PrintConfig();
+#endif
             ServerConfig.Get();
+            if (ServerConfig.GetString("Connection", "MongoDBServer", "").Length < 1)
+            {
+                Console.WriteLine("[ERROR] MongoDB Connection URL is invalid. Please set it in `config.ini`");
+                Environment.Exit(1);
+            }
             ServerConfig.OnWrite += (group, key, value) =>
             {
                 switch (group)
@@ -115,7 +182,7 @@ namespace OpenSoftwareLauncher.Server
                 else if (context.Request.Headers.ContainsKey("X-Real-IP"))
                     possibleAddress = context.Request.Headers["X-Real-IP"];
                 var query = context.Request.Path.ToString();
-                if (!query.StartsWith("/token/grant"))
+                if (!query.Contains("&password"))
                     query += context.Request.QueryString.ToString();
                Console.WriteLine($"[OpenSoftwareLauncher.Server] {context.Request.Method} {possibleAddress} \"{query}\" \"{context.Request.Headers.UserAgent}\"");
                 return next();
@@ -244,71 +311,5 @@ namespace OpenSoftwareLauncher.Server
             }
             return allFiles.ToArray();
         }
-
-        public static List<ReleaseInfo> ScrapeForProducts(string[] infoFiles)
-        {
-            var releaseList = new List<ReleaseInfo>();
-            foreach (var file in infoFiles)
-            {
-                var content = File.ReadAllText(file);
-                if (content.Replace(": ", ":").Contains("\"envtimestamp\":\"")) continue;
-                var deserialized = JsonSerializer.Deserialize<ReleaseInfo>(content, serializerOptions);
-                if (deserialized == null || deserialized?.envtimestamp == null) continue;
-
-                var splitted = file.Split(Path.DirectorySeparatorChar);
-                var organization = splitted[splitted.Length - 4];
-                var repository = splitted[splitted.Length - 3];
-                if (deserialized.remoteLocation.Length < 1)
-                    deserialized.remoteLocation = $"{organization}/{repository}";
-
-                var recognitionMap = new Dictionary<ReleaseType, string[]>()
-                {
-                    {ReleaseType.Beta, new string[] {
-                        "-beta",
-                        "-canary"
-                    } },
-                    {ReleaseType.Nightly, new string[] {
-                        "-dev",
-                        "-devel",
-                        "-debug",
-                        "-nightly"
-                    } },
-                    {ReleaseType.Stable, new string[] {
-                        "-stable",
-                        "-public",
-                        "-prod",
-                        "-main"
-                    } }
-                };
-                var targetReleaseType = ReleaseType.Invalid;
-
-                foreach (var pair in recognitionMap)
-                {
-                    var pairTarget = ReleaseType.Invalid;
-                    foreach (var item in pair.Value)
-                    {
-                        if (pairTarget != ReleaseType.Invalid && (repository.EndsWith(item) || deserialized.remoteLocation.EndsWith(item)))
-                            pairTarget = pair.Key;
-                    }
-                    if (pairTarget != ReleaseType.Invalid)
-                    {
-                        targetReleaseType = pairTarget;
-                        break;
-                    }
-                }
-                if (repository.Split('-').Length == 1 || deserialized.remoteLocation.Split('-').Length == 1)
-                    targetReleaseType = ReleaseType.Stable;
-                else if (targetReleaseType == ReleaseType.Invalid)
-                    targetReleaseType = ReleaseType.Other;
-
-                deserialized.releaseType = targetReleaseType;
-                if ((deserialized.files.ContainsKey("windows") && deserialized.executable.ContainsKey("windows")) ||
-                    (deserialized.files.ContainsKey("linux")   && deserialized.executable.ContainsKey("linux")))
-                    releaseList.Add(deserialized);
-            }
-            return releaseList;
-        }
-
-        public static List<ProductRelease> Products = new List<ProductRelease>();
     }
 }

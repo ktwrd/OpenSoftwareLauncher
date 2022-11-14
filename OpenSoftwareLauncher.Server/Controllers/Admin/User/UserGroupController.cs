@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Text.Json;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
@@ -47,7 +46,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
             return Json(new ObjectResponse<string[]>()
             {
                 Success = true,
-                Data = targetAccount.Groups.ToArray()
+                Data = targetAccount.Groups
             }, MainClass.serializerOptions);
         }
 

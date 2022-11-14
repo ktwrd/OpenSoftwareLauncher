@@ -4,9 +4,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Runtime.Serialization;
-using OpenSoftwareLauncher.Server.OpenSoftwareLauncher.Server;
 using System.Linq;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Admin
@@ -35,7 +32,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
             }
 
             var detailList = new List<AccountDetailsResponse>();
-            foreach (var account in MainClass.contentManager.AccountManager.AccountList)
+            foreach (var account in MainClass.contentManager.AccountManager.GetAllAccounts(false))
             {
                 if (account.FirstSeenTimestamp >= firstSeenTimestamp
                     && account.LastSeenTimestamp <= lastSeenTimestamp)

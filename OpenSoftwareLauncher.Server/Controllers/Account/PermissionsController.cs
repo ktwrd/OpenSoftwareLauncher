@@ -1,8 +1,6 @@
 ﻿using OSLCommon;
 using OSLCommon.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Account
 {
@@ -24,7 +22,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Account
             return Json(new ObjectResponse<AccountPermission[]>()
             {
                 Success = true,
-                Data = account.Permissions.ToArray()
+                Data = account.Permissions
             }, MainClass.serializerOptions);
         }
     }

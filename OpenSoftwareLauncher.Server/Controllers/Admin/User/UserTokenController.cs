@@ -1,14 +1,11 @@
 ﻿using OSLCommon;
 using OSLCommon.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using static OSLCommon.Authorization.AccountManager;
-using Account = OSLCommon.Authorization.Account;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
 {
@@ -33,7 +30,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                 return Json(authRes, MainClass.serializerOptions);
             }
             var usernameDict = new Dictionary<string, int>();
-            foreach (var user in MainClass.contentManager.AccountManager.AccountList)
+            foreach (var user in MainClass.contentManager.AccountManager.GetAllAccounts())
             {
                 string[] exclude = Array.Empty<string>();
                 if (includeGivenToken)
@@ -90,7 +87,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                     }, MainClass.serializerOptions);
                 }
 
-                accountArray = MainClass.contentManager.AccountManager.GetAccountsByRegex(expression, AccountField.Username).ToArray();
+                accountArray = MainClass.contentManager.AccountManager.GetAccountsByRegex(expression, AccountField.Username);
             }
             // When username is null, that means we want to purge our own tokens.
             else if (username == null)
