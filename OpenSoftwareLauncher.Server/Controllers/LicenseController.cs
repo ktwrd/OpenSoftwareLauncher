@@ -28,7 +28,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
                 {
                     Success = false,
                     Data = new HttpException(400, ServerStringResponse.InvalidLicenseKey)
-                });
+                }, MainClass.serializerOptions);
             }
 
             var responseCode = MainClass.contentManager.AccountLicenseManager.GrantLicenseKey(account.Username, key).Result;

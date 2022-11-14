@@ -45,7 +45,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                 {
                     Success = false,
                     Data = new HttpException(StatusCodes.Status409Conflict, ServerStringResponse.LicenseExists)
-                });
+                }, MainClass.serializerOptions);
             }
             return Json(new ObjectResponse<string[]>()
             {
@@ -86,7 +86,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                 {
                     Success = false,
                     Data = new HttpException(StatusCodes.Status409Conflict, ServerStringResponse.LicenseNotFound)
-                });
+                }, MainClass.serializerOptions);
             }
             return Json(new ObjectResponse<string[]>()
             {
