@@ -328,7 +328,7 @@ namespace OpenSoftwareLauncher.Server
                 .Filter
                 .Empty;
 
-            return collection.Find(filter).ToList().Where(v => v.Release.appID.Length > 0).Select(v => v.Release.appID).ToArray();
+            return collection.Find(filter).ToList().Where(v => v.Release.appID.Length > 0).Select(v => v.Release.appID).Distinct().ToArray();
         }
     }
 }
