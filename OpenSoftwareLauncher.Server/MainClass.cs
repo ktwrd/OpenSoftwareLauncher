@@ -70,17 +70,44 @@ namespace OpenSoftwareLauncher.Server
                 aliases: new string[] { "--dataDirectory", "-d" },
                 description: "Set the data directory. Default is working directory.");
 
+            Option<bool>? migrateOption = new Option<bool>(
+                aliases: new string[] { "--databaseMigrate" },
+                description: "Force a database migration, from JSON to MongoDB.");
+
             RootCommand rootCommand = new RootCommand(
                 description: "Open Software Launcher Backend Server");
             rootCommand.TreatUnmatchedTokensAsErrors = false;
 
             rootCommand.AddOption(dataDirOption);
+            rootCommand.AddOption(migrateOption);
             rootCommand.SetHandler(SetDataDirectory, dataDirOption);
-
+            bool forceMigrate = false;
+            rootCommand.SetHandler((opt) =>
+            {
+                if (opt != null && opt)
+                {
+                    forceMigrate = true;
+                }
+            }, migrateOption);
             rootCommand.Invoke(args);
+
+            if (forceMigrate)
+            {
+                foreach (var parent in ServerConfig.DefaultData)
+                {
+                    if (parent.Key != "Migrated")
+                        continue;
+                    foreach (var child in parent.Value)
+                    {
+                        ServerConfig.Set(parent.Key, child.Key, child.Value);
+                    }
+                }
+                Console.WriteLine("[INFO] Enforced Mirgration");
+            }
         }
         public static void SetDataDirectory(string dataDirectory)
         {
+            if (dataDirectory == null) return;
             MainClass.dataDirectory = dataDirectory.Trim('"');
             Console.WriteLine($"[OSLServer] Set data directory to \"{MainClass.dataDirectory}\"");
         }
