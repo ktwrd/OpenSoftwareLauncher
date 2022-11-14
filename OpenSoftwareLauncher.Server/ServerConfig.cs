@@ -43,19 +43,27 @@ namespace OpenSoftwareLauncher.Server
                 File.WriteAllText(ConfigLocation, "");
 
 
+            ReadFrom(ConfigLocation);
+        }
+        internal static void ReadFrom(string? location=null)
+        {
             var resetEvent = new AutoResetEvent(false);
-            BusStationTimer = new Timer(delegate
+            if (BusStationTimer != null)
             {
-                if (HasChanges)
+                BusStationTimer = new Timer(delegate
                 {
-                    Save();
-                    HasChanges = false;
-                }
-                resetEvent.Set();
-            }, resetEvent, 0, 1000);
-            Source = new IniConfigSource(ConfigLocation);
+                    if (HasChanges)
+                    {
+                        Save();
+                        HasChanges = false;
+                    }
+                    resetEvent.Set();
+                }, resetEvent, 0, 1000);
+            }
+            Source = new IniConfigSource(location ?? ConfigLocation);
             MergeDefaultData();
-            resetEvent.WaitOne(1);
+            if (BusStationTimer != null)
+                resetEvent.WaitOne(1);
         }
 
         private static void MergeDefaultData()
@@ -204,7 +212,6 @@ namespace OpenSoftwareLauncher.Server
             var cfg = Get(group);
             cfg.Set(key, value);
             HasChanges = true;
-            OnWrite?.Invoke(group, key, value);
         }
 
         private static bool HasChanges = false;
