@@ -30,6 +30,7 @@ namespace OpenSoftwareLauncher.Server
 
         public ContentManager()
         {
+            Console.WriteLine($"[ContentManager] Connecting to Database");
             this.MongoClient = new MongoClient(ServerConfig.GetString("Connection", "MongoDBServer"));
 
             AccountManager = new MongoAccountManager(MongoClient);
