@@ -1,12 +1,10 @@
-﻿using OpenSoftwareLauncher.Server.OpenSoftwareLauncher.Server;
-using OSLCommon;
+﻿using OSLCommon;
 using OSLCommon.AutoUpdater;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -31,7 +29,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
                 Response.StatusCode = 401;
                 return Json(new HttpException(401, ServerStringResponse.InvalidCredential), MainClass.serializerOptions);
             }
-            else if (!MainClass.contentManager?.Published.ContainsKey(hash) ?? false)
+            else if (MainClass.contentManager?.GetPublishedReleaseByHash(hash) == null)
             {
                 Response.StatusCode = StatusCodes.Status404NotFound;
                 return Json(new HttpException(404, @"Commit not published"), MainClass.serializerOptions);
@@ -73,11 +71,9 @@ namespace OpenSoftwareLauncher.Server.Controllers
                 Response.StatusCode = 500;
                 return Json(new HttpException(500, "Content Manager has not been initalized"), MainClass.serializerOptions);
             }
-            MainClass.contentManager.Published[hash].Files =
-            new List<PublishedReleaseFile>(MainClass.contentManager?.Published[hash].Files ?? new PublishedReleaseFile[] { })
-                .Concat(fileList)
-                .ToArray();
-            return Json(MainClass.contentManager?.Published[hash].Files ?? Array.Empty<object>(), MainClass.serializerOptions);
+            MainClass.contentManager?.AddPublishedFilesByHash(hash, fileList.ToArray());
+            var commit = MainClass.contentManager?.GetPublishedReleaseByHash(hash);
+            return Json(commit?.Files ?? Array.Empty<object>(), MainClass.serializerOptions);
         }
 
         [HttpGet("{hash}")]
@@ -98,10 +94,10 @@ namespace OpenSoftwareLauncher.Server.Controllers
 
             if (contentManager != null)
             {
-                if (contentManager.Published.ContainsKey(hash))
+                var commit = contentManager.GetPublishedReleaseByHash(hash);
+                if (commit != null)
                 {
                     var allow = false;
-                    var commit = contentManager.Published[hash];
                     if (account != null)
                     {
                         /*if (commit.Release.releaseType != ReleaseType.Other)

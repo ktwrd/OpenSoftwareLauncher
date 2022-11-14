@@ -169,5 +169,20 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         {
             listViewAccounts_SelectedIndexChanged(null, null);
         }
+
+        private void listViewAccounts_KeyUp(object sender, KeyEventArgs e)
+        {
+            // Ctrl+C
+            if (e.KeyCode == Keys.C && e.Control)
+            {
+                List<string> usernames = new List<string>();
+                foreach (ListViewItem item in listViewAccounts.SelectedItems)
+                {
+                    usernames.Add(item.Name);
+                }
+                var joined = string.Join("\n", usernames.ToArray());
+                Clipboard.SetText(joined);
+            }
+        }
     }
 }

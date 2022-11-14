@@ -2,9 +2,6 @@
 using OSLCommon.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Net;
-using System.Security;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
 {
@@ -44,7 +41,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
             return Json(new ObjectResponse<AccountPermission[]>()
             {
                 Success = true,
-                Data = account.Permissions.ToArray()
+                Data = account.Permissions
             }, MainClass.serializerOptions);
         }
 

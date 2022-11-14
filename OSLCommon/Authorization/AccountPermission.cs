@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿
 namespace OSLCommon.Authorization
 {
     public enum AccountPermission
@@ -20,6 +17,6 @@ namespace OSLCommon.Authorization
         USER_DISABLE_MODIFY,
         USER_LICENSE_MODIFY,
         LICENSE_MANAGE,
-        
+        INVULNERABLE
     }
 }

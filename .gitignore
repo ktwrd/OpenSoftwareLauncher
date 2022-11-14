@@ -374,3 +374,7 @@ OpenSoftwareLauncher/content.json
 OpenSoftwareLauncher/tokens.json
 config.ini
 OpenSoftwareLauncher.Server/.config/dotnet-tools.json
+OpenSoftwareLauncher.Server/licenseGroups.json
+OpenSoftwareLauncher.Server/licenses.json
+OpenSoftwareLauncher.Server/Config/**/*
+OpenSoftwareLauncher.Server/Config/*

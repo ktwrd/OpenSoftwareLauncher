@@ -179,6 +179,7 @@
             this.listViewAccounts.View = System.Windows.Forms.View.Details;
             this.listViewAccounts.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listViewAccounts_ItemSelectionChanged);
             this.listViewAccounts.SelectedIndexChanged += new System.EventHandler(this.listViewAccounts_SelectedIndexChanged);
+            this.listViewAccounts.KeyUp += new System.Windows.Forms.KeyEventHandler(this.listViewAccounts_KeyUp);
             this.listViewAccounts.MouseUp += new System.Windows.Forms.MouseEventHandler(this.listViewAccounts_MouseUp);
             // 
             // columnHeaderUsername

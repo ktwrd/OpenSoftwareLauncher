@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using OSLCommon;
-using System.Collections.Generic;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Account
 {

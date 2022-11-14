@@ -8,71 +8,53 @@ using System.IO;
 using System;
 using System.Diagnostics;
 using OSLCommon.Authorization;
-using OpenSoftwareLauncher.Server.OpenSoftwareLauncher.Server;
 using OSLCommon.Licensing;
 using System.Linq;
+using MongoDB.Driver;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace OpenSoftwareLauncher.Server
 {
     public class ContentManager
     {
         public List<ReleaseInfo> ReleaseInfoContent = new();
-        public Dictionary<string, ProductRelease> Releases = new();
         public Dictionary<string, PublishedRelease> Published = new();
-        public AccountManager AccountManager;
-        public SystemAnnouncement SystemAnnouncement = new();
-        public AccountLicenseManager AccountLicenseManager;
+        public MongoAccountManager AccountManager;
+        public MongoSystemAnnouncement SystemAnnouncement;
+        public MongoAccountLicenseManager AccountLicenseManager;
 
-        /*internal List<string> LoadedFirebaseAssets = new();
-         * internal FirestoreDb database;*/
+        public MongoClient MongoClient;
+        public static string ReleaseInfo_Collection = ServerConfig.GetString("MongoDB", "Collection_ReleaseInfo");
+        public static string Publised_Collection = ServerConfig.GetString("MongoDB", "Collection_Published");
+        public static string DatabaseName = ServerConfig.GetString("MongoDB", "DatabaseName");
 
         public ContentManager()
         {
-            AccountManager = new AccountManager();
-            AccountLicenseManager = new AccountLicenseManager(AccountManager);
+            this.MongoClient = new MongoClient(ServerConfig.GetString("Connection", "MongoDBServer"));
+
+            AccountManager = new MongoAccountManager(MongoClient);
+            AccountManager.DatabaseName = ServerConfig.GetString("MongoDB", "DatabaseName");
+            AccountManager.CollectionName = ServerConfig.GetString("MongoDB", "Collection_Account");
+
+            SystemAnnouncement = new MongoSystemAnnouncement(MongoClient);
+            SystemAnnouncement.DatabaseName = ServerConfig.GetString("MongoDB", "DatabaseName");
+            SystemAnnouncement.CollectionName = ServerConfig.GetString("MongoDB", "Collection_Announcement");
+
+            AccountLicenseManager = new MongoAccountLicenseManager(AccountManager, MongoClient);
+            AccountLicenseManager.DatabaseName = ServerConfig.GetString("MongoDB", "DatabaseName");
+            AccountLicenseManager.CollectionName = ServerConfig.GetString("MongoDB", "Collection_License");
+            AccountLicenseManager.GroupCollectionName = ServerConfig.GetString("MongoDB", "Collection_GroupLicense");
+
             databaseDeserialize();
 
-            AccountManager.PendingWrite += AccountManager_PendingWrite;
             SystemAnnouncement.Update += SystemAnnouncement_Update;
-            AccountLicenseManager.Update += AccountLicenseManager_Update;
-        }
-
-        private void AccountLicenseManager_Update(LicenseField field, LicenseKeyMetadata license)
-        {
-            if (field == LicenseField.All || field == LicenseField.AllGroups)
-            {
-                File.WriteAllText(JSON_LICENSEGROUP_FILENAME,
-                    JsonSerializer.Serialize(AccountLicenseManager.LicenseGroups, MainClass.serializerOptions));
-            }
-            if (field == LicenseField.AllGroups)
-            {
-                File.WriteAllText(JSON_LICENSE_FILENAME,
-                    JsonSerializer.Serialize(AccountLicenseManager.LicenseKeys, MainClass.serializerOptions));
-            }
         }
 
         private void SystemAnnouncement_Update()
         {
-            File.WriteAllText(JSON_SYSANNOUNCE_FILENAME, SystemAnnouncement.ToJSON());
-            string txt = $"[ContentManager->SystemAnnouncement_Update]  {Path.GetRelativePath(Directory.GetCurrentDirectory(), JSON_SYSANNOUNCE_FILENAME)}";
-            Trace.WriteLine(txt);
-            Console.WriteLine(txt);
-            ServerConfig.Save();
+            ServerConfig.Set("Announcement", "Enable", SystemAnnouncement.Active);
         }
 
-        private void AccountManager_PendingWrite()
-        {
-            File.WriteAllText(JSON_ACCOUNT_FILENAME, AccountManager.ToJSON());
-            AccountManager.ClearPendingWrite();
-            string txt = $"[ContentManager->AccountManager_PendingWrite] {Path.GetRelativePath(Directory.GetCurrentDirectory(), JSON_ACCOUNT_FILENAME)}";
-            Trace.WriteLine(txt);
-            Console.WriteLine(txt);
-            ServerConfig.Save();
-        }
-
-        /*private readonly string DATABASE_FILENAME = Path.Combine(
-            MainClass.DataDirectory,
-            "content.db");*/
         private readonly string JSONBACKUP_FILENAME = Path.Combine(
             MainClass.DataDirectory,
             "content.json");
@@ -88,7 +70,6 @@ namespace OpenSoftwareLauncher.Server
         private readonly string JSON_LICENSEGROUP_FILENAME = Path.Combine(
             MainClass.DataDirectory,
             "licenseGroups.json");
-        private int DatabaseVersion;
         private class JSONBackupContent
         {
             public List<ReleaseInfo> ReleaseInfoContent = new();
@@ -97,57 +78,89 @@ namespace OpenSoftwareLauncher.Server
         }
         private void databaseDeserialize()
         {
-            try
+            if (!ServerConfig.GetBoolean("Migrated", "Account", false))
             {
-                if (File.Exists(JSON_ACCOUNT_FILENAME))
-                    AccountManager.Read(File.ReadAllText(JSON_ACCOUNT_FILENAME));
+                try
+                {
+                    if (File.Exists(JSON_ACCOUNT_FILENAME))
+                        AccountManager.ReadJSON(File.ReadAllText(JSON_ACCOUNT_FILENAME));
+                }
+                catch (Exception except)
+                {
+                    string txt = $"[ContentManager->databaseSerialize:{GeneralHelper.GetNanoseconds()}] [ERR] Failed to read Account Details\n--------\n{except}\n--------\n";
+                    Trace.WriteLine(txt);
+                    Console.Error.WriteLine(txt);
+#if DEBUG
+                    throw;
+#endif
+                }
+                ServerConfig.Set("Migrated", "Account", true);
             }
-            catch (Exception except)
+            if (!ServerConfig.GetBoolean("Migrated", "Announcement", false))
             {
-                string txt = $"[ContentManager->databaseSerialize:{GeneralHelper.GetNanoseconds()}] [ERR] Failed to read Account Details\n--------\n{except}\n--------\n";
-                Trace.WriteLine(txt);
-                Console.Error.WriteLine(txt);
-            }
-            try
-            {
-                if (File.Exists(JSON_SYSANNOUNCE_FILENAME))
-                    SystemAnnouncement.Read(File.ReadAllText(JSON_SYSANNOUNCE_FILENAME));
-            }
-            catch (Exception except)
-            {
-                string txt = $"[ContentManager->databaseSerialize:{GeneralHelper.GetNanoseconds()}] [ERR] Failed to read Announcement Details\n--------\n{except}\n--------\n";
-                Trace.WriteLine(txt);
-                Console.Error.WriteLine(txt);
+                try
+                {
+                    if (File.Exists(JSON_SYSANNOUNCE_FILENAME))
+                        SystemAnnouncement.Read(File.ReadAllText(JSON_SYSANNOUNCE_FILENAME));
+                    SystemAnnouncement.Active = ServerConfig.GetBoolean("Announcement", "Enable", true);
+                }
+                catch (Exception except)
+                {
+                    string txt = $"[ContentManager->databaseSerialize:{GeneralHelper.GetNanoseconds()}] [ERR] Failed to read Announcement Details\n--------\n{except}\n--------\n";
+                    Trace.WriteLine(txt);
+                    Console.Error.WriteLine(txt);
+#if DEBUG
+                    throw;
+#endif
+                }
+                ServerConfig.Set("Migrated", "Announcement", true);
             }
             if (File.Exists(JSONBACKUP_FILENAME))
             {
                 RestoreFromJSON();
             }
-            try
+            if (!ServerConfig.GetBoolean("Migrated", "License", false))
             {
-                if (File.Exists(JSON_LICENSE_FILENAME))
-                    AccountLicenseManager.LicenseKeys = JsonSerializer.Deserialize<Dictionary<string, LicenseKeyMetadata>>(
-                        File.ReadAllText(JSON_LICENSE_FILENAME),
-                        MainClass.serializerOptions);
-            }
-            catch (Exception except)
-            {
-                string txt = $"[ContentManager->databaseSerialize:{GeneralHelper.GetNanoseconds()}] [ERR] Failed to read Licenses\n--------\n{except}\n--------\n";
-                Trace.WriteLine(txt);
-                Console.Error.WriteLine(txt);
-            }
-            try
-            {
-                if (File.Exists(JSON_LICENSEGROUP_FILENAME))
-                    AccountLicenseManager.LicenseGroups = JsonSerializer.Deserialize<Dictionary<string, LicenseGroup>>(
-                        File.ReadAllText(JSON_LICENSEGROUP_FILENAME),
-                        MainClass.serializerOptions);
-            }
-            catch (Exception except)
-            {
-                string txt = $"[ContentManager->databaseSerialize:{GeneralHelper.GetNanoseconds()}] [ERR] Failed to read License Groups\n--------\n{except}\n--------\n";
-                Trace.WriteLine(txt);
-                Console.Error.WriteLine(txt);
+                try
+                {
+                    if (File.Exists(JSON_LICENSE_FILENAME))
+                    {
+                        var deser = JsonSerializer.Deserialize<Dictionary<string, LicenseKeyMetadata>>(
+                            File.ReadAllText(JSON_LICENSE_FILENAME),
+                            MainClass.serializerOptions);
+                        AccountLicenseManager.SetLicenseKeys(deser.Select(v => v.Value).ToArray(), false).Wait();
+                    }
+                }
+                catch (Exception except)
+                {
+                    string txt = $"[ContentManager->databaseSerialize:{GeneralHelper.GetNanoseconds()}] [ERR] Failed to read Licenses\n--------\n{except}\n--------\n";
+                    Trace.WriteLine(txt);
+                    Console.Error.WriteLine(txt);
+#if DEBUG
+                    throw;
+#endif
+                }
+                try
+                {
+                    if (File.Exists(JSON_LICENSEGROUP_FILENAME))
+                    {
+                        var deser = JsonSerializer.Deserialize<Dictionary<string, LicenseGroup>>(
+                            File.ReadAllText(JSON_LICENSEGROUP_FILENAME),
+                            MainClass.serializerOptions);
+                        AccountLicenseManager.SetGroups(deser.Select(v => v.Value).ToArray(), false, false).Wait();
+                    }
+                }
+                catch (Exception except)
+                {
+                    string txt = $"[ContentManager->databaseSerialize:{GeneralHelper.GetNanoseconds()}] [ERR] Failed to read License Groups\n--------\n{except}\n--------\n";
+                    Trace.WriteLine(txt);
+                    Console.Error.WriteLine(txt);
+#if DEBUG
+                    throw;
+#endif
+                }
+                ServerConfig.Set("Migrated", "License", true);
+                ServerConfig.Save();
             }
         }
         private void RestoreFromJSON()
@@ -162,6 +175,9 @@ namespace OpenSoftwareLauncher.Server
             (Exception e)
             {
                 deserializeException = e;
+#if DEBUG
+                throw;
+#endif
             }
             if (deserialized == null)
             {
@@ -173,325 +189,146 @@ namespace OpenSoftwareLauncher.Server
             }
             Console.WriteLine($"[ContentManager->RestoreFromJSON] Restored from JSON.");
 
-            ReleaseInfoContent = deserialized.ReleaseInfoContent;
-            Releases = ReleaseHelper.TransformReleaseList(ReleaseInfoContent.ToArray());
-            Published = deserialized.Published;
+            if (!ServerConfig.GetBoolean("Migrated", "ReleaseInfo", false))
+            {
+                Console.WriteLine("[ContentManager] Importing ReleaseInfo");
+                SetReleaseInfoContent(deserialized.ReleaseInfoContent.ToArray());
+                ServerConfig.Set("Migrated", "ReleaseInfo", true);
+            }
+            if (!ServerConfig.GetBoolean("Migrated", "Published", false))
+            {
+                Console.WriteLine("[ContentManager] Importing Published Releases");
+                ForceSetPublishedContent(deserialized.Published.Select(v => v.Value).ToArray());
+                ServerConfig.Set("Migrated", "Published", true);
+            }
             System.Threading.Thread.Sleep(500);
             DatabaseSerialize();
         }
         public void DatabaseSerialize()
         {
-            /*bool response = DatabaseHelper.Write(DATABASE_FILENAME, sw =>
-            {
-                sw.Write(DatabaseVersion);
-                sw.Write(ReleaseInfoContent);
-                sw.Write(Releases);
-                sw.Write(Published);
-            });
-            if (response)
-            {
-                Console.WriteLine($"[ContentManager->DatabaseSerialize] Saved {Path.GetRelativePath(Directory.GetCurrentDirectory(), DATABASE_FILENAME)}");
-                CreateJSONBackup();
-            }
-            else
-            {
-                Console.Error.WriteLine($"[ContentManager->DatabaseSerialize] Failed to save {Path.GetRelativePath(Directory.GetCurrentDirectory(), DATABASE_FILENAME)}");
-            }*/
-            SystemAnnouncement.OnUpdate();
-            AccountManager.ForcePendingWrite();
-            AccountLicenseManager.OnUpdate(LicenseField.All, null);
-            CreateJSONBackup();
             ServerConfig.Save();
         }
-        private void CreateJSONBackup()
+        public void SetReleaseInfoContent(ReleaseInfo[] items)
         {
-            var data = new JSONBackupContent
-            {
-                ReleaseInfoContent = ReleaseInfoContent.ToArray().ToList(),
-                Releases = Releases,
-                Published = Published
-            };
-            File.WriteAllText(JSONBACKUP_FILENAME, JsonSerializer.Serialize(data, MainClass.serializerOptions));
-        }
-        /*static ContentManager()
-        {
-            FirebaseHelper.FirebaseCollection.Add(typeof(PublishedRelease), "PublishedRelease");
-            FirebaseHelper.FirebaseCollection.Add(typeof(PublishedReleaseFile), "PublishedReleaseFile");
-            FirebaseHelper.FirebaseCollection.Add(typeof(ProductReleaseStream), "ProductReleaseStream");
-            FirebaseHelper.FirebaseCollection.Add(typeof(ProductRelease), "ProductRelease");
-            FirebaseHelper.FirebaseCollection.Add(typeof(ReleaseInfo), "Release");
-            FirebaseHelper.FirebaseCollection.Add(typeof(ProductExecutable), "ProductExecutables");
-        }
+            var uidList = new List<string>();
 
-        private Thread firebaseSaveThread;
-        private Thread firebaseLoadThread;
-        private void firebase()
-        {
-            BusStationTimer = new System.Threading.Timer(CheckBusSchedule, new AutoResetEvent(false), 0, 150);
-            TriggerSave = false;
-            TriggerSaveTimestamp = -1;
-            TriggerLoad = false;
-            TriggerLoadTimestamp = -1;
-            IsSaving = false;
-            IsLoading = false;
-            firebaseSaveThread = new Thread(firebaseSaveThreadLogic);
-            firebaseLoadThread = new Thread(firebaseLoadThreadLogic);
-            database = FirestoreDb.Create(@"cloudtesting-3d734");
-
-            // We do this because we want to lock the process
-            // before the web server starts, just to be safe.
-            firebaseLoadThreadLogic();
-        }
-
-        public void DatabaseSerialize()
-        {
-
-        }
-
-        private Timer BusStationTimer;
-
-        #region Schedule Saving
-        public bool TriggerSave { get; private set; }
-        public long TriggerSaveTimestamp { get; private set; }
-        public void ScheduleSave()
-        {
-            Console.WriteLine($"ScheduleSave: (TriggerLoad: {TriggerLoad},\n              TriggerSave: {TriggerSave},\n              TriggerLoadTimestamp: {TriggerLoadTimestamp},\n              TriggerSaveTimestamp: {TriggerSaveTimestamp},\n              IsSaving: {IsSaving},\n              IsLoading: {IsLoading})");
-            if (TriggerSave || TriggerLoad || TriggerSaveTimestamp > 0) return;
-            TriggerSave = true;
-            TriggerSaveTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-        }
-        #endregion
-        #region Schedule Loading
-        public bool TriggerLoad { get; set; }
-        public long TriggerLoadTimestamp { get; private set; }
-        public void ScheduleLoad()
-        {
-            Console.WriteLine($"ScheduleSave: (TriggerLoad: {TriggerLoad},\n              TriggerSave: {TriggerSave},\n              TriggerLoadTimestamp: {TriggerLoadTimestamp},\n              TriggerSaveTimestamp: {TriggerSaveTimestamp},\n              IsSaving: {IsSaving},\n              IsLoading: {IsLoading})");
-            if (TriggerLoad || TriggerSave || TriggerLoadTimestamp > 0) return;
-            TriggerLoad = true;
-            TriggerLoadTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-        }
-        #endregion
-        #region Schedule Checker
-        public bool IsSaving{ get; private set; }
-        public bool IsLoading { get; private set; }
-        public bool WillScheduleSave => !(TriggerSave || TriggerLoad || TriggerSaveTimestamp > 0);
-        public bool WillScheduleLoad => !(TriggerLoad || TriggerSave || TriggerLoadTimestamp > 0);
-        private void CheckBusSchedule(object? state)
-        {
-            if (state == null) return;
-            AutoResetEvent autoEvent = (AutoResetEvent)state;
-            if (TriggerLoadTimestamp > 0 && !IsSaving && !IsLoading)
+            var db = MongoClient.GetDatabase(DatabaseName);
+            var collection = db.GetCollection<ReleaseInfo>(ReleaseInfo_Collection);
+            foreach (ReleaseInfo item in items)
             {
-                if ((TriggerLoadTimestamp < TriggerSaveTimestamp || TriggerSaveTimestamp <= 0) && TriggerLoad)
-                {
-                    TriggerLoad = false;
-                    LoadFirebase();
-                }
-            }
-            if (TriggerSaveTimestamp > 0 && !IsSaving && !IsLoading)
-            {
-                if ((TriggerSaveTimestamp < TriggerLoadTimestamp || TriggerLoadTimestamp <= 0) && TriggerSave)
-                {
-                    TriggerSave = false;
-                    SaveFirebase();
-                }
-            }
-            autoEvent.Set();
-        }
-        #endregion
-
-        #region Save Content from Firebase
-        public void SaveFirebase()
-        {
-            if (firebaseSaveThread.ThreadState == ThreadState.Running) return;
-            if (firebaseSaveThread.ThreadState == ThreadState.Stopped)
-                firebaseSaveThread = new Thread(firebaseSaveThreadLogic);
-            firebaseSaveThread.Start();
-        }
-        private void firebaseSaveThreadLogic()
-        {
-            Console.WriteLine($"[ContentManager->SaveFirebase] Uploading Content to Firebase");
-            IsSaving = true;
-            var startTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            var count = 0;
-            List<ReleaseInfo> working_ReleaseInfoContent = JsonSerializer.Deserialize<List<ReleaseInfo>>(JsonSerializer.Serialize(this.ReleaseInfoContent, MainClass.serializerOptions), MainClass.serializerOptions) ?? new List<ReleaseInfo>();
-            Dictionary<string, ProductRelease> working_Releases = JsonSerializer.Deserialize<Dictionary<string, ProductRelease>>(JsonSerializer.Serialize(this.Releases, MainClass.serializerOptions), MainClass.serializerOptions) ?? new Dictionary<string, ProductRelease>();
-            Dictionary<string, PublishedRelease> working_Published = JsonSerializer.Deserialize<Dictionary<string, PublishedRelease>>(JsonSerializer.Serialize(this.Published, MainClass.serializerOptions), MainClass.serializerOptions) ?? new Dictionary<string, PublishedRelease>();
-            var fetchedCount = 0;
-            var taskList = new List<Task>();
-            VoidDelegate del = delegate
-            {
-                fetchedCount++;
-            };
-            foreach (var item in working_ReleaseInfoContent)
-            {
-                taskList.Add(new Task(new Action(delegate
-                {
-                    item.ToFirebase(item.GetFirebaseDocumentReference(database), del).Wait();
-                    count++;
-                })));
-            }
-            foreach (var pair in working_Releases)
-            {
-                taskList.Add(new Task(new Action(delegate
-                {
-                    pair.Value.ToFirebase(pair.Value.GetFirebaseDocumentReference(database), del).Wait();
-                    count++;
-                    count += pair.Value.Streams.Length * 2;
-                })));
-            }
-            foreach (var pair in working_Published)
-            {
-                taskList.Add(new Task(new Action(delegate
-                {
-                    pair.Value.ToFirebase(pair.Value.GetFirebaseDocumentReference(database), del).Wait();
-                    count++;
-                    count += pair.Value.Files.Length + 1;
-                })));
-            }
-            foreach (var i in taskList)
-                i.Start();
-            Task.WaitAll(taskList.ToArray());
-            Console.WriteLine($"[ContentManager->SaveFirebase] Uploaded {count} items in {DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - startTimestamp}ms");
-            working_Releases.Clear();
-            working_Published.Clear();
-            working_ReleaseInfoContent.Clear();
-            TriggerSaveTimestamp = -1;
-            IsSaving = false;
-        }
-        #endregion
-        #region Load Content from Firebase
-        public void LoadFirebase()
-        {
-            if (firebaseLoadThread.ThreadState == ThreadState.Running) return;
-            if (firebaseLoadThread.ThreadState == ThreadState.Stopped)
-                firebaseLoadThread = new Thread(firebaseLoadThreadLogic);
-            firebaseLoadThread.Start();
-        }
-        private void firebaseLoadThreadLogic()
-        {
-            IsLoading = true;
-            Console.WriteLine($"[ContentManager->LoadFirebase] Fetching Content from Firebase");
-            var startTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            var count = 0;
-            var fetchedCount = 0;
-
-            List<ReleaseInfo> working_ReleaseInfoContent = JsonSerializer.Deserialize<List<ReleaseInfo>>(JsonSerializer.Serialize(this.ReleaseInfoContent, MainClass.serializerOptions), MainClass.serializerOptions) ?? new List<ReleaseInfo>();
-            Dictionary<string, ProductRelease> working_Releases = JsonSerializer.Deserialize<Dictionary<string, ProductRelease>>(JsonSerializer.Serialize(this.Releases, MainClass.serializerOptions), MainClass.serializerOptions) ?? new Dictionary<string, ProductRelease>();
-            Dictionary<string, PublishedRelease> working_Published = JsonSerializer.Deserialize<Dictionary<string, PublishedRelease>>(JsonSerializer.Serialize(this.Published, MainClass.serializerOptions), MainClass.serializerOptions) ?? new Dictionary<string, PublishedRelease>();
-
-            var taskList = new List<Task>();
-            VoidDelegate del = delegate
-            {
-                fetchedCount++;
-            };
-
-            foreach (var item in working_ReleaseInfoContent)
-            {
-                taskList.Add(new Task(new Action(delegate
-                {
-                    var snapshot = item.GetFirebaseDocumentReference(database).GetSnapshotAsync().Result;
-                    item.FromFirebase(snapshot, del).Wait();
-                    count++;
-                })));
-            }
-            foreach (var pair in working_Releases)
-            {
-                taskList.Add(new Task(new Action(delegate
-                {
-                    var snapshot = pair.Value.GetFirebaseDocumentReference(database).GetSnapshotAsync().Result;
-                    pair.Value.FromFirebase(snapshot, del).Wait();
-                    count++;
-                    count += pair.Value.Streams.Length * 2;
-                })));
-            }
-            foreach (var pair in working_Published)
-            {
-                taskList.Add(new Task(new Action(delegate
-                {
-                    var snapshot = pair.Value.GetFirebaseDocumentReference(database).GetSnapshotAsync().Result;
-                    pair.Value.FromFirebase(snapshot, del).Wait();
-                    count++;
-                    count += pair.Value.Files.Length + 1;
-                })));
+                var filterCount = Builders<ReleaseInfo>
+                    .Filter
+                    .Eq("UID", item.UID);
+                var count = collection.Find(filterCount).ToList().Count;
+                if (count < 1)
+                    collection.InsertOne(item);
+                else
+                    collection.FindOneAndReplace(filterCount, item);
+                uidList.Add(item.UID);
             }
 
-            var newReleaseInfoContent = new List<ReleaseInfo>();
-            var newReleases = new Dictionary<string, ProductRelease>();
-            var newPublished = new Dictionary<string, PublishedRelease>();
+            var removeFilter = Builders<ReleaseInfo>
+                .Filter
+                .Nin("UID", uidList);
+            collection.DeleteMany(removeFilter);
+        }
+        public ReleaseInfo[] GetReleaseInfoContent()
+        {
+            var db = MongoClient.GetDatabase(DatabaseName);
+            var collection = db.GetCollection<ReleaseInfo>(ReleaseInfo_Collection);
 
-            var collectionListAsync = database.ListRootCollectionsAsync().ToListAsync().Result;
-            foreach (var collection in collectionListAsync)
+            var filter = Builders<ReleaseInfo>
+                .Filter
+                .Empty;
+
+            var res = collection.Find(filter).ToList();
+            return res.ToArray();
+        }
+
+        public PublishedRelease? GetPublishedReleaseByHash(string hash)
+        {
+            var db = MongoClient.GetDatabase(DatabaseName);
+            var collection = db.GetCollection<PublishedRelease>(Publised_Collection);
+
+            var filter = Builders<PublishedRelease>
+                .Filter
+                .Eq("CommitHash", hash);
+
+            return collection.Find(filter).FirstOrDefault();
+        }
+        public void SetPublishedRelease(PublishedRelease content)
+        {
+            var db = MongoClient.GetDatabase(DatabaseName);
+            var collection = db.GetCollection<PublishedRelease>(Publised_Collection);
+
+            var filter = Builders<PublishedRelease>
+                .Filter
+                .Eq("UID", content.UID);
+
+            if (collection.Find(filter).ToList().Count < 1)
+                collection.InsertOne(content);
+            else
+                collection.FindOneAndReplace(filter, content);
+        }
+        public void ForceSetPublishedContent(PublishedRelease[] items)
+        {
+            var uidList = new List<string>();
+            foreach (var i in items)
             {
-                if (
-                collection.Path.EndsWith(FirebaseHelper.FirebaseCollection[typeof(ReleaseInfo)])
-                || collection.Path.EndsWith(FirebaseHelper.FirebaseCollection[typeof(ProductRelease)])
-                || collection.Path.EndsWith(FirebaseHelper.FirebaseCollection[typeof(PublishedRelease)]))
-                {
-                    var documents = collection.GetSnapshotAsync().Result;
-                    foreach (var doc in documents)
-                    {
-                        if (LoadedFirebaseAssets.Contains(doc.Reference.Path))
-                            continue;
-
-                        switch (doc.Reference.Path.Split("/documents/")[1].Split("/")[0])
-                        {
-                            case "Release":
-                                taskList.Add(new Task(new Action(delegate
-                                {
-                                    var rel = new ReleaseInfo();
-                                    rel.FromFirebase(doc, del).Wait();
-                                    newReleaseInfoContent.Add(rel);
-                                    LoadedFirebaseAssets.Add(doc.Reference.Path);
-                                    count++;
-                                })));
-                                break;
-                            case "ProductRelease":
-                                taskList.Add(new Task(new Action(delegate
-                                {
-                                    var prodrel = new ProductRelease();
-                                    prodrel.FromFirebase(doc, del).Wait();
-                                    if (newReleases.ContainsKey(prodrel.ProductID))
-                                        newReleases[prodrel.ProductID].Streams = new List<ProductReleaseStream>(newReleases[prodrel.ProductID].Streams.Concat(prodrel.Streams)).ToArray();
-                                    LoadedFirebaseAssets.Add(doc.Reference.Path);
-                                    count++;
-                                    count += prodrel.Streams.Length * 2;
-                                })));
-                                break;
-                            case "PublishedRelease":
-                                taskList.Add(new Task(new Action(delegate
-                                {
-                                    var pubrel = new PublishedRelease();
-                                    pubrel.FromFirebase(doc, del).Wait();
-                                    if (pubrel != null && pubrel.CommitHash != null)
-                                    {
-                                        newPublished.Add(pubrel.CommitHash, pubrel);
-                                        LoadedFirebaseAssets.Add(doc.Reference.Path);
-                                        count++;
-                                        count += pubrel.Files.Length;
-                                    }
-                                })));
-                                break;
-                        }
-                    }
-                }
+                uidList.Add(i.UID);
+                SetPublishedRelease(i);
             }
 
-            foreach (var i in taskList)
-                i.Start();
-            Task.WaitAll(taskList.ToArray());
-
-            working_Releases = new(working_Releases.Concat(newReleases));
-            working_Published = new(working_Published.Concat(newPublished));
-            working_ReleaseInfoContent = new(working_ReleaseInfoContent.Concat(newReleaseInfoContent));
-            Console.WriteLine($"[ContentManager->LoadFirebase] Fetched {count} items in {DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - startTimestamp}ms");
-            Releases = new(working_Releases);
-            Published = new(working_Published);
-            ReleaseInfoContent = new(working_ReleaseInfoContent);
-            TriggerLoadTimestamp = -1;
-            IsLoading = false;
+            var db = MongoClient.GetDatabase(DatabaseName);
+            var collection = db.GetCollection<PublishedRelease>(Publised_Collection);
+            var removeFilter = Builders<PublishedRelease>
+                .Filter
+                .Nin("UID", uidList);
+            collection.DeleteMany(removeFilter);
         }
-        #endregion*/
+        public PublishedReleaseFile[] GetPublishedFilesByHash(string hash)
+        {
+            var published = GetPublishedReleaseByHash(hash);
+            return published?.Files ?? Array.Empty<PublishedReleaseFile>();
+        }
+        public void SetPublishedFilesByHash(string hash, PublishedReleaseFile[] files)
+        {
+            var published = GetPublishedReleaseByHash(hash);
+            if (published == null)
+                return;
+            published.Files = files;
+            SetPublishedRelease(published);
+        }
+        public void AddPublishedFilesByHash(string hash, PublishedReleaseFile[] files)
+        {
+            var published = GetPublishedReleaseByHash(hash);
+            if (published == null)
+                return;
+
+            published.Files = published.Files.Concat(files).ToArray();
+            SetPublishedRelease(published);
+        }
+        public Dictionary<string, PublishedRelease> GetAllPublished()
+        {
+            var db = MongoClient.GetDatabase(DatabaseName);
+            var collection = db.GetCollection<PublishedRelease>(Publised_Collection);
+
+            var filter = Builders<PublishedRelease>
+                .Filter
+                .Empty;
+
+            return collection.Find(filter).ToList().ToDictionary(v => v.CommitHash, t => t);
+        }
+        public string[] GetAllProductIds()
+        {
+            var db = MongoClient.GetDatabase(DatabaseName);
+            var collection = db.GetCollection<PublishedRelease>(Publised_Collection);
+
+            var filter = Builders<PublishedRelease>
+                .Filter
+                .Empty;
+
+            return collection.Find(filter).ToList().Where(v => v.Release.appID.Length > 0).Select(v => v.Release.appID).ToArray();
+        }
     }
 }

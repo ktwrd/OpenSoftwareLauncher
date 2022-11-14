@@ -1,10 +1,5 @@
-﻿using Google.Cloud.Firestore;
-using kate.shared.Helpers;
-using kate.shared.Extensions;
+﻿using kate.shared.Helpers;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OSLCommon.AutoUpdater
 {
@@ -55,51 +50,6 @@ namespace OSLCommon.AutoUpdater
             Executable = new ProductExecutable();
             CommitHash = "";
         }
-/*
-        #region bFirebaseSerializable
-        public Task FromFirebase(DocumentSnapshot document, VoidDelegate completeIncrement)
-        {
-            this.UID = document.Reference.Id;
-
-            this.ProductID = FirebaseHelper.ParseString(document, "ProductID");
-            this.ProductName = FirebaseHelper.ParseString(document, "ProductName");
-            this.ProductVersion = FirebaseHelper.ParseString(document, "Version");
-            this.BranchName = FirebaseHelper.ParseString(document, "BranchName");
-            this.RemoteSignature = FirebaseHelper.ParseString(document, "RemoteSignature");
-            this.UpdatedTimestamp = FirebaseHelper.Parse<long>(document, "UpdatedTimestamp", 0);
-            var dict = document.ToDictionary();
-            if (dict["Executable"] != null)
-            {
-                var dc = (DocumentReference)dict["Executable"];
-                var exec = FirebaseHelper.DeserializeDocumentReference<ProductExecutable>(dc, completeIncrement);
-                exec.Wait();
-                Executable = exec.Result;
-            }
-            this.CommitHash = FirebaseHelper.ParseString(document, "CommitHash");
-            completeIncrement();
-            return Task.CompletedTask;
-        }
-        public async Task ToFirebase(DocumentReference document, VoidDelegate completeIncrement)
-        {
-            Dictionary<string, object> data = new Dictionary<string, object>()
-            {
-                { "ProductID", ProductID },
-                { "ProductName", ProductName },
-                { "Version", ProductVersion },
-                { "BranchName", BranchName },
-                { "RemoteSignature", RemoteSignature },
-                { "UpdatedTimestamp", UpdatedTimestamp },
-                { "CommitHash", CommitHash }
-            };
-            var execRef = Executable.GetFirebaseDocumentReference(document.Database);
-            await Executable.ToFirebase(execRef, completeIncrement);
-            data.Add("Executable", execRef);
-            await document.SetAsync(data);
-            completeIncrement();
-        }
-        public DocumentReference GetFirebaseDocumentReference(FirestoreDb database) => database.Document(FirebaseHelper.FirebaseCollection[this.GetType()] + "/" + UID);
-        #endregion bFirebaseSerializable
-*/
         #region bSerializable
         public void ReadFromStream(SerializationReader sr)
         {

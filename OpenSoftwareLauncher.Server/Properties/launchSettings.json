@@ -11,8 +11,7 @@
   "profiles": {
     "OpenSoftwareLauncher.Server": {
       "commandName": "Project",
-      "commandLineArgs": "-minalyze",
-      "launchUrl": "weatherforecast",
+      "launchUrl": "",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
