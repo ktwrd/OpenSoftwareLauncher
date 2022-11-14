@@ -25,7 +25,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.Bot
             {
                 Success = false,
                 Data = new HttpException(StatusCodes.Status403Forbidden, @"Not Implemented")
-            });
+            }, MainClass.serializerOptions);
 #endif
             var authRes = MainClass.ValidatePermissions(token, AccountPermission.ADMINISTRATOR);
             if (authRes != null)
