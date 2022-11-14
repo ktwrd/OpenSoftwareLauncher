@@ -330,5 +330,17 @@ namespace OpenSoftwareLauncher.Server
 
             return collection.Find(filter).ToList().Where(v => v.Release.appID.Length > 0).Select(v => v.Release.appID).Distinct().ToArray();
         }
+        public IMongoCollection<PublishedRelease>? GetPublishedCollection()
+        {
+            var db = MongoClient.GetDatabase(DatabaseName);
+            var collection = db.GetCollection<PublishedRelease>(Publised_Collection);
+            return collection;
+        }
+        public IMongoCollection<ReleaseInfo>? GetReleaseCollection()
+        {
+            var db = MongoClient.GetDatabase(DatabaseName);
+            var collection = db.GetCollection<ReleaseInfo>(ReleaseInfo_Collection);
+            return collection;
+        }
     }
 }
