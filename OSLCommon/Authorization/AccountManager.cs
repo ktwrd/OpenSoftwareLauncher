@@ -1,16 +1,17 @@
 ﻿using kate.shared.Helpers;
+using OSLCommon.AuthProviders;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace OSLCommon.Authorization
 {
-    public class AccountManager
+    public delegate void AccountDelegate(Account account);
+    public partial class AccountManager
     {
         public List<Account> AccountList = new List<Account>();
 
@@ -26,8 +27,15 @@ namespace OSLCommon.Authorization
             TokenGranters.Add(granter);
         }
 
+        #region Events
         public bool IsPendingWrite { get; private set; }
         public event VoidDelegate PendingWrite;
+        public event AccountDelegate AccountUpdated;
+        internal void OnAccountUpdate(Account account)
+        {
+            if (AccountUpdated != null)
+                AccountUpdated?.Invoke(account);
+        }
         public void ForcePendingWrite()
         {
             IsPendingWrite = true;
@@ -46,25 +54,45 @@ namespace OSLCommon.Authorization
                 item.ClearPendingWrite();
             IsPendingWrite = false;
         }
+        #endregion
 
-        public bool ValidateToken(string token)
+        #region Account Boilerplate
+        internal virtual Account CreateAccount()
         {
-            foreach (var account in AccountList)
-            {
-                foreach (var item in account.Tokens)
-                    if (item.Token == token && account.Enabled)
-                        return true;
-            }
-            return false;
+            return new Account(this);
         }
+        internal virtual Account CreateNewAccount(string username)
+        {
+            var check = GetAccountByUsername(username);
+            if (check != null)
+                return check;
+            var account = new Account(this);
+            account.Username = username;
+            AccountList.Add(account);
+            return account;
+        }
+        public virtual void RemoveAccount(string username)
+        {
+            foreach (var item in AccountList.ToArray())
+                if (item.Username == username)
+                    AccountList.Remove(item);
+        }
+        public virtual void SetAccount(Account account)
+        {
+            foreach (var item in AccountList.ToArray())
+                if (item.Username == account.Username)
+                    item.Merge(account);
+        }
+        #endregion
 
-        public void SetUserGroups(Dictionary<string, string[]> dict)
+
+        public virtual void SetUserGroups(Dictionary<string, string[]> dict)
         {
             foreach (var acc in this.AccountList)
             {
                 if (dict.ContainsKey(acc.Username))
                 {
-                    acc.Groups = new List<string>(dict[acc.Username]);
+                    acc.Groups = new List<string>(dict[acc.Username]).ToArray();
                 }
             }
             OnPendingWrite();
@@ -74,13 +102,17 @@ namespace OSLCommon.Authorization
         /// Check if account is invulnerable.
         /// </summary>
         /// <param name="account">Is <see cref="Nullable{Account}"/></param>
-        public bool IsInvulnerable(Account account)
+        public virtual bool IsInvulnerable(Account account)
         {
             return account == null ? false : account.HasPermission(AccountPermission.INVULNERABLE);
         }
 
         #region Get Account
-        public Account GetAccount(string token, bool bumpLastUsed=false)
+        public virtual Account[] GetAllAccounts()
+        {
+            return AccountList.ToArray();
+        }
+        public virtual Account GetAccount(string token, bool bumpLastUsed=false)
         { 
             foreach (var account in AccountList)
             {
@@ -93,7 +125,7 @@ namespace OSLCommon.Authorization
             }
             return null;
         }
-        public Account GetAccountByUsername(string username)
+        public virtual Account GetAccountByUsername(string username)
         {
             foreach (var account in AccountList)
             {
@@ -106,7 +138,7 @@ namespace OSLCommon.Authorization
         {
             Username
         }
-        public LinkedList<Account> GetAccountsByRegex(Regex expression, AccountField field=AccountField.Username)
+        public virtual Account[] GetAccountsByRegex(Regex expression, AccountField field=AccountField.Username)
         {
             var list = new LinkedList<Account>();
             foreach (var account in AccountList)
@@ -124,21 +156,32 @@ namespace OSLCommon.Authorization
 
                 list.AddLast(account);
             }
-            return list;
+            return list.ToArray();
         }
         #endregion
 
         #region Token Management
+        public virtual bool ValidateToken(string token)
+        {
+            foreach (var account in AccountList)
+            {
+                foreach (var item in account.Tokens)
+                    if (item.Token == token && account.Enabled)
+                        return true;
+            }
+            return false;
+        }
+
         /// <summary>
         /// Used to mark <see cref="AccountToken.LastUsed"/> to the current Unix Epoch
         /// </summary>
         /// <param name="token">Token to set <see cref="AccountToken.LastUsed"/></param>
-        public void TokenUsed(string token)
+        public virtual void TokenUsed(string token)
         {
             var account = GetAccount(token);
             if (account == null) return;
 
-            for (int i = 0; i < account.Tokens.Count; i++)
+            for (int i = 0; i < account.Tokens.Length; i++)
             {
                 if (account.Tokens[i] != null)
                     account.Tokens[i] = TokenMarkLastUsedTimestamp(account.Tokens[i]);
@@ -146,7 +189,7 @@ namespace OSLCommon.Authorization
             if (!IsPendingWrite)
                 OnPendingWrite();
         }
-        internal AccountToken TokenMarkLastUsedTimestamp(AccountToken token)
+        internal virtual AccountToken TokenMarkLastUsedTimestamp(AccountToken token)
         {
             if (token.Allow)
             {
@@ -163,37 +206,38 @@ namespace OSLCommon.Authorization
         public GrantTokenResponse CreateToken(Account account, string userAgent = "", string host = "")
         {
             bool accountFound = false;
-            foreach (var item in AccountList)
+            var targetAccount = GetAccountByUsername(account.Username);
+            if (targetAccount != null && account != null)
             {
-                if (item == account && account != null)
+                accountFound = true;
+                if (targetAccount.Enabled)
                 {
-                    accountFound = true;
-                    if (item.Enabled)
+                    var token = new AccountToken(targetAccount);
+                    AccountToken success = targetAccount.AddToken(token);
+                    if (success == null)
+                        return new GrantTokenResponse(ServerStringResponse.AccountTokenGrantFailed, false);
+                    else
                     {
-                        var token = new AccountToken(item);
-                        AccountToken success = item.AddToken(token);
-                        if (success == null)
-                            return new GrantTokenResponse(ServerStringResponse.AccountTokenGrantFailed, false);
-                        else
+                        if (!IsPendingWrite)
+                            OnPendingWrite();
+                        if (account.Groups == null)
+                            account.Groups = Array.Empty<string>();
+                        if (account.Permissions == null)
+                            account.Permissions = Array.Empty<AccountPermission>();
+                        TokenUsed(success.Token);
+                        foreach (var thing in account.Tokens)
                         {
-                            if (!IsPendingWrite)
-                                OnPendingWrite();
-                            if (account.Groups == null)
-                                account.Groups = new List<string>();
-                            if (account.Permissions == null)
-                                account.Permissions = new List<AccountPermission>();
-                            TokenUsed(success.Token);
-                            foreach (var thing in account.Tokens)
+                            if (thing.Token == success.Token)
                             {
-                                if (thing.Token == success.Token)
-                                {
-                                    thing.UserAgent = userAgent;
-                                    thing.Host = host;
-                                }
+                                thing.UserAgent = userAgent;
+                                thing.Host = host;
                             }
-                            return new GrantTokenResponse(ServerStringResponse.AccountTokenGranted, true, success, account.Groups.ToArray(), account.Permissions.ToArray());
                         }
+                        return new GrantTokenResponse(ServerStringResponse.AccountTokenGranted, true, success, account.Groups.ToArray(), account.Permissions.ToArray());
                     }
+                }
+                else
+                {
                     return new GrantTokenResponse(ServerStringResponse.AccountDisabled, false);
                 }
             }
@@ -235,22 +279,13 @@ namespace OSLCommon.Authorization
 
         public GrantTokenResponse GrantTokenAndOrAccount(string username, string password, string userAgent="", string host="")
         {
-            foreach (var account in AccountList)
-            {
-                // Found our account
-                if (account.Username == username)
-                {
-                    return GrantToken(account, username, password, userAgent: userAgent, host: host);
-                }
-            }
+            Account accountInstance = GetAccountByUsername(username);
+            if (accountInstance != null)
+                return GrantToken(accountInstance, username, password, userAgent: userAgent, host: host);
 
             // Create account
-            var accountInstance = new Account(this);
-            accountInstance.Username = username;
-            AccountList.Add(accountInstance);
+            accountInstance = CreateNewAccount(username);
             var response = GrantToken(accountInstance, username, password, userAgent: userAgent, host: host);
-            if (!response.Success)
-                AccountList.Remove(accountInstance);
             return response;
         }
         #endregion
@@ -262,18 +297,22 @@ namespace OSLCommon.Authorization
         /// <param name="account">Account to check</param>
         /// <param name="permissions">Array of permissions to check</param>
         /// <param name="ignoreAdmin">When <see cref="Account"/> has the <see cref="AccountPermission.ADMINISTRATOR"/> permission, then <see cref="true"/> is always returned.</param>
-        /// <returns></returns>
-        public bool AccountHasPermission(Account account, AccountPermission[] permissions, bool ignoreAdmin=false)
+        /// <param name="condition">If true then account must have all permissions. If false, user must have one or more of the permissions given.</param>
+        /// <returns>Does the account have the requested permissions?</returns>
+        public virtual bool AccountHasPermission(Account account, AccountPermission[] permissions, bool ignoreAdmin=false, bool condition=false)
         {
-            bool match = false;
+            int count = 0;
             foreach (var target in account.Permissions)
             {
                 if (permissions.Contains(target))
-                    match = true;
+                    count++;
             }
             if (account.Permissions.Contains(AccountPermission.ADMINISTRATOR) && !ignoreAdmin)
                 return true;
-            return match;
+            else if (condition)
+                return count == permissions.Length;
+            else
+                return count > 0;
         }
         /// <summary>
         /// Singular Permission overload for <see cref="AccountHasPermission(Account, AccountPermission[], bool)"/>
@@ -289,7 +328,7 @@ namespace OSLCommon.Authorization
         /// <summary>
         /// Token overload for <see cref="AccountHasPermission(Account, AccountPermission[], bool)"/>
         /// </summary>
-        public bool AccountHasPermission(string token, AccountPermission[] permissions, bool ignoreAdmin=false, bool bumpLastUsed=false)
+        public virtual bool AccountHasPermission(string token, AccountPermission[] permissions, bool ignoreAdmin=false, bool bumpLastUsed=false)
         {
             if (token == null || token.Length < AccountToken.TokenLength || token.Length > AccountToken.TokenLength) return false;
             var account = GetAccount(token);
@@ -312,7 +351,7 @@ namespace OSLCommon.Authorization
         #endregion
 
         #region JSON (Des|S)erialization
-        public void Read(string jsonContent)
+        public virtual void ReadJSON(string jsonContent)
         {
             if (jsonContent.Length < 1)
                 Trace.WriteLine($"[AccountManager->Read:{GeneralHelper.GetNanoseconds()}] [ERR] Argument jsonContent has invalid length of {jsonContent.Length}");
@@ -338,7 +377,7 @@ namespace OSLCommon.Authorization
             Trace.WriteLine($"[AccountManager->Read:{GeneralHelper.GetNanoseconds()}] Deserialized Accounts ({AccountList.Count} Accounts)");
         }
 
-        public string ToJSON()
+        public virtual string ToJSON()
         {
             var jsonOptions = new JsonSerializerOptions()
             {
@@ -349,7 +388,7 @@ namespace OSLCommon.Authorization
             };
             try
             {
-                var serialized = JsonSerializer.Serialize(AccountList, jsonOptions);
+                var serialized = JsonSerializer.Serialize(GetAllAccounts(), jsonOptions);
                 return serialized;
             }
             catch (Exception except)

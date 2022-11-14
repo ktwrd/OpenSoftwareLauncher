@@ -1,9 +1,9 @@
-﻿using Google.Cloud.Firestore;
-using kate.shared.Helpers;
+﻿using kate.shared.Helpers;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
+using System.Xml.Serialization;
 
 namespace OSLCommon.AutoUpdater
 {
@@ -17,7 +17,7 @@ namespace OSLCommon.AutoUpdater
     }
     public interface IReleaseInfo
     {
-        string UID { get; }
+        string UID { get; set; }
         string version { get; set; }
         string name { get; set; }
         string productName { get; set; }
@@ -34,7 +34,11 @@ namespace OSLCommon.AutoUpdater
     [Serializable]
     public class ReleaseInfo : IReleaseInfo, bSerializable
     {
-        public string UID { get; private set; }
+        [JsonIgnore]
+        [XmlIgnore]
+        [SoapIgnore]
+        public ObjectId _id { get; set; }
+        public string UID { get; set; }
         public string version { get; set; }
         public string name { get; set; }
         public string productName { get; set; }
@@ -47,50 +51,6 @@ namespace OSLCommon.AutoUpdater
         public ReleaseType releaseType { get; set; }
         public Dictionary<string, string> files { get; set; }
         public Dictionary<string, string> executable { get; set; }
-/*
-        #region bFirebaseSerializable
-        public Task FromFirebase(DocumentSnapshot document, VoidDelegate completeIncrement)
-        {
-            this.UID = document.Reference.Id;
-
-            this.version = FirebaseHelper.ParseString(document, "version");
-            this.name = FirebaseHelper.ParseString(document, "name");
-            this.productName = FirebaseHelper.ParseString(document, "productName");
-            this.appID = FirebaseHelper.ParseString(document, "appID");
-            this.timestamp = FirebaseHelper.Parse<long>(document, "timestamp", 0);
-            this.envtimestamp = FirebaseHelper.Parse<long>(document, "envtimestamp", 0);
-            this.remoteLocation = FirebaseHelper.ParseString(document, "remoteLocation");
-            this.commitHash = FirebaseHelper.ParseString(document, "commitHash");
-            this.commitHashShort = FirebaseHelper.ParseString(document, "commitHashShort");
-            this.releaseType = FirebaseHelper.Parse<ReleaseType>(document, "releaseType", ReleaseType.Other);
-            this.files = FirebaseHelper.Parse<Dictionary<string, string>>(document, "files", new Dictionary<string, string>());
-            this.executable = FirebaseHelper.Parse<Dictionary<string, string>>(document, "executable", new Dictionary<string, string>());
-            completeIncrement();
-            return Task.CompletedTask;
-        }
-        public async Task ToFirebase(DocumentReference document, VoidDelegate completeIncrement)
-        {
-            Dictionary<string, object> data = new Dictionary<string, object>()
-            {
-                { "version", version },
-                { "name", name },
-                { "productName", productName },
-                { "appID", appID },
-                { "timestamp", timestamp },
-                { "envtimestamp", envtimestamp },
-                { "remoteLocation", remoteLocation },
-                { "commitHash", commitHash },
-                { "commitHashShort", commitHashShort },
-                { "releaseType", releaseType },
-                { "files", files },
-                { "executable", executable }
-            };
-            await document.SetAsync(data);
-            completeIncrement();
-        }
-        public DocumentReference GetFirebaseDocumentReference(FirestoreDb database) => database.Document(FirebaseHelper.FirebaseCollection[this.GetType()] + "/" + UID);
-        #endregion
-*/
         public static ReleaseInfo Blank()
         {
             return new ReleaseInfo();

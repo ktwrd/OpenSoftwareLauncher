@@ -1,10 +1,7 @@
 ﻿using OSLCommon;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Reflection;
-using OpenSoftwareLauncher.Server.OpenSoftwareLauncher.Server;
 
 namespace OpenSoftwareLauncher.Server.Controllers
 {

@@ -1,8 +1,6 @@
 ﻿using OSLCommon;
 using OSLCommon.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Admin.Bot
 {
