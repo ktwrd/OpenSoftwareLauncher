@@ -90,6 +90,9 @@ namespace OpenSoftwareLauncher.Server
                     string txt = $"[ContentManager->databaseSerialize:{GeneralHelper.GetNanoseconds()}] [ERR] Failed to read Account Details\n--------\n{except}\n--------\n";
                     Trace.WriteLine(txt);
                     Console.Error.WriteLine(txt);
+#if DEBUG
+                    throw;
+#endif
                 }
                 ServerConfig.Set("Migrated", "Account", true);
             }
@@ -106,6 +109,9 @@ namespace OpenSoftwareLauncher.Server
                     string txt = $"[ContentManager->databaseSerialize:{GeneralHelper.GetNanoseconds()}] [ERR] Failed to read Announcement Details\n--------\n{except}\n--------\n";
                     Trace.WriteLine(txt);
                     Console.Error.WriteLine(txt);
+#if DEBUG
+                    throw;
+#endif
                 }
                 ServerConfig.Set("Migrated", "Announcement", true);
             }
@@ -130,6 +136,9 @@ namespace OpenSoftwareLauncher.Server
                     string txt = $"[ContentManager->databaseSerialize:{GeneralHelper.GetNanoseconds()}] [ERR] Failed to read Licenses\n--------\n{except}\n--------\n";
                     Trace.WriteLine(txt);
                     Console.Error.WriteLine(txt);
+#if DEBUG
+                    throw;
+#endif
                 }
                 try
                 {
@@ -146,8 +155,12 @@ namespace OpenSoftwareLauncher.Server
                     string txt = $"[ContentManager->databaseSerialize:{GeneralHelper.GetNanoseconds()}] [ERR] Failed to read License Groups\n--------\n{except}\n--------\n";
                     Trace.WriteLine(txt);
                     Console.Error.WriteLine(txt);
+#if DEBUG
+                    throw;
+#endif
                 }
                 ServerConfig.Set("Migrated", "License", true);
+                ServerConfig.Save();
             }
         }
         private void RestoreFromJSON()
@@ -162,6 +175,9 @@ namespace OpenSoftwareLauncher.Server
             (Exception e)
             {
                 deserializeException = e;
+#if DEBUG
+                throw;
+#endif
             }
             if (deserialized == null)
             {
