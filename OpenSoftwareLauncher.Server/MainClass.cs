@@ -14,6 +14,10 @@ using System.Text;
 using System.Text.Json;
 using Prometheus;
 using OSLCommon.AuthProviders;
+using System.CommandLine;
+using System.CommandLine.Invocation;
+using System.Runtime.CompilerServices;
+using Google.Cloud.Firestore;
 
 namespace OpenSoftwareLauncher.Server
 {
@@ -48,18 +52,41 @@ namespace OpenSoftwareLauncher.Server
 
         public static ContentManager contentManager;
 
+        private static string? dataDirectory = null;
         public static string DataDirectory
         {
             get
             {
-                string target = Assembly.GetExecutingAssembly().Location ?? Path.Combine(Directory.GetCurrentDirectory(), "config.ini");
-                return Path.GetDirectoryName(target) ?? Directory.GetCurrentDirectory();
+                string target = dataDirectory ?? Directory.GetCurrentDirectory();
+                return target;
             }
         }
 
         public static long StartupTimestamp { get; private set; }
-        public static void Main(string[] args)
+        private static void SetupOptions(params string[] args)
         {
+
+            Option<string> dataDirOption = new Option<string>(
+                aliases: new string[] { "--dataDirectory", "-d" },
+                description: "Set the data directory. Default is working directory.");
+
+            RootCommand rootCommand = new RootCommand(
+                description: "Open Software Launcher Backend Server");
+            rootCommand.TreatUnmatchedTokensAsErrors = false;
+
+            rootCommand.AddOption(dataDirOption);
+            rootCommand.SetHandler(SetDataDirectory, dataDirOption);
+
+            rootCommand.Invoke(args);
+        }
+        public static void SetDataDirectory(string dataDirectory)
+        {
+            MainClass.dataDirectory = dataDirectory.Trim('"');
+            Console.WriteLine($"[OSLServer] Set data directory to \"{MainClass.dataDirectory}\"");
+        }
+        public static void Main(params string[] args)
+        {
+            SetupOptions(args);
             StartupTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             ServerConfig.Get();
             if (ServerConfig.GetString("Connection", "MongoDBServer", "").Length < 1)
