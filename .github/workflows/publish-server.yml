@@ -21,9 +21,9 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore OpenSoftwareLauncher.Server
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build OpenSoftwareLauncher.Server --no-restore
     - name: Publish
       run: dotnet publish OpenSoftwareLauncher.Server -p:PublishProfile=Windows -p:Configuration=Release
     - run: sudo apt install zip -y
@@ -46,9 +46,9 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore OpenSoftwareLauncher.Server
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build OpenSoftwareLauncher.Server --no-restore
     - name: Publish
       run: dotnet publish OpenSoftwareLauncher.Server -p:PublishProfile=Linux -p:Configuration=Release
     - name: Compress
