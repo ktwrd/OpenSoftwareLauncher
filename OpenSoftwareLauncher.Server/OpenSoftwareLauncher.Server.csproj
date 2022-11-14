@@ -32,18 +32,6 @@
 		<TransformOutOfDateOnly>false</TransformOutOfDateOnly>
 	</PropertyGroup>
 
-	<!-- This is the important line: -->
-	<Import Project="$(VSToolsPath)\TextTemplating\Microsoft.TextTemplating.targets" />
-
-
-	<ItemGroup>
-    <None Include="Properties\VersionAutoIncrement.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>VersionAutoIncrement.tt</DependentUpon>
-    </None>
-  </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.3.56" />
     <PackageReference Include="BinaryFormatter" Version="3.0.0" />
@@ -65,22 +53,7 @@
 	</ItemGroup>
 
   <ItemGroup>
-    <None Update="Properties\VersionAutoIncrement.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>VersionAutoIncrement.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Properties\VersionAutoIncrement.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>VersionAutoIncrement.tt</DependentUpon>
-    </Compile>
   </ItemGroup>
 
   <ItemGroup>
