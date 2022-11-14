@@ -111,10 +111,23 @@ namespace OpenSoftwareLauncher.Server
             MainClass.dataDirectory = dataDirectory.Trim('"');
             Console.WriteLine($"[OSLServer] Set data directory to \"{MainClass.dataDirectory}\"");
         }
+        private static void PrintConfig()
+        {
+            foreach (var parent in ServerConfig.Get())
+            {
+                foreach (var child in parent.Value)
+                {
+                    Console.WriteLine($"[Config] {parent.Key}.{child.Key} = {child.Value}");
+                }
+            }
+        }
         public static void Main(params string[] args)
         {
             SetupOptions(args);
             StartupTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+#if DEBUG
+            PrintConfig();
+#endif
             ServerConfig.Get();
             if (ServerConfig.GetString("Connection", "MongoDBServer", "").Length < 1)
             {
