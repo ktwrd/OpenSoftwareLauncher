@@ -151,7 +151,8 @@ namespace OSLCommon.Licensing
                 else
                 {
                     replaceCount++;
-                    await collection.FindOneAndReplaceAsync(filter, item);
+                    await collection.DeleteManyAsync(filter);
+                    await collection.InsertOneAsync(item);
                 }
                 
             }
@@ -169,7 +170,7 @@ namespace OSLCommon.Licensing
                 }
             }
 
-            Console.WriteLine($"[MongoAccountLicenseManager] Insert: {insertCount}, Replace: {replaceCount}, Delete: {deleteCount}");
+            Console.WriteLine($"[MongoAccountLicenseManager->SetLicenseKeys] Insert: {insertCount}, Replace: {replaceCount}, Delete: {deleteCount}");
         }
         public override async Task DeleteLicenseKey(string keyId)
         {
@@ -202,6 +203,9 @@ namespace OSLCommon.Licensing
         {
             var groupIds = new List<StringOrRegularExpression>();
             var groupCollection = GetGroupCollection<LicenseGroup>();
+            int insertCount = 0;
+            int replaceCount = 0;
+            int deleteCount = 0;
             foreach (var item in groups)
             {
                 groupIds.Add(new StringOrRegularExpression(item.UID));
@@ -212,9 +216,16 @@ namespace OSLCommon.Licensing
                 var found = await groupCollection.FindAsync(filter);
                 var count = found.ToList().Count;
                 if (count < 1)
+                {
+                    insertCount++;
                     await groupCollection.InsertOneAsync(item);
+                }
                 else
-                    await groupCollection.FindOneAndReplaceAsync(filter, item);
+                {
+                    replaceCount++;
+                    await groupCollection.DeleteManyAsync(filter);
+                    await groupCollection.InsertOneAsync(item);
+                }
             }
 
             if (deleteKeys)
@@ -224,6 +235,7 @@ namespace OSLCommon.Licensing
                 var filter = Builders<LicenseKeyMetadata>
                     .Filter
                     .Nin("GroupId", groupIds);
+                deleteCount++;
                 await licenseCollection.DeleteManyAsync(filter);
             }
 
@@ -234,6 +246,8 @@ namespace OSLCommon.Licensing
                     .Nin("UID", groupIds);
                 await GetGroupCollection<BsonDocument>().DeleteManyAsync(notFilter);
             }
+
+            Console.WriteLine($"[MongoAccountLicenseManager->SetGroups] Insert: {insertCount}, Replace: {replaceCount}, Delete: {deleteCount}");
         }
         public override async Task DeleteGroup(string groupId, bool includeKeys = true)
         {
