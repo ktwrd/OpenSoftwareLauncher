@@ -19,6 +19,8 @@ namespace OSLCommon.Logging
 
         AnnouncementModify      = 200,
         AnnouncementDelete      = 201,
+        AnnouncementCreate      = 202,
+        AnnouncementStateToggle = 203,
 
         PublishRelease          = 210,
 
