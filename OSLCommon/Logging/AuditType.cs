@@ -16,6 +16,7 @@ namespace OSLCommon.Logging
         AccountLicenseUpdate    = 131,
         TokenDelete             = 140,
         TokenCreate             = 142,
+        BulkTokenDelete         = 145,
 
         AnnouncementModify      = 200,
         AnnouncementDelete      = 201,
