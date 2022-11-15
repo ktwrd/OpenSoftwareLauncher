@@ -48,6 +48,23 @@ namespace OSLCommon.Authorization
             };
         }
 
+        public JsonSerializerOptions serializerOptions = new JsonSerializerOptions
+        {
+            IgnoreReadOnlyFields = true,
+            IgnoreReadOnlyProperties = true,
+            IncludeFields = true
+        };
+
+        public override GrantTokenResponse CreateToken(Account account, string userAgent = "", string host = "")
+        {
+            var b = base.CreateToken(account, userAgent, host);
+            if (b.Message == ServerStringResponse.AccountTokenGranted)
+            {
+                auditLogManager.Create(new TokenCreateEntryData(account, b.Token), account).Wait();
+            }
+            return b;
+        }
+
         #region Account Boilerplate
 
         internal override Account CreateAccount() => this.CreateAccount(true);
