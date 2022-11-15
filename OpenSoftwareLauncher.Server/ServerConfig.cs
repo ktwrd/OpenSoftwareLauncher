@@ -117,7 +117,8 @@ namespace OpenSoftwareLauncher.Server
                     {"Collection_License", "licenses" },
                     {"Collection_GroupLicense", "licenseGroups" },
                     {"Collection_ReleaseInfo", "releaseInfo" },
-                    {"Collection_Published", "published" }
+                    {"Collection_Published", "published" },
+                    {"Collection_AuditLog", "auditLog" }
                 }
             },
             {"Migrated", new Dictionary<string, object>
