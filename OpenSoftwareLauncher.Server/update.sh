@@ -1,5 +1,7 @@
 #!/bin/bash
 
+alias rm="/bin/rm"
+
 sudo systemctl stop buildapi.service
 
 rm -rf osltmp
@@ -12,9 +14,11 @@ rm *.zip
 
 cd ..
 
-
-mv OpenSoftwareLauncher.Server OpenSoftwareLauncher.Server.old
+rm -f OpenSoftwareLauncher.Server.old
+rm -f OpenSoftwareLauncher.Server.Old
+mv OpenSoftwareLauncher.Server OpenSoftwareLauncher.Server.Old
 rm osltmp/appsettings.*
 cp -rf osltmp/* ./
+rm -rf osltmp
 
 sudo systemctl start buildapi.service

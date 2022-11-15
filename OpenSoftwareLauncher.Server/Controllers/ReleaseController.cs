@@ -8,6 +8,7 @@ using OSLCommon.Authorization;
 using System;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;
+using System.Runtime.Serialization;
 
 namespace OpenSoftwareLauncher.Server.Controllers
 {
@@ -285,6 +286,93 @@ namespace OpenSoftwareLauncher.Server.Controllers
             }
 
             return Json(details, MainClass.serializerOptions);
+        }
+    
+        
+        [HttpGet("history/at")]
+        [ProducesResponseType(200, Type = typeof(ObjectResponse<List<ProductReleaseStream>>))]
+        [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
+        public ActionResult FromCommitHash(string token, string hash, string? signature = "")
+        {
+            var validationResponse = MainClass.ValidatePermissions(token, AccountPermission.READ_RELEASE_HISTORY);
+            if (validationResponse != null)
+            {
+                Response.StatusCode = validationResponse.Data.Code;
+                return Json(validationResponse, MainClass.serializerOptions);
+            }
+
+            OSLCommon.Authorization.Account account = MainClass.contentManager.AccountManager.GetAccount(token);
+
+            var collection = MainClass.contentManager.GetReleaseCollection();
+            var filter = Builders<ReleaseInfo>
+                .Filter
+                .Eq("commitHash", hash);
+            var foundList = collection.Find(filter).ToList();
+            var result = foundList
+                .Where((v) => 
+                {
+                    return account.HasLicense(v.remoteLocation);
+                });
+
+            if (signature != null && signature.Length > 0)
+                result = result.Where(v => v.remoteLocation == signature);
+
+            var resultArray = result.ToArray();
+            var transformed = ReleaseHelper.TransformReleaseList(result.ToArray());
+
+            var streamList = new List<ProductReleaseStream>();
+            foreach (var pair in transformed)
+                foreach (var item in pair.Value.Streams)
+                    streamList.Add(item);
+
+            return Json(new ObjectResponse<List<ProductReleaseStream>>()
+            {
+                Success = true,
+                Data = streamList
+            }, MainClass.serializerOptions);
+        }
+
+        [HttpGet("history/sig")]
+        [ProducesResponseType(200, Type = typeof(ObjectResponse<List<ProductReleaseStream>>))]
+        [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
+        public ActionResult FromSignature(string token, string signature)
+        {
+            var validationResponse = MainClass.ValidatePermissions(token, AccountPermission.READ_RELEASE_HISTORY);
+            if (validationResponse != null)
+            {
+                Response.StatusCode = validationResponse.Data.Code;
+                return Json(validationResponse, MainClass.serializerOptions);
+            }
+
+            OSLCommon.Authorization.Account account = MainClass.contentManager.AccountManager.GetAccount(token);
+
+            var collection = MainClass.contentManager.GetReleaseCollection();
+            var filter = Builders<ReleaseInfo>
+                .Filter
+                .Eq("remoteLocation", signature);
+            var foundList = collection.Find(filter).ToList();
+            var result = foundList
+                .Where((v) =>
+                {
+                    return account.HasLicense(v.remoteLocation);
+                });
+
+            if (signature != null && signature.Length > 0)
+                result = result.Where(v => v.remoteLocation == signature);
+
+            var resultArray = result.ToArray();
+            var transformed = ReleaseHelper.TransformReleaseList(result.ToArray());
+
+            var streamList = new List<ProductReleaseStream>();
+            foreach (var pair in transformed)
+                foreach (var item in pair.Value.Streams)
+                    streamList.Add(item);
+
+            return Json(new ObjectResponse<List<ProductReleaseStream>>()
+            {
+                Success = true,
+                Data = streamList.OrderByDescending(v => v.UpdatedTimestamp).ToList()
+            }, MainClass.serializerOptions);
         }
     }
 }

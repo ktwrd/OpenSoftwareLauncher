@@ -169,7 +169,7 @@ namespace OSLCommon.Authorization
             set
             {
                 _pendingWrite = value;
-                if (value)
+                if (value && accountManager != null)
                     accountManager.OnPendingWrite();
             }
         }

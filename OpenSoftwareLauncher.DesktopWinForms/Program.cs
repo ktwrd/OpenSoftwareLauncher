@@ -1,9 +1,11 @@
-﻿using OpenSoftwareLauncher.DesktopWinForms.ServerBridge;
+﻿using kate.shared;
+using OpenSoftwareLauncher.DesktopWinForms.ServerBridge;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Remoting.Contexts;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -28,6 +30,10 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         public static string ProductName = @"Open Software Launcher";
         public static string ProductNameAcronym = "OSL";
         public static readonly DateTime Epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+        public static DebugListener DebugListener;
+        public static System.Windows.Forms.Timer LogFlushTimer;
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -37,12 +43,19 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 #if DEBUG
             System.Threading.Thread.Sleep(2000);
 #endif
+
             UserConfig.Get();
             LocaleManager.Load();
             try
             {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
+                DebugListener = new DebugListener();
+                LogFlushTimer = new System.Windows.Forms.Timer();
+                LogFlushTimer.Interval = 500;
+                LogFlushTimer.Tick += LogFlushTimer_Tick;
+                DebugListener.Updated += DebugListener_Updated;
+                LogFlushTimer.Start();
                 ClientContext = new ClientContext();
                 Application.Run(ClientContext);
             }
@@ -55,6 +68,25 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 }));
                 Trace.WriteLine($"[Program->Main] Fatal Exception\n================\n{e}\n================\n");
             }
+        }
+
+        private static bool PendingLogLines = false;
+        private static void DebugListener_Updated(DebugListener instance)
+        {
+            if (!PendingLogLines)
+                PendingLogLines = true;
+        }
+
+        private static void LogFlushTimer_Tick(object sender, EventArgs e)
+        {
+            if (PendingLogLines)
+            {
+                var content = new List<string>(DebugListener.LogLines).ToArray();
+                PendingLogLines = false;
+                if (ClientContext != null && ClientContext.ParentForm != null && ClientContext.ParentForm.LogForm != null)
+                    ClientContext.ParentForm.LogForm.SetContent(content);
+            }
+            LogFlushTimer.Start();
         }
 
         public static DialogResult MessageBoxShow(

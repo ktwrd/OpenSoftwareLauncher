@@ -378,3 +378,4 @@ OpenSoftwareLauncher.Server/licenseGroups.json
 OpenSoftwareLauncher.Server/licenses.json
 OpenSoftwareLauncher.Server/Config/**/*
 OpenSoftwareLauncher.Server/Config/*
+OpenSoftwareLauncher.Server/Properties/launchSettings.json

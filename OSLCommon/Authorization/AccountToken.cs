@@ -24,7 +24,14 @@ namespace OSLCommon.Authorization
             LastUsed = 0;
         }
         public AccountToken() : this(parentAccount: null)
-        { }
+        {
+            Allow = true;
+            Token = GeneralHelper.GenerateToken(TokenLength);
+            CreatedTimestamp = 0;
+            UserAgent = "unknown";
+            Host = "0.0.0.0";
+            LastUsed = 0;
+        }
 
         public AccountToken(AccountTokenDetailsResponse res)
         {

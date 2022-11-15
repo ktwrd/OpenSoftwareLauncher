@@ -16,9 +16,9 @@ namespace OSLCommon
             Message = message;
             this.Exception = exception?.ToString() ?? "";
         }
-        public int Code { get; private set; }
-        public string Message { get; private set; }
+        public int Code { get; set; }
+        public string Message { get; set; }
         public readonly bool Error = true;
-        public string Exception { get; private set; }
+        public string Exception { get; set; }
     }
 }

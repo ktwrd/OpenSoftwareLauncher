@@ -71,4 +71,10 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="update.sh">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

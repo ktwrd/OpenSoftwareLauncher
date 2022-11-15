@@ -106,6 +106,9 @@
     <Compile Include="CustomComponents\LabelTextBox.Designer.cs">
       <DependentUpon>LabelTextBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="CustomComponents\ScrollingRichTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="LicenseManagement\LicenseKeyCreateDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -117,6 +120,12 @@
     </Compile>
     <Compile Include="LicenseManagement\LicenseManagmentForm.Designer.cs">
       <DependentUpon>LicenseManagmentForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LogForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LogForm.Designer.cs">
+      <DependentUpon>LogForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ServerBridge\ContentField.cs" />
     <Compile Include="ServerBridge\LocalContent.cs" />
@@ -200,6 +209,9 @@
     <EmbeddedResource Include="LicenseManagement\LicenseManagmentForm.resx">
       <DependentUpon>LicenseManagmentForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="LogForm.resx">
+      <DependentUpon>LogForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -259,6 +271,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <None Include="Resources\arrow-270.png" />
     <None Include="Resources\lock--cross.png" />
     <None Include="Resources\lock--tick.png" />
     <None Include="Resources\folder-horizontal-open.png" />
