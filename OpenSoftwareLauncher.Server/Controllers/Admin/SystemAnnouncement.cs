@@ -148,5 +148,33 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 Data = attemptedDeserialized
             }, MainClass.serializerOptions);
         }
+
+        [HttpGet("remove")]
+        [ProducesResponseType(200, Type = typeof(ObjectResponse<SystemAnnouncementSummary>))]
+        [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
+        public ActionResult RemoveAnnouncement(string token, string id)
+        {
+            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
+            if (authRes != null)
+            {
+                Response.StatusCode = authRes?.Data.Code ?? 0;
+                return Json(authRes, MainClass.serializerOptions);
+            }
+            var account = MainClass.contentManager.AccountManager.GetAccount(token);
+
+            bool exists = MainClass.contentManager.SystemAnnouncement.GetAll().Where(v => v.ID == id).Count() > 0;
+            if (exists)
+            {
+                var item = MainClass.contentManager.SystemAnnouncement.GetAll().Where(v => v.ID == id).FirstOrDefault();
+                MainClass.contentManager.AuditLogManager.Create(new AnnouncementDeleteEntryData(item), account).Wait();
+                MainClass.contentManager.SystemAnnouncement.RemoveId(id);
+            }
+
+            return Json(new ObjectResponse<SystemAnnouncementSummary>()
+            {
+                Success = true,
+                Data = MainClass.contentManager.SystemAnnouncement.GetSummary()
+            }, MainClass.serializerOptions);
+        }
     }
 }
