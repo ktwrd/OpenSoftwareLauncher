@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using OSLCommon;
 using OSLCommon.Authorization;
+using OSLCommon.Logging;
+using System.Linq;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
 {
@@ -26,6 +28,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                 Response.StatusCode = authRes?.Data.Code ?? 0;
                 return Json(authRes, MainClass.serializerOptions);
             }
+            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token, false);
 
             var account = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
             if (account == null)
@@ -37,7 +40,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                     Data = new HttpException(StatusCodes.Status404NotFound, ServerStringResponse.AccountNotFound)
                 }, MainClass.serializerOptions);
             }
-
+            string[] previous = account.Licenses.ToArray();
             bool didItWork = account.GrantLicense(license);
             if (!didItWork)
             {
@@ -47,6 +50,9 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                     Data = new HttpException(StatusCodes.Status409Conflict, ServerStringResponse.LicenseExists)
                 }, MainClass.serializerOptions);
             }
+
+            MainClass.contentManager.AuditLogManager.Create(new AccountLicenseUpdateEntryData(account, previous, account.Licenses.ToArray()), tokenAccount).Wait();
+
             return Json(new ObjectResponse<string[]>()
             {
                 Success = true,
@@ -67,6 +73,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                 Response.StatusCode = authRes?.Data.Code ?? 0;
                 return Json(authRes, MainClass.serializerOptions);
             }
+            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token, false);
 
             var account = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
             if (account == null)
@@ -79,6 +86,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                 }, MainClass.serializerOptions);
             }
 
+            string[] previous = account.Licenses.ToArray();
             bool didItWork = account.RevokeLicense(license);
             if (!didItWork)
             {
@@ -88,6 +96,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                     Data = new HttpException(StatusCodes.Status409Conflict, ServerStringResponse.LicenseNotFound)
                 }, MainClass.serializerOptions);
             }
+            MainClass.contentManager.AuditLogManager.Create(new AccountLicenseUpdateEntryData(account, previous, account.Licenses.ToArray()), tokenAccount).Wait();
             return Json(new ObjectResponse<string[]>()
             {
                 Success = true,
