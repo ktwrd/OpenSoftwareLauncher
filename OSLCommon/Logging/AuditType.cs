@@ -6,7 +6,8 @@ namespace OSLCommon.Logging
 {
     public enum AuditType
     {
-        None,
+        None = 0,
+        Any  = 1,
         
         AccountModify           = 100,
         AccountDisable          = 101,
