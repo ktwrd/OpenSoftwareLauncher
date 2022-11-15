@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OSLCommon.Logging;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Admin
 {
@@ -84,7 +85,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 Response.StatusCode = authRes?.Data.Code ?? 0;
                 return Json(authRes, MainClass.serializerOptions);
             }
-
+            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token);
             var targetAccount = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
             if (targetAccount == null)
             {
@@ -97,6 +98,12 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
             }
 
             targetAccount.Pardon();
+
+            MainClass.contentManager.AuditLogManager.Create(new AccountDisableEntryData(targetAccount)
+            {
+                Reason = "",
+                State = false
+            }, tokenAccount).Wait();
 
             return Json(new ObjectResponse<AccountDetailsResponse>()
             {
@@ -135,6 +142,12 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 else
                     targetAccount.DisableAccount();
             }
+
+            MainClass.contentManager.AuditLogManager.Create(new AccountDisableEntryData(targetAccount)
+            {
+                Reason = reason,
+                State = true
+            }, bannerAccount).Wait();
 
 
             return Json(new ObjectResponse<AccountDetailsResponse>()
