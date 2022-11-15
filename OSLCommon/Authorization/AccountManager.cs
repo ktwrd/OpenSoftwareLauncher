@@ -1,4 +1,5 @@
 ﻿using kate.shared.Helpers;
+using Newtonsoft.Json.Linq;
 using OSLCommon.AuthProviders;
 using System;
 using System.Collections.Generic;
@@ -203,7 +204,7 @@ namespace OSLCommon.Authorization
         /// </summary>
         /// <param name="account">Target account</param>
         /// <returns></returns>
-        public GrantTokenResponse CreateToken(Account account, string userAgent = "", string host = "")
+        public virtual GrantTokenResponse CreateToken(Account account, string userAgent = "", string host = "")
         {
             bool accountFound = false;
             var targetAccount = GetAccountByUsername(account.Username);
