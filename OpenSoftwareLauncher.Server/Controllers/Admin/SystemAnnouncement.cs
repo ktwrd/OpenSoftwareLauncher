@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
 using System.Linq;
+using OSLCommon.Logging;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Admin
 {
@@ -44,6 +45,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
             }
 
             MainClass.contentManager.SystemAnnouncement.Set(content, active ?? true);
+
             return Json(new ObjectResponse<SystemAnnouncementSummary>()
             {
                 Success = true,
@@ -120,6 +122,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 Response.StatusCode = authRes?.Data.Code ?? 0;
                 return Json(authRes, MainClass.serializerOptions);
             }
+            var account = MainClass.contentManager.AccountManager.GetAccount(token);
 
             var attemptedDeserialized = JsonSerializer.Deserialize<SystemAnnouncementSummary>(content, MainClass.serializerOptions);
             if (attemptedDeserialized == null) {
@@ -140,6 +143,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
             foreach (var item in MainClass.contentManager.SystemAnnouncement.GetAll().Where(v => !idList.Contains(v.ID)))
             {
                 MainClass.contentManager.SystemAnnouncement.RemoveId(item.ID);
+                MainClass.contentManager.AuditLogManager.Create(new AnnouncementDeleteEntryData(item), account).Wait();
             }
 
             return Json(new ObjectResponse<SystemAnnouncementSummary>()
