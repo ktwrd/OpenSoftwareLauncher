@@ -15,7 +15,7 @@ namespace OSLCommon.Logging
         [JsonIgnore]
         public virtual AuditType AuditType { get; set; }
 
-        public string SerializeToJSON()
+        public virtual string SerializeToJSON()
         {
             var result = JsonSerializer.Serialize(this, new JsonSerializerOptions()
             {
