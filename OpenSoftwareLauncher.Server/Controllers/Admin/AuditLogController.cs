@@ -31,7 +31,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
 
             var result = MainClass.contentManager.AuditLogManager.GetAll().Result;
 
-            return Json(new ObjectResponse<AuditLogEntry[]>
+            return Json(new ObjectResponse<AuditLogEntry[]>()
             {
                 Success = true,
                 Data = result
@@ -52,7 +52,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
 
             var result = MainClass.contentManager.AuditLogManager.GetByType(auditType).Result;
 
-            return Json(new ObjectResponse<AuditLogEntry[]>
+            return Json(new ObjectResponse<AuditLogEntry[]>()
             {
                 Success = true,
                 Data = result
@@ -83,7 +83,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 result = MainClass.contentManager.AuditLogManager.GetByUsername(username).Result;
             }
 
-            return Json(new ObjectResponse<AuditLogEntry[]>
+            return Json(new ObjectResponse<AuditLogEntry[]>()
             {
                 Success = true,
                 Data = result
@@ -111,7 +111,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 result = result.Where(v => v.ActionType == auditType).ToArray();
             }
 
-            return Json(new ObjectResponse<AuditLogEntry[]>
+            return Json(new ObjectResponse<AuditLogEntry[]>()
             {
                 Success = true,
                 Data = result
