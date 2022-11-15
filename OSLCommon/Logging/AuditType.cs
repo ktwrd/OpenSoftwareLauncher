@@ -13,6 +13,7 @@ namespace OSLCommon.Logging
         AccountPermissionGrant  = 120,
         AccountPermissionRevoke = 121,
         LicenseRedeem           = 130,
+        AccountLicenseUpdate    = 131,
         TokenDelete             = 140,
         TokenCreate             = 142,
 
