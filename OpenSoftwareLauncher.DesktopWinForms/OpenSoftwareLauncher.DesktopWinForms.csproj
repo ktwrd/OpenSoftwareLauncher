@@ -100,6 +100,12 @@
     <Compile Include="Announcement Management\AnnouncementManagementForm.Designer.cs">
       <DependentUpon>AnnouncementManagementForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="AuditLogForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AuditLogForm.Designer.cs">
+      <DependentUpon>AuditLogForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="CustomComponents\LabelTextBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -199,6 +205,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Announcement Management\AnnouncementManagementForm.resx">
       <DependentUpon>AnnouncementManagementForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AuditLogForm.resx">
+      <DependentUpon>AuditLogForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CustomComponents\LabelTextBox.resx">
       <DependentUpon>LabelTextBox.cs</DependentUpon>
