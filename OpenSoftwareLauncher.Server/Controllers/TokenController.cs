@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Net;
+using OSLCommon.Logging;
+using MongoDB.Driver.Linq;
+using System.Linq;
 
 namespace OpenSoftwareLauncher.Server.Controllers
 {
@@ -29,6 +32,17 @@ namespace OpenSoftwareLauncher.Server.Controllers
                 host: possibleAddress);
             if (!grantTokenResponse.Success)
                 Response.StatusCode = StatusCodes.Status401Unauthorized;
+
+            if (grantTokenResponse.Success)
+            {
+                var account = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
+                MainClass.contentManager.AuditLogManager.Create(
+                    new TokenCreateEntryData(
+                        account,
+                        grantTokenResponse.Token),
+                    account).Wait();
+            }
+
             return Json(new ObjectResponse<GrantTokenResponse>()
             {
                 Success = grantTokenResponse.Success,
@@ -138,6 +152,9 @@ namespace OpenSoftwareLauncher.Server.Controllers
             }
             else
             {
+                var tokenData = account.Tokens.Where(v => v.Token == token).FirstOrDefault();
+                if (tokenData != null)
+                    MainClass.contentManager.AuditLogManager.Create(new TokenDeleteEntryData(account, tokenData), account).Wait();
                 account.RemoveToken(token);
                 return Json(new ObjectResponse<object>()
                 {
