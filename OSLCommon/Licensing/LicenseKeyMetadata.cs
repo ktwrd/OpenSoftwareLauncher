@@ -159,7 +159,7 @@ namespace OSLCommon.Licensing
 
         private string[] productsApplied = Array.Empty<string>();
         /// <summary>
-        /// Products applied to user when licence is redeemed
+        /// Products applied to user when License is redeemed
         /// </summary>
         [Category("Targets"), Description("Products applied to this user when the license was redeemed.")]
         public string[] ProductsApplied
@@ -191,7 +191,7 @@ namespace OSLCommon.Licensing
 
         private AccountPermission[] permissionsApplied = Array.Empty<AccountPermission>();
         /// <summary>
-        /// Permissions applied to user when licence is redeemed
+        /// Permissions applied to user when License is redeemed
         /// </summary>
         [Category("Targets"), Description("Permissions applied to this user when the license was redeemed.")]
         public AccountPermission[] PermissionsApplied

@@ -188,7 +188,7 @@ namespace OSLCommon.Authorization
                 return true;
             return Licenses.Contains(remoteSignature);
         }
-        /// <returns>true: License does not exist and was added. false: Licence already exists, ignoring.</returns>
+        /// <returns>true: License does not exist and was added. false: License already exists, ignoring.</returns>
         public bool GrantLicense(string remoteSignature)
         {
             if (Licenses.Contains(remoteSignature))
@@ -197,7 +197,7 @@ namespace OSLCommon.Authorization
             PendingWrite = true;
             return true;
         }
-        /// <returns>true: License does not exist and was added. false: Licence already exists, ignoring.</returns>
+        /// <returns>true: License does not exist and was added. false: License already exists, ignoring.</returns>
         public bool RevokeLicense(string remoteSignature)
         {
             if (!Licenses.Contains(remoteSignature))
