@@ -92,6 +92,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                 Response.StatusCode = authRes?.Data.Code ?? 0;
                 return Json(authRes, MainClass.serializerOptions);
             }
+            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token);
 
             var account = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
             if (account == null)
@@ -103,6 +104,8 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                     Data = new HttpException(StatusCodes.Status404NotFound, ServerStringResponse.AccountNotFound)
                 }, MainClass.serializerOptions);
             }
+
+            MainClass.contentManager.AuditLogManager.Create(new AccountPermissionRevokeEntryData(account, permission), tokenAccount).Wait();
 
             return Json(new ObjectResponse<bool>()
             {
