@@ -2,6 +2,7 @@
 using OSLCommon.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OSLCommon.Logging;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
 {
@@ -57,6 +58,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                 Response.StatusCode = authRes?.Data.Code ?? 0;
                 return Json(authRes, MainClass.serializerOptions);
             }
+            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token);
 
             var account = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
             if (account == null)
@@ -68,6 +70,8 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                     Data = new HttpException(StatusCodes.Status404NotFound, ServerStringResponse.AccountNotFound)
                 }, MainClass.serializerOptions);
             }
+
+            MainClass.contentManager.AuditLogManager.Create(new AccountPermissionGrantEntryData(account, permission, false), tokenAccount).Wait();
 
             return Json(new ObjectResponse<bool>()
             {
