@@ -125,7 +125,7 @@ namespace OSLCommon.Authorization
                                       where tk.Token == token
                                       &&    tk.Allow
                           select item.Username;*/
-            var response = accountList.Where(v => v.Tokens.Where(t => t.Token == token && t.Allow).Count() > 0).ToList();
+            var response = accountList.Where(v => v.Tokens.Where(t => t != null && t.Token != null && t.Token == token && t.Allow).Count() > 0).ToList();
 
             Account result = response.Count() == 1 ? GetAccountByUsername(response.First().Username, false) : null;
 
