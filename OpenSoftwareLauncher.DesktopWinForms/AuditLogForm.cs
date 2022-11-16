@@ -285,6 +285,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 new ReadOnlyAttribute(true)
             });
             propertyGrid1.SelectedObject = targetItem;
+            propertyGrid1.ExpandAllGridItems();
         }
 
         private void checkedListBoxTypes_ItemCheck(object sender, ItemCheckEventArgs e)
