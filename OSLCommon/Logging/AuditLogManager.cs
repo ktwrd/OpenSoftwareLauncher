@@ -3,6 +3,7 @@ using OSLCommon.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace OSLCommon.Logging
@@ -28,7 +29,12 @@ namespace OSLCommon.Logging
         public async Task Create(IAuditEntryData entry, Account account)
         {
             var instance = new AuditLogEntry(this);
-            instance.ActionData = entry.SerializeToJSON();
+            instance.ActionData = JsonSerializer.Serialize((object)entry, new JsonSerializerOptions
+            {
+                IgnoreReadOnlyFields = true,
+                IgnoreReadOnlyProperties = true,
+                IncludeFields = true
+            });
             instance.ActionType = entry.AuditType;
             if (account != null)
                 instance.Username = account.Username;
