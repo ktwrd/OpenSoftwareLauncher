@@ -14,6 +14,28 @@ namespace OSLCommon.Logging
         public string DatabaseName = "opensoftwarelauncher";
         public string CollectionName = "auditLog";
 
+        public static readonly Dictionary<AuditType, Type> AuditTypeMap = new Dictionary<AuditType, Type>
+        {
+            {AuditType.None,                    typeof(object) },
+            {AuditType.AccountModify,           typeof(AccountModifyEntryData) },
+            {AuditType.AccountDisable,          typeof(AccountDisableEntryData) },
+            {AuditType.AccountPermissionGrant,  typeof(AccountPermissionGrantEntryData) },
+            {AuditType.AccountPermissionRevoke, typeof(AccountPermissionRevokeEntryData) },
+            {AuditType.LicenseRedeem,           typeof(LicenseRedeemEntryData) },
+            {AuditType.AccountLicenseUpdate,    typeof(AccountLicenseUpdateEntryData) },
+            {AuditType.TokenDelete,             typeof(TokenDeleteEntryData) },
+            {AuditType.TokenCreate,             typeof(TokenCreateEntryData) },
+            {AuditType.BulkTokenDelete,         typeof(BulkTokenDeleteEntryData) },
+            {AuditType.AnnouncementModify,      typeof(AnnouncementModifyEntryData) },
+            {AuditType.AnnouncementDelete,      typeof(AnnouncementDeleteEntryData) },
+            {AuditType.AnnouncementCreate,      typeof(AnnouncementCreateEntryData) },
+            {AuditType.AnnouncementStateToggle, typeof(AnnouncementStateToggleEntryData) },
+            {AuditType.PublishRelease,          typeof(PublishReleaseEntryData) },
+            {AuditType.LicenseCreate,           typeof(LicenseCreateEntryData) },
+            {AuditType.LicenseDisable,          typeof(LicenseDisableEntryData) },
+            {AuditType.LicenseEnable,           typeof(LicenseEnableEntryData) }
+        };
+
         public AuditLogManager(MongoClient client)
         {
             mongoClient = client;
