@@ -52,6 +52,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             }
             for (int i = 0; i < checkedListBoxTypes.Items.Count; i++)
                 checkedListBoxTypes.SetItemCheckState(i, CheckState.Checked);
+
+            PullData();
         }
 
         public void RedrawElements()
