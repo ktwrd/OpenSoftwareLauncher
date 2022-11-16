@@ -1,4 +1,5 @@
 ﻿using kate.shared.Helpers;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,10 @@ namespace OSLCommon.Logging
         {
             this.manager = manager;
         }
-
+        [JsonIgnore]
+        [XmlIgnore]
+        [SoapIgnore]
+        public ObjectId _id { get; set; }
         public string UID { get; set; }
         public string Username { get; set; }
         public long Timestamp { get; set; }
