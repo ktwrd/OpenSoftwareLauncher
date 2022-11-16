@@ -31,12 +31,12 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LogForm));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.toolStripButtonScrollToBottom = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonSave = new System.Windows.Forms.ToolStripButton();
-            this.timerPendingContent = new System.Windows.Forms.Timer(this.components);
             this.toolStripLabelLineCount = new System.Windows.Forms.ToolStripLabel();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.scrollingRichTextBox1 = new OpenSoftwareLauncher.DesktopWinForms.CustomComponents.ScrollingRichTextBox();
+            this.timerPendingContent = new System.Windows.Forms.Timer(this.components);
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -55,20 +55,6 @@
             this.toolStrip1.Size = new System.Drawing.Size(677, 25);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
-            // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.ColumnCount = 1;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.scrollingRichTextBox1, 0, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 25);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 443F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(677, 443);
-            this.tableLayoutPanel1.TabIndex = 2;
             // 
             // toolStripButtonScrollToBottom
             // 
@@ -90,16 +76,26 @@
             this.toolStripButtonSave.Text = "Save";
             this.toolStripButtonSave.Click += new System.EventHandler(this.toolStripButtonSave_Click);
             // 
-            // timerPendingContent
-            // 
-            this.timerPendingContent.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
             // toolStripLabelLineCount
             // 
             this.toolStripLabelLineCount.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.toolStripLabelLineCount.Name = "toolStripLabelLineCount";
             this.toolStripLabelLineCount.Size = new System.Drawing.Size(97, 22);
             this.toolStripLabelLineCount.Text = "LineCount_Plural";
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 1;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Controls.Add(this.scrollingRichTextBox1, 0, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 25);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 1;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 443F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(677, 443);
+            this.tableLayoutPanel1.TabIndex = 2;
             // 
             // scrollingRichTextBox1
             // 
@@ -114,6 +110,11 @@
             this.scrollingRichTextBox1.Size = new System.Drawing.Size(671, 437);
             this.scrollingRichTextBox1.TabIndex = 0;
             this.scrollingRichTextBox1.Text = "";
+            // 
+            // timerPendingContent
+            // 
+            this.timerPendingContent.Enabled = true;
+            this.timerPendingContent.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // LogForm
             // 
