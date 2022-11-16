@@ -24,6 +24,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 
         public void Locale()
         {
+            long start = OSLHelper.GetMicroseconds();
             toolStripButtonRefresh.Text = LocaleManager.Get("Refresh");
             toolStripDropDownButtonFilter.Text = LocaleManager.Get("Filter");
             foreach (ColumnHeader item in listView1.Columns)
@@ -37,19 +38,9 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         private void AuditLogForm_Shown(object sender, EventArgs e)
         {
             Locale();
-        }
-
-        public void RedrawElements()
-        {
-            Trace.WriteLine($"[DEBUG] [AuditLogForm->RedrawElements]");
-            RedrawCheckboxTypes();
-        }
-        public void RedrawCheckboxTypes()
-        {
             var items = GeneralHelper.GetEnumList<AuditType>();
             var itemBlacklist = new AuditType[]
             {
-                AuditType.None,
                 AuditType.Any
             };
             checkedListBoxTypes.Items.Clear();
@@ -60,11 +51,14 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 checkedListBoxTypes.Items.Add(entry);
             }
             for (int i = 0; i < checkedListBoxTypes.Items.Count; i++)
-            {
-                AuditType checkboxItem = (AuditType)checkedListBoxTypes.Items[i];
-                checkedListBoxTypes.SetItemChecked(i, !TypeBlacklist.Contains(checkboxItem));
-            }
-            Trace.WriteLine($"[INFO] [AuditLogForm->RedrawCheckboxTypes] CheckedCount: {checkedListBoxTypes.CheckedItems.Count}");
+                checkedListBoxTypes.SetItemCheckState(i, CheckState.Checked);
+        }
+
+        public void RedrawElements()
+        {
+            Trace.WriteLine($"[DEBUG] [AuditLogForm->RedrawElements]");
+            FilterItems();
+            RedrawListView();
         }
         public void RedrawListView()
         {
@@ -78,6 +72,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                     DateTimeOffset.FromUnixTimeMilliseconds(item.Timestamp).LocalDateTime.ToString()
                 });
                 listViewItem.Name = item.UID;
+                listView1.Items.Add(listViewItem);
             }
         }
 
@@ -136,56 +131,53 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             }
         }
 
-        public void UpdateFilter()
+        public void FilterItems()
         {
-            var sorted = new List<AuditLogEntry>();
+            List<AuditType> itemBlacklist = new List<AuditType>();
+            for (int i = 0; i < checkedListBoxTypes.Items.Count; i++)
+            {
+                if (!checkedListBoxTypes.GetItemChecked(i))
+                    itemBlacklist.Add((AuditType)checkedListBoxTypes.Items[i]);
+            }
+
+            var filtered = new List<AuditLogEntry>();
+            var checkedItems = new List<AuditType>(checkedListBoxTypes.CheckedItems.Cast<AuditType>()).ToArray();
+            var uncheckedItems = new List<AuditType>(checkedListBoxTypes.Items.Cast<AuditType>())
+                .Where(v => !checkedItems.Contains(v))
+                .ToArray();
             foreach (var item in EntryList)
             {
                 int min = 0;
-                int curr = 0;
+                int max = 0;
                 if (UsernameFilter.Length > 0)
                 {
                     min++;
-                    if (UsernameFilter.Contains(item.Username))
-                        curr++;
+                    if (!UsernameFilter.Contains(item.Username))
+                        max++;
                 }
-                if (TypeBlacklist.Length > 0)
+                if (uncheckedItems.Length > 0)
                 {
                     min++;
-                    if (TypeBlacklist.Contains(item.ActionType))
-                        curr++;
+                    if (!checkedItems.Contains(item.ActionType))
+                        max++;
                 }
 
-                if (min == curr)
-                    sorted.Add(item);
+                if (min == max)
+                    filtered.Add(item);
             }
-            EntryListSorted = sorted.ToArray();
-            Trace.WriteLine($"[AuditLogForm->UpdateFilter] Diff Count: {EntryListSorted.Length - EntryList.Length}");
-            RedrawListView();
-        }
-
-        public void UpdateTypeBlacklist()
-        {
-            var blacklist = new List<AuditType>();
-            for (int i = 0; i < checkedListBoxTypes.Items.Count; i++)
-            {
-                var item = (AuditType)checkedListBoxTypes.Items[i];
-                if (checkedListBoxTypes.GetItemCheckState(i) == CheckState.Unchecked)
-                    blacklist.Add(item);
-            }
-            TypeBlacklist = blacklist.ToArray();
-            Trace.WriteLine($"[AuditLogForm->UpdateTypeBlacklist] Diff Count: {TypeBlacklist.Length - checkedListBoxTypes.Items.Count}");
-            UpdateFilter();
+            EntryListSorted = filtered
+                .OrderByDescending(v => v.Timestamp)
+                .ToArray();
+            Trace.WriteLine($"[AuditLogForm->FilterItems] Diff Count: {EntryListSorted.Length - EntryList.Length}, Sorted Count: {EntryListSorted.Length}");
         }
 
         public AuditLogEntry[] EntryList = Array.Empty<AuditLogEntry>();
         public AuditLogEntry[] EntryListSorted = Array.Empty<AuditLogEntry>();
         public string[] UsernameFilter = Array.Empty<string>();
-        public AuditType[] TypeBlacklist = Array.Empty<AuditType>();
 
         private void checkedListBoxTypes_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            UpdateTypeBlacklist();
+            FilterItems();
         }
 
         private void toolStripButtonRefresh_Click(object sender, EventArgs e)
