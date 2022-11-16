@@ -64,7 +64,7 @@
             this.toolStripDropDownButtonFilter});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1098, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(1202, 25);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -106,7 +106,7 @@
             this.listView1.Location = new System.Drawing.Point(0, 0);
             this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(454, 541);
+            this.listView1.Size = new System.Drawing.Size(527, 541);
             this.listView1.TabIndex = 1;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -115,12 +115,12 @@
             // columnHeaderType
             // 
             this.columnHeaderType.Text = "Type";
-            this.columnHeaderType.Width = 100;
+            this.columnHeaderType.Width = 130;
             // 
             // columnHeaderUsername
             // 
             this.columnHeaderUsername.Text = "Username";
-            this.columnHeaderUsername.Width = 160;
+            this.columnHeaderUsername.Width = 180;
             // 
             // columnHeaderTimestamp
             // 
@@ -129,11 +129,24 @@
             // 
             // propertyGrid1
             // 
+            this.propertyGrid1.BackColor = System.Drawing.Color.White;
+            this.propertyGrid1.CategoryForeColor = System.Drawing.Color.Black;
+            this.propertyGrid1.CategorySplitterColor = System.Drawing.Color.White;
+            this.propertyGrid1.CommandsBorderColor = System.Drawing.Color.Gray;
+            this.propertyGrid1.CommandsForeColor = System.Drawing.Color.Black;
             this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.propertyGrid1.HelpBackColor = System.Drawing.Color.White;
+            this.propertyGrid1.HelpBorderColor = System.Drawing.Color.Gray;
+            this.propertyGrid1.HelpForeColor = System.Drawing.Color.Black;
+            this.propertyGrid1.LineColor = System.Drawing.Color.White;
             this.propertyGrid1.Location = new System.Drawing.Point(0, 0);
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(447, 541);
+            this.propertyGrid1.SelectedItemWithFocusForeColor = System.Drawing.Color.White;
+            this.propertyGrid1.Size = new System.Drawing.Size(478, 541);
             this.propertyGrid1.TabIndex = 2;
+            this.propertyGrid1.ViewBackColor = System.Drawing.Color.White;
+            this.propertyGrid1.ViewBorderColor = System.Drawing.Color.Gray;
+            this.propertyGrid1.ViewForeColor = System.Drawing.Color.Black;
             // 
             // checkedListBoxTypes
             // 
@@ -159,7 +172,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(1098, 541);
+            this.splitContainer1.Size = new System.Drawing.Size(1202, 541);
             this.splitContainer1.SplitterDistance = 189;
             this.splitContainer1.TabIndex = 5;
             // 
@@ -197,15 +210,15 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.propertyGrid1);
-            this.splitContainer2.Size = new System.Drawing.Size(905, 541);
-            this.splitContainer2.SplitterDistance = 454;
+            this.splitContainer2.Size = new System.Drawing.Size(1009, 541);
+            this.splitContainer2.SplitterDistance = 527;
             this.splitContainer2.TabIndex = 6;
             // 
             // AuditLogForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1098, 566);
+            this.ClientSize = new System.Drawing.Size(1202, 566);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.toolStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
