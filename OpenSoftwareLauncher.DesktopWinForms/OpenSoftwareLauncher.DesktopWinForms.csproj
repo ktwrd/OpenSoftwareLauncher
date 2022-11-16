@@ -142,6 +142,12 @@
     <Compile Include="ServerConfigForm.Designer.cs">
       <DependentUpon>ServerConfigForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="TimeRangeModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TimeRangeModal.Designer.cs">
+      <DependentUpon>TimeRangeModal.cs</DependentUpon>
+    </Compile>
     <Compile Include="User Management\PermissionEditForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -229,6 +235,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ServerConfigForm.resx">
       <DependentUpon>ServerConfigForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TimeRangeModal.resx">
+      <DependentUpon>TimeRangeModal.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="User Management\PermissionEditForm.resx">
       <DependentUpon>PermissionEditForm.cs</DependentUpon>
