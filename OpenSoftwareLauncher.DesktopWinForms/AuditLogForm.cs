@@ -24,19 +24,25 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 
         public void Locale()
         {
-            long start = OSLHelper.GetMicroseconds();
             toolStripButtonRefresh.Text = LocaleManager.Get("Refresh");
+            toolStripButtonRefresh.ToolTipText = toolStripButtonRefresh.Text;
+            
             toolStripDropDownButtonFilter.Text = LocaleManager.Get("Filter");
+            toolStripDropDownButtonFilter.ToolTipText = toolStripDropDownButtonFilter.Text;
+
+            timeRangeToolStripMenuItem.Text = LocaleManager.Get("TimeRange");
+            timeRangeToolStripMenuItem.ToolTipText = timeRangeToolStripMenuItem.Text;
+
             foreach (ColumnHeader item in listView1.Columns)
             {
                 item.Text = LocaleManager.Get(item.Text);
             }
             Text = LocaleManager.Get("Title_AuditLog");
-            Trace.WriteLine($"[AuditLogForm->Locale] Took {OSLHelper.GetMicroseconds() - start}µs");
         }
 
         private void AuditLogForm_Shown(object sender, EventArgs e)
         {
+            long start = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             Locale();
             var items = GeneralHelper.GetEnumList<AuditType>();
             var itemBlacklist = new AuditType[]
@@ -54,19 +60,25 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 checkedListBoxTypes.SetItemCheckState(i, CheckState.Checked);
 
             PullData();
+            Trace.WriteLine($"[AuditLogForm->Shown] Took {DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - start}ms");
         }
 
         public void RedrawElements()
         {
-            Trace.WriteLine($"[DEBUG] [AuditLogForm->RedrawElements]");
+            long start = OSLHelper.GetMicroseconds();
+            Trace.WriteLine($"[AuditLogForm->RedrawElements] Start");
             FilterItems();
             RedrawListView();
+            Trace.WriteLine($"[AuditLogForm->RedrawElements] Took {OSLHelper.GetMicroseconds() - start}µs");
         }
         public void RedrawListView()
         {
             listView1.Items.Clear();
             foreach (var item in EntryListSorted)
             {
+                if (TimestampMin > long.MinValue && TimestampMax < long.MaxValue)
+                    if (item.Timestamp < TimestampMin || item.Timestamp > TimestampMax)
+                        continue;
                 var listViewItem = new ListViewItem(new string[]
                 {
                     item.ActionType.ToString(),
@@ -135,6 +147,11 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 
         public void FilterItems()
         {
+            if (EntryList.Length < 1)
+            {
+                EntryListSorted = Array.Empty<AuditLogEntry>();
+                return;
+            }
             List<AuditType> itemBlacklist = new List<AuditType>();
             for (int i = 0; i < checkedListBoxTypes.Items.Count; i++)
             {
@@ -143,7 +160,13 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             }
 
             var filtered = new List<AuditLogEntry>();
-            var checkedItems = new List<AuditType>(checkedListBoxTypes.CheckedItems.Cast<AuditType>()).ToArray();
+            var checkedItemList = new List<AuditType>();
+            for (int i = 0; i < checkedListBoxTypes.Items.Count; i++)
+            {
+                if (checkedListBoxTypes.GetItemChecked(i))
+                    checkedItemList.Add((AuditType)checkedListBoxTypes.Items[i]);
+            }
+            var checkedItems = checkedItemList.ToArray();
             var uncheckedItems = new List<AuditType>(checkedListBoxTypes.Items.Cast<AuditType>())
                 .Where(v => !checkedItems.Contains(v))
                 .ToArray();
@@ -160,7 +183,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 if (uncheckedItems.Length > 0)
                 {
                     min++;
-                    if (!checkedItems.Contains(item.ActionType))
+                    if (checkedItems.Contains(item.ActionType))
                         max++;
                 }
 
@@ -176,11 +199,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         public AuditLogEntry[] EntryList = Array.Empty<AuditLogEntry>();
         public AuditLogEntry[] EntryListSorted = Array.Empty<AuditLogEntry>();
         public string[] UsernameFilter = Array.Empty<string>();
-
-        private void checkedListBoxTypes_ItemCheck(object sender, ItemCheckEventArgs e)
-        {
-            FilterItems();
-        }
+        public long TimestampMin = long.MinValue;
+        public long TimestampMax = long.MaxValue;
 
         private void toolStripButtonRefresh_Click(object sender, EventArgs e)
         {
@@ -217,6 +237,35 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 new ReadOnlyAttribute(true)
             });
             propertyGrid1.SelectedObject = targetItem;
+        }
+
+        private void checkedListBoxTypes_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            FilterItems();
+            RedrawListView();
+        }
+
+        private void timeRangeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = new TimeRangeModal();
+            form.MdiParent = MdiParent;
+            if (TimestampMin > long.MinValue)
+                form.Minimum = TimestampMin;
+            if (TimestampMax < long.MaxValue)
+                form.Maximum = TimestampMax;
+            form.Complete += (min, max) =>
+            {
+                TimestampMin = min;
+                TimestampMax = max;
+                FilterItems();
+                RedrawListView();
+            };
+            form.FormClosing += (o, f) =>
+            {
+                Enabled = true;
+            };
+            Enabled = false;
+            form.Show();
         }
     }
 }

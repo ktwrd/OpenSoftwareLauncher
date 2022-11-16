@@ -33,6 +33,7 @@
             this.toolStripButtonRefresh = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripDropDownButtonFilter = new System.Windows.Forms.ToolStripDropDownButton();
+            this.timeRangeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listView1 = new System.Windows.Forms.ListView();
             this.columnHeaderType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderUsername = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -86,12 +87,21 @@
             // toolStripDropDownButtonFilter
             // 
             this.toolStripDropDownButtonFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripDropDownButtonFilter.Enabled = false;
+            this.toolStripDropDownButtonFilter.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.timeRangeToolStripMenuItem});
             this.toolStripDropDownButtonFilter.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.funnel;
             this.toolStripDropDownButtonFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButtonFilter.Name = "toolStripDropDownButtonFilter";
             this.toolStripDropDownButtonFilter.Size = new System.Drawing.Size(29, 22);
             this.toolStripDropDownButtonFilter.Text = "Filter";
+            // 
+            // timeRangeToolStripMenuItem
+            // 
+            this.timeRangeToolStripMenuItem.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.clock_select;
+            this.timeRangeToolStripMenuItem.Name = "timeRangeToolStripMenuItem";
+            this.timeRangeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.timeRangeToolStripMenuItem.Text = "TimeRange";
+            this.timeRangeToolStripMenuItem.Click += new System.EventHandler(this.timeRangeToolStripMenuItem_Click);
             // 
             // listView1
             // 
@@ -261,5 +271,6 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.ToolStripMenuItem timeRangeToolStripMenuItem;
     }
 }
