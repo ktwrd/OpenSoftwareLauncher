@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text.RegularExpressions;
 using static OSLCommon.Authorization.AccountManager;
+using OSLCommon.Logging;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
 {
@@ -29,6 +30,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                 Response.StatusCode = authRes?.Data.Code ?? 0;
                 return Json(authRes, MainClass.serializerOptions);
             }
+            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token);
             var usernameDict = new Dictionary<string, int>();
             foreach (var user in MainClass.contentManager.AccountManager.GetAllAccounts())
             {
@@ -40,6 +42,11 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                     usernameDict.Add(user.Username, 0);
                 usernameDict[user.Username] += value;
             }
+
+            MainClass.contentManager.AuditLogManager.Create(new BulkTokenDeleteEntryData()
+            {
+                Dict = usernameDict
+            }, tokenAccount).Wait();
 
             return Json(new ObjectResponse<Dictionary<string, int>>()
             {
@@ -59,6 +66,8 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                 Response.StatusCode = authRes?.Data.Code ?? 0;
                 return Json(authRes, MainClass.serializerOptions);
             }
+
+            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token);
 
             OSLCommon.Authorization.Account[] accountArray;
 
@@ -110,6 +119,10 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
             {
                 usernameDict.Add(a.Username, a.RemoveTokens());
             }
+            MainClass.contentManager.AuditLogManager.Create(new BulkTokenDeleteEntryData()
+            {
+                Dict = usernameDict
+            }, tokenAccount).Wait();
 
             return Json(new ObjectResponse<Dictionary<string, int>>()
             {

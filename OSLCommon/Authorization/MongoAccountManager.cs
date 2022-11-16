@@ -1,6 +1,7 @@
 ﻿using kate.shared.Helpers;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using OSLCommon.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,12 +14,14 @@ namespace OSLCommon.Authorization
     public class MongoAccountManager : AccountManager
     {
         public MongoClient mongoClient;
+        public AuditLogManager auditLogManager;
         public string DatabaseName = "opensoftwarelauncher";
         public string CollectionName = "accounts";
-        public MongoAccountManager(MongoClient client)
+        public MongoAccountManager(MongoClient client, AuditLogManager auditLogManager)
             : base()
         {
             mongoClient = client;
+            this.auditLogManager = auditLogManager;
             AccountUpdated += (eventAccount) =>
             {
                 var collection = GetAccountCollection<Account>();
@@ -43,6 +46,19 @@ namespace OSLCommon.Authorization
                     account.Merge(eventAccount);
                 }
             };
+        }
+
+        public JsonSerializerOptions serializerOptions = new JsonSerializerOptions
+        {
+            IgnoreReadOnlyFields = true,
+            IgnoreReadOnlyProperties = true,
+            IncludeFields = true
+        };
+
+        public override GrantTokenResponse CreateToken(Account account, string userAgent = "", string host = "")
+        {
+            var b = base.CreateToken(account, userAgent, host);
+            return b;
         }
 
         #region Account Boilerplate
@@ -118,14 +134,16 @@ namespace OSLCommon.Authorization
             var filter = Builders<Account>.Filter.Where(v => v.Username.Length > 1);
 
             var accountList = collection.Find(filter).ToList();
-
-            /*var response =
-                          from item   in accountList.AsQueryable()
-                          from tk     in    item.Tokens 
-                                      where tk.Token == token
-                                      &&    tk.Allow
-                          select item.Username;*/
-            var response = accountList.Where(v => v.Tokens.Where(t => t != null && t.Token != null && t.Token == token && t.Allow).Count() > 0).ToList();
+            var response = accountList.Where((v) =>
+            {
+                return v.Tokens.Where((t) =>
+                {
+                    return t != null
+                        && t.Token != null
+                        && t.Token == token
+                        && t.Allow;
+                }).Count() > 0;
+            });
 
             Account result = response.Count() == 1 ? GetAccountByUsername(response.First().Username, false) : null;
 

@@ -11,6 +11,7 @@ namespace OSLCommon.Licensing
         [JsonIgnore]
         [XmlIgnore]
         [SoapIgnore]
+        [Browsable(false)]
         public ObjectId _id { get; set; }
         internal AccountLicenseManager manager;
         internal bool eventHook = false;

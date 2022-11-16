@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OSLCommon;
 using OSLCommon.Licensing;
+using OSLCommon.Logging;
 
 namespace OpenSoftwareLauncher.Server.Controllers
 {
@@ -38,6 +39,11 @@ namespace OpenSoftwareLauncher.Server.Controllers
                 Products = data.ProductsApplied,
                 Permissions = data.PermissionsApplied
             };
+
+            if (responseCode == GrantLicenseKeyResponseCode.Granted)
+            {
+                MainClass.contentManager.AuditLogManager.Create(new LicenseRedeemEntryData(data), account).Wait();
+            }
 
             return Json(new ObjectResponse<GrantLicenseKeyResponse>
             {

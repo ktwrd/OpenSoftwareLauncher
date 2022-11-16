@@ -10,6 +10,9 @@ using Licensing = OSLCommon.Licensing;
 using OSLCommon.Licensing;
 using System.Linq;
 using static OSLCommon.Licensing.AccountLicenseManager;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using OSLCommon.Logging;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Admin
 {
@@ -77,6 +80,18 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 decodedBody.Note,
                 decodedBody.ExpiryTimestamp,
                 decodedBody.GroupLabel).Result;
+
+            var taskList = new List<Task>();
+            foreach (var item in res.Keys)
+            {
+                taskList.Add(new Task(delegate
+                {
+                    MainClass.contentManager.AuditLogManager.Create(new LicenseCreateEntryData(item), account).Wait();
+                }));
+            }
+            foreach (var i in taskList)
+                i.Start();
+            Task.WhenAll(taskList);
 
             return Json(new ObjectResponse<CreateLicenseKeyResponse>
             {
@@ -149,6 +164,12 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
 
             LicenseKeyActionResult response = MainClass.contentManager.AccountLicenseManager.DisableLicenseKey(keyId).Result;
 
+            var account = MainClass.contentManager.AccountManager.GetAccount(token);
+            if (response == LicenseKeyActionResult.Success)
+            {
+                MainClass.contentManager.AuditLogManager.Create(new LicenseDisableEntryData(MainClass.contentManager.AccountLicenseManager.GetLicenseKeyById(keyId).Result), account).Wait();
+            }
+
             return Json(new ObjectResponse<LicenseKeyActionResult>
             {
                 Success = true,
@@ -170,6 +191,11 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
 
             LicenseKeyActionResult response = MainClass.contentManager.AccountLicenseManager.EnableLicenseKey(keyId).Result;
 
+            var account = MainClass.contentManager.AccountManager.GetAccount(token);
+            if (response == LicenseKeyActionResult.Success)
+            {
+                MainClass.contentManager.AuditLogManager.Create(new LicenseEnableEntryData(MainClass.contentManager.AccountLicenseManager.GetLicenseKeyById(keyId).Result), account).Wait();
+            }
             return Json(new ObjectResponse<LicenseKeyActionResult>
             {
                 Success = true,

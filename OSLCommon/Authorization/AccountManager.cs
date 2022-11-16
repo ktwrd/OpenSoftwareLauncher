@@ -1,4 +1,5 @@
 ﻿using kate.shared.Helpers;
+using Newtonsoft.Json.Linq;
 using OSLCommon.AuthProviders;
 using System;
 using System.Collections.Generic;
@@ -203,7 +204,7 @@ namespace OSLCommon.Authorization
         /// </summary>
         /// <param name="account">Target account</param>
         /// <returns></returns>
-        public GrantTokenResponse CreateToken(Account account, string userAgent = "", string host = "")
+        public virtual GrantTokenResponse CreateToken(Account account, string userAgent = "", string host = "")
         {
             bool accountFound = false;
             var targetAccount = GetAccountByUsername(account.Username);
@@ -220,19 +221,13 @@ namespace OSLCommon.Authorization
                     {
                         if (!IsPendingWrite)
                             OnPendingWrite();
+                        token.UserAgent = userAgent;
+                        token.Host = host;
                         if (account.Groups == null)
                             account.Groups = Array.Empty<string>();
                         if (account.Permissions == null)
                             account.Permissions = Array.Empty<AccountPermission>();
                         TokenUsed(success.Token);
-                        foreach (var thing in account.Tokens)
-                        {
-                            if (thing.Token == success.Token)
-                            {
-                                thing.UserAgent = userAgent;
-                                thing.Host = host;
-                            }
-                        }
                         return new GrantTokenResponse(ServerStringResponse.AccountTokenGranted, true, success, account.Groups.ToArray(), account.Permissions.ToArray());
                     }
                 }
