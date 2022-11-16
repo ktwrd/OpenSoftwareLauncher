@@ -1,5 +1,6 @@
 ﻿using kate.shared.Helpers;
 using Nini.Config;
+using OSLCommon;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -75,7 +76,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 
         public static void Save()
         {
-            var startTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            var start = OSLHelper.GetMicroseconds();
             if (!File.Exists(ConfigLocation))
                 File.WriteAllText(ConfigLocation, "");
             MergeDefaultData();
@@ -83,7 +84,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             PendingWriteChanged?.Invoke(false, PendingWrite);
             PendingWrite = false;
             SaveEvent?.Invoke();
-            Trace.WriteLine($"[UserConfig] Saved {DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - startTimestamp}");
+            Trace.WriteLine($"[UserConfig] Saved {OSLHelper.GetMicroseconds() - start}µs");
         }
         private static void MergeDefaultData()
         {
