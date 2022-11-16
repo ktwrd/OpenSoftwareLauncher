@@ -310,6 +310,9 @@ namespace OpenSoftwareLauncher.DesktopWinForms.Properties {
             }
         }
 
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap funnel {
             get {
                 object obj = ResourceManager.GetObject("funnel", resourceCulture);
