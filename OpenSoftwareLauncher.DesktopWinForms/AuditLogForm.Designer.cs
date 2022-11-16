@@ -86,6 +86,7 @@
             // toolStripDropDownButtonFilter
             // 
             this.toolStripDropDownButtonFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripDropDownButtonFilter.Enabled = false;
             this.toolStripDropDownButtonFilter.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.funnel;
             this.toolStripDropDownButtonFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButtonFilter.Name = "toolStripDropDownButtonFilter";
