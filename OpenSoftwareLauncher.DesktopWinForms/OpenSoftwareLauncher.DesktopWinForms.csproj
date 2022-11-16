@@ -280,6 +280,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <None Include="Resources\funnel.png" />
     <None Include="Resources\arrow-270.png" />
     <None Include="Resources\lock--cross.png" />
     <None Include="Resources\lock--tick.png" />
