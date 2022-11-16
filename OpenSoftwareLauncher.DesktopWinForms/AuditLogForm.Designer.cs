@@ -38,7 +38,10 @@
             this.columnHeaderUsername = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderTimestamp = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
+            this.checkedListBoxTypes = new System.Windows.Forms.CheckedListBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.toolStrip1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -49,7 +52,7 @@
             this.toolStripDropDownButtonFilter});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(872, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(1027, 25);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -61,6 +64,7 @@
             this.toolStripButtonRefresh.Name = "toolStripButtonRefresh";
             this.toolStripButtonRefresh.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonRefresh.Text = "Refresh";
+            this.toolStripButtonRefresh.Click += new System.EventHandler(this.toolStripButtonRefresh_Click);
             // 
             // toolStripSeparator1
             // 
@@ -83,9 +87,9 @@
             this.columnHeaderUsername,
             this.columnHeaderTimestamp});
             this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(12, 28);
+            this.listView1.Location = new System.Drawing.Point(172, 28);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(425, 526);
+            this.listView1.Size = new System.Drawing.Size(386, 526);
             this.listView1.TabIndex = 1;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -102,29 +106,53 @@
             // columnHeaderTimestamp
             // 
             this.columnHeaderTimestamp.Text = "Timestamp";
-            this.columnHeaderTimestamp.Width = 130;
+            this.columnHeaderTimestamp.Width = 180;
             // 
             // propertyGrid1
             // 
-            this.propertyGrid1.Location = new System.Drawing.Point(443, 28);
+            this.propertyGrid1.Location = new System.Drawing.Point(564, 28);
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(417, 526);
+            this.propertyGrid1.Size = new System.Drawing.Size(451, 526);
             this.propertyGrid1.TabIndex = 2;
+            // 
+            // checkedListBoxTypes
+            // 
+            this.checkedListBoxTypes.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.checkedListBoxTypes.FormattingEnabled = true;
+            this.checkedListBoxTypes.Location = new System.Drawing.Point(3, 16);
+            this.checkedListBoxTypes.Name = "checkedListBoxTypes";
+            this.checkedListBoxTypes.Size = new System.Drawing.Size(148, 116);
+            this.checkedListBoxTypes.TabIndex = 3;
+            this.checkedListBoxTypes.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedListBoxTypes_ItemCheck);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.checkedListBoxTypes);
+            this.groupBox1.Location = new System.Drawing.Point(12, 28);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(154, 135);
+            this.groupBox1.TabIndex = 4;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "TypeFilter";
             // 
             // AuditLogForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(872, 566);
+            this.ClientSize = new System.Drawing.Size(1027, 566);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.propertyGrid1);
             this.Controls.Add(this.listView1);
             this.Controls.Add(this.toolStrip1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
             this.Name = "AuditLogForm";
             this.Text = "Title_AuditLog";
             this.Shown += new System.EventHandler(this.AuditLogForm_Shown);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -141,5 +169,7 @@
         private System.Windows.Forms.PropertyGrid propertyGrid1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButtonFilter;
+        private System.Windows.Forms.CheckedListBox checkedListBoxTypes;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }
