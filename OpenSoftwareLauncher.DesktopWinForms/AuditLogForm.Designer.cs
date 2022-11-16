@@ -43,7 +43,6 @@
             this.checkedListBoxTypes = new System.Windows.Forms.CheckedListBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.groupByAccountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
@@ -52,7 +51,6 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
@@ -173,11 +171,12 @@
             // 
             // checkedListBoxTypes
             // 
+            this.checkedListBoxTypes.Dock = System.Windows.Forms.DockStyle.Fill;
             this.checkedListBoxTypes.FormattingEnabled = true;
-            this.checkedListBoxTypes.Location = new System.Drawing.Point(3, 3);
+            this.checkedListBoxTypes.Location = new System.Drawing.Point(0, 0);
             this.checkedListBoxTypes.MinimumSize = new System.Drawing.Size(176, 182);
             this.checkedListBoxTypes.Name = "checkedListBoxTypes";
-            this.checkedListBoxTypes.Size = new System.Drawing.Size(176, 169);
+            this.checkedListBoxTypes.Size = new System.Drawing.Size(189, 541);
             this.checkedListBoxTypes.TabIndex = 3;
             this.checkedListBoxTypes.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedListBoxTypes_ItemCheck);
             // 
@@ -201,23 +200,12 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.flowLayoutPanel1);
+            this.panel1.Controls.Add(this.checkedListBoxTypes);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(189, 541);
             this.panel1.TabIndex = 0;
-            // 
-            // flowLayoutPanel1
-            // 
-            this.flowLayoutPanel1.Controls.Add(this.checkedListBoxTypes);
-            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.flowLayoutPanel1.MinimumSize = new System.Drawing.Size(189, 541);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(189, 541);
-            this.flowLayoutPanel1.TabIndex = 5;
             // 
             // splitContainer2
             // 
@@ -265,7 +253,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
-            this.flowLayoutPanel1.ResumeLayout(false);
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
@@ -290,7 +277,6 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.ToolStripMenuItem timeRangeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem groupByActionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem groupByAccountToolStripMenuItem;
