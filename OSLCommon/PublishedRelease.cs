@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using MongoDB.Bson;
 using System.Text.Json.Serialization;
 using System.Xml.Serialization;
+using System.ComponentModel;
 
 namespace OSLCommon
 {
@@ -14,6 +15,7 @@ namespace OSLCommon
         [JsonIgnore]
         [XmlIgnore]
         [SoapIgnore]
+        [Browsable(false)]
         public ObjectId _id { get; set; }
         public string UID { get; set; }
         public string CommitHash { get; set; }
@@ -50,6 +52,7 @@ namespace OSLCommon
         [JsonIgnore]
         [XmlIgnore]
         [SoapIgnore]
+        [Browsable(false)]
         public ObjectId _id { get; set; }
         public string UID { get; set; }
         public string Location { get; set; }

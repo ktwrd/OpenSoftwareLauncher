@@ -4,6 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -27,11 +28,14 @@ namespace OSLCommon
     {
         [BsonIgnore]
         [JsonIgnore]
+        [Browsable(false)]
         internal SystemAnnouncement manager;
         [BsonIgnore]
         [JsonIgnore]
+        [Browsable(false)]
         internal bool hooked = false;
         [JsonIgnore]
+        [Browsable(false)]
         public ObjectId _id { get; set; }
         public string Message
         {

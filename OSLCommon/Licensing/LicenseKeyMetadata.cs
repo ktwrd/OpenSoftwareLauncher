@@ -39,10 +39,12 @@ namespace OSLCommon.Licensing
         [XmlIgnore]
         [SoapIgnore]
         [BsonIgnore]
+        [Browsable(false)]
         internal bool eventHook = false;
         [JsonIgnore]
         [XmlIgnore]
         [SoapIgnore]
+        [Browsable(false)]
         public ObjectId _id { get; set; }
 
         [Category("Metadata"), Description("Unique Identifier of the License Key")]
