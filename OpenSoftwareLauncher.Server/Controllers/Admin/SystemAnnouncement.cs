@@ -143,7 +143,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
 
             var idList = attemptedDeserialized.Entries.ToList().Select(v => v.ID).ToList();
             var prevIdList = MainClass.contentManager.SystemAnnouncement.GetAll().Select(v => v.ID).ToArray();
-            foreach (var item in MainClass.contentManager.SystemAnnouncement.GetAll().Where(v => idList.Contains(v.ID)))
+            foreach (var item in attemptedDeserialized.Entries)
             {
                 if (!prevIdList.Contains(item.ID))
                 {
@@ -151,14 +151,21 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 }
                 else
                 {
-                    var current = attemptedDeserialized.Entries.Where(v => v.ID == item.ID).FirstOrDefault();
-                    var diff = (new JsonDiffPatch()).Diff(
-                        JsonSerializer.Serialize(item, MainClass.serializerOptions),
-                        JsonSerializer.Serialize(current, MainClass.serializerOptions));
-                    var count = JsonSerializer.Deserialize<Dictionary<object, object[]>>(diff, MainClass.serializerOptions);
-                    if (count.Count > 0)
+                    var current = MainClass.contentManager.SystemAnnouncement.GetAll().Where(v => v.ID == item.ID).FirstOrDefault();
+                    if (current != null)
                     {
-                        MainClass.contentManager.AuditLogManager.Create(new AnnouncementModifyEntryData(item, current), account).Wait();
+                        var diff = (new JsonDiffPatch()).Diff(
+                            JsonSerializer.Serialize(current, MainClass.serializerOptions),
+                            JsonSerializer.Serialize(item, MainClass.serializerOptions));
+                        if (diff != null)
+                        {
+                            diff = diff.ReplaceLineEndings("");
+                            var count = JsonSerializer.Deserialize<Dictionary<string, dynamic[]>>(diff, MainClass.serializerOptions);
+                            if (count.Count > 0)
+                            {
+                                MainClass.contentManager.AuditLogManager.Create(new AnnouncementModifyEntryData(current, item), account).Wait();
+                            }
+                        }
                     }
                 }
             }

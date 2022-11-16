@@ -15,7 +15,7 @@ namespace OSLCommon.Logging
         {
             AuditType = AuditType.AccountModify;
             Username = "";
-            Diff = new Dictionary<object, object[]>();
+            Diff = new object();
         }
         public AccountModifyEntryData(Account previous, Account current)
             : base()
@@ -33,12 +33,12 @@ namespace OSLCommon.Logging
             var currentObject = JsonSerializer.Serialize(current, options);
 
             var patch = new JsonDiffPatch();
-            Diff = JsonSerializer.Deserialize<Dictionary<object, object[]>>(patch.Diff(previousObject, currentObject), options);
+            Diff = (object)JsonSerializer.Deserialize<Dictionary<string, object[]>>(patch.Diff(previousObject, currentObject) ?? "{}", options);
         }
 
         public string Username { get; set; }
         [Category("Account Difference (array is before and after)")]
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        public Dictionary<object, object[]> Diff { get; set; }
+        public object Diff { get; set; }
     }
 }
