@@ -206,6 +206,10 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                     }
                 }
             }
+            if (targetItem == null)
+            {
+                targetItem = new object();
+            }
             TypeDescriptor.AddAttributes(targetItem, new Attribute[]
             {
                 new ReadOnlyAttribute(true)
