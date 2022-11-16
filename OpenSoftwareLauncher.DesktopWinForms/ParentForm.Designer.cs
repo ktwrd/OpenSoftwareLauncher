@@ -99,7 +99,7 @@
             // toolStripButtonAuditLog
             // 
             this.toolStripButtonAuditLog.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonAuditLog.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonAuditLog.Image")));
+            this.toolStripButtonAuditLog.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.blue_document_task;
             this.toolStripButtonAuditLog.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonAuditLog.Name = "toolStripButtonAuditLog";
             this.toolStripButtonAuditLog.Size = new System.Drawing.Size(30, 20);
