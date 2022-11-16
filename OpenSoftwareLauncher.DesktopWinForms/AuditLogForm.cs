@@ -22,6 +22,14 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             InitializeComponent();
         }
 
+        public AuditLogEntry[] EntryList = Array.Empty<AuditLogEntry>();
+        public AuditLogEntry[] EntryListSorted = Array.Empty<AuditLogEntry>();
+        public string[] UsernameFilter = Array.Empty<string>();
+        public long TimestampMin = long.MinValue;
+        public long TimestampMax = long.MaxValue;
+        public bool GroupByAction = false;
+        public bool GroupByAccount = false;
+
         public void Locale()
         {
             toolStripButtonRefresh.Text = LocaleManager.Get("Refresh");
@@ -32,6 +40,12 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 
             timeRangeToolStripMenuItem.Text = LocaleManager.Get("TimeRange");
             timeRangeToolStripMenuItem.ToolTipText = timeRangeToolStripMenuItem.Text;
+
+            groupByActionToolStripMenuItem.Text = LocaleManager.Get("GroupByAuditType");
+            groupByActionToolStripMenuItem.ToolTipText = groupByActionToolStripMenuItem.Text;
+
+            groupByAccountToolStripMenuItem.Text = LocaleManager.Get("GroupByAccount");
+            groupByAccountToolStripMenuItem.ToolTipText = groupByAccountToolStripMenuItem.Text;
 
             foreach (ColumnHeader item in listView1.Columns)
             {
@@ -73,6 +87,31 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         }
         public void RedrawListView()
         {
+            listView1.Groups.Clear();
+            if (GroupByAction)
+            {
+                var enumArray = GeneralHelper.GetEnumList<AuditType>();
+                enumArray.Remove(AuditType.Any);
+
+                foreach (var item in enumArray)
+                {
+                    var group = new ListViewGroup();
+                    group.Header = item.ToString();
+                    listView1.Groups.Add(group);
+                }
+            }
+            else if (GroupByAccount)
+            {
+                var accountList = EntryListSorted.Select(v => v.Username).Distinct().Where(v => v.Length > 0).ToList();
+                accountList.Add("<None>");
+                foreach (var item in accountList)
+                {
+                    var group = new ListViewGroup();
+                    group.Header = item;
+                    listView1.Groups.Add(group);
+                }
+            }
+
             listView1.Items.Clear();
             foreach (var item in EntryListSorted)
             {
@@ -86,6 +125,21 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                     DateTimeOffset.FromUnixTimeMilliseconds(item.Timestamp).LocalDateTime.ToString()
                 });
                 listViewItem.Name = item.UID;
+                if (GroupByAction)
+                {
+                    listViewItem.Group = new List<ListViewGroup>(listView1.Groups.Cast<ListViewGroup>())
+                        .Where(v => v.Header == item.ActionType.ToString())
+                        .FirstOrDefault();
+                }
+                else if (GroupByAccount)
+                {
+                    string targetUsername = item.Username;
+                    if (targetUsername.Length < 1)
+                        targetUsername = "<None>";
+                    listViewItem.Group = new List<ListViewGroup>(listView1.Groups.Cast<ListViewGroup>())
+                        .Where(v => v.Header == targetUsername)
+                        .FirstOrDefault();
+                }
                 listView1.Items.Add(listViewItem);
             }
         }
@@ -196,12 +250,6 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             Trace.WriteLine($"[AuditLogForm->FilterItems] Diff Count: {EntryListSorted.Length - EntryList.Length}, Sorted Count: {EntryListSorted.Length}");
         }
 
-        public AuditLogEntry[] EntryList = Array.Empty<AuditLogEntry>();
-        public AuditLogEntry[] EntryListSorted = Array.Empty<AuditLogEntry>();
-        public string[] UsernameFilter = Array.Empty<string>();
-        public long TimestampMin = long.MinValue;
-        public long TimestampMax = long.MaxValue;
-
         private void toolStripButtonRefresh_Click(object sender, EventArgs e)
         {
             PullData();
@@ -266,6 +314,22 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             };
             Enabled = false;
             form.Show();
+        }
+
+        private void groupByActionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GroupByAction = groupByActionToolStripMenuItem.Checked;
+            groupByAccountToolStripMenuItem.Checked = false;
+            GroupByAccount = false;
+            RedrawListView();
+        }
+
+        private void groupByAccountToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GroupByAction = false;
+            groupByActionToolStripMenuItem.Checked = false;
+            GroupByAccount = groupByAccountToolStripMenuItem.Checked;
+            RedrawListView();
         }
     }
 }
