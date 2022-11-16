@@ -138,14 +138,16 @@ namespace OSLCommon.Authorization
             var filter = Builders<Account>.Filter.Where(v => v.Username.Length > 1);
 
             var accountList = collection.Find(filter).ToList();
-
-            /*var response =
-                          from item   in accountList.AsQueryable()
-                          from tk     in    item.Tokens 
-                                      where tk.Token == token
-                                      &&    tk.Allow
-                          select item.Username;*/
-            var response = accountList.Where(v => v.Tokens.Where(t => t != null && t.Token != null && t.Token == token && t.Allow).Count() > 0).ToList();
+            var response = accountList.Where((v) =>
+            {
+                return v.Tokens.Where((t) =>
+                {
+                    return t != null
+                        && t.Token != null
+                        && t.Token == token
+                        && t.Allow;
+                }).Count() > 0;
+            });
 
             Account result = response.Count() == 1 ? GetAccountByUsername(response.First().Username, false) : null;
 
