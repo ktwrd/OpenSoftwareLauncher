@@ -184,5 +184,33 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         {
             PullData();
         }
+
+        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            dynamic targetItem = null;
+            if (listView1.SelectedItems.Count > 0)
+            {
+                string targetUID = listView1.SelectedItems[0].Name;
+                foreach (var item in EntryList)
+                {
+                    if (targetUID == item.UID)
+                    {
+                        Type targetType = typeof(Dictionary<object, object[]>);
+
+                        var typeDict = AuditLogManager.AuditTypeMap;
+
+                        if (typeDict.ContainsKey(item.ActionType))
+                            targetType = typeDict[item.ActionType];
+                        
+                        targetItem = JsonSerializer.Deserialize(item.ActionData, targetType, Program.serializerOptions);
+                    }
+                }
+            }
+            TypeDescriptor.AddAttributes(targetItem, new Attribute[]
+            {
+                new ReadOnlyAttribute(true)
+            });
+            propertyGrid1.SelectedObject = targetItem;
+        }
     }
 }
