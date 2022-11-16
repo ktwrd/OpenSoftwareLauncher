@@ -221,19 +221,13 @@ namespace OSLCommon.Authorization
                     {
                         if (!IsPendingWrite)
                             OnPendingWrite();
+                        token.UserAgent = userAgent;
+                        token.Host = host;
                         if (account.Groups == null)
                             account.Groups = Array.Empty<string>();
                         if (account.Permissions == null)
                             account.Permissions = Array.Empty<AccountPermission>();
                         TokenUsed(success.Token);
-                        foreach (var thing in account.Tokens)
-                        {
-                            if (thing.Token == success.Token)
-                            {
-                                thing.UserAgent = userAgent;
-                                thing.Host = host;
-                            }
-                        }
                         return new GrantTokenResponse(ServerStringResponse.AccountTokenGranted, true, success, account.Groups.ToArray(), account.Permissions.ToArray());
                     }
                 }
