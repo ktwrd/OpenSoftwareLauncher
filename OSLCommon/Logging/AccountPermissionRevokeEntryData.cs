@@ -1,6 +1,7 @@
 ﻿using OSLCommon.Authorization;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace OSLCommon.Logging
@@ -22,7 +23,9 @@ namespace OSLCommon.Logging
             Permission = permission;
         }
 
+        [Description("Username of the account disabled")]
         public string Username { get; set; }
+        [Description("Permission revoked from user")]
         public AccountPermission Permission { get; set; }
     }
 }

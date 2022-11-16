@@ -1,6 +1,7 @@
 ﻿using OSLCommon.AutoUpdater;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace OSLCommon.Logging
@@ -20,8 +21,9 @@ namespace OSLCommon.Logging
             CommitHash = published.CommitHash;
             Signature = published.Release.remoteLocation;
         }
-
+        [Description("Commit hash of release")]
         public string CommitHash { get; set; }
+        [Description("Signature of release")]
         public string Signature { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using OSLCommon.Authorization;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
@@ -33,8 +34,11 @@ namespace OSLCommon.Logging
             Removed = removeList.ToArray();
             Added = addList.ToArray();
         }
+        [Description("Username of the account affected")]
         public string Username { get; set; }
+        [Description("Licenses removed")]
         public string[] Removed { get; set; }
+        [Description("Licenses added")]
         public string[] Added { get; set; }
     }
 }

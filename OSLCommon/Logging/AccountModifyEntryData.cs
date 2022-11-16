@@ -2,6 +2,7 @@
 using OSLCommon.Authorization;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using System.Text.Json;
 
@@ -36,6 +37,8 @@ namespace OSLCommon.Logging
         }
 
         public string Username { get; set; }
+        [Category("Account Difference (array is before and after)")]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
         public Dictionary<object, object[]> Diff { get; set; }
     }
 }
