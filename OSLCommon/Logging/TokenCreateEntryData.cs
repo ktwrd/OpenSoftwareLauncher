@@ -1,6 +1,7 @@
 ﻿using OSLCommon.Authorization;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace OSLCommon.Logging
@@ -21,7 +22,10 @@ namespace OSLCommon.Logging
             Username = account.Username;
             Token = token;
         }
+        [Description("Username of the account affected")]
         public string Username { get; set; }
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        [Category("Token")]
         public AccountToken Token { get; set; }
     }
 }

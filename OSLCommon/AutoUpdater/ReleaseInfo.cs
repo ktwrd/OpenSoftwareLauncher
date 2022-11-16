@@ -2,6 +2,7 @@
 using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text.Json.Serialization;
 using System.Xml.Serialization;
 
@@ -37,6 +38,7 @@ namespace OSLCommon.AutoUpdater
         [JsonIgnore]
         [XmlIgnore]
         [SoapIgnore]
+        [Browsable(false)]
         public ObjectId _id { get; set; }
         public string UID { get; set; }
         public string version { get; set; }

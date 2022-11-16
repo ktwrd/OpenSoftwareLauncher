@@ -81,8 +81,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         {
             if (PendingLogLines)
             {
-                var content = new List<string>(DebugListener.LogLines).ToArray();
                 PendingLogLines = false;
+                var content = new List<string>(DebugListener.LogLines).ToArray();
                 if (ClientContext != null && ClientContext.ParentForm != null && ClientContext.ParentForm.LogForm != null)
                     ClientContext.ParentForm.LogForm.SetContent(content);
             }

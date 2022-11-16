@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace OSLCommon.Logging
@@ -12,15 +13,21 @@ namespace OSLCommon.Logging
             AuditType = AuditType.BulkTokenDelete;
             Dict = new Dictionary<string, int>();
         }
-
-        public Dictionary<string, int> Dict { get; set; }
-        public int Total { get; set; }
-        public override string SerializeToJSON()
+        private Dictionary<string, int> dict = new Dictionary<string, int>();
+        [Description("Username of the account (key) and the tokens removed (value)")]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        public Dictionary<string, int> Dict
         {
-            Total = 0;
-            foreach (var thing in Dict)
-                Total += thing.Value;
-            return base.SerializeToJSON();
+            get => dict;
+            set
+            {
+                dict = value;
+                Total = 0;
+                foreach (var thing in dict)
+                    Total += thing.Value;
+            }
         }
+        [Description("Total amount of tokens deleted.")]
+        public int Total { get; set; }
     }
 }

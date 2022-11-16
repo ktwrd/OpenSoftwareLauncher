@@ -1,6 +1,7 @@
 ﻿using OSLCommon.Licensing;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace OSLCommon.Logging
@@ -21,7 +22,9 @@ namespace OSLCommon.Logging
             LicenseId = license.UID;
             Username = license.ActivatedBy;
         }
-        public string LicenseId { get; set; }
+        [Description("Username of the account that activated the license key")]
         public string Username { get; set; }
+        [Description("ID of the License Key activated")]
+        public string LicenseId { get; set; }
     }
 }

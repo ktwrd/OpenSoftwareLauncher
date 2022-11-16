@@ -3,6 +3,7 @@ using OSLCommon.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace OSLCommon.Logging
@@ -12,6 +13,28 @@ namespace OSLCommon.Logging
         public MongoClient mongoClient;
         public string DatabaseName = "opensoftwarelauncher";
         public string CollectionName = "auditLog";
+
+        public static readonly Dictionary<AuditType, Type> AuditTypeMap = new Dictionary<AuditType, Type>
+        {
+            {AuditType.None,                    typeof(object) },
+            {AuditType.AccountModify,           typeof(AccountModifyEntryData) },
+            {AuditType.AccountDisable,          typeof(AccountDisableEntryData) },
+            {AuditType.AccountPermissionGrant,  typeof(AccountPermissionGrantEntryData) },
+            {AuditType.AccountPermissionRevoke, typeof(AccountPermissionRevokeEntryData) },
+            {AuditType.LicenseRedeem,           typeof(LicenseRedeemEntryData) },
+            {AuditType.AccountLicenseUpdate,    typeof(AccountLicenseUpdateEntryData) },
+            {AuditType.TokenDelete,             typeof(TokenDeleteEntryData) },
+            {AuditType.TokenCreate,             typeof(TokenCreateEntryData) },
+            {AuditType.BulkTokenDelete,         typeof(BulkTokenDeleteEntryData) },
+            {AuditType.AnnouncementModify,      typeof(AnnouncementModifyEntryData) },
+            {AuditType.AnnouncementDelete,      typeof(AnnouncementDeleteEntryData) },
+            {AuditType.AnnouncementCreate,      typeof(AnnouncementCreateEntryData) },
+            {AuditType.AnnouncementStateToggle, typeof(AnnouncementStateToggleEntryData) },
+            {AuditType.PublishRelease,          typeof(PublishReleaseEntryData) },
+            {AuditType.LicenseCreate,           typeof(LicenseCreateEntryData) },
+            {AuditType.LicenseDisable,          typeof(LicenseDisableEntryData) },
+            {AuditType.LicenseEnable,           typeof(LicenseEnableEntryData) }
+        };
 
         public AuditLogManager(MongoClient client)
         {
@@ -28,7 +51,12 @@ namespace OSLCommon.Logging
         public async Task Create(IAuditEntryData entry, Account account)
         {
             var instance = new AuditLogEntry(this);
-            instance.ActionData = entry.SerializeToJSON();
+            instance.ActionData = JsonSerializer.Serialize((object)entry, new JsonSerializerOptions
+            {
+                IgnoreReadOnlyFields = true,
+                IgnoreReadOnlyProperties = true,
+                IncludeFields = true
+            });
             instance.ActionType = entry.AuditType;
             if (account != null)
                 instance.Username = account.Username;

@@ -16,6 +16,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         public LogForm()
         {
             InitializeComponent();
+            timerPendingContent.Start();
         }
 
         public void Locale()
@@ -29,14 +30,13 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         private void LogForm_Shown(object sender, EventArgs e)
         {
             Locale();
-            timerPendingContent.Start();
             allow = true;
             scrollingRichTextBox1.ScrollToBottom();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (pendingContent && allow)
+            if (pendingContent)
             {
                 scrollingRichTextBox1.Text = string.Join("\n", contentToDoStuff.ToArray());
                 var injected = new Dictionary<string, object>()
@@ -55,11 +55,10 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         private List<string> contentToDoStuff = new List<string>();
         public void SetContent(string[] content)
         {
-            if (!allow) return;
             if (!pendingContent)
             {
-                pendingContent = true;
                 contentToDoStuff = content.ToList();
+                pendingContent = true;
             }
         }
         private void toolStripButtonScrollToBottom_Click(object sender, EventArgs e)

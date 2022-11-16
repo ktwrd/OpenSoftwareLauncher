@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using System.Text.Json;
 
@@ -27,7 +28,10 @@ namespace OSLCommon.Logging
             };
             Entry = JsonSerializer.Deserialize<SystemAnnouncementEntry>(JsonSerializer.Serialize(entry, options), options);
         }
+        [Description("Announcement ID")]
         public string Id { get; set; }
+        [Category("Entry")]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
         public SystemAnnouncementEntry Entry { get; set; }
 
     }

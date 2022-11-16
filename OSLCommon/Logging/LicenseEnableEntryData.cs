@@ -30,7 +30,10 @@ namespace OSLCommon.Logging
             };
             Metadata = JsonSerializer.Deserialize<LicenseKeyMetadata>(JsonSerializer.Serialize(key, options), options);
         }
+        [Description("License ID")]
         public string LicenseId { get; set; }
+        [Category("License Key")]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
         public LicenseKeyMetadata Metadata { get; set; }
     }
 }

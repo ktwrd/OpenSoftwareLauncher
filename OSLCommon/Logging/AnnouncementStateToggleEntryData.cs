@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace OSLCommon.Logging
@@ -12,6 +13,7 @@ namespace OSLCommon.Logging
             AuditType = AuditType.AnnouncementStateToggle;
             State = true;
         }
+        [Description("Are announcements enabled?")]
         public bool State { get; set; }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using kate.shared.Helpers;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -21,6 +23,7 @@ namespace OSLCommon.Logging
         [BsonIgnore]
         [XmlIgnore]
         [SoapIgnore]
+        [Browsable(false)]
         internal AuditLogManager manager = null;
         public AuditLogEntry()
         {
@@ -35,7 +38,11 @@ namespace OSLCommon.Logging
         {
             this.manager = manager;
         }
-
+        [JsonIgnore]
+        [XmlIgnore]
+        [SoapIgnore]
+        [Browsable(false)]
+        public ObjectId _id { get; set; }
         public string UID { get; set; }
         public string Username { get; set; }
         public long Timestamp { get; set; }

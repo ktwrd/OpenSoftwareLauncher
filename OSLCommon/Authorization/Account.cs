@@ -3,6 +3,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.Json.Serialization;
@@ -41,6 +42,7 @@ namespace OSLCommon.Authorization
 
         #region Fields
         internal AccountManager accountManager = null;
+        [Browsable(false)]
         public ObjectId _id { get; set; }
         public string Username { get; set; } = "";
         private AccountToken[] tokens = Array.Empty<AccountToken>();

@@ -34,6 +34,7 @@
             this.toolStripButtonAnnouncements = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonLicenceManagement = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonLicenseKeyCreator = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonAuditLog = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -44,7 +45,8 @@
             this.toolStripButtonUsers,
             this.toolStripButtonAnnouncements,
             this.toolStripButtonLicenceManagement,
-            this.toolStripButtonLicenseKeyCreator});
+            this.toolStripButtonLicenseKeyCreator,
+            this.toolStripButtonAuditLog});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
             this.toolStrip1.Name = "toolStrip1";
@@ -94,6 +96,16 @@
             this.toolStripButtonLicenseKeyCreator.Text = "License Key Creator";
             this.toolStripButtonLicenseKeyCreator.Click += new System.EventHandler(this.toolStripButtonLicenseKeyCreator_Click);
             // 
+            // toolStripButtonAuditLog
+            // 
+            this.toolStripButtonAuditLog.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonAuditLog.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.blue_document_task;
+            this.toolStripButtonAuditLog.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonAuditLog.Name = "toolStripButtonAuditLog";
+            this.toolStripButtonAuditLog.Size = new System.Drawing.Size(30, 20);
+            this.toolStripButtonAuditLog.Text = "Title_AuditLog";
+            this.toolStripButtonAuditLog.Click += new System.EventHandler(this.toolStripButtonAuditLog_Click);
+            // 
             // ParentForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -119,5 +131,6 @@
         private System.Windows.Forms.ToolStripButton toolStripButtonAnnouncements;
         private System.Windows.Forms.ToolStripButton toolStripButtonLicenseKeyCreator;
         private System.Windows.Forms.ToolStripButton toolStripButtonLicenceManagement;
+        private System.Windows.Forms.ToolStripButton toolStripButtonAuditLog;
     }
 }
