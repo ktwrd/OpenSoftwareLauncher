@@ -1,6 +1,5 @@
 ﻿using OSLCommon.AutoUpdater;
 using OSLCommon;
-using Google.Cloud.Firestore;
 using kate.shared.Helpers;
 using System.Text.Json;
 using System.Collections.Generic;
@@ -11,7 +10,7 @@ using OSLCommon.Authorization;
 using OSLCommon.Licensing;
 using System.Linq;
 using MongoDB.Driver;
-using Microsoft.AspNetCore.Components.Web;
+using OSLCommon.Logging;
 
 namespace OpenSoftwareLauncher.Server
 {
@@ -22,6 +21,7 @@ namespace OpenSoftwareLauncher.Server
         public MongoAccountManager AccountManager;
         public MongoSystemAnnouncement SystemAnnouncement;
         public MongoAccountLicenseManager AccountLicenseManager;
+        public AuditLogManager AuditLogManager;
 
         public MongoClient MongoClient;
         public static string ReleaseInfo_Collection = ServerConfig.GetString("MongoDB", "Collection_ReleaseInfo");
@@ -33,7 +33,11 @@ namespace OpenSoftwareLauncher.Server
             Console.WriteLine($"[ContentManager] Connecting to Database");
             this.MongoClient = new MongoClient(ServerConfig.GetString("Connection", "MongoDBServer"));
 
-            AccountManager = new MongoAccountManager(MongoClient);
+            AuditLogManager = new AuditLogManager(MongoClient);
+            AuditLogManager.DatabaseName = ServerConfig.GetString("MongoDB", "DatabaseName");
+            AuditLogManager.CollectionName = ServerConfig.GetString("MongoDB", "Collection_AuditLog");
+
+            AccountManager = new MongoAccountManager(MongoClient, AuditLogManager);
             AccountManager.DatabaseName = ServerConfig.GetString("MongoDB", "DatabaseName");
             AccountManager.CollectionName = ServerConfig.GetString("MongoDB", "Collection_Account");
 

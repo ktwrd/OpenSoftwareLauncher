@@ -3,6 +3,7 @@ using OSLCommon.Authorization;
 using OSLCommon;
 using System.Net;
 using System.Text.Json;
+using OSLCommon.Logging;
 
 namespace OpenSoftwareLauncher.DesktopWinForms
 {
@@ -106,6 +107,37 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             string token,
             string username)
             => $"{Base}/admin/user/pardon?token={encode(token)}&username={encode(username)}";
+
+        #region Audit Log
+        public static string AuditLogGetAll_Userspace(
+            string token)
+            => $"{Base}/auditlog/fetch?token={encode(token)}";
+
+        #region Admin
+        public static string AuditLogGetAll(
+            string token)
+            => $"{Base}/admin/auditlog/all?token={encode(token)}";
+        public static string AuditLogGetByType(
+            string token,
+            AuditType auditType)
+            => $"{Base}/admin/auditlog/byType?token={encode(token)}&auditType={encode((int)auditType)}";
+        public static string AuditLogGetByUsername(
+            string token,
+            string username=null)
+        {
+            var str = $"{Base}/admin/auditlog/byUsername?token={encode(token)}";
+            if (username != null && username.Length > 0)
+                str += $"&username={encode(username)}";
+            return str;
+        }
+        public static string AuditLogGetByRange(
+            string token,
+            long min,
+            long max,
+            AuditType auditType = AuditType.Any)
+            => $"{Base}/admin/auditlog/byRange?token={encode(token)}&min={encode(min)}&max={encode(max)}&auditType={encode((int)auditType)}";
+        #endregion
+        #endregion
 
         #region Account License Management
         public static string UserLicenseGrant(

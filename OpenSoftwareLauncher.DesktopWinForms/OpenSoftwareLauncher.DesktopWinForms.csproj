@@ -100,6 +100,12 @@
     <Compile Include="Announcement Management\AnnouncementManagementForm.Designer.cs">
       <DependentUpon>AnnouncementManagementForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="AuditLogForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AuditLogForm.Designer.cs">
+      <DependentUpon>AuditLogForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="CustomComponents\LabelTextBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -135,6 +141,12 @@
     </Compile>
     <Compile Include="ServerConfigForm.Designer.cs">
       <DependentUpon>ServerConfigForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TimeRangeModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TimeRangeModal.Designer.cs">
+      <DependentUpon>TimeRangeModal.cs</DependentUpon>
     </Compile>
     <Compile Include="User Management\PermissionEditForm.cs">
       <SubType>Form</SubType>
@@ -200,6 +212,9 @@
     <EmbeddedResource Include="Announcement Management\AnnouncementManagementForm.resx">
       <DependentUpon>AnnouncementManagementForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="AuditLogForm.resx">
+      <DependentUpon>AuditLogForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CustomComponents\LabelTextBox.resx">
       <DependentUpon>LabelTextBox.cs</DependentUpon>
     </EmbeddedResource>
@@ -220,6 +235,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ServerConfigForm.resx">
       <DependentUpon>ServerConfigForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TimeRangeModal.resx">
+      <DependentUpon>TimeRangeModal.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="User Management\PermissionEditForm.resx">
       <DependentUpon>PermissionEditForm.cs</DependentUpon>
@@ -271,6 +289,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <None Include="Resources\clock-select.png" />
+    <None Include="Resources\blue-document-task.png" />
+    <None Include="Resources\funnel.png" />
     <None Include="Resources\arrow-270.png" />
     <None Include="Resources\lock--cross.png" />
     <None Include="Resources\lock--tick.png" />

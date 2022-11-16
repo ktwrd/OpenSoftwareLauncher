@@ -22,6 +22,9 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             toolStripButtonLicenceManagement.Text = LocaleManager.Get(toolStripButtonLicenceManagement.Text);
             toolStripButtonLicenceManagement.ToolTipText = toolStripButtonLicenceManagement.Text;
 
+            toolStripButtonAuditLog.Text = LocaleManager.Get("Title_AuditLog");
+            toolStripButtonAuditLog.ToolTipText = LocaleManager.Get("Title_AuditLog");
+
             Text = LocaleManager.Get(Text);
         }
 
@@ -29,6 +32,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         public LicenseManagmentForm LicenseManagmentForm;
         public AnnouncementManagementForm AnnouncementManagementForm;
         public LogForm LogForm;
+        public AuditLogForm AuditLogForm;
 
         private void ParentForm_Shown(object sender, EventArgs e)
         {
@@ -74,6 +78,16 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             }
             AnnouncementManagementForm.MdiParent = this;
             AnnouncementManagementForm.Show();
+        }
+
+        private void toolStripButtonAuditLog_Click(object sender, EventArgs e)
+        {
+            if (AuditLogForm == null || AuditLogForm.IsDisposed)
+            {
+                AuditLogForm = new AuditLogForm();
+            }
+            AuditLogForm.MdiParent = this;
+            AuditLogForm.Show();
         }
     }
 }

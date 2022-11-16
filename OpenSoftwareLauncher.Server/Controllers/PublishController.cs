@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using OSLCommon.Authorization;
 using System.Linq;
+using OSLCommon.Logging;
 
 namespace OpenSoftwareLauncher.Server.Controllers
 {
@@ -99,6 +100,9 @@ namespace OpenSoftwareLauncher.Server.Controllers
                 MainClass.contentManager.SetReleaseInfoContent(cnt.ToArray());
                 result["releaseAlreadyExists"] = false;
             }
+
+            MainClass.contentManager?.AuditLogManager.Create(new PublishReleaseEntryData(publishedRelease), null).Wait();
+
             return Json(result, MainClass.serializerOptions);
         }
 

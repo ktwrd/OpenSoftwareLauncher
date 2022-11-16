@@ -18,6 +18,8 @@ namespace OSLCommon.Authorization
         USER_LICENSE_MODIFY,
         LICENSE_MANAGE,
         INVULNERABLE,
-        READ_RELEASE_HISTORY
+        READ_RELEASE_HISTORY,
+        AUDITLOG_GLOBAL,
+        AUDITLOG_SELF
     }
 }

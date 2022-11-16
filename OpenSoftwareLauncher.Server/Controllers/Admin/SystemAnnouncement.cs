@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
 using System.Linq;
+using OSLCommon.Logging;
+using JsonDiffPatchDotNet;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Admin
 {
@@ -42,8 +44,10 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 Response.StatusCode = authRes?.Data.Code ?? 0;
                 return Json(authRes, MainClass.serializerOptions);
             }
+            var account = MainClass.contentManager.AccountManager.GetAccount(token);
+            var announcement = MainClass.contentManager.SystemAnnouncement.Set(content, active ?? true);
+            MainClass.contentManager.AuditLogManager.Create(new AnnouncementCreateEntryData(announcement), account).Wait();
 
-            MainClass.contentManager.SystemAnnouncement.Set(content, active ?? true);
             return Json(new ObjectResponse<SystemAnnouncementSummary>()
             {
                 Success = true,
@@ -62,9 +66,14 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 Response.StatusCode = authRes?.Data.Code ?? 0;
                 return Json(authRes, MainClass.serializerOptions);
             }
+            var account = MainClass.contentManager.AccountManager.GetAccount(token);
 
             MainClass.contentManager.SystemAnnouncement.Active = active;
             MainClass.contentManager.SystemAnnouncement.OnUpdate();
+            MainClass.contentManager.AuditLogManager.Create(new AnnouncementStateToggleEntryData
+            {
+                State = active
+            }, account).Wait();
             return Json(new ObjectResponse<object>()
             {
                 Success = true,
@@ -120,6 +129,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 Response.StatusCode = authRes?.Data.Code ?? 0;
                 return Json(authRes, MainClass.serializerOptions);
             }
+            var account = MainClass.contentManager.AccountManager.GetAccount(token);
 
             var attemptedDeserialized = JsonSerializer.Deserialize<SystemAnnouncementSummary>(content, MainClass.serializerOptions);
             if (attemptedDeserialized == null) {
@@ -131,21 +141,79 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 }, MainClass.serializerOptions);
             }
 
-            var idList = new List<string>();
+            var idList = attemptedDeserialized.Entries.ToList().Select(v => v.ID).ToList();
+            var prevIdList = MainClass.contentManager.SystemAnnouncement.GetAll().Select(v => v.ID).ToArray();
+            foreach (var item in MainClass.contentManager.SystemAnnouncement.GetAll().Where(v => idList.Contains(v.ID)))
+            {
+                if (!prevIdList.Contains(item.ID))
+                {
+                    MainClass.contentManager.AuditLogManager.Create(new AnnouncementCreateEntryData(item), account).Wait();
+                }
+                else
+                {
+                    var current = attemptedDeserialized.Entries.Where(v => v.ID == item.ID).FirstOrDefault();
+                    var diff = (new JsonDiffPatch()).Diff(
+                        JsonSerializer.Serialize(item, MainClass.serializerOptions),
+                        JsonSerializer.Serialize(current, MainClass.serializerOptions));
+                    var count = JsonSerializer.Deserialize<Dictionary<object, object[]>>(diff, MainClass.serializerOptions);
+                    if (count.Count > 0)
+                    {
+                        MainClass.contentManager.AuditLogManager.Create(new AnnouncementModifyEntryData(item, current), account).Wait();
+                    }
+                }
+            }
             foreach (var item in attemptedDeserialized.Entries)
             {
                 MainClass.contentManager.SystemAnnouncement.Set(item.ID, item);
-                idList.Add(item.ID);
             }
             foreach (var item in MainClass.contentManager.SystemAnnouncement.GetAll().Where(v => !idList.Contains(v.ID)))
             {
                 MainClass.contentManager.SystemAnnouncement.RemoveId(item.ID);
+                MainClass.contentManager.AuditLogManager.Create(new AnnouncementDeleteEntryData(item), account).Wait();
+            }
+
+            if (attemptedDeserialized.Active != MainClass.contentManager.SystemAnnouncement.Active)
+            {
+                MainClass.contentManager.AuditLogManager.Create(new AnnouncementStateToggleEntryData
+                {
+                    State = attemptedDeserialized.Active
+                }, account).Wait();
+                MainClass.contentManager.SystemAnnouncement.Active = attemptedDeserialized.Active;
+                MainClass.contentManager.SystemAnnouncement.OnUpdate();
             }
 
             return Json(new ObjectResponse<SystemAnnouncementSummary>()
             {
                 Success = true,
                 Data = attemptedDeserialized
+            }, MainClass.serializerOptions);
+        }
+
+        [HttpGet("remove")]
+        [ProducesResponseType(200, Type = typeof(ObjectResponse<SystemAnnouncementSummary>))]
+        [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
+        public ActionResult RemoveAnnouncement(string token, string id)
+        {
+            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
+            if (authRes != null)
+            {
+                Response.StatusCode = authRes?.Data.Code ?? 0;
+                return Json(authRes, MainClass.serializerOptions);
+            }
+            var account = MainClass.contentManager.AccountManager.GetAccount(token);
+
+            bool exists = MainClass.contentManager.SystemAnnouncement.GetAll().Where(v => v.ID == id).Count() > 0;
+            if (exists)
+            {
+                var item = MainClass.contentManager.SystemAnnouncement.GetAll().Where(v => v.ID == id).FirstOrDefault();
+                MainClass.contentManager.AuditLogManager.Create(new AnnouncementDeleteEntryData(item), account).Wait();
+                MainClass.contentManager.SystemAnnouncement.RemoveId(id);
+            }
+
+            return Json(new ObjectResponse<SystemAnnouncementSummary>()
+            {
+                Success = true,
+                Data = MainClass.contentManager.SystemAnnouncement.GetSummary()
             }, MainClass.serializerOptions);
         }
     }
