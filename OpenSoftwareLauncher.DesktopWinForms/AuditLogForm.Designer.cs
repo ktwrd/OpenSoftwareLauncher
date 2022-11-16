@@ -34,6 +34,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripDropDownButtonFilter = new System.Windows.Forms.ToolStripDropDownButton();
             this.timeRangeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.groupByActionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listView1 = new System.Windows.Forms.ListView();
             this.columnHeaderType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderUsername = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -44,6 +45,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.groupByAccountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -88,7 +90,9 @@
             // 
             this.toolStripDropDownButtonFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.toolStripDropDownButtonFilter.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.timeRangeToolStripMenuItem});
+            this.timeRangeToolStripMenuItem,
+            this.groupByActionToolStripMenuItem,
+            this.groupByAccountToolStripMenuItem});
             this.toolStripDropDownButtonFilter.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.funnel;
             this.toolStripDropDownButtonFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButtonFilter.Name = "toolStripDropDownButtonFilter";
@@ -102,6 +106,14 @@
             this.timeRangeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.timeRangeToolStripMenuItem.Text = "TimeRange";
             this.timeRangeToolStripMenuItem.Click += new System.EventHandler(this.timeRangeToolStripMenuItem_Click);
+            // 
+            // groupByActionToolStripMenuItem
+            // 
+            this.groupByActionToolStripMenuItem.CheckOnClick = true;
+            this.groupByActionToolStripMenuItem.Name = "groupByActionToolStripMenuItem";
+            this.groupByActionToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.groupByActionToolStripMenuItem.Text = "GroupByAuditType";
+            this.groupByActionToolStripMenuItem.Click += new System.EventHandler(this.groupByActionToolStripMenuItem_Click);
             // 
             // listView1
             // 
@@ -225,6 +237,14 @@
             this.splitContainer2.SplitterDistance = 527;
             this.splitContainer2.TabIndex = 6;
             // 
+            // groupByAccountToolStripMenuItem
+            // 
+            this.groupByAccountToolStripMenuItem.CheckOnClick = true;
+            this.groupByAccountToolStripMenuItem.Name = "groupByAccountToolStripMenuItem";
+            this.groupByAccountToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.groupByAccountToolStripMenuItem.Text = "GroupByAccount";
+            this.groupByAccountToolStripMenuItem.Click += new System.EventHandler(this.groupByAccountToolStripMenuItem_Click);
+            // 
             // AuditLogForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -272,5 +292,7 @@
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.ToolStripMenuItem timeRangeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem groupByActionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem groupByAccountToolStripMenuItem;
     }
 }
