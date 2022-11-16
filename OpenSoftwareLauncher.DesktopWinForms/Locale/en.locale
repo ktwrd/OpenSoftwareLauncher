@@ -87,6 +87,7 @@ Btn_ScrollToBottom=Scroll to Bottom
 Title=${product.name} v${version}
 Title_AnnouncementEditDialog=Announcement Editor
 Title_AnnouncementManagementForm=Announcement Management
+Title_AuditLog=Audit Log
 Title_ChangelogViewer=Changelog
 Title_Brand=Minalyze Launcher
 Title_BrandWithVersion=Minalyze Launcher v${version}
