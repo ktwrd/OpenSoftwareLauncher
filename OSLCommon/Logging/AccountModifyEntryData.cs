@@ -33,12 +33,12 @@ namespace OSLCommon.Logging
             var currentObject = JsonSerializer.Serialize(current, options);
 
             var patch = new JsonDiffPatch();
-            Diff = (object)JsonSerializer.Deserialize<Dictionary<string, object[]>>(patch.Diff(previousObject, currentObject) ?? "{}", options);
+            Diff = JsonSerializer.Deserialize<Dictionary<string, object[]>>(patch.Diff(previousObject, currentObject) ?? "{}", options);
         }
 
         public string Username { get; set; }
         [Category("Account Difference (array is before and after)")]
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        public object Diff { get; set; }
+        public dynamic Diff { get; set; }
     }
 }

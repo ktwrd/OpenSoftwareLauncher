@@ -38,6 +38,6 @@ namespace OSLCommon.Logging
         public string AnnouncementId { get; set; }
         [Category("Difference")]
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        public object Diff { get; set; }
+        public dynamic Diff { get; set; }
     }
 }
