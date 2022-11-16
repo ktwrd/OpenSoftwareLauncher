@@ -81,6 +81,61 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             }
         }
 
+        public void PullData()
+        {
+            var url = Endpoint.AuditLogGetAll(Program.Client.Token);
+            var response = Program.Client.HttpClient.GetAsync(url).Result;
+            var stringContent = response.Content.ReadAsStringAsync().Result;
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var deserialized = JsonSerializer.Deserialize<ObjectResponse<AuditLogEntry[]>>(stringContent, Program.serializerOptions);
+
+                EntryList = deserialized.Data;
+                RedrawElements();
+            }
+            else if ((int)response.StatusCode == 401)
+            {
+                var exceptionDeserialized = JsonSerializer.Deserialize<ObjectResponse<HttpException>>(stringContent, Program.serializerOptions);
+                string addon = "";
+                if (exceptionDeserialized.Data.Exception.Length > 0)
+                    addon = "\n" + exceptionDeserialized.Data.Exception;
+                
+                Trace.WriteLine(string.Join("\n", new string[]
+                {
+                     "[AuditLogForm->PullData] Server responded with 401.",
+                    $"    Message  : {exceptionDeserialized.Data.Message}",
+                    $"    Exception: {exceptionDeserialized.Data.Exception}",
+                    $"    Code     : {exceptionDeserialized.Data.Code}"
+                }));
+
+                Program.MessageBoxShow(LocaleManager.Get(exceptionDeserialized.Data.Message) + addon);
+                if (exceptionDeserialized.Data.Message == ServerStringResponse.InvalidPermission)
+                {
+                    Close();
+                }
+            }
+            else
+            {
+                Trace.WriteLine(string.Join("\n", new string[]
+                {
+                    $"[AuditLogForm->PullData] Server responded with {(int)response.StatusCode} at {url}",
+                     "======================== Content Start",
+                     stringContent,
+                     "======================== Content End"
+                }));
+                MessageBox.Show(
+                    string.Join("\n", new string[]
+                    {
+                        $"URL: {url}",
+                        $"Code: {(int)response.StatusCode}",
+                        $"======== Content ========",
+                        stringContent
+                    }),
+                    LocaleManager.Get("ServerResponse_Invalid"));
+            }
+        }
+
         public void UpdateFilter()
         {
             var sorted = new List<AuditLogEntry>();
