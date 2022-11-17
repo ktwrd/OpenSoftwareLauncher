@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace OSLCommon
@@ -13,9 +14,13 @@ namespace OSLCommon
             Active = null;
             ID = null;
         }
+        [TypeConverter(typeof(ExpandableObjectConverter))]
         public GenericDifference<string> Message { get; set; }
+        [TypeConverter(typeof(ExpandableObjectConverter))]
         public GenericDifference<long> Timestamp { get; set; }
+        [TypeConverter(typeof(ExpandableObjectConverter))]
         public GenericDifference<bool> Active { get; set; }
+        [TypeConverter(typeof(ExpandableObjectConverter))]
         public GenericDifference<string> ID { get; set; }
         public static AnnouncementEntryDiff FromDictionary(Dictionary<string, object[]> dict)
         {
@@ -23,26 +28,26 @@ namespace OSLCommon
             if (dict.ContainsKey("Message"))
                 instance.Message = new GenericDifference<string>
                 {
-                    Previous = (string)dict["Message"][0],
-                    Current  = (string)dict["Message"][1],
+                    Previous = dict["Message"][0].ToString(),
+                    Current  = dict["Message"][1].ToString(),
                 };
             if (dict.ContainsKey("Timestamp"))
                 instance.Timestamp = new GenericDifference<long>
                 {
-                    Previous = (long)dict["Timestamp"][0],
-                    Current  = (long)dict["Timestamp"][1],
+                    Previous = long.Parse(dict["Timestamp"][0].ToString()),
+                    Current  = long.Parse(dict["Timestamp"][1].ToString())
                 };
             if (dict.ContainsKey("Active"))
                 instance.Active = new GenericDifference<bool>
                 {
-                    Previous = (bool)dict["Active"][0],
-                    Current  = (bool)dict["Active"][1],
+                    Previous = dict["Active"][0].ToString().ToLower() == "true",
+                    Current  = dict["Active"][1].ToString().ToLower() == "true",
                 };
             if (dict.ContainsKey("ID"))
                 instance.ID = new GenericDifference<string>
                 {
-                    Previous = (string)dict["ID"][0],
-                    Current  = (string)dict["ID"][1]
+                    Previous = dict["ID"][0].ToString(),
+                    Current  = dict["ID"][1].ToString()
                 };
             return instance;
         }
