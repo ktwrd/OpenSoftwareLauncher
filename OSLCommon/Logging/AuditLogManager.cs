@@ -36,6 +36,8 @@ namespace OSLCommon.Logging
             {AuditType.LicenseEnable,           typeof(LicenseEnableEntryData) }
         };
 
+        public delegate void AuditEntryDelegate(AuditLogEntry entry);
+        public event AuditEntryDelegate CreateEntry;
         public AuditLogManager(MongoClient client)
         {
             mongoClient = client;
@@ -63,6 +65,8 @@ namespace OSLCommon.Logging
 
             var collection = GetAuditCollection();
             await collection.InsertOneAsync(instance);
+            if (CreateEntry != null)
+                CreateEntry.Invoke(instance);
         }
 
         public async Task<AuditLogEntry[]> GetAll()
