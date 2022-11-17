@@ -21,6 +21,7 @@ using Google.Cloud.Firestore;
 using Elastic.Clients.Elasticsearch;
 using Elastic.Transport;
 using System.Diagnostics;
+using OSLCommon.Logging;
 
 namespace OpenSoftwareLauncher.Server
 {
@@ -204,6 +205,7 @@ namespace OpenSoftwareLauncher.Server
             serializerOptions.Converters.Add(new kate.shared.DateTimeConverterUsingDateTimeOffsetParse());
             serializerOptions.Converters.Add(new kate.shared.DateTimeConverterUsingDateTimeParse());
             contentManager = new ContentManager();
+            contentManager.AuditLogManager.CreateEntry += AuditLogManager_CreateEntry;
             LoadTokens();
             Builder = WebApplication.CreateBuilder(args);
             Builder.Services.AddControllers();
@@ -253,6 +255,29 @@ namespace OpenSoftwareLauncher.Server
             App.MapControllers();
             App.Run();
         }
+
+        private static void AuditLogManager_CreateEntry(OSLCommon.Logging.AuditLogEntry entry)
+        {
+            if (!ServerConfig.GetBoolean("ElasticSearch", "Enable", false) || ElasticClient == null)
+                return;
+
+            switch (entry.ActionType)
+            {
+                case OSLCommon.Logging.AuditType.AccountDisable:
+                    var disabledeser = JsonSerializer.Deserialize<AccountDisableEntryData>(entry.ActionData, serializerOptions);
+                    ElasticClient?.Index(new Dictionary<string, object>
+                    {
+                        {"Username", entry.Username },
+                        {"Timestamp", entry.Timestamp },
+                        {"TargetUsername", disabledeser.Username },
+                        {"State", disabledeser.State },
+                        {"Reason", disabledeser.Reason }
+                    },
+                    request => request.Index(entry.ActionType.ToString()));
+                    break;
+            }
+        }
+
         public static ObjectResponse<HttpException>? Validate(string token)
         {
             var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
