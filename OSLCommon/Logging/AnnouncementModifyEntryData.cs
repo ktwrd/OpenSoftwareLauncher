@@ -14,7 +14,7 @@ namespace OSLCommon.Logging
         {
             AuditType = AuditType.AnnouncementModify;
             AnnouncementId = "";
-            Diff = new object();
+            Diff = new AnnouncementEntryDiff();
         }
         public AnnouncementModifyEntryData(SystemAnnouncementEntry previous, SystemAnnouncementEntry current)
             : base()
@@ -32,12 +32,12 @@ namespace OSLCommon.Logging
             var currentObject = JsonSerializer.Serialize(current, options);
 
             var patch = new JsonDiffPatch();
-            Diff = (object)JsonSerializer.Deserialize<Dictionary<string, object[]>>(patch.Diff(previousObject, currentObject) ?? "{}", options);
+            Diff = AnnouncementEntryDiff.FromDictionary(JsonSerializer.Deserialize<Dictionary<string, object[]>>(patch.Diff(previousObject, currentObject) ?? "{}", options));
         }
         [Description("Announcement ID")]
         public string AnnouncementId { get; set; }
         [Category("Difference")]
         [TypeConverter(typeof(ExpandableObjectConverter))]
-        public dynamic Diff { get; set; }
+        public AnnouncementEntryDiff Diff { get; set; }
     }
 }
