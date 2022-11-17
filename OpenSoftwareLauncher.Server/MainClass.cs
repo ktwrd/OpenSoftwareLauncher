@@ -18,6 +18,9 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Runtime.CompilerServices;
 using Google.Cloud.Firestore;
+using Elastic.Clients.Elasticsearch;
+using Elastic.Transport;
+using System.Diagnostics;
 
 namespace OpenSoftwareLauncher.Server
 {
@@ -61,6 +64,7 @@ namespace OpenSoftwareLauncher.Server
                 return target;
             }
         }
+        public static ElasticsearchClient? ElasticClient;
 
         public static long StartupTimestamp { get; private set; }
         private static void SetupOptions(params string[] args)
@@ -129,6 +133,54 @@ namespace OpenSoftwareLauncher.Server
             PrintConfig();
 #endif
             ServerConfig.Get();
+
+            if (ServerConfig.GetBoolean("ElasticSearch", "Enable", false))
+            {
+                if (ServerConfig.GetBoolean("ElasticSearch", "IsCloud", false))
+                {
+                    ElasticClient = new ElasticsearchClient(
+                        ServerConfig.GetString("ElasticCloud", "CloudId"),
+                        new ApiKey(
+                            ServerConfig.GetString("ElasticSearch", "APIKey", "")));
+                    Console.WriteLine("[ElasticClient] Using Cloud instance");
+                }
+                else
+                {
+                    var uriList = new List<Uri>();
+                    foreach (var item in ServerConfig.ElasticSearch_URL)
+                        uriList.Add(new Uri(item));
+                    if (uriList.Count < 1)
+                    {
+                        Console.WriteLine($"[ElasticClient] No URLs supplied. Aborting");
+                        Environment.Exit(1);
+                    }
+                    var pool = new StaticNodePool(uriList);
+                    Console.WriteLine("[ElasticClient] Using URL Pool");
+                    var settings = new ElasticsearchClientSettings(pool)
+                        .CertificateFingerprint(ServerConfig.GetString("ElasticSearch", "Fingerprint"));
+                    if (ServerConfig.GetBoolean("ElasticCloud", "BasicAuth_Enable", false))
+                    {
+                        Console.WriteLine("[ElasticClient] Using Basic Auth");
+                        var basicAuth = new BasicAuthentication(
+                            ServerConfig.GetString("ElasticCloud", "BasicAuth_Username", ""),
+                            ServerConfig.GetString("ElasticCloud", "BasicAuth_Password"));
+                        settings.Authentication(basicAuth);
+                    }
+                    else
+                    {
+                        Console.WriteLine("[ElasticClient] Using API Key");
+                        settings.Authentication(new ApiKey(ServerConfig.GetString("ElasticSearch", "APIKey", "")));
+                    }
+
+                    ElasticClient = new ElasticsearchClient(
+                        settings);
+                }
+            }
+            else
+            {
+                Console.WriteLine("[ElasticClient] Disabled");
+            }
+
             if (ServerConfig.GetString("Connection", "MongoDBServer", "").Length < 1)
             {
                 Console.WriteLine("[ERROR] MongoDB Connection URL is invalid. Please set it in `config.ini`");
