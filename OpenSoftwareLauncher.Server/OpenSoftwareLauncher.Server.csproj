@@ -35,6 +35,7 @@
   <ItemGroup>
     <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.3.56" />
     <PackageReference Include="BinaryFormatter" Version="3.0.0" />
+    <PackageReference Include="Elastic.Clients.Elasticsearch" Version="8.0.0-rc.2" />
     <PackageReference Include="Google.Cloud.Firestore" Version="3.0.0" />
     <PackageReference Include="kate.shared" Version="1.0.1" />
     <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" Version="1.0.1" />
