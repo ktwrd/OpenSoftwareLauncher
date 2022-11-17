@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -104,6 +105,20 @@ namespace OpenSoftwareLauncher.Server
                     {"Prometheus", false }
                 }
             },
+            {"ElasticSearch", new Dictionary<string, object>()
+                {
+                    {"Enable", false },
+                    {"IsCloud", false },
+                    {"CloudId", "" },
+                    {"URL", "" },
+                    {"Fingerprint", "" },
+                    {"APIKey_Enable", false },
+                    {"APIKey", "" },
+                    {"BasicAuth_Enable", false },
+                    {"BasicAuth_Username", "" },
+                    {"BasicAuth_Password", "" }
+                }
+            },
             {"Connection", new Dictionary<string, object>()
                 {
                     {"MongoDBServer", "" }
@@ -131,6 +146,18 @@ namespace OpenSoftwareLauncher.Server
                 }
             }
         };
+
+        public static string[] ElasticSearch_URL
+        {
+            get
+            {
+                return GetString("ElasticSearch", "URL", "").Split(' ');
+            }
+            set
+            {
+                Set("ElasticSearch", "URL", string.Join(' ', value));
+            }
+        }
 
         public static string[] Security_DefaultSignatures
         {
