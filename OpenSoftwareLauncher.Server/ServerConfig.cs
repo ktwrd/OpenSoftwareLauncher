@@ -112,7 +112,6 @@ namespace OpenSoftwareLauncher.Server
                     {"CloudId", "" },
                     {"URL", "" },
                     {"Fingerprint", "" },
-                    {"APIKey_Enable", false },
                     {"APIKey", "" },
                     {"BasicAuth_Enable", false },
                     {"BasicAuth_Username", "" },
