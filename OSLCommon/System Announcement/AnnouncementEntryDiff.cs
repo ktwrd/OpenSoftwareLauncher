@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
 
 namespace OSLCommon
@@ -13,9 +14,13 @@ namespace OSLCommon
             Active = null;
             ID = null;
         }
+        [TypeConverter(typeof(ExpandableObjectConverter))]
         public GenericDifference<string> Message { get; set; }
+        [TypeConverter(typeof(ExpandableObjectConverter))]
         public GenericDifference<long> Timestamp { get; set; }
+        [TypeConverter(typeof(ExpandableObjectConverter))]
         public GenericDifference<bool> Active { get; set; }
+        [TypeConverter(typeof(ExpandableObjectConverter))]
         public GenericDifference<string> ID { get; set; }
         public static AnnouncementEntryDiff FromDictionary(Dictionary<string, object[]> dict)
         {
@@ -35,8 +40,8 @@ namespace OSLCommon
             if (dict.ContainsKey("Active"))
                 instance.Active = new GenericDifference<bool>
                 {
-                    Previous = dict["Active"][0].ToString() == "true",
-                    Current  = dict["Active"][1].ToString() == "true",
+                    Previous = dict["Active"][0].ToString().ToLower() == "true",
+                    Current  = dict["Active"][1].ToString().ToLower() == "true",
                 };
             if (dict.ContainsKey("ID"))
                 instance.ID = new GenericDifference<string>
