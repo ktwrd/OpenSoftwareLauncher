@@ -58,11 +58,16 @@ namespace OSLCommon.Authorization
         #endregion
 
         #region Account Boilerplate
+        public virtual void DeleteAccount(string username)
+        {
+            AccountList = AccountList.ToArray().Where(v => v.Username != username).ToList();
+            OnPendingWrite();
+        }
         internal virtual Account CreateAccount()
         {
             return new Account(this);
         }
-        internal virtual Account CreateNewAccount(string username)
+        public virtual Account CreateNewAccount(string username)
         {
             var check = GetAccountByUsername(username);
             if (check != null)
@@ -228,7 +233,7 @@ namespace OSLCommon.Authorization
                         if (account.Permissions == null)
                             account.Permissions = Array.Empty<AccountPermission>();
                         TokenUsed(success.Token);
-                        return new GrantTokenResponse(ServerStringResponse.AccountTokenGranted, true, success, account.Groups.ToArray(), account.Permissions.ToArray());
+                        return new GrantTokenResponse(ServerStringResponse.AccountTokenGranted, true, success, account.Groups.ToArray(), account.Licenses.ToArray(), account.Permissions.ToArray());
                     }
                 }
                 else

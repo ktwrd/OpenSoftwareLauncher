@@ -22,12 +22,32 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         public void Locale()
         {
             Text = LocaleManager.Get(Text);
+
             toolStripButtonEdit.Text = LocaleManager.Get(toolStripButtonEdit.Text);
+            toolStripButtonEdit.ToolTipText = toolStripButtonEdit.Text;
+
             toolStripButtonRefresh.Text = LocaleManager.Get(toolStripButtonRefresh.Text);
+            toolStripButtonRefresh.ToolTipText = toolStripButtonRefresh.Text;
+            
             toolStripButtonBanTool.Text = LocaleManager.Get(toolStripButtonBanTool.Text);
+            toolStripButtonBanTool.ToolTipText = toolStripButtonBanTool.Text;
+            
             toolStripButtonPermissionTool.Text = LocaleManager.Get(toolStripButtonPermissionTool.Text);
+            toolStripButtonPermissionTool.ToolTipText = toolStripButtonPermissionTool.Text;
+            
             toolStripButtonGroupTool.Text = LocaleManager.Get(toolStripButtonGroupTool.Text);
+            toolStripButtonGroupTool.ToolTipText = toolStripButtonGroupTool.Text;
+            
             toolStripButtonGroupEditorTool.Text = LocaleManager.Get(toolStripButtonGroupEditorTool.Text);
+            toolStripButtonGroupEditorTool.ToolTipText = toolStripButtonGroupEditorTool.Text;
+            
+            toolStripButtonCreateServiceAccount.Text = LocaleManager.Get(toolStripButtonCreateServiceAccount.Text);
+            toolStripButtonCreateServiceAccount.ToolTipText = toolStripButtonCreateServiceAccount.Text;
+
+            toolStripButtonDelete.Text = LocaleManager.Get(toolStripButtonDelete.Text);
+            toolStripButtonDelete.ToolTipText = toolStripButtonDelete.Text;
+
+
             foreach (ColumnHeader col in listViewAccounts.Columns)
             {
                 col.Text = LocaleManager.Get(col.Text);
@@ -55,6 +75,10 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                         item.Licenses.Length > 1 ? $"{item.Licenses.Length} " + LocaleManager.Get("License_Plural") : string.Join(", ", item.Licenses),
                         string.Join(", ", permissionString)
                     });
+                    if (!item.Enabled)
+                        lvitem.ImageIndex = 1;
+                    else if (item.ServiceAccount)
+                        lvitem.ImageIndex = 0;
                     lvitem.Name = item.Username;
                     listViewAccounts.Items.Add(lvitem);
                 }
@@ -65,6 +89,9 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         {
             Enabled = false;
             ReloadList(true);
+
+            toolStripButtonCreateServiceAccount.Enabled = Program.Client.HasPermission(AccountPermission.SERVICEACCOUNT_MANAGE);
+
             Enabled = true;
         }
 
@@ -107,6 +134,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             toolStripButtonLicense.Enabled = false;
             toolStripButtonGroupTool.Enabled = false;
             toolStripButtonEdit.Enabled = false;
+            toolStripButtonDelete.Enabled = false;
             if (SelectedAccounts.Length > 0)
             {
                 if (SelectedAccounts.Length < 2)
@@ -118,6 +146,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 }
                 toolStripButtonGroupTool.Enabled = true;
                 toolStripButtonUnban.Enabled = true;
+                toolStripButtonDelete.Enabled = true;
             }
         }
 
@@ -183,6 +212,43 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 var joined = string.Join("\n", usernames.ToArray());
                 Clipboard.SetText(joined);
             }
+        }
+
+        private void toolStripButtonCreateServiceAccount_Click(object sender, EventArgs e)
+        {
+            Enabled = false;
+            var form = new ServiceAccountCreateForm();
+            form.MdiParent = MdiParent;
+            form.FormClosed += (o, f) =>
+            {
+                toolStripButtonRefresh_Click(null, null);
+                Enabled = true;
+            };
+            form.Show();
+        }
+
+        private async void toolStripButtonDelete_Click(object sender, EventArgs e)
+        {
+            var taskList = new List<Task>();
+            var count = 0;
+            foreach (var account in SelectedAccounts)
+            {
+                taskList.Add(new Task(delegate
+                {
+                    var result = Program.Client.AccountDelete(account.Username).Result;
+                    if (result != null)
+                        MessageBox.Show(LocaleManager.Get(result.Message, @"Failed to delete user"));
+                    else
+                        count++;
+                }));
+            }
+            foreach (var i in taskList)
+                i.Start();
+            await Task.WhenAll(taskList);
+            ReloadList();
+
+            MessageBox.Show($"Deleted {count} Accounts");
+
         }
     }
 }

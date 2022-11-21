@@ -57,6 +57,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 
         public static string AccountDetails(string token)
             => $"{Base}/account?token={encode(token)}";
+        public static string ServiceAccountCreate(string token)
+            => $"{Base}/admin/serviceaccount/create?token={encode(token)}";
 
         public static string AnnouncementLatest()
             => $"{Base}/admin/announcement/latest";
@@ -107,6 +109,10 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             string token,
             string username)
             => $"{Base}/admin/user/pardon?token={encode(token)}&username={encode(username)}";
+        public static string UserDelete(
+            string token,
+            string username)
+            => $"{Base}/admin/user/delete?token={encode(token)}&username={encode(username)}";
 
         #region Audit Log
         public static string AuditLogGetAll_Userspace(

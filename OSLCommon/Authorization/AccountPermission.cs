@@ -20,6 +20,8 @@ namespace OSLCommon.Authorization
         INVULNERABLE,
         READ_RELEASE_HISTORY,
         AUDITLOG_GLOBAL,
-        AUDITLOG_SELF
+        AUDITLOG_SELF,
+        SERVICEACCOUNT_MANAGE,
+        USER_DELETE
     }
 }
