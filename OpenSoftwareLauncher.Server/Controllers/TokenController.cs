@@ -25,6 +25,16 @@ namespace OpenSoftwareLauncher.Server.Controllers
             else if (Request.Headers.ContainsKey("X-Real-IP"))
                 possibleAddress = Request.Headers["X-Real-IP"];
 
+            var accountUsername = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
+            if (accountUsername != null && accountUsername.IsServiceAccount)
+            {
+                return Json(new ObjectResponse<GrantTokenResponse>()
+                {
+                    Success = false,
+                    Data = new GrantTokenResponse(ServerStringResponse.AccountTokenGrantFailed, false)
+                }, MainClass.serializerOptions);
+            }
+
             var grantTokenResponse = MainClass.contentManager.AccountManager.GrantTokenAndOrAccount(
                 WebUtility.UrlDecode(username),
                 WebUtility.UrlDecode(password),

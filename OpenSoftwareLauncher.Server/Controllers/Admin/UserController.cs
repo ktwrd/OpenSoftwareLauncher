@@ -73,6 +73,26 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
             }, MainClass.serializerOptions);
         }
 
+        [HttpGet("delete")]
+        [ProducesResponseType(200, Type = typeof(ObjectResponse<object>))]
+        [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
+        public ActionResult DeleteAccount(string token, string username)
+        {
+            var authRes = MainClass.ValidatePermissions(token, AccountPermission.USER_DELETE);
+            if (authRes != null)
+            {
+                Response.StatusCode = authRes?.Data.Code ?? 0;
+                return Json(authRes, MainClass.serializerOptions);
+            }
+
+            MainClass.contentManager.AccountManager.DeleteAccount(username);
+            return Json(new ObjectResponse<object>()
+            {
+                Success = true,
+                Data = new object()
+            }, MainClass.serializerOptions);
+        }
+
         [HttpGet("pardon")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<AccountDetailsResponse>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]

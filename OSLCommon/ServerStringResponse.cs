@@ -11,6 +11,9 @@ namespace OSLCommon
         public static string AccountDisabled => $"ServerResponse_AccountDisabled";
         public static string AccountTokenGrantFailed = "ServerResponse_Account_TokenGrantFailed";
         public static string AccountTokenGranted = "ServerResponse_Account_TokenGranted";
+        public static string AccountTokenGrantDenied = "ServerResponse_Account_TokenGrantNotAllowed";
+        public static string AccountUsernameInvalid = "ServerResponse_Account_InvalidUsername";
+        public static string AccountCreateFail = "ServerResponse_Account_CreateFail";
         public static string LicenseExists => "ServerResponse_License_Exists";
         public static string LicenseNotFound => "ServerResponse_License_NotFound";
         public static string InvalidLicenseKey => "ServerResponse_License_Invalid";
