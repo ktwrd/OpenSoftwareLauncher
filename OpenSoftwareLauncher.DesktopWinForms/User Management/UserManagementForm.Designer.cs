@@ -227,11 +227,13 @@
             // toolStripButtonCreateServiceAccount
             // 
             this.toolStripButtonCreateServiceAccount.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonCreateServiceAccount.Enabled = false;
             this.toolStripButtonCreateServiceAccount.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.hard_hat__plus;
             this.toolStripButtonCreateServiceAccount.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonCreateServiceAccount.Name = "toolStripButtonCreateServiceAccount";
             this.toolStripButtonCreateServiceAccount.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonCreateServiceAccount.Text = "Create_ServiceAccount";
+            this.toolStripButtonCreateServiceAccount.Click += new System.EventHandler(this.toolStripButtonCreateServiceAccount_Click);
             // 
             // UserManagementForm
             // 

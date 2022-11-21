@@ -85,6 +85,9 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         {
             Enabled = false;
             ReloadList(true);
+
+            toolStripButtonCreateServiceAccount.Enabled = Program.Client.HasPermission(AccountPermission.SERVICEACCOUNT_MANAGE);
+
             Enabled = true;
         }
 
@@ -203,6 +206,19 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 var joined = string.Join("\n", usernames.ToArray());
                 Clipboard.SetText(joined);
             }
+        }
+
+        private void toolStripButtonCreateServiceAccount_Click(object sender, EventArgs e)
+        {
+            Enabled = false;
+            var form = new ServiceAccountCreateForm();
+            form.MdiParent = MdiParent;
+            form.FormClosed += (o, f) =>
+            {
+                toolStripButtonRefresh_Click(null, null);
+                Enabled = true;
+            };
+            form.Show();
         }
     }
 }
