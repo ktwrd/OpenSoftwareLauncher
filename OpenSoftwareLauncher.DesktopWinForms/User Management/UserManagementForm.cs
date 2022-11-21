@@ -22,12 +22,28 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         public void Locale()
         {
             Text = LocaleManager.Get(Text);
+
             toolStripButtonEdit.Text = LocaleManager.Get(toolStripButtonEdit.Text);
+            toolStripButtonEdit.ToolTipText = toolStripButtonEdit.Text;
+
             toolStripButtonRefresh.Text = LocaleManager.Get(toolStripButtonRefresh.Text);
+            toolStripButtonRefresh.ToolTipText = toolStripButtonRefresh.Text;
+            
             toolStripButtonBanTool.Text = LocaleManager.Get(toolStripButtonBanTool.Text);
+            toolStripButtonBanTool.ToolTipText = toolStripButtonBanTool.Text;
+            
             toolStripButtonPermissionTool.Text = LocaleManager.Get(toolStripButtonPermissionTool.Text);
+            toolStripButtonPermissionTool.ToolTipText = toolStripButtonPermissionTool.Text;
+            
             toolStripButtonGroupTool.Text = LocaleManager.Get(toolStripButtonGroupTool.Text);
+            toolStripButtonGroupTool.ToolTipText = toolStripButtonGroupTool.Text;
+            
             toolStripButtonGroupEditorTool.Text = LocaleManager.Get(toolStripButtonGroupEditorTool.Text);
+            toolStripButtonGroupEditorTool.ToolTipText = toolStripButtonGroupEditorTool.Text;
+            
+            toolStripButtonCreateServiceAccount.Text = LocaleManager.Get(toolStripButtonCreateServiceAccount.Text);
+            toolStripButtonCreateServiceAccount.ToolTipText = toolStripButtonCreateServiceAccount.Text;
+            
             foreach (ColumnHeader col in listViewAccounts.Columns)
             {
                 col.Text = LocaleManager.Get(col.Text);
