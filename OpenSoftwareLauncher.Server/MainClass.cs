@@ -129,35 +129,6 @@ namespace OpenSoftwareLauncher.Server
             }
         }
         
-        private static void InitElastic()
-        {
-            var start = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            var enumList = GeneralHelper.GetEnumList<OSLCommon.Logging.AuditType>();
-            enumList.Remove(AuditType.Any);
-            var taskList = new List<Task>();
-            foreach (var item in enumList)
-            {
-                taskList.Add(new Task(delegate
-                {
-                    string indexName = "auditLog-" + item.ToString();
-                    indexName = indexName.ToLower();
-                    var exists = ElasticClient?.Indices.ExistsAsync(indexName).Result;
-                    if (!exists.Exists)
-                    {
-                        var res = ElasticClient?.Indices.Create(indexName);
-                        if (!res.IsSuccess())
-                        {
-                            Console.WriteLine(res.ElasticsearchServerError.ToString());
-                        }
-                    }
-                }));
-            }
-
-            foreach (var i in taskList)
-                i.Start();
-            Task.WhenAll(taskList).Wait();
-            Console.WriteLine($"[InitElastic] Took {DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - start}ms");
-        }
         public static void Main(params string[] args)
         {
             SetupOptions(args);
@@ -166,55 +137,7 @@ namespace OpenSoftwareLauncher.Server
             PrintConfig();
 #endif
             ServerConfig.Get();
-
-            if (ServerConfig.GetBoolean("ElasticSearch", "Enable", false))
-            {
-                if (ServerConfig.GetBoolean("ElasticSearch", "IsCloud", false))
-                {
-                    ElasticClient = new ElasticsearchClient(
-                        ServerConfig.GetString("ElasticCloud", "CloudId"),
-                        new ApiKey(
-                            ServerConfig.GetString("ElasticSearch", "APIKey", "")));
-                    Console.WriteLine("[ElasticClient] Using Cloud instance");
-                    InitElastic();
-                }
-                else
-                {
-                    var uriList = new List<Uri>();
-                    foreach (var item in ServerConfig.ElasticSearch_URL)
-                        uriList.Add(new Uri(item));
-                    if (uriList.Count < 1)
-                    {
-                        Console.WriteLine($"[ElasticClient] No URLs supplied. Aborting");
-                        Environment.Exit(1);
-                    }
-                    var pool = new StaticNodePool(uriList);
-                    Console.WriteLine("[ElasticClient] Using URL Pool");
-                    var settings = new ElasticsearchClientSettings(pool)
-                        .CertificateFingerprint(ServerConfig.GetString("ElasticSearch", "Fingerprint"));
-                    if (ServerConfig.GetBoolean("ElasticCloud", "BasicAuth_Enable", false))
-                    {
-                        Console.WriteLine("[ElasticClient] Using Basic Auth");
-                        var basicAuth = new BasicAuthentication(
-                            ServerConfig.GetString("ElasticCloud", "BasicAuth_Username", ""),
-                            ServerConfig.GetString("ElasticCloud", "BasicAuth_Password"));
-                        settings.Authentication(basicAuth);
-                    }
-                    else
-                    {
-                        Console.WriteLine("[ElasticClient] Using API Key");
-                        settings.Authentication(new ApiKey(ServerConfig.GetString("ElasticSearch", "APIKey", "")));
-                    }
-
-                    ElasticClient = new ElasticsearchClient(
-                        settings);
-                    InitElastic();
-                }
-            }
-            else
-            {
-                Console.WriteLine("[ElasticClient] Disabled");
-            }
+            ElasticAdapter.Create();
 
             if (ServerConfig.GetString("Connection", "MongoDBServer", "").Length < 1)
             {
