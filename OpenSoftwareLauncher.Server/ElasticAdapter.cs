@@ -35,7 +35,11 @@ namespace OpenSoftwareLauncher.Server
                     if (!exists.Exists)
                     {
                         var res = ElasticClient?.Indices.Create(indexName);
-                        if (!res.IsSuccess())
+                        if (res.IsSuccess())
+                        {
+                            Console.WriteLine($"[ElasticAdapter.Initialize] Create index \"{item}\"");
+                        }
+                        else
                         {
                             Console.WriteLine(res.ElasticsearchServerError.ToString());
                         }
