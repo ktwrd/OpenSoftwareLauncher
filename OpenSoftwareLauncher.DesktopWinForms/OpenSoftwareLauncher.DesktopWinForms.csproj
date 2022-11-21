@@ -289,6 +289,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <None Include="Resources\hard-hat--plus.png" />
     <None Include="Resources\clock-select.png" />
     <None Include="Resources\blue-document-task.png" />
     <None Include="Resources\funnel.png" />
