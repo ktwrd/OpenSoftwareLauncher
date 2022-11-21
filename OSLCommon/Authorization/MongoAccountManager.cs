@@ -113,6 +113,15 @@ namespace OSLCommon.Authorization
         }
         #endregion
 
+        public override void DeleteAccount(string username)
+        {
+            var collection = GetAccountCollection<Account>();
+            var filter = Builders<Account>
+                .Filter
+                .Eq("Username", username);
+
+            collection.DeleteMany(filter);
+        }
 
         #region Get Account
         public override Account[] GetAllAccounts()

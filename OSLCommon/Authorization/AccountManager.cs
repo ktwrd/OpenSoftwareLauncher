@@ -58,6 +58,11 @@ namespace OSLCommon.Authorization
         #endregion
 
         #region Account Boilerplate
+        public virtual void DeleteAccount(string username)
+        {
+            AccountList = AccountList.ToArray().Where(v => v.Username != username).ToList();
+            OnPendingWrite();
+        }
         internal virtual Account CreateAccount()
         {
             return new Account(this);
