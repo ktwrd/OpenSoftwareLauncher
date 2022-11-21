@@ -22,6 +22,8 @@ using Elastic.Clients.Elasticsearch;
 using Elastic.Transport;
 using System.Diagnostics;
 using OSLCommon.Logging;
+using System.Threading.Tasks;
+using OSLCommon.Logging.Elastic;
 
 namespace OpenSoftwareLauncher.Server
 {
@@ -293,20 +295,39 @@ namespace OpenSoftwareLauncher.Server
             if (!ServerConfig.GetBoolean("ElasticSearch", "Enable", false) || ElasticClient == null)
                 return;
 
+            IndexResponse? elasticResponse = null;
+            string indexName = "auditLog-" + entry.ActionType.ToString();
+            indexName = indexName.ToLower();
             switch (entry.ActionType)
             {
                 case OSLCommon.Logging.AuditType.AccountDisable:
                     var disabledeser = JsonSerializer.Deserialize<AccountDisableEntryData>(entry.ActionData, serializerOptions);
-                    ElasticClient?.Index(new Dictionary<string, object>
+                    
+                    elasticResponse = ElasticClient?.IndexAsync(new AccountDisableEntry(disabledeser)
                     {
-                        {"Username", entry.Username },
-                        {"Timestamp", entry.Timestamp },
-                        {"TargetUsername", disabledeser.Username },
-                        {"State", disabledeser.State },
-                        {"Reason", disabledeser.Reason }
+                        Username = entry.Username,
+                        Timestamp = entry.Timestamp
                     },
-                    request => request.Index(entry.ActionType.ToString()));
+                    request => request.Index(indexName)).Result;
                     break;
+                case OSLCommon.Logging.AuditType.AnnouncementStateToggle:
+                    var stateToggleDeser = JsonSerializer.Deserialize<AnnouncementStateToggleEntryData>(entry.ActionData, serializerOptions);
+                    
+                    elasticResponse = ElasticClient?.IndexAsync(new AnnouncementStateToggleEntry(stateToggleDeser)
+                    {
+                        Username = entry.Username,
+                        Timestamp = entry.Timestamp
+                    },
+                    request => request.Index(indexName)).Result;
+                    break;
+            }
+
+            if (elasticResponse != null)
+            {
+                if (elasticResponse.IsValidResponse)
+                {
+                    Console.WriteLine($"Index document with ID {elasticResponse.Id} succeeded.");
+                }
             }
         }
 
