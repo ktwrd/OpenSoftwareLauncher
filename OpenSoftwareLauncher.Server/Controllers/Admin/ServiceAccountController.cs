@@ -8,6 +8,7 @@ using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Text.Json;
+using OSLCommon.Logging;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Admin
 {
@@ -111,6 +112,8 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
             var grantTokenResponse = new GrantTokenResponse(ServerStringResponse.AccountTokenGranted, true, freshtoken, account.Groups.ToArray(), account.Licenses.ToArray(), account.Permissions.ToArray());
 
             MainClass.contentManager.AccountManager.SetAccount(account);
+
+            MainClass.contentManager.AuditLogManager.Create(new ServiceAccountCreateEntryData(account), tokenAccount).Wait();
 
             return Json(new ObjectResponse<GrantTokenResponse>()
             {
