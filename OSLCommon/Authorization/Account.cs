@@ -38,6 +38,7 @@ namespace OSLCommon.Authorization
             enabled = sourceAccount.enabled;
             disableReasons = sourceAccount.disableReasons;
             licenses = sourceAccount.licenses;
+            isServiceAccount = sourceAccount.IsServiceAccount;
         }
 
         #region Fields
