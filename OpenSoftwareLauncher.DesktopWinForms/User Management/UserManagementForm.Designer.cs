@@ -31,17 +31,10 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserManagementForm));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.listViewAccounts = new System.Windows.Forms.ListView();
-            this.columnHeaderUsername = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeaderEnabled = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeaderGroups = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeaderPermissions = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeaderLastSeen = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.toolStripButtonEdit = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonRefresh = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonBanTool = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonUnban = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonPermissionTool = new System.Windows.Forms.ToolStripButton();
@@ -49,6 +42,14 @@
             this.toolStripButtonGroupEditorTool = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonLicense = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonCreateServiceAccount = new System.Windows.Forms.ToolStripButton();
+            this.listViewAccounts = new System.Windows.Forms.ListView();
+            this.columnHeaderUsername = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderEnabled = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderGroups = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderPermissions = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderLastSeen = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.toolStripButtonDelete = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -56,6 +57,7 @@
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButtonEdit,
+            this.toolStripButtonDelete,
             this.toolStripSeparator1,
             this.toolStripButtonRefresh,
             this.toolStripSeparator2,
@@ -72,75 +74,6 @@
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
-            // 
-            // listViewAccounts
-            // 
-            this.listViewAccounts.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeaderUsername,
-            this.columnHeaderEnabled,
-            this.columnHeaderGroups,
-            this.columnHeaderPermissions,
-            this.columnHeaderLastSeen});
-            this.listViewAccounts.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listViewAccounts.HideSelection = false;
-            this.listViewAccounts.LargeImageList = this.imageList1;
-            this.listViewAccounts.Location = new System.Drawing.Point(0, 25);
-            this.listViewAccounts.Name = "listViewAccounts";
-            this.listViewAccounts.Size = new System.Drawing.Size(924, 436);
-            this.listViewAccounts.SmallImageList = this.imageList1;
-            this.listViewAccounts.TabIndex = 1;
-            this.listViewAccounts.UseCompatibleStateImageBehavior = false;
-            this.listViewAccounts.View = System.Windows.Forms.View.Details;
-            this.listViewAccounts.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listViewAccounts_ItemSelectionChanged);
-            this.listViewAccounts.SelectedIndexChanged += new System.EventHandler(this.listViewAccounts_SelectedIndexChanged);
-            this.listViewAccounts.KeyUp += new System.Windows.Forms.KeyEventHandler(this.listViewAccounts_KeyUp);
-            this.listViewAccounts.MouseUp += new System.Windows.Forms.MouseEventHandler(this.listViewAccounts_MouseUp);
-            // 
-            // columnHeaderUsername
-            // 
-            this.columnHeaderUsername.Text = "Username";
-            this.columnHeaderUsername.Width = 220;
-            // 
-            // columnHeaderEnabled
-            // 
-            this.columnHeaderEnabled.Text = "Enabled";
-            this.columnHeaderEnabled.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.columnHeaderEnabled.Width = 90;
-            // 
-            // columnHeaderGroups
-            // 
-            this.columnHeaderGroups.Text = "License_Plural";
-            this.columnHeaderGroups.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.columnHeaderGroups.Width = 233;
-            // 
-            // columnHeaderPermissions
-            // 
-            this.columnHeaderPermissions.Text = "Permission_Plural";
-            this.columnHeaderPermissions.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.columnHeaderPermissions.Width = 233;
-            // 
-            // columnHeaderLastSeen
-            // 
-            this.columnHeaderLastSeen.Text = "LastSeen";
-            this.columnHeaderLastSeen.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.columnHeaderLastSeen.Width = 140;
-            // 
-            // imageList1
-            // 
-            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "hard-hat.png");
-            this.imageList1.Images.SetKeyName(1, "cross.png");
-            // 
             // toolStripButtonEdit
             // 
             this.toolStripButtonEdit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -151,6 +84,11 @@
             this.toolStripButtonEdit.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonEdit.Text = "Edit";
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
             // toolStripButtonRefresh
             // 
             this.toolStripButtonRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -160,6 +98,11 @@
             this.toolStripButtonRefresh.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonRefresh.Text = "Refresh";
             this.toolStripButtonRefresh.Click += new System.EventHandler(this.toolStripButtonRefresh_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
             // 
             // toolStripButtonBanTool
             // 
@@ -235,6 +178,76 @@
             this.toolStripButtonCreateServiceAccount.Text = "Create_ServiceAccount";
             this.toolStripButtonCreateServiceAccount.Click += new System.EventHandler(this.toolStripButtonCreateServiceAccount_Click);
             // 
+            // listViewAccounts
+            // 
+            this.listViewAccounts.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeaderUsername,
+            this.columnHeaderEnabled,
+            this.columnHeaderGroups,
+            this.columnHeaderPermissions,
+            this.columnHeaderLastSeen});
+            this.listViewAccounts.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewAccounts.HideSelection = false;
+            this.listViewAccounts.LargeImageList = this.imageList1;
+            this.listViewAccounts.Location = new System.Drawing.Point(0, 25);
+            this.listViewAccounts.Name = "listViewAccounts";
+            this.listViewAccounts.Size = new System.Drawing.Size(924, 436);
+            this.listViewAccounts.SmallImageList = this.imageList1;
+            this.listViewAccounts.TabIndex = 1;
+            this.listViewAccounts.UseCompatibleStateImageBehavior = false;
+            this.listViewAccounts.View = System.Windows.Forms.View.Details;
+            this.listViewAccounts.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listViewAccounts_ItemSelectionChanged);
+            this.listViewAccounts.SelectedIndexChanged += new System.EventHandler(this.listViewAccounts_SelectedIndexChanged);
+            this.listViewAccounts.KeyUp += new System.Windows.Forms.KeyEventHandler(this.listViewAccounts_KeyUp);
+            this.listViewAccounts.MouseUp += new System.Windows.Forms.MouseEventHandler(this.listViewAccounts_MouseUp);
+            // 
+            // columnHeaderUsername
+            // 
+            this.columnHeaderUsername.Text = "Username";
+            this.columnHeaderUsername.Width = 220;
+            // 
+            // columnHeaderEnabled
+            // 
+            this.columnHeaderEnabled.Text = "Enabled";
+            this.columnHeaderEnabled.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.columnHeaderEnabled.Width = 90;
+            // 
+            // columnHeaderGroups
+            // 
+            this.columnHeaderGroups.Text = "License_Plural";
+            this.columnHeaderGroups.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.columnHeaderGroups.Width = 233;
+            // 
+            // columnHeaderPermissions
+            // 
+            this.columnHeaderPermissions.Text = "Permission_Plural";
+            this.columnHeaderPermissions.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.columnHeaderPermissions.Width = 233;
+            // 
+            // columnHeaderLastSeen
+            // 
+            this.columnHeaderLastSeen.Text = "LastSeen";
+            this.columnHeaderLastSeen.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.columnHeaderLastSeen.Width = 140;
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "hard-hat.png");
+            this.imageList1.Images.SetKeyName(1, "cross.png");
+            // 
+            // toolStripButtonDelete
+            // 
+            this.toolStripButtonDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonDelete.Enabled = false;
+            this.toolStripButtonDelete.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.minus;
+            this.toolStripButtonDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonDelete.Name = "toolStripButtonDelete";
+            this.toolStripButtonDelete.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonDelete.Text = "Delete";
+            this.toolStripButtonDelete.Click += new System.EventHandler(this.toolStripButtonDelete_Click);
+            // 
             // UserManagementForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -275,5 +288,6 @@
         private System.Windows.Forms.ToolStripButton toolStripButtonLicense;
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.ToolStripButton toolStripButtonCreateServiceAccount;
+        private System.Windows.Forms.ToolStripButton toolStripButtonDelete;
     }
 }

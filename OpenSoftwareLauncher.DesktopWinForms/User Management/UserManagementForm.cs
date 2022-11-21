@@ -43,7 +43,11 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             
             toolStripButtonCreateServiceAccount.Text = LocaleManager.Get(toolStripButtonCreateServiceAccount.Text);
             toolStripButtonCreateServiceAccount.ToolTipText = toolStripButtonCreateServiceAccount.Text;
-            
+
+            toolStripButtonDelete.Text = LocaleManager.Get(toolStripButtonDelete.Text);
+            toolStripButtonDelete.ToolTipText = toolStripButtonDelete.Text;
+
+
             foreach (ColumnHeader col in listViewAccounts.Columns)
             {
                 col.Text = LocaleManager.Get(col.Text);
@@ -130,6 +134,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             toolStripButtonLicense.Enabled = false;
             toolStripButtonGroupTool.Enabled = false;
             toolStripButtonEdit.Enabled = false;
+            toolStripButtonDelete.Enabled = false;
             if (SelectedAccounts.Length > 0)
             {
                 if (SelectedAccounts.Length < 2)
@@ -141,6 +146,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 }
                 toolStripButtonGroupTool.Enabled = true;
                 toolStripButtonUnban.Enabled = true;
+                toolStripButtonDelete.Enabled = true;
             }
         }
 
@@ -219,6 +225,30 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 Enabled = true;
             };
             form.Show();
+        }
+
+        private async void toolStripButtonDelete_Click(object sender, EventArgs e)
+        {
+            var taskList = new List<Task>();
+            var count = 0;
+            foreach (var account in SelectedAccounts)
+            {
+                taskList.Add(new Task(delegate
+                {
+                    var result = Program.Client.AccountDelete(account.Username).Result;
+                    if (result != null)
+                        MessageBox.Show(LocaleManager.Get(result.Message, @"Failed to delete user"));
+                    else
+                        count++;
+                }));
+            }
+            foreach (var i in taskList)
+                i.Start();
+            await Task.WhenAll(taskList);
+            ReloadList();
+
+            MessageBox.Show($"Deleted {count} Accounts");
+
         }
     }
 }
