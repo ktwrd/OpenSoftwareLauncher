@@ -8,6 +8,7 @@ namespace OSLCommon.Authorization
         {
             Username = "";
             Enabled = true;
+            ServiceAccount = false;
             Permissions = Array.Empty<AccountPermission>();
             DisableReasons = Array.Empty<AccountDisableReason>();
             Licenses = Array.Empty<string>();
@@ -18,6 +19,7 @@ namespace OSLCommon.Authorization
         }
         public string Username { get; set; }
         public bool Enabled { get; set; }
+        public bool ServiceAccount { get; set; }
         public AccountPermission[] Permissions { get; set; }
         public AccountDisableReason[] DisableReasons { get; set; }
         public string[] Licenses { get; set; }

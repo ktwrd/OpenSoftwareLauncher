@@ -526,6 +526,7 @@ namespace OSLCommon.Authorization
             {
                 Username = this.Username ?? "",
                 Enabled = this.Enabled,
+                ServiceAccount = this.IsServiceAccount,
                 Permissions = this.Permissions.ToArray(),
                 DisableReasons = this.DisableReasons.ToArray(),
                 Licenses = this.Licenses,
