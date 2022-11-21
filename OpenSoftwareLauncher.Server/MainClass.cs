@@ -126,6 +126,36 @@ namespace OpenSoftwareLauncher.Server
                 }
             }
         }
+        
+        private static void InitElastic()
+        {
+            var start = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            var enumList = GeneralHelper.GetEnumList<OSLCommon.Logging.AuditType>();
+            enumList.Remove(AuditType.Any);
+            var taskList = new List<Task>();
+            foreach (var item in enumList)
+            {
+                taskList.Add(new Task(delegate
+                {
+                    string indexName = "auditLog-" + item.ToString();
+                    indexName = indexName.ToLower();
+                    var exists = ElasticClient?.Indices.ExistsAsync(indexName).Result;
+                    if (!exists.Exists)
+                    {
+                        var res = ElasticClient?.Indices.Create(indexName);
+                        if (!res.IsSuccess())
+                        {
+                            Console.WriteLine(res.ElasticsearchServerError.ToString());
+                        }
+                    }
+                }));
+            }
+
+            foreach (var i in taskList)
+                i.Start();
+            Task.WhenAll(taskList).Wait();
+            Console.WriteLine($"[InitElastic] Took {DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - start}ms");
+        }
         public static void Main(params string[] args)
         {
             SetupOptions(args);
@@ -144,6 +174,7 @@ namespace OpenSoftwareLauncher.Server
                         new ApiKey(
                             ServerConfig.GetString("ElasticSearch", "APIKey", "")));
                     Console.WriteLine("[ElasticClient] Using Cloud instance");
+                    InitElastic();
                 }
                 else
                 {
@@ -175,6 +206,7 @@ namespace OpenSoftwareLauncher.Server
 
                     ElasticClient = new ElasticsearchClient(
                         settings);
+                    InitElastic();
                 }
             }
             else
