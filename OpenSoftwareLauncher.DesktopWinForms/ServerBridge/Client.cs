@@ -327,6 +327,25 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
             }
             return null;
         }
+        public async Task<HttpException> AccountDelete(string username)
+        {
+            var url = Endpoint.UserDelete(Token, username);
+            var response = await HttpClient.GetAsync(url);
+            var stringContent = await response.Content.ReadAsStreamAsync();
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                Program.LocalContent.AccountDetailList =
+                    Program.LocalContent.AccountDetailList.ToArray().Where(v => v.Username != username)
+                    .ToList();
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.NotFound || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                var deser = JsonSerializer.Deserialize<ObjectResponse<HttpException>>(stringContent, Program.serializerOptions);
+                return deser.Data;
+            }
+            return null;
+        }
 
         /// <summary>
         /// 

@@ -109,6 +109,10 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             string token,
             string username)
             => $"{Base}/admin/user/pardon?token={encode(token)}&username={encode(username)}";
+        public static string UserDelete(
+            string token,
+            string username)
+            => $"{Base}/admin/user/delete?token={encode(token)}&username={encode(username)}";
 
         #region Audit Log
         public static string AuditLogGetAll_Userspace(
