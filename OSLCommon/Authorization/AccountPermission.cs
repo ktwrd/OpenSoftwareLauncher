@@ -21,6 +21,7 @@ namespace OSLCommon.Authorization
         READ_RELEASE_HISTORY,
         AUDITLOG_GLOBAL,
         AUDITLOG_SELF,
-        SERVICEACCOUNT_MANAGE
+        SERVICEACCOUNT_MANAGE,
+        USER_DELETE
     }
 }
