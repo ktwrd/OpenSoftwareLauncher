@@ -195,6 +195,27 @@ namespace OpenSoftwareLauncher.Server
                 var query = context.Request.Path.ToString();
                 if (!query.Contains("&password"))
                     query += context.Request.QueryString.ToString();
+
+                if (context.Request.Query.ContainsKey("token"))
+                {
+                    new Task(delegate
+                    {
+                        var account = contentManager.AccountManager.GetAccount(context.Request.Query["token"], bumpLastUsed: true);
+                        if (account != null)
+                        {
+                            ElasticClient?.Index(new AuthorizedRequestEntry()
+                            {
+                                Username = account.Username,
+                                Path = context.Request.Path,
+                                UserAgent = context.Request.Headers.UserAgent,
+                                Address = possibleAddress,
+                                Method = context.Request.Method
+                            }, request => request.Index("authorizedrequest"));
+                        }
+                    }).Start();
+
+                }
+
                Console.WriteLine($"[OpenSoftwareLauncher.Server] {context.Request.Method} {possibleAddress} \"{query}\" \"{context.Request.Headers.UserAgent}\"");
                 return next();
             });
