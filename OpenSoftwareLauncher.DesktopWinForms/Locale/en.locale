@@ -35,6 +35,7 @@ Modify=Modify
 Other=Other
 Parameters=Parameters
 Password=Password
+Push=Push
 Product=Product
 Ready=Ready
 Redeem=Redeem
@@ -107,6 +108,7 @@ Title_LoginForm=${product.name.short} v${version}
 Title_ParentForm=${product.name} v${version}
 Title_ProductSettingPlural=Product Settings
 Title_LicenseRedeemForm=Redeem License Key
+Title_ServiceAccountCreate=Create Service Account
 Title_SystemAnnouncement=System Announcement
 Title_UserManagement=User Management
 

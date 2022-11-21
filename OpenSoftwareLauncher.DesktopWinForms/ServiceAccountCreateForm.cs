@@ -83,7 +83,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             else if ((int)request.StatusCode == 200)
             {
                 var deser = JsonSerializer.Deserialize<ObjectResponse<GrantTokenResponse>>(stringContent, Program.serializerOptions);
-                var msgResponse = MessageBox.Show("Copy token to clipboard?", LocaleManager.Get("MessageBox_Title"), MessageBoxButtons.OKCancel);
+                var msgResponse = MessageBox.Show("Copy token to clipboard?", LocaleManager.Get("Title"), MessageBoxButtons.OKCancel);
                 if (msgResponse == DialogResult.OK)
                 {
                     Clipboard.SetText(deser.Data.Token.Token);
