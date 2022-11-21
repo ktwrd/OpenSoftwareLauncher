@@ -228,7 +228,7 @@ namespace OSLCommon.Authorization
                         if (account.Permissions == null)
                             account.Permissions = Array.Empty<AccountPermission>();
                         TokenUsed(success.Token);
-                        return new GrantTokenResponse(ServerStringResponse.AccountTokenGranted, true, success, account.Groups.ToArray(), account.Permissions.ToArray());
+                        return new GrantTokenResponse(ServerStringResponse.AccountTokenGranted, true, success, account.Groups.ToArray(), account.Licenses.ToArray(), account.Permissions.ToArray());
                     }
                 }
                 else
