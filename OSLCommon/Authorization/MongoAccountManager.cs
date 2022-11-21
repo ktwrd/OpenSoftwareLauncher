@@ -105,7 +105,11 @@ namespace OSLCommon.Authorization
 
             var filter = Builders<Account>.Filter.Eq("Username", account.Username);
 
-            collection.ReplaceOne(filter, account);
+            long length = collection.Find(filter).CountDocuments();
+            if (length < 1)
+                collection.InsertOne(account);
+            else
+                collection.ReplaceOne(filter, account);
         }
         #endregion
 
