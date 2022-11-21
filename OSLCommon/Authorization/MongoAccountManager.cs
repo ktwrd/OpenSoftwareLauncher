@@ -64,7 +64,7 @@ namespace OSLCommon.Authorization
         #region Account Boilerplate
 
         internal override Account CreateAccount() => this.CreateAccount(true);
-        internal override Account CreateNewAccount(string username)
+        public override Account CreateNewAccount(string username)
         {
             var check = GetAccountByUsername(username);
             if (check != null)

@@ -62,7 +62,7 @@ namespace OSLCommon.Authorization
         {
             return new Account(this);
         }
-        internal virtual Account CreateNewAccount(string username)
+        public virtual Account CreateNewAccount(string username)
         {
             var check = GetAccountByUsername(username);
             if (check != null)
