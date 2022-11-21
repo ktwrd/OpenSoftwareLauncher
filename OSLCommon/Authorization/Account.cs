@@ -79,6 +79,21 @@ namespace OSLCommon.Authorization
             }
         }
 
+        internal bool isServiceAccount = false;
+        /// <summary>
+        /// Is this account a service account. Tokens will not be granted from username+password
+        /// </summary>
+        public bool IsServiceAccount
+        {
+            get => isServiceAccount;
+            set
+            {
+                isServiceAccount = value;
+                if (accountManager != null)
+                    accountManager.OnAccountUpdate(this);
+            }
+        }
+
         internal bool enabled = true;
         /// <summary>
         /// Setting this to false will deny this account from accessing any endpoints.
