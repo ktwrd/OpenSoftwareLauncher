@@ -57,6 +57,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 
         public static string AccountDetails(string token)
             => $"{Base}/account?token={encode(token)}";
+        public static string ServiceAccountCreate(string token)
+            => $"{Base}/admin/serviceaccount/create?token={encode(token)}";
 
         public static string AnnouncementLatest()
             => $"{Base}/admin/announcement/latest";
