@@ -55,6 +55,10 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                         item.Licenses.Length > 1 ? $"{item.Licenses.Length} " + LocaleManager.Get("License_Plural") : string.Join(", ", item.Licenses),
                         string.Join(", ", permissionString)
                     });
+                    if (!item.Enabled)
+                        lvitem.ImageIndex = 1;
+                    else if (item.ServiceAccount)
+                        lvitem.ImageIndex = 0;
                     lvitem.Name = item.Username;
                     listViewAccounts.Items.Add(lvitem);
                 }

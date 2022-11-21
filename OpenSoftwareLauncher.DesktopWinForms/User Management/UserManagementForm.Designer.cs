@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserManagementForm));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonEdit = new System.Windows.Forms.ToolStripButton();
@@ -46,6 +47,7 @@
             this.columnHeaderGroups = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderPermissions = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderLastSeen = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -171,9 +173,11 @@
             this.columnHeaderLastSeen});
             this.listViewAccounts.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listViewAccounts.HideSelection = false;
+            this.listViewAccounts.LargeImageList = this.imageList1;
             this.listViewAccounts.Location = new System.Drawing.Point(0, 25);
             this.listViewAccounts.Name = "listViewAccounts";
             this.listViewAccounts.Size = new System.Drawing.Size(924, 436);
+            this.listViewAccounts.SmallImageList = this.imageList1;
             this.listViewAccounts.TabIndex = 1;
             this.listViewAccounts.UseCompatibleStateImageBehavior = false;
             this.listViewAccounts.View = System.Windows.Forms.View.Details;
@@ -210,6 +214,13 @@
             this.columnHeaderLastSeen.Text = "LastSeen";
             this.columnHeaderLastSeen.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.columnHeaderLastSeen.Width = 140;
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "hard-hat.png");
+            this.imageList1.Images.SetKeyName(1, "cross.png");
             // 
             // UserManagementForm
             // 
@@ -249,5 +260,6 @@
         private System.Windows.Forms.ToolStripButton toolStripButtonGroupEditorTool;
         private System.Windows.Forms.ToolStripButton toolStripButtonUnban;
         private System.Windows.Forms.ToolStripButton toolStripButtonLicense;
+        private System.Windows.Forms.ImageList imageList1;
     }
 }
