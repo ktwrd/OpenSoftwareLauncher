@@ -1,9 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using OSLCommon;
 using OSLCommon.Authorization;
+using System.IO;
+using System;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Text.Json;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Admin
 {
@@ -20,7 +24,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(200, Type = typeof(ObjectResponse<GrantTokenResponse>))]
         [ProducesResponseType(400, Type = typeof(ObjectResponse<HttpException>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
-        public ActionResult CreateAccount(string token, [FromBody] ServiceAccountCreateRequest createRequest)
+        public ActionResult CreateAccount(string token)
         {
             var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
             if (authRes != null)
@@ -29,10 +33,42 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 return Json(authRes, MainClass.serializerOptions);
             }
 
+
+            var syncIOFeature = HttpContext.Features.Get<IHttpBodyControlFeature>();
+            if (syncIOFeature != null)
+            {
+                syncIOFeature.AllowSynchronousIO = true;
+            }
+            ServiceAccountCreateRequest decodedBody;
+            try
+            {
+                StreamReader reader = new StreamReader(Request.Body);
+                string decodedBodyText = reader.ReadToEnd();
+                decodedBody = JsonSerializer.Deserialize<ServiceAccountCreateRequest>(decodedBodyText, MainClass.serializerOptions);
+            }
+            catch (Exception e)
+            {
+                Response.StatusCode = StatusCodes.Status400BadRequest;
+                return Json(new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(StatusCodes.Status400BadRequest, ServerStringResponse.InvalidBody, e)
+                }, MainClass.serializerOptions);
+            }
+            if (decodedBody == null)
+            {
+                Response.StatusCode = StatusCodes.Status400BadRequest;
+                return Json(new ObjectResponse<HttpException>()
+                {
+                    Success = false,
+                    Data = new HttpException(StatusCodes.Status400BadRequest, ServerStringResponse.InvalidBody)
+                }, MainClass.serializerOptions);
+            }
+
             var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token);
 
             var emailRegex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
-            if (!emailRegex.Match(createRequest.Username).Success)
+            if (!emailRegex.Match(decodedBody.Username).Success)
             {
                 Response.StatusCode = 400;
                 return Json(new ObjectResponse<HttpException>()
@@ -42,7 +78,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 }, MainClass.serializerOptions);
             }
 
-            var account = MainClass.contentManager.AccountManager.CreateNewAccount(tokenAccount.Username);
+            var account = MainClass.contentManager.AccountManager.CreateNewAccount(decodedBody.Username);
 
             if (account == null)
             {
@@ -55,8 +91,9 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
             }
 
 
-            account.Permissions = createRequest.Permissions;
-            account.Licenses = createRequest.Licenses;
+            account.Permissions = decodedBody.Permissions;
+            account.Licenses = decodedBody.Licenses;
+            account.IsServiceAccount = true;
 
 
             var possibleAddress = Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "";
@@ -72,6 +109,8 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
             account.AddToken(freshtoken);
 
             var grantTokenResponse = new GrantTokenResponse(ServerStringResponse.AccountTokenGranted, true, freshtoken, account.Groups.ToArray(), account.Licenses.ToArray(), account.Permissions.ToArray());
+
+            MainClass.contentManager.AccountManager.SetAccount(account);
 
             return Json(new ObjectResponse<GrantTokenResponse>()
             {
