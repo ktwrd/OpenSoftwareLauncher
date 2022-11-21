@@ -125,6 +125,11 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 State = false
             }, tokenAccount).Wait();
 
+            MainClass.contentManager.AuditLogManager.Create(new AccountDeleteEntryData()
+            {
+                Username = username
+            }, tokenAccount).Wait();
+
             return Json(new ObjectResponse<AccountDetailsResponse>()
             {
                 Success = true,
