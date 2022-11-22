@@ -21,10 +21,10 @@ namespace OpenSoftwareLauncher.Server
             var start = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             var taskList = new List<Task>();
 
-            var indexList = new List<string>
-            {
-                "authorizedrequest"
-            };
+            var indexList = new List<string>();
+
+            foreach (var item in GeneralHelper.GetEnumList<ElasticIndex>())
+                indexList.Add(item.ToString().ToLower());
 
             var enumList = GeneralHelper.GetEnumList<OSLCommon.Logging.AuditType>();
             enumList.Remove(AuditType.Any);
@@ -121,6 +121,14 @@ namespace OpenSoftwareLauncher.Server
             }
         }
 
+        public enum ElasticIndex
+        {
+            AuthorizedRequest
+        }
+        public static string ParseToIndex(ElasticIndex type)
+            => (IndexPrefix + type.ToString()).ToLower();
+        public static string ParseToIndex(AuditType type)
+            => (IndexPrefix + "auditlog-" + type.ToString()).ToLower();
 
         public static string IndexPrefix
         {
@@ -147,7 +155,7 @@ namespace OpenSoftwareLauncher.Server
                 var account = MainClass.contentManager.AccountManager.GetAccount(context.Request.Query["token"], bumpLastUsed: true);
                 if (account != null)
                 {
-                    string indexName = IndexPrefix + "authorizedrequest";
+                    string indexName = ParseToIndex(ElasticIndex.AuthorizedRequest);
                     var reqData = new AuthorizedRequestEntry()
                     {
                         Username = account.Username,
@@ -179,8 +187,7 @@ namespace OpenSoftwareLauncher.Server
                 return;
 
             IndexResponse? elasticResponse = null;
-            string indexName = IndexPrefix + "auditLog-" + entry.ActionType.ToString();
-            indexName = indexName.ToLower();
+            string indexName = ParseToIndex(entry.ActionType);
             switch (entry.ActionType)
             {
                 case AuditType.AccountDelete:
