@@ -5,6 +5,11 @@ using System;
 using OSLCommon.Logging;
 using Elastic.Clients.Elasticsearch;
 using Elastic.Transport;
+using System.Text.Json;
+using OSLCommon;
+using OSLCommon.Logging.Elastic;
+using System.Linq;
+using Microsoft.AspNetCore.Http;
 
 namespace OpenSoftwareLauncher.Server
 {
@@ -30,19 +35,23 @@ namespace OpenSoftwareLauncher.Server
             {
                 taskList.Add(new Task(delegate
                 {
-                    string indexName = item.ToString().ToLower();
+                    string indexName = IndexPrefix + item.ToString().ToLower();
+                    indexName = indexName.ToLower();
                     var exists = Client?.Indices.ExistsAsync(indexName).Result;
                     if (!exists.Exists)
                     {
                         var res = Client?.Indices.Create(indexName);
                         if (res.IsSuccess())
                         {
-                            Console.WriteLine($"[ElasticAdapter.Initialize] Create index \"{item}\"");
+                            CPrint.Debug($"[ElasticAdapter.Initialize] Create index \"{item}\"");
                         }
                         else
                         {
-                            Console.WriteLine(res.ElasticsearchServerError.ToString());
+                            CPrint.Error($"[ElasticAdapter.Initialize] Failed to create index \"{item}\"\n{res.ElasticsearchServerError}");
                         }
+                        if (res.ElasticsearchWarnings.Count() > 0)
+                            for (int i = 0; i < res.ElasticsearchWarnings.Count(); i++)
+                                CPrint.Warn($"[ElasticAdapter.Initialize] ({i}) Warn while creating index \"{item}\": {res.ElasticsearchWarnings.ElementAt(i)}");
                     }
                 }));
             }
@@ -50,7 +59,7 @@ namespace OpenSoftwareLauncher.Server
             foreach (var i in taskList)
                 i.Start();
             Task.WhenAll(taskList).Wait();
-            Console.WriteLine($"[ElasticAdapter.Initialize] Took {DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - start}ms for {indexList.Count} indexes");
+            CPrint.Debug($"[ElasticAdapter.Initialize] Took {DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - start}ms for {indexList.Count} indexes");
         }
         public static void Create()
         {
@@ -59,11 +68,12 @@ namespace OpenSoftwareLauncher.Server
             {
                 if (ServerConfig.GetBoolean("ElasticSearch", "IsCloud", false))
                 {
+                    string cloudId = ServerConfig.GetString("ElasticCloud", "CloudId");
                     Client = new ElasticsearchClient(
-                        ServerConfig.GetString("ElasticCloud", "CloudId"),
+                        cloudId,
                         new ApiKey(
                             ServerConfig.GetString("ElasticSearch", "APIKey", "")));
-                    Console.WriteLine("[ElasticClient] Using Cloud instance");
+                    CPrint.WriteLine($"[ElasticAdapter] Using Cloud Instance (ID: \"{cloudId}\")");
                     Initialize();
                 }
                 else
@@ -73,16 +83,15 @@ namespace OpenSoftwareLauncher.Server
                         uriList.Add(new Uri(item));
                     if (uriList.Count < 1)
                     {
-                        Console.WriteLine($"[ElasticClient] No URLs supplied. Aborting");
+                        CPrint.Error($"[ElasticAdapter] Empty array at \"ElasticSearch.URL\" in ServerConfig. Aborting");
                         Environment.Exit(1);
                     }
                     var pool = new StaticNodePool(uriList);
-                    Console.WriteLine("[ElasticClient] Using URL Pool");
                     var settings = new ElasticsearchClientSettings(pool)
                         .CertificateFingerprint(ServerConfig.GetString("ElasticSearch", "Fingerprint"));
                     if (ServerConfig.GetBoolean("ElasticCloud", "BasicAuth_Enable", false))
                     {
-                        Console.WriteLine("[ElasticClient] Using Basic Auth");
+                        CPrint.WriteLine("[ElasticAdapter] Using URL Pool with Basic Auth (Username + Password)");
                         var basicAuth = new BasicAuthentication(
                             ServerConfig.GetString("ElasticCloud", "BasicAuth_Username", ""),
                             ServerConfig.GetString("ElasticCloud", "BasicAuth_Password"));
@@ -90,7 +99,7 @@ namespace OpenSoftwareLauncher.Server
                     }
                     else
                     {
-                        Console.WriteLine("[ElasticClient] Using API Key");
+                        CPrint.WriteLine("[ElasticAdapter] Using URL Pool with API Key");
                         settings.Authentication(new ApiKey(ServerConfig.GetString("ElasticSearch", "APIKey", "")));
                     }
 
@@ -101,7 +110,11 @@ namespace OpenSoftwareLauncher.Server
             }
             else
             {
-                Console.WriteLine("[ElasticClient] Disabled");
+                CPrint.WriteLine("[ElasticAdapter] Disabled in ServerConfig (ElasticSearch.Enable is False)");
+            }
+        }
+
+
         public static string IndexPrefix
         {
             get
