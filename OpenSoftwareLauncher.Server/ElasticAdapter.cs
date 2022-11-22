@@ -148,14 +148,21 @@ namespace OpenSoftwareLauncher.Server
                 if (account != null)
                 {
                     string indexName = IndexPrefix + "authorizedrequest";
-                    var res = Client?.Index(new AuthorizedRequestEntry()
+                    var reqData = new AuthorizedRequestEntry()
                     {
                         Username = account.Username,
                         Path = context.Request.Path,
                         UserAgent = context.Request.Headers.UserAgent,
                         Address = possibleAddress,
                         Method = context.Request.Method
-                    }, request => request.Index(indexName));
+                    };
+                    if (GeolocationAdapter.Component != null)
+                    {
+                        var geoRes = GeolocationAdapter.Component.IPQuery(reqData.Address);
+                        if (geoRes != null && geoRes.Status == "OK")
+                            reqData.CountryCode = geoRes.CountryShort;
+                    }
+                    var res = Client?.Index(reqData, request => request.Index(indexName));
                     if (!res.IsSuccess())
                     {
                         CPrint.Error($"[ElasticAdapter.ASPMiddleware] Failed to index in \"{indexName}\"\n{res.ElasticsearchServerError.Error}");
