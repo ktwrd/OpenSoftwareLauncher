@@ -213,6 +213,28 @@ namespace OpenSoftwareLauncher.Server
                     },
                     request => request.Index(indexName)).Result;
                     break;
+                case AuditType.AccountPermissionGrant:
+                    var permissionGrantDeser = JsonSerializer.Deserialize<AccountPermissionGrantEntryData>(entry.ActionData, OSLHelper.SerializerOptions);
+
+                    elasticResponse = Client?.IndexAsync(new AccountPermissionGrantEntry()
+                    {
+                        Username = entry.Username,
+                        Timestamp = entry.Timestamp,
+                        TargetUsername = permissionGrantDeser?.Username ?? "<none>",
+                        Permission = permissionGrantDeser?.Permission ?? OSLCommon.Authorization.AccountPermission.INVALID
+                    }, request => request.Index(indexName)).Result;
+                    break;
+                case AuditType.AccountPermissionRevoke:
+                    var permissionRevokeDeser = JsonSerializer.Deserialize<AccountPermissionRevokeEntryData>(entry.ActionData, OSLHelper.SerializerOptions);
+
+                    elasticResponse = Client?.IndexAsync(new AccountPermissionRevokeEntry()
+                    {
+                        Username = entry.Username,
+                        Timestamp = entry.Timestamp,
+                        TargetUsername = permissionRevokeDeser?.Username ?? "<none>",
+                        Permission = permissionRevokeDeser?.Permission ?? OSLCommon.Authorization.AccountPermission.INVALID
+                    }, request => request.Index(indexName)).Result;
+                    break;
                 case AuditType.AnnouncementStateToggle:
                     var stateToggleDeser = JsonSerializer.Deserialize<AnnouncementStateToggleEntryData>(entry.ActionData, OSLHelper.SerializerOptions);
 
