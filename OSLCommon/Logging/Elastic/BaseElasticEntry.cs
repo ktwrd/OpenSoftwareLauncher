@@ -16,5 +16,14 @@ namespace OSLCommon.Logging.Elastic
         public string ID { get; set; }
         public string Username { get; set; }
         public long Timestamp { get; set; }
+        public string TimestampDate
+        {
+            get
+            {
+                return new DateTime(OSLCommon.OSLHelper.Epoch.Ticks).AddMilliseconds(Timestamp).ToUniversalTime().ToString();
+            }
+            set
+            {}
+        }
     }
 }
