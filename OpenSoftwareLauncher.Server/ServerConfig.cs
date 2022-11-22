@@ -102,7 +102,8 @@ namespace OpenSoftwareLauncher.Server
             },
             {"Telemetry", new Dictionary<string, object>()
                 {
-                    {"Prometheus", false }
+                    {"Prometheus", false },
+                    {"AddressGeolocation", true }
                 }
             },
             {"ElasticSearch", new Dictionary<string, object>()
