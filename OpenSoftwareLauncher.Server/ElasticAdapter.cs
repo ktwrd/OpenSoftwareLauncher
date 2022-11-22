@@ -176,23 +176,37 @@ namespace OpenSoftwareLauncher.Server
             indexName = indexName.ToLower();
             switch (entry.ActionType)
             {
-                case OSLCommon.Logging.AuditType.AccountDisable:
+                case AuditType.AccountDelete:
+                    var accountDeleteDeser = JsonSerializer.Deserialize<AccountDeleteEntryData>(entry.ActionData, OSLHelper.SerializerOptions);
+
+                    elasticResponse = Client?.IndexAsync(new AccountDeleteEntry()
+                    {
+                        Username = entry.Username,
+                        Timestamp = entry.Timestamp,
+                        TargetUsername = accountDeleteDeser?.Username ?? "<none>"
+                    }, request => request.Index(indexName)).Result;
+                    break;
+                case AuditType.AccountDisable:
                     var disabledeser = JsonSerializer.Deserialize<AccountDisableEntryData>(entry.ActionData, OSLHelper.SerializerOptions);
 
                     elasticResponse = Client?.IndexAsync(new AccountDisableEntry(disabledeser)
                     {
                         Username = entry.Username,
-                        Timestamp = entry.Timestamp
+                        Timestamp = entry.Timestamp,
+                        TargetUsername = disabledeser?.Username ?? "<none>",
+                        State = disabledeser?.State ?? false,
+                        Reason = disabledeser?.Reason ?? "<none>",
                     },
                     request => request.Index(indexName)).Result;
                     break;
-                case OSLCommon.Logging.AuditType.AnnouncementStateToggle:
+                case AuditType.AnnouncementStateToggle:
                     var stateToggleDeser = JsonSerializer.Deserialize<AnnouncementStateToggleEntryData>(entry.ActionData, OSLHelper.SerializerOptions);
 
                     elasticResponse = Client?.IndexAsync(new AnnouncementStateToggleEntry(stateToggleDeser)
                     {
                         Username = entry.Username,
-                        Timestamp = entry.Timestamp
+                        Timestamp = entry.Timestamp,
+                        State = stateToggleDeser?.State ?? false
                     },
                     request => request.Index(indexName)).Result;
                     break;
