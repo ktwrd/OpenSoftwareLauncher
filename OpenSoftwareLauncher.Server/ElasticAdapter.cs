@@ -10,7 +10,7 @@ namespace OpenSoftwareLauncher.Server
 {
     public static class ElasticAdapter
     {
-        public static ElasticsearchClient ElasticClient => MainClass.ElasticClient;
+        public static ElasticsearchClient? Client;
         public static void Initialize()
         {
             var start = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
@@ -31,10 +31,10 @@ namespace OpenSoftwareLauncher.Server
                 taskList.Add(new Task(delegate
                 {
                     string indexName = item.ToString().ToLower();
-                    var exists = ElasticClient?.Indices.ExistsAsync(indexName).Result;
+                    var exists = Client?.Indices.ExistsAsync(indexName).Result;
                     if (!exists.Exists)
                     {
-                        var res = ElasticClient?.Indices.Create(indexName);
+                        var res = Client?.Indices.Create(indexName);
                         if (res.IsSuccess())
                         {
                             Console.WriteLine($"[ElasticAdapter.Initialize] Create index \"{item}\"");
@@ -59,7 +59,7 @@ namespace OpenSoftwareLauncher.Server
             {
                 if (ServerConfig.GetBoolean("ElasticSearch", "IsCloud", false))
                 {
-                    MainClass.ElasticClient = new ElasticsearchClient(
+                    Client = new ElasticsearchClient(
                         ServerConfig.GetString("ElasticCloud", "CloudId"),
                         new ApiKey(
                             ServerConfig.GetString("ElasticSearch", "APIKey", "")));
@@ -94,7 +94,7 @@ namespace OpenSoftwareLauncher.Server
                         settings.Authentication(new ApiKey(ServerConfig.GetString("ElasticSearch", "APIKey", "")));
                     }
 
-                    MainClass.ElasticClient = new ElasticsearchClient(
+                    Client = new ElasticsearchClient(
                         settings);
                     Initialize();
                 }

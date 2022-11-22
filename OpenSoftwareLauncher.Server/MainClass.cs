@@ -67,7 +67,7 @@ namespace OpenSoftwareLauncher.Server
                 return target;
             }
         }
-        public static ElasticsearchClient? ElasticClient;
+        public static ElasticsearchClient? ElasticClient => ElasticAdapter.Client;
 
         public static long StartupTimestamp { get; private set; }
         private static void SetupOptions(params string[] args)
