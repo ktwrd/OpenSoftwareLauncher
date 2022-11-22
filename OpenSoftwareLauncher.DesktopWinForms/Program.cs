@@ -14,13 +14,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 {
     public static class Program
     {
-        public static JsonSerializerOptions serializerOptions = new JsonSerializerOptions()
-        {
-            IgnoreReadOnlyFields = true,
-            IgnoreReadOnlyProperties = true,
-            IncludeFields = true,
-            WriteIndented = true
-        };
+        public static JsonSerializerOptions serializerOptions => OSLCommon.OSLHelper.SerializerOptions;
 
         public static Client Client;
         public static LocalContent LocalContent;

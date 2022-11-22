@@ -368,12 +368,7 @@ namespace OpenSoftwareLauncher.Server
             }
         }
 
-        public static JsonSerializerOptions serializerOptions = new JsonSerializerOptions()
-        {
-            IgnoreReadOnlyFields = false,
-            IgnoreReadOnlyProperties = false,
-            IncludeFields = true
-        };
+        public static JsonSerializerOptions serializerOptions => OSLCommon.OSLHelper.SerializerOptions;
 
         public static string[] GetFileList(string directory, string filename)
         {
