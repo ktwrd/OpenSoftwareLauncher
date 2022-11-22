@@ -63,6 +63,7 @@ namespace OpenSoftwareLauncher.Server
 
             MainClass.Ready += delegate
             {
+                MainClass.contentManager.AuditLogManager.CreateEntry += AuditCreateHandle;
             };
         }
 
@@ -164,6 +165,49 @@ namespace OpenSoftwareLauncher.Server
 
             return next();
         }
+
+        private static void AuditCreateHandle(AuditLogEntry entry)
+        {
+            if (!ServerConfig.GetBoolean("ElasticSearch", "Enable", false) || Client == null)
+                return;
+
+            IndexResponse? elasticResponse = null;
+            string indexName = IndexPrefix + "auditLog-" + entry.ActionType.ToString();
+            indexName = indexName.ToLower();
+            switch (entry.ActionType)
+            {
+                case OSLCommon.Logging.AuditType.AccountDisable:
+                    var disabledeser = JsonSerializer.Deserialize<AccountDisableEntryData>(entry.ActionData, OSLHelper.SerializerOptions);
+
+                    elasticResponse = Client?.IndexAsync(new AccountDisableEntry(disabledeser)
+                    {
+                        Username = entry.Username,
+                        Timestamp = entry.Timestamp
+                    },
+                    request => request.Index(indexName)).Result;
+                    break;
+                case OSLCommon.Logging.AuditType.AnnouncementStateToggle:
+                    var stateToggleDeser = JsonSerializer.Deserialize<AnnouncementStateToggleEntryData>(entry.ActionData, OSLHelper.SerializerOptions);
+
+                    elasticResponse = Client?.IndexAsync(new AnnouncementStateToggleEntry(stateToggleDeser)
+                    {
+                        Username = entry.Username,
+                        Timestamp = entry.Timestamp
+                    },
+                    request => request.Index(indexName)).Result;
+                    break;
+                default:
+                    CPrint.Warn($"[ElasticAdapter.AuditCreateHandle] Unsupported ActionType \"{entry.ActionType}\"");
+                    return;
+                    break;
+            }
+
+            if (elasticResponse != null)
+            {
+                if (elasticResponse.IsValidResponse)
+                {
+                    Console.WriteLine($"Index document with ID {elasticResponse.Id} succeeded.");
+                }
             }
         }
     }

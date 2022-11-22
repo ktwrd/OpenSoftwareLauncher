@@ -164,7 +164,6 @@ namespace OpenSoftwareLauncher.Server
             serializerOptions.Converters.Add(new kate.shared.DateTimeConverterUsingDateTimeOffsetParse());
             serializerOptions.Converters.Add(new kate.shared.DateTimeConverterUsingDateTimeParse());
             contentManager = new ContentManager();
-            contentManager.AuditLogManager.CreateEntry += AuditLogManager_CreateEntry;
             LoadTokens();
             Builder = WebApplication.CreateBuilder(args);
             Builder.Services.AddControllers();
@@ -216,47 +215,6 @@ namespace OpenSoftwareLauncher.Server
             App.MapControllers();
             Ready?.Invoke();
             App.Run();
-        }
-
-        private static void AuditLogManager_CreateEntry(OSLCommon.Logging.AuditLogEntry entry)
-        {
-            if (!ServerConfig.GetBoolean("ElasticSearch", "Enable", false) || ElasticClient == null)
-                return;
-
-            IndexResponse? elasticResponse = null;
-            string indexName = "auditLog-" + entry.ActionType.ToString();
-            indexName = indexName.ToLower();
-            switch (entry.ActionType)
-            {
-                case OSLCommon.Logging.AuditType.AccountDisable:
-                    var disabledeser = JsonSerializer.Deserialize<AccountDisableEntryData>(entry.ActionData, serializerOptions);
-                    
-                    elasticResponse = ElasticClient?.IndexAsync(new AccountDisableEntry(disabledeser)
-                    {
-                        Username = entry.Username,
-                        Timestamp = entry.Timestamp
-                    },
-                    request => request.Index(indexName)).Result;
-                    break;
-                case OSLCommon.Logging.AuditType.AnnouncementStateToggle:
-                    var stateToggleDeser = JsonSerializer.Deserialize<AnnouncementStateToggleEntryData>(entry.ActionData, serializerOptions);
-                    
-                    elasticResponse = ElasticClient?.IndexAsync(new AnnouncementStateToggleEntry(stateToggleDeser)
-                    {
-                        Username = entry.Username,
-                        Timestamp = entry.Timestamp
-                    },
-                    request => request.Index(indexName)).Result;
-                    break;
-            }
-
-            if (elasticResponse != null)
-            {
-                if (elasticResponse.IsValidResponse)
-                {
-                    Console.WriteLine($"Index document with ID {elasticResponse.Id} succeeded.");
-                }
-            }
         }
 
         public static ObjectResponse<HttpException>? Validate(string token)
