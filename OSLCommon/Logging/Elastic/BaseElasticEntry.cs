@@ -1,6 +1,7 @@
 ﻿using kate.shared.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace OSLCommon.Logging.Elastic
@@ -16,14 +17,6 @@ namespace OSLCommon.Logging.Elastic
         public string ID { get; set; }
         public string Username { get; set; }
         public long Timestamp { get; set; }
-        public string TimestampDate
-        {
-            get
-            {
-                return new DateTime(OSLCommon.OSLHelper.Epoch.Ticks).AddMilliseconds(Timestamp).ToUniversalTime().ToString();
-            }
-            set
-            {}
-        }
+        public string TimestampDate => new DateTime(OSLCommon.OSLHelper.Epoch.Ticks).AddMilliseconds(Timestamp).ToUniversalTime().ToString("yyyy-MM-ddTHH\\:mm\\:ss.fffffffzzz", CultureInfo.InvariantCulture);
     }
 }
