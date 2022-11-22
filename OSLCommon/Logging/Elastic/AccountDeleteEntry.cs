@@ -10,7 +10,9 @@ namespace OSLCommon.Logging.Elastic
             : base()
         {
             TargetUsername = "<none>";
+            AuditType = AuditType.AccountDelete;
         }
         public string TargetUsername { get; set; }
+        public AuditType AuditType { get; set; }
     }
 }
