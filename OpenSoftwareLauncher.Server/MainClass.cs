@@ -196,33 +196,10 @@ namespace OpenSoftwareLauncher.Server
                 if (!query.Contains("&password"))
                     query += context.Request.QueryString.ToString();
 
-                if (context.Request.Query.ContainsKey("token"))
-                {
-                    new Task(delegate
-                    {
-                        var account = contentManager.AccountManager.GetAccount(context.Request.Query["token"], bumpLastUsed: true);
-                        if (account != null)
-                        {
-                            var res = ElasticClient?.Index(new AuthorizedRequestEntry()
-                            {
-                                Username = account.Username,
-                                Path = context.Request.Path,
-                                UserAgent = context.Request.Headers.UserAgent,
-                                Address = possibleAddress,
-                                Method = context.Request.Method
-                            }, request => request.Index("authorizedrequest"));
-                            if (!res.IsSuccess())
-                            {
-                                Console.WriteLine($"[ERR] [App.Use] Failed to record authorizedrequest\n================\n{res.ElasticsearchServerError.Error}\n================");
-                            }
-                        }
-                    }).Start();
-
-                }
-
                Console.WriteLine($"[OpenSoftwareLauncher.Server] {context.Request.Method} {possibleAddress} \"{query}\" \"{context.Request.Headers.UserAgent}\"");
                 return next();
             });
+            App.Use(ElasticAdapter.ASPMiddleware);
 
             TokenGrantList.Add(new OSLCommon.AuthProviders.URLProvider(ServerConfig.GetString("Authentication", "Provider")));
             AccountManager.TokenGranters.Add(new OSLCommon.AuthProviders.URLProvider(ServerConfig.GetString("Authentication", "Provider")));

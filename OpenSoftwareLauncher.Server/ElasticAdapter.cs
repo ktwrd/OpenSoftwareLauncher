@@ -102,6 +102,49 @@ namespace OpenSoftwareLauncher.Server
             else
             {
                 Console.WriteLine("[ElasticClient] Disabled");
+        public static string IndexPrefix
+        {
+            get
+            {
+                return ServerConfig.GetString("ElasticSearch", "IndexPrefix", "osl-");
+            }
+            set
+            {
+                ServerConfig.Set("ElasticSearch", "IndexPrefix", value);
+            }
+        }
+
+        public static Task ASPMiddleware(HttpContext context, Func<Task> next)
+        {
+            var possibleAddress = context.Connection.RemoteIpAddress?.ToString() ?? "";
+            if (context.Request.Headers.ContainsKey("X-Forwarded-For"))
+                possibleAddress = context.Request.Headers["X-Forwarded-For"];
+            else if (context.Request.Headers.ContainsKey("X-Real-IP"))
+                possibleAddress = context.Request.Headers["X-Real-IP"];
+
+            if (context.Request.Query.ContainsKey("token"))
+            {
+                var account = MainClass.contentManager.AccountManager.GetAccount(context.Request.Query["token"], bumpLastUsed: true);
+                if (account != null)
+                {
+                    string indexName = IndexPrefix + "authorizedrequest";
+                    var res = Client?.Index(new AuthorizedRequestEntry()
+                    {
+                        Username = account.Username,
+                        Path = context.Request.Path,
+                        UserAgent = context.Request.Headers.UserAgent,
+                        Address = possibleAddress,
+                        Method = context.Request.Method
+                    }, request => request.Index(indexName));
+                    if (!res.IsSuccess())
+                    {
+                        CPrint.Error($"[ElasticAdapter.ASPMiddleware] Failed to index in \"{indexName}\"\n{res.ElasticsearchServerError.Error}");
+                    }
+                }
+            }
+
+            return next();
+        }
             }
         }
     }
