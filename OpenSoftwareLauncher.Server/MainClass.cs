@@ -109,14 +109,14 @@ namespace OpenSoftwareLauncher.Server
                         ServerConfig.Set(parent.Key, child.Key, child.Value);
                     }
                 }
-                Console.WriteLine("[INFO] Enforced Mirgration");
+                CPrint.WriteLine("Enforced Mirgration");
             }
         }
         public static void SetDataDirectory(string dataDirectory)
         {
             if (dataDirectory == null) return;
             MainClass.dataDirectory = dataDirectory.Trim('"');
-            Console.WriteLine($"[OSLServer] Set data directory to \"{MainClass.dataDirectory}\"");
+            CPrint.Debug($"[OSLServer] Set data directory to \"{MainClass.dataDirectory}\"");
         }
         private static void PrintConfig()
         {
@@ -124,7 +124,7 @@ namespace OpenSoftwareLauncher.Server
             {
                 foreach (var child in parent.Value)
                 {
-                    Console.WriteLine($"[Config] {parent.Key}.{child.Key} = {child.Value}");
+                    CPrint.Debug($"[Config] {parent.Key}.{child.Key} = {child.Value}");
                 }
             }
         }
@@ -136,14 +136,14 @@ namespace OpenSoftwareLauncher.Server
             SetupOptions(args);
             StartupTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 #if DEBUG
-            PrintConfig();
+            // PrintConfig();
 #endif
             ServerConfig.Get();
             ElasticAdapter.Create();
 
             if (ServerConfig.GetString("Connection", "MongoDBServer", "").Length < 1)
             {
-                Console.WriteLine("[ERROR] MongoDB Connection URL is invalid. Please set it in `config.ini`");
+                CPrint.Error("MongoDB Connection URL is invalid. Please set it in `config.ini`");
                 Environment.Exit(1);
             }
             ServerConfig.OnWrite += (group, key, value) =>
@@ -183,7 +183,7 @@ namespace OpenSoftwareLauncher.Server
                     options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
                     options.RoutePrefix = "swagger/ui";
                 });
-                Console.WriteLine($"[OpenSoftwareLauncher.Server] In development mode, so swagger is enabled. SwaggerUI can be accessed at 0.0.0.0:5010/swagger/ui");
+                CPrint.WriteLine($"In development mode, so swagger is enabled. SwaggerUI can be accessed at 0.0.0.0:5010/swagger/ui");
             }
             App.Use((context, next) =>
             {
@@ -197,13 +197,13 @@ namespace OpenSoftwareLauncher.Server
                 if (!query.Contains("&password"))
                     query += context.Request.QueryString.ToString();
 
-               Console.WriteLine($"[OpenSoftwareLauncher.Server] {context.Request.Method} {possibleAddress} \"{query}\" \"{context.Request.Headers.UserAgent}\"");
+                Console.WriteLine($"[OpenSoftwareLauncher.Server] {context.Request.Method} {possibleAddress} \"{query}\" \"{context.Request.Headers.UserAgent}\"");
                 return next();
             });
             App.Use(ElasticAdapter.ASPMiddleware);
 
-            TokenGrantList.Add(new OSLCommon.AuthProviders.URLProvider(ServerConfig.GetString("Authentication", "Provider")));
-            AccountManager.TokenGranters.Add(new OSLCommon.AuthProviders.URLProvider(ServerConfig.GetString("Authentication", "Provider")));
+            TokenGrantList.Add(new URLProvider(ServerConfig.GetString("Authentication", "Provider")));
+            AccountManager.TokenGranters.Add(new URLProvider(ServerConfig.GetString("Authentication", "Provider")));
 
             if (ServerConfig.GetBoolean("Telemetry", "Prometheus"))
             {
