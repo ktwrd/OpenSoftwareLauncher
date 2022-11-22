@@ -128,7 +128,9 @@ namespace OpenSoftwareLauncher.Server
                 }
             }
         }
-        
+
+        public static event VoidDelegate Ready;
+
         public static void Main(params string[] args)
         {
             SetupOptions(args);
@@ -212,6 +214,7 @@ namespace OpenSoftwareLauncher.Server
 
             App.UseAuthorization();
             App.MapControllers();
+            Ready?.Invoke();
             App.Run();
         }
 

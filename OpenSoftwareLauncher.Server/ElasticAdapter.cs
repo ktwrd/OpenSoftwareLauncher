@@ -60,7 +60,13 @@ namespace OpenSoftwareLauncher.Server
                 i.Start();
             Task.WhenAll(taskList).Wait();
             CPrint.Debug($"[ElasticAdapter.Initialize] Took {DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - start}ms for {indexList.Count} indexes");
+
+            MainClass.Ready += delegate
+            {
+            };
         }
+
+
         public static void Create()
         {
 
