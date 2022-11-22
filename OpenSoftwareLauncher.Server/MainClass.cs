@@ -140,6 +140,7 @@ namespace OpenSoftwareLauncher.Server
 #endif
             ServerConfig.Get();
             ElasticAdapter.Create();
+            GeolocationAdapter.Initialize();
 
             if (ServerConfig.GetString("Connection", "MongoDBServer", "").Length < 1)
             {
