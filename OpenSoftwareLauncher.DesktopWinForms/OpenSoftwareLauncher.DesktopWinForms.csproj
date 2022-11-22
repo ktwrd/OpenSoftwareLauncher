@@ -133,6 +133,12 @@
     <Compile Include="LogForm.Designer.cs">
       <DependentUpon>LogForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ReleaseManagementForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReleaseManagementForm.Designer.cs">
+      <DependentUpon>ReleaseManagementForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ServerBridge\ContentField.cs" />
     <Compile Include="ServerBridge\LocalContent.cs" />
     <Compile Include="ServerBridge\SystemAnnouncementSummaryAsList.cs" />
@@ -238,6 +244,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ParentForm.resx">
       <DependentUpon>ParentForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReleaseManagementForm.resx">
+      <DependentUpon>ReleaseManagementForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ServerConfigForm.resx">
       <DependentUpon>ServerConfigForm.cs</DependentUpon>
