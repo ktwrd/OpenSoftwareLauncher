@@ -35,10 +35,10 @@
             this.columnHeaderSignature = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderTimestamp = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripDropDownButtonDelete = new System.Windows.Forms.ToolStripDropDownButton();
             this.remoteSignatureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripButtonRefresh = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripDropDownButtonFilter = new System.Windows.Forms.ToolStripDropDownButton();
             this.showLatestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -74,6 +74,8 @@
             this.listViewStreamHistory.TabIndex = 1;
             this.listViewStreamHistory.UseCompatibleStateImageBehavior = false;
             this.listViewStreamHistory.View = System.Windows.Forms.View.Details;
+            this.listViewStreamHistory.SelectedIndexChanged += new System.EventHandler(this.listViewStreamHistory_SelectedIndexChanged);
+            this.listViewStreamHistory.Click += new System.EventHandler(this.listViewStreamHistory_Click);
             // 
             // columnHeaderHash
             // 
@@ -103,11 +105,6 @@
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
-            // 
             // toolStripDropDownButtonDelete
             // 
             this.toolStripDropDownButtonDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -118,6 +115,7 @@
             this.toolStripDropDownButtonDelete.Name = "toolStripDropDownButtonDelete";
             this.toolStripDropDownButtonDelete.Size = new System.Drawing.Size(29, 22);
             this.toolStripDropDownButtonDelete.Text = "Delete";
+            this.toolStripDropDownButtonDelete.Click += new System.EventHandler(this.toolStripDropDownButtonDelete_Click);
             // 
             // remoteSignatureToolStripMenuItem
             // 
@@ -134,6 +132,11 @@
             this.toolStripButtonRefresh.Name = "toolStripButtonRefresh";
             this.toolStripButtonRefresh.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonRefresh.Text = "Refresh";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
             // toolStripDropDownButtonFilter
             // 
@@ -152,6 +155,7 @@
             this.showLatestToolStripMenuItem.Name = "showLatestToolStripMenuItem";
             this.showLatestToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.showLatestToolStripMenuItem.Text = "ShowLatest";
+            this.showLatestToolStripMenuItem.Click += new System.EventHandler(this.showLatestToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 
