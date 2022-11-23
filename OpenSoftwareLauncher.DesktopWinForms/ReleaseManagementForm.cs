@@ -20,6 +20,36 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             InitializeComponent();
         }
 
+        public void Locale()
+        {
+            Text = LocaleManager.Get(Text);
+
+            toolStripDropDownButtonDelete.Text = LocaleManager.Get(toolStripDropDownButtonDelete.Text);
+            toolStripDropDownButtonDelete.ToolTipText = toolStripDropDownButtonDelete.Text;
+            remoteSignatureToolStripMenuItem.Text = LocaleManager.Get(remoteSignatureToolStripMenuItem.Text);
+            remoteSignatureToolStripMenuItem.ToolTipText = remoteSignatureToolStripMenuItem.Text;
+
+            toolStripButtonRefresh.Text = LocaleManager.Get(toolStripButtonRefresh.Text);
+            toolStripButtonRefresh.ToolTipText = toolStripButtonRefresh.Text;
+
+            toolStripButtonSave.Text = LocaleManager.Get(toolStripButtonSave.Text);
+            toolStripButtonSave.ToolTipText = toolStripButtonSave.Text;
+
+            toolStripDropDownButtonFilter.Text = LocaleManager.Get(toolStripDropDownButtonFilter.Text);
+            toolStripDropDownButtonFilter.ToolTipText = toolStripDropDownButtonFilter.Text;
+            showLatestToolStripMenuItem.Text = LocaleManager.Get(showLatestToolStripMenuItem.Text);
+            showLatestToolStripMenuItem.ToolTipText = showLatestToolStripMenuItem.Text;
+
+            foreach (ColumnHeader column in listViewStreamHistory.Columns)
+            {
+                column.Text = LocaleManager.Get(column.Text);
+            }
+        }
+        private void ReleaseManagementForm_Shown(object sender, EventArgs e)
+        {
+            Locale();
+        }
+
         public List<ReleaseInfo> WorkingReleaseInfo = new List<ReleaseInfo>();
 
         public void RefreshReleaseTree()

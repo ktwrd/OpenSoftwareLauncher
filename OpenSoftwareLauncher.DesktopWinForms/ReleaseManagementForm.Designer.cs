@@ -42,6 +42,7 @@
             this.toolStripDropDownButtonFilter = new System.Windows.Forms.ToolStripDropDownButton();
             this.showLatestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.toolStripButtonSave = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -97,6 +98,7 @@
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripDropDownButtonDelete,
             this.toolStripButtonRefresh,
+            this.toolStripButtonSave,
             this.toolStripSeparator1,
             this.toolStripDropDownButtonFilter});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
@@ -174,6 +176,15 @@
             this.splitContainer1.SplitterDistance = 156;
             this.splitContainer1.TabIndex = 3;
             // 
+            // toolStripButtonSave
+            // 
+            this.toolStripButtonSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonSave.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.disk;
+            this.toolStripButtonSave.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonSave.Name = "toolStripButtonSave";
+            this.toolStripButtonSave.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonSave.Text = "Save";
+            // 
             // ReleaseManagementForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -184,6 +195,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ReleaseManagementForm";
             this.Text = "Title_Release_Plural";
+            this.Shown += new System.EventHandler(this.ReleaseManagementForm_Shown);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -210,5 +222,6 @@
         private System.Windows.Forms.ToolStripMenuItem showLatestToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton toolStripButtonRefresh;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.ToolStripButton toolStripButtonSave;
     }
 }
