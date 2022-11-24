@@ -68,7 +68,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
 
             var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token);
 
-            var emailRegex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+            var emailRegex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,63})+)$");
             if (!emailRegex.Match(decodedBody.Username).Success)
             {
                 Response.StatusCode = 400;
