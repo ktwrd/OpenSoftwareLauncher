@@ -27,3 +27,6 @@ Set-Location $env:BuildScriptDirectory
 pause
 
 . $PSScriptRoot\Build-Installer.ps1
+
+cd $env:BuildScriptDirectory\minalyzeDeploy
+.\publish.bat
