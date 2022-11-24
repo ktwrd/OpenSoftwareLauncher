@@ -22,6 +22,7 @@ namespace OSLCommon
         public long Timestamp { get; set; }
         public ReleaseInfo Release { get; set; }
         public PublishedReleaseFile[] Files { get; set; }
+        public string RemoteLocation => Release == null ? "" : Release.remoteLocation;
 
         public void ReadFromStream(SerializationReader sr)
         {
