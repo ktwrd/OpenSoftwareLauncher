@@ -25,6 +25,9 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             toolStripButtonAuditLog.Text = LocaleManager.Get("Title_AuditLog");
             toolStripButtonAuditLog.ToolTipText = LocaleManager.Get("Title_AuditLog");
 
+            toolStripButtonReleases.Text = LocaleManager.Get(toolStripButtonReleases.Text);
+            toolStripButtonReleases.ToolTipText = toolStripButtonReleases.Text;
+
             Text = LocaleManager.Get(Text);
         }
 
@@ -88,6 +91,17 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             }
             AuditLogForm.MdiParent = this;
             AuditLogForm.Show();
+        }
+
+        private void toolStripButtonReleases_Click(object sender, EventArgs e)
+        {
+            if (!Program.Client.HasPermission(OSLCommon.Authorization.AccountPermission.RELEASE_MANAGE)) return;
+            if (ReleaseManagementForm == null || ReleaseManagementForm.IsDisposed)
+            {
+                ReleaseManagementForm = new ReleaseManagementForm();
+            }
+            ReleaseManagementForm.MdiParent = this;
+            ReleaseManagementForm.Show();
         }
     }
 }

@@ -35,6 +35,9 @@
             this.toolStripButtonLicenceManagement = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonLicenseKeyCreator = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonAuditLog = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonReleases = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonLogout = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -46,7 +49,10 @@
             this.toolStripButtonAnnouncements,
             this.toolStripButtonLicenceManagement,
             this.toolStripButtonLicenseKeyCreator,
-            this.toolStripButtonAuditLog});
+            this.toolStripButtonAuditLog,
+            this.toolStripButtonReleases,
+            this.toolStripSeparator1,
+            this.toolStripButtonLogout});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
             this.toolStrip1.Name = "toolStrip1";
@@ -106,6 +112,30 @@
             this.toolStripButtonAuditLog.Text = "Title_AuditLog";
             this.toolStripButtonAuditLog.Click += new System.EventHandler(this.toolStripButtonAuditLog_Click);
             // 
+            // toolStripButtonReleases
+            // 
+            this.toolStripButtonReleases.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonReleases.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.box;
+            this.toolStripButtonReleases.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonReleases.Name = "toolStripButtonReleases";
+            this.toolStripButtonReleases.Size = new System.Drawing.Size(30, 20);
+            this.toolStripButtonReleases.Text = "Title_Release_Plural";
+            this.toolStripButtonReleases.Click += new System.EventHandler(this.toolStripButtonReleases_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(30, 6);
+            // 
+            // toolStripButtonLogout
+            // 
+            this.toolStripButtonLogout.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonLogout.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonLogout.Image")));
+            this.toolStripButtonLogout.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonLogout.Name = "toolStripButtonLogout";
+            this.toolStripButtonLogout.Size = new System.Drawing.Size(30, 20);
+            this.toolStripButtonLogout.Text = "Logout";
+            // 
             // ParentForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -132,5 +162,8 @@
         private System.Windows.Forms.ToolStripButton toolStripButtonLicenseKeyCreator;
         private System.Windows.Forms.ToolStripButton toolStripButtonLicenceManagement;
         private System.Windows.Forms.ToolStripButton toolStripButtonAuditLog;
+        private System.Windows.Forms.ToolStripButton toolStripButtonReleases;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripButton toolStripButtonLogout;
     }
 }
