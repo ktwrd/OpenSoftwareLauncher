@@ -30,13 +30,13 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ParentForm));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonUsers = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonAnnouncements = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonLicenceManagement = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonLicenseKeyCreator = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonAuditLog = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonReleases = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonLogout = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -61,6 +61,11 @@
             this.toolStrip1.Size = new System.Drawing.Size(31, 861);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(30, 6);
             // 
             // toolStripButtonUsers
             // 
@@ -122,19 +127,15 @@
             this.toolStripButtonReleases.Text = "Title_Release_Plural";
             this.toolStripButtonReleases.Click += new System.EventHandler(this.toolStripButtonReleases_Click);
             // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(30, 6);
-            // 
             // toolStripButtonLogout
             // 
             this.toolStripButtonLogout.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonLogout.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonLogout.Image")));
+            this.toolStripButtonLogout.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.door_open_out;
             this.toolStripButtonLogout.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonLogout.Name = "toolStripButtonLogout";
             this.toolStripButtonLogout.Size = new System.Drawing.Size(30, 20);
             this.toolStripButtonLogout.Text = "Logout";
+            this.toolStripButtonLogout.Click += new System.EventHandler(this.toolStripButtonLogout_Click);
             // 
             // ParentForm
             // 

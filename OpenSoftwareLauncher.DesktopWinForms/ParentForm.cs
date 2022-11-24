@@ -28,6 +28,9 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             toolStripButtonReleases.Text = LocaleManager.Get(toolStripButtonReleases.Text);
             toolStripButtonReleases.ToolTipText = toolStripButtonReleases.Text;
 
+            toolStripButtonLogout.Text = LocaleManager.Get(toolStripButtonLogout.Text);
+            toolStripButtonLogout.ToolTipText = toolStripButtonLogout.Text;
+
             Text = LocaleManager.Get(Text);
         }
 
@@ -111,6 +114,13 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             }
             ReleaseManagementForm.MdiParent = this;
             ReleaseManagementForm.Show();
+        }
+
+        private void toolStripButtonLogout_Click(object sender, EventArgs e)
+        {
+            UserConfig.Auth_Token = "";
+            UserConfig.Save();
+            Program.ClientContext.Restart();
         }
     }
 }
