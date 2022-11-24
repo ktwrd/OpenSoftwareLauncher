@@ -21,6 +21,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         public string Username { get; set; }
         [Option('e', "endpoint", Required = false, Default = "")]
         public string Endpoint { get; set; }
+        [Option('l', "autologin", Required = false, Default = false)]
+        public bool AutoLogin { get; set; }
     }
 
     public static class Program
@@ -70,6 +72,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                     UserConfig.Auth_Username = Options.Username;
                 if (Options.Endpoint.Length > 0)
                     UserConfig.Connection_Endpoint = Options.Endpoint;
+                if (Options.AutoLogin)
+                    UserConfig.Auth_Remember = Options.AutoLogin;
 
 
                 Application.EnableVisualStyles();
