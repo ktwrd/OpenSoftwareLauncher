@@ -1,4 +1,5 @@
-﻿using kate.shared;
+﻿using CommandLine;
+using kate.shared;
 using OpenSoftwareLauncher.DesktopWinForms.ServerBridge;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,16 @@ using System.Windows.Forms;
 
 namespace OpenSoftwareLauncher.DesktopWinForms
 {
+    public class CommandlineOptions
+    {
+        [Option('t', "token", Required = false, Default = "")]
+        public string Token { get; set; }
+        [Option('u', "username", Required = false, Default = "")]
+        public string Username { get; set; }
+        [Option('e', "endpoint", Required = false, Default = "")]
+        public string Endpoint { get; set; }
+    }
+
     public static class Program
     {
         public static JsonSerializerOptions serializerOptions = new JsonSerializerOptions()
@@ -34,11 +45,13 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         public static DebugListener DebugListener;
         public static System.Windows.Forms.Timer LogFlushTimer;
 
+        public static CommandlineOptions Options;
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
 #if DEBUG
             System.Threading.Thread.Sleep(2000);
@@ -48,6 +61,16 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             LocaleManager.Load();
             try
             {
+                var parsed = Parser.Default.ParseArguments<CommandlineOptions>(args);
+                Options = parsed.Value;
+                if (Options.Token.Length > 0)
+                    UserConfig.Auth_Token = Options.Token;
+                if (Options.Username.Length > 0)
+                    UserConfig.Auth_Username = Options.Username;
+                if (Options.Endpoint.Length > 0)
+                    UserConfig.Connection_Endpoint = Options.Endpoint;
+
+
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 DebugListener = new DebugListener();
