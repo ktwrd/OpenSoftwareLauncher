@@ -61,7 +61,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             LocaleManager.Load();
             try
             {
-                var parsed = Parser.Default.ParseArguments<CommandlineOptions>(args);
+                var parser = new Parser(with => with.IgnoreUnknownArguments = true);
+                var parsed = parser.ParseArguments<CommandlineOptions>(args);
                 Options = parsed.Value;
                 if (Options.Token.Length > 0)
                     UserConfig.Auth_Token = Options.Token;
