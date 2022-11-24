@@ -110,10 +110,11 @@ Section "Desktop Client (required)" SecInstallLauncher
   SetOutPath "$LOCALAPPDATA\OpenSoftwareLauncher.DesktopWinForms"
   
   ;ADD YOUR OWN FILES HERE...
-  File    "..\bin\Release\*.exe"
-  File    "..\bin\Release\*.dll"
-  File    "..\bin\Release\*.exe.config"
-  File /r "..\bin\Release\Locale"
+  File    ".\release\*.exe"
+  File    ".\release\*.dll"
+  File    ".\release\*.exe.config"
+  File    ".\release\*.txt"
+  File /r ".\release\Locale"
   
   ;Store installation folder
   WriteRegStr HKCU "Software\OpenSoftwareLauncher_DesktopWinForms" "" "$LOCALAPPDATA\OpenSoftwareLauncher.DesktopWinForms"
