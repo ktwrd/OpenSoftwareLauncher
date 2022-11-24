@@ -42,7 +42,6 @@
             this.toolStripDropDownButtonFilter = new System.Windows.Forms.ToolStripDropDownButton();
             this.showLatestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.toolStripButtonSave = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -98,7 +97,6 @@
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripDropDownButtonDelete,
             this.toolStripButtonRefresh,
-            this.toolStripButtonSave,
             this.toolStripSeparator1,
             this.toolStripDropDownButtonFilter});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
@@ -125,6 +123,7 @@
             this.remoteSignatureToolStripMenuItem.Name = "remoteSignatureToolStripMenuItem";
             this.remoteSignatureToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.remoteSignatureToolStripMenuItem.Text = "RemoteSignature";
+            this.remoteSignatureToolStripMenuItem.Click += new System.EventHandler(this.remoteSignatureToolStripMenuItem_Click);
             // 
             // toolStripButtonRefresh
             // 
@@ -134,6 +133,7 @@
             this.toolStripButtonRefresh.Name = "toolStripButtonRefresh";
             this.toolStripButtonRefresh.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonRefresh.Text = "Refresh";
+            this.toolStripButtonRefresh.Click += new System.EventHandler(this.toolStripButtonRefresh_Click);
             // 
             // toolStripSeparator1
             // 
@@ -155,7 +155,7 @@
             // 
             this.showLatestToolStripMenuItem.CheckOnClick = true;
             this.showLatestToolStripMenuItem.Name = "showLatestToolStripMenuItem";
-            this.showLatestToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.showLatestToolStripMenuItem.Size = new System.Drawing.Size(134, 22);
             this.showLatestToolStripMenuItem.Text = "ShowLatest";
             this.showLatestToolStripMenuItem.Click += new System.EventHandler(this.showLatestToolStripMenuItem_Click);
             // 
@@ -175,15 +175,6 @@
             this.splitContainer1.Size = new System.Drawing.Size(733, 358);
             this.splitContainer1.SplitterDistance = 156;
             this.splitContainer1.TabIndex = 3;
-            // 
-            // toolStripButtonSave
-            // 
-            this.toolStripButtonSave.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonSave.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.disk;
-            this.toolStripButtonSave.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonSave.Name = "toolStripButtonSave";
-            this.toolStripButtonSave.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonSave.Text = "Save";
             // 
             // ReleaseManagementForm
             // 
@@ -222,6 +213,5 @@
         private System.Windows.Forms.ToolStripMenuItem showLatestToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton toolStripButtonRefresh;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.ToolStripButton toolStripButtonSave;
     }
 }

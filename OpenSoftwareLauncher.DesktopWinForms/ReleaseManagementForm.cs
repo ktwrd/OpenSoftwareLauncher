@@ -1,13 +1,16 @@
 ﻿using kate.shared.Helpers;
 using OpenSoftwareLauncher.DesktopWinForms.ServerBridge;
+using OSLCommon;
 using OSLCommon.AutoUpdater;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -32,9 +35,6 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             toolStripButtonRefresh.Text = LocaleManager.Get(toolStripButtonRefresh.Text);
             toolStripButtonRefresh.ToolTipText = toolStripButtonRefresh.Text;
 
-            toolStripButtonSave.Text = LocaleManager.Get(toolStripButtonSave.Text);
-            toolStripButtonSave.ToolTipText = toolStripButtonSave.Text;
-
             toolStripDropDownButtonFilter.Text = LocaleManager.Get(toolStripDropDownButtonFilter.Text);
             toolStripDropDownButtonFilter.ToolTipText = toolStripDropDownButtonFilter.Text;
             showLatestToolStripMenuItem.Text = LocaleManager.Get(showLatestToolStripMenuItem.Text);
@@ -48,6 +48,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         private void ReleaseManagementForm_Shown(object sender, EventArgs e)
         {
             Locale();
+            toolStripButtonRefresh_Click(null, null);
         }
 
         public List<ReleaseInfo> WorkingReleaseInfo = new List<ReleaseInfo>();
@@ -95,6 +96,32 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             }
         }
 
+        public async Task<bool> Pull()
+        {
+            var url = Endpoint.Release_ReleaseInfo(Program.Client.Token);
+            var response = await Program.Client.HttpClient.GetAsync(url);
+            var stringContent = response.Content.ReadAsStringAsync().Result;
+            switch ((int)response.StatusCode)
+            {
+                case 200:
+                    var successDeser = JsonSerializer.Deserialize<ObjectResponse<ReleaseInfo[]>>(stringContent, Program.serializerOptions);
+                    WorkingReleaseInfo = successDeser.Data.ToList();
+                    return true;
+                    break;
+                case 401:
+                    var failDeser = JsonSerializer.Deserialize<ObjectResponse<HttpException>>(stringContent, Program.serializerOptions);
+                    Trace.WriteLine($"[ReleaseManagementForm.Pull] Failed. Code 401 at {url}\n================\n{failDeser.Data.Message}\n{failDeser.Data.Error}\n================");
+                    MessageBox.Show($"Code: {(int)response.StatusCode}\n{LocaleManager.Get(failDeser.Data.Message)}\n{failDeser.Data.Error}", "Pull Failure");
+                    return false;
+                    break;
+                default:
+                    Trace.WriteLine($"[ReleaseManagementForm.Pull] Failed. Code {(int)response.StatusCode} at {url}\n================\n{stringContent}\n================");
+                    MessageBox.Show($"Code: {(int)response.StatusCode}\nURL: {url}\n========================\n{stringContent}", "Pull Failure");
+                    return false;
+                    break;
+            }
+        }
+
         public List<ReleaseInfo> SelectedReleases = new List<ReleaseInfo>();
         public event VoidDelegate SelectedReleasesChange;
         private void listViewStreamHistory_SelectedIndexChanged(object sender, EventArgs e)
@@ -124,21 +151,91 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             RefreshReleaseListView();
         }
 
-        private void toolStripDropDownButtonDelete_Click(object sender, EventArgs e)
+        private async void toolStripDropDownButtonDelete_Click(object sender, EventArgs e)
         {
+            var taskList = new List<Task>();
             foreach (var selected in SelectedReleases)
             {
-                RemoveRelease(selected);
+                taskList.Add(RemoveRelease(selected));
             }
+            await Task.WhenAll(taskList);
             RefreshReleaseListView();
             RefreshReleaseTree();
         }
-        public bool RemoveRelease(ReleaseInfo releaseInfo)
-            => WorkingReleaseInfo.Remove(releaseInfo);
-
-        public void RemoveReleaseBySignature(string signature)
+        /// <param name="releaseInfo">Release to delete (by commit+signature)</param>
+        /// <returns>Was it successful?</returns>
+        public async Task<bool> RemoveRelease(ReleaseInfo releaseInfo)
         {
-            WorkingReleaseInfo = WorkingReleaseInfo.Where(v => v.remoteLocation != signature).ToList();
+            var url = Endpoint.Release_CommitHash(Program.Client.Token, releaseInfo.commitHash, releaseInfo.remoteLocation);
+            var response = await Program.Client.HttpClient.DeleteAsync(url);
+            var stringContent = response.Content.ReadAsStringAsync().Result;
+            switch ((int)response.StatusCode)
+            {
+                case 200:
+                    var successDeser = JsonSerializer.Deserialize<ObjectResponse<long>>(stringContent, Program.serializerOptions);
+                    WorkingReleaseInfo = WorkingReleaseInfo.Where(v => v != releaseInfo).ToList();
+                    Trace.WriteLine($"[ReleaseManagementForm.RemoveRelease] Deleted {successDeser.Data} items");
+                    return true;
+                    break;
+                case 401:
+                    var failDeser = JsonSerializer.Deserialize<ObjectResponse<HttpException>>(stringContent, Program.serializerOptions);
+                    Trace.WriteLine($"[ReleaseManagementForm.RemoveRelease] Failed. Code 401 at {url}\n================\n{failDeser.Data.Message}\n{failDeser.Data.Error}\n================");
+                    MessageBox.Show($"Code: {(int)response.StatusCode}\n{LocaleManager.Get(failDeser.Data.Message)}\n{failDeser.Data.Error}", "RemoveRelease Failure");
+                    return false;
+                    break;
+                default:
+                    Trace.WriteLine($"[ReleaseManagementForm.RemoveRelease] Failed. Code {(int)response.StatusCode} at {url}\n================\n{stringContent}\n================");
+                    MessageBox.Show($"Code: {(int)response.StatusCode}\nURL: {url}\n========================\n{stringContent}", "RemoveRelease Failure");
+                    return false;
+                    break;
+            }
+        }
+
+        public async Task RemoveReleaseBySignature(string signature)
+        {
+            var url = Endpoint.Release_Signature(Program.Client.Token, signature);
+            var response = await Program.Client.HttpClient.DeleteAsync(url);
+            var stringContent = response.Content.ReadAsStringAsync().Result;
+
+            switch ((int)response.StatusCode)
+            {
+                case 200:
+                    var successDeser = JsonSerializer.Deserialize<ObjectResponse<long>>(stringContent, Program.serializerOptions);
+                    WorkingReleaseInfo = WorkingReleaseInfo.Where(v => v.remoteLocation != signature).ToList();
+                    Trace.WriteLine($"[ReleaseManagementForm.RemoveReleaseBySignature] Deleted {successDeser.Data} items");
+                    break;
+                case 401:
+                    var failDeser = JsonSerializer.Deserialize<ObjectResponse<HttpException>>(stringContent, Program.serializerOptions);
+                    Trace.WriteLine($"[ReleaseManagementForm.RemoveReleaseBySignature] Failed. Code 401 at {url}\n================\n{failDeser.Data.Message}\n{failDeser.Data.Error}\n================");
+                    MessageBox.Show($"Code: {(int)response.StatusCode}\n{LocaleManager.Get(failDeser.Data.Message)}\n{failDeser.Data.Error}", "RemoveReleaseBySignature Failure");
+                    break;
+                default:
+                    Trace.WriteLine($"[ReleaseManagementForm.RemoveReleaseBySignature] Failed. Code {(int)response.StatusCode} at {url}\n================\n{stringContent}\n================");
+                    MessageBox.Show($"Code: {(int)response.StatusCode}\nURL: {url}\n========================\n{stringContent}", "RemoveReleaseBySignature Failure");
+                    break;
+            }
+        }
+
+        private async void remoteSignatureToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var taskList = new List<Task>();
+            foreach (var selected in SelectedReleases)
+            {
+                taskList.Add(RemoveReleaseBySignature(selected.remoteLocation));
+            }
+            await Task.WhenAll(taskList);
+            RefreshReleaseListView();
+            RefreshReleaseTree();
+        }
+
+        private async void toolStripButtonRefresh_Click(object sender, EventArgs e)
+        {
+            var refreshViews = await Pull();
+            if (refreshViews)
+            {
+                RefreshReleaseListView();
+                RefreshReleaseTree();
+            }
         }
     }
 }
