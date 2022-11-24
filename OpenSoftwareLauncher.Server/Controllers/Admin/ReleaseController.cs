@@ -23,19 +23,11 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
             var publishedCollection = MainClass.contentManager.GetPublishedCollection();
             var releaseCollection = MainClass.contentManager.GetReleaseCollection();
 
-            var taskList = new List<Task<DeleteResult>>();
-            if (publishedCollection != null)
-                taskList.Add(publishedCollection.DeleteManyAsync(publishedFilter));
-            if (releaseCollection != null)
-                taskList.Add(releaseCollection.DeleteManyAsync(releaseFilter));
-
-            var results = await Task.WhenAll(taskList);
-
             long count = 0;
-            foreach (var item in results)
-            {
-                count += item.DeletedCount;
-            }
+            if (publishedCollection != null)
+                count += (await publishedCollection.DeleteManyAsync(publishedFilter)).DeletedCount;
+            if (releaseCollection != null)
+                count += (await releaseCollection.DeleteManyAsync(releaseFilter)).DeletedCount;
 
             return count;
         }
@@ -85,7 +77,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
 
             var publishedFilter = Builders<PublishedRelease>
                 .Filter
-                .Where(v => v.Release.remoteLocation == signature);
+                .Where(v => v.RemoteLocation == signature);
 
             var releaseFilter = Builders<ReleaseInfo>
                 .Filter
@@ -143,7 +135,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
 
             var filter = Builders<PublishedRelease>
                 .Filter
-                .Where(v => v.Release.remoteLocation == signature);
+                .Where(v => v.RemoteLocation == signature);
 
             IMongoCollection<PublishedRelease>? collection = MainClass.contentManager.GetPublishedCollection();
 
@@ -162,7 +154,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [HttpDelete("commitHash")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<long>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
-        public async Task<ActionResult> CommitHash_Delete(string token, string hash, string signature)
+        public async Task<ActionResult> CommitHash_Delete(string token, string hash)
         {
             var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
             if (authRes != null)
@@ -171,12 +163,14 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 return Json(authRes, MainClass.serializerOptions);
             }
 
+
+
             var publishedFilter = Builders<PublishedRelease>
                 .Filter
-                .Where(v => v.CommitHash == hash && (signature.Length > 0 ? v.Release.remoteLocation == signature : true));
+                .Where(v => v.CommitHash == hash);
             var releaseFilter = Builders<ReleaseInfo>
                 .Filter
-                .Where(v => v.commitHash == hash && (signature.Length > 0 ? v.remoteLocation == signature : true));
+                .Where(v => v.commitHash == hash);
 
             long count = await DeleteFilter(releaseFilter, publishedFilter);
 
