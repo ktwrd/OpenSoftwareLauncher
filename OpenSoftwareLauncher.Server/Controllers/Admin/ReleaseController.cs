@@ -163,8 +163,6 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 return Json(authRes, MainClass.serializerOptions);
             }
 
-
-
             var publishedFilter = Builders<PublishedRelease>
                 .Filter
                 .Where(v => v.CommitHash == hash);
@@ -178,6 +176,65 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
             {
                 Success = true,
                 Data = count
+            }, MainClass.serializerOptions);
+        }
+
+        [HttpGet("commitHash/releaseInfo")]
+        [ProducesResponseType(200, Type = typeof(ObjectResponse<ReleaseInfo[]>))]
+        [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
+        public async Task<ActionResult> CommitHash_Get_ReleaseInfo(string token, string hash)
+        {
+            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
+            if (authRes != null)
+            {
+                Response.StatusCode = authRes?.Data.Code ?? 0;
+                return Json(authRes, MainClass.serializerOptions);
+            }
+
+            var filter = Builders<ReleaseInfo>
+                .Filter
+                .Where(v => v.commitHash == hash);
+
+            var collection = MainClass.contentManager.GetReleaseCollection();
+            IAsyncCursor<ReleaseInfo>? result = null;
+            if (collection != null)
+                result = await collection.FindAsync(filter);
+            List<ReleaseInfo> resultList = result.ToList() ?? new List<ReleaseInfo>();
+
+            return Json(new ObjectResponse<ReleaseInfo[]>()
+            {
+                Success = true,
+                Data = resultList.ToArray()
+            }, MainClass.serializerOptions);
+        }
+
+        [HttpGet("commitHash/publishedRelease")]
+        [ProducesResponseType(200, Type = typeof(ObjectResponse<PublishedRelease[]>))]
+        [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
+        public async Task<ActionResult> CommitHash_Get_PublishedRelease(string token, string hash)
+        {
+            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
+            if (authRes != null)
+            {
+                Response.StatusCode = authRes?.Data.Code ?? 0;
+                return Json(authRes, MainClass.serializerOptions);
+            }
+
+
+            var filter = Builders<PublishedRelease>
+                .Filter
+                .Where(v => v.CommitHash == hash);
+
+            var collection = MainClass.contentManager.GetPublishedCollection();
+            IAsyncCursor<PublishedRelease>? result = null;
+            if (collection != null)
+                result = await collection.FindAsync(filter);
+            List<PublishedRelease> resultList = result.ToList() ?? new List<PublishedRelease>();
+
+            return Json(new ObjectResponse<PublishedRelease[]>()
+            {
+                Success = true,
+                Data = resultList.ToArray()
             }, MainClass.serializerOptions);
         }
     }
