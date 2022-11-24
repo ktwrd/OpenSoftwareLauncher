@@ -36,6 +36,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         public AnnouncementManagementForm AnnouncementManagementForm;
         public LogForm LogForm;
         public AuditLogForm AuditLogForm;
+        public ReleaseManagementForm ReleaseManagementForm;
 
         private void ParentForm_Shown(object sender, EventArgs e)
         {
@@ -43,6 +44,14 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             LogForm.MdiParent = this;
             LogForm.Show();
             LogForm.WindowState = FormWindowState.Minimized;
+
+            toolStripButtonUsers.Enabled = Program.Client.HasPermission(OSLCommon.Authorization.AccountPermission.USER_LIST);
+            toolStripButtonAnnouncements.Enabled = Program.Client.HasPermission(OSLCommon.Authorization.AccountPermission.ANNOUNCEMENT_MANAGE);
+            toolStripButtonLicenceManagement.Enabled = Program.Client.HasPermission(OSLCommon.Authorization.AccountPermission.LICENSE_MANAGE);
+            toolStripButtonLicenseKeyCreator.Enabled = Program.Client.HasPermission(OSLCommon.Authorization.AccountPermission.LICENSE_MANAGE);
+            toolStripButtonAuditLog.Enabled = Program.Client.HasPermission(OSLCommon.Authorization.AccountPermission.AUDITLOG_SELF)
+                                           || Program.Client.HasPermission(OSLCommon.Authorization.AccountPermission.AUDITLOG_GLOBAL);
+            toolStripButtonReleases.Enabled = Program.Client.HasPermission(OSLCommon.Authorization.AccountPermission.RELEASE_MANAGE);
         }
 
         private void toolStripButtonUsers_Click(object sender, EventArgs e)
