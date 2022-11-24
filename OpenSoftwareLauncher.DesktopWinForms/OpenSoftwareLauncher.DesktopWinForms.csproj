@@ -307,6 +307,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <None Include="Resources\door-open-out.png" />
     <None Include="Resources\geolocation.png" />
     <None Include="Resources\hard-hat--plus.png" />
     <None Include="Resources\clock-select.png" />
