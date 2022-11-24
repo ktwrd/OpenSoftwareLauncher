@@ -13,6 +13,13 @@ msbuild /p:Configuration=Release -maxcpucount:4
 Remove-Item -Recurse -Force BuildScripts\release
 mkdir BuildScripts\release\
 Copy-Item bin\Release\* BuildScripts\release\
+Copy-Item Locale\*.locale BuildScripts\release\Locale\
+Copy-Item ..\LICENSE BuildScripts\release\LICENSE.txt
+Remove-Item BuildScripts\release\config.ini
+Remove-Item BuildScripts\release\*.xml
+Remove-Item BuildScripts\release\*.pdb
+Remove-Item BuildScripts\release\*.dylib
+Remove-Item BuildScripts\release\*.so
 
 # . $PSScriptRoot\Build-ILMerge.ps1
 
