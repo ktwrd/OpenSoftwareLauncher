@@ -216,18 +216,6 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             }
         }
 
-        private async void remoteSignatureToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var taskList = new List<Task>();
-            foreach (var selected in SelectedReleases)
-            {
-                taskList.Add(RemoveReleaseBySignature(selected.remoteLocation));
-            }
-            await Task.WhenAll(taskList);
-            RefreshReleaseListView();
-            RefreshReleaseTree();
-        }
-
         private async void toolStripButtonRefresh_Click(object sender, EventArgs e)
         {
             var refreshViews = await Pull();
@@ -241,6 +229,30 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         private void treeViewBaseSignature_AfterSelect(object sender, TreeViewEventArgs e)
         {
             RefreshReleaseListView();
+        }
+
+        private async void toolStripSplitButton1_ButtonClick(object sender, EventArgs e)
+        {
+            var taskList = new List<Task>();
+            foreach (var selected in SelectedReleases)
+            {
+                taskList.Add(RemoveRelease(selected));
+            }
+            await Task.WhenAll(taskList);
+            RefreshReleaseListView();
+            RefreshReleaseTree();
+        }
+
+        private async void remoteSignatureToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            var taskList = new List<Task>();
+            foreach (var selected in SelectedReleases)
+            {
+                taskList.Add(RemoveReleaseBySignature(selected.remoteLocation));
+            }
+            await Task.WhenAll(taskList);
+            RefreshReleaseListView();
+            RefreshReleaseTree();
         }
     }
 }

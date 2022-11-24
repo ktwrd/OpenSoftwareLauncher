@@ -35,13 +35,13 @@
             this.columnHeaderSignature = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderTimestamp = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripDropDownButtonDelete = new System.Windows.Forms.ToolStripDropDownButton();
-            this.remoteSignatureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripButtonRefresh = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripDropDownButtonFilter = new System.Windows.Forms.ToolStripDropDownButton();
             this.showLatestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripDropDownButtonDelete = new System.Windows.Forms.ToolStripSplitButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.remoteSignatureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -108,26 +108,6 @@
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // toolStripDropDownButtonDelete
-            // 
-            this.toolStripDropDownButtonDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripDropDownButtonDelete.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.remoteSignatureToolStripMenuItem});
-            this.toolStripDropDownButtonDelete.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.minus;
-            this.toolStripDropDownButtonDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripDropDownButtonDelete.Name = "toolStripDropDownButtonDelete";
-            this.toolStripDropDownButtonDelete.Size = new System.Drawing.Size(29, 22);
-            this.toolStripDropDownButtonDelete.Text = "Delete";
-            this.toolStripDropDownButtonDelete.Click += new System.EventHandler(this.toolStripDropDownButtonDelete_Click);
-            // 
-            // remoteSignatureToolStripMenuItem
-            // 
-            this.remoteSignatureToolStripMenuItem.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.geolocation;
-            this.remoteSignatureToolStripMenuItem.Name = "remoteSignatureToolStripMenuItem";
-            this.remoteSignatureToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
-            this.remoteSignatureToolStripMenuItem.Text = "RemoteSignature";
-            this.remoteSignatureToolStripMenuItem.Click += new System.EventHandler(this.remoteSignatureToolStripMenuItem_Click);
-            // 
             // toolStripButtonRefresh
             // 
             this.toolStripButtonRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -162,6 +142,19 @@
             this.showLatestToolStripMenuItem.Text = "ShowLatest";
             this.showLatestToolStripMenuItem.Click += new System.EventHandler(this.showLatestToolStripMenuItem_Click);
             // 
+            // toolStripDropDownButtonDelete
+            // 
+            this.toolStripDropDownButtonDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripDropDownButtonDelete.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.remoteSignatureToolStripMenuItem});
+            this.toolStripDropDownButtonDelete.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.minus;
+            this.toolStripDropDownButtonDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripDropDownButtonDelete.Name = "toolStripDropDownButtonDelete";
+            this.toolStripDropDownButtonDelete.Size = new System.Drawing.Size(32, 22);
+            this.toolStripDropDownButtonDelete.Text = "Delete";
+            this.toolStripDropDownButtonDelete.ToolTipText = "Delete";
+            this.toolStripDropDownButtonDelete.ButtonClick += new System.EventHandler(this.toolStripSplitButton1_ButtonClick);
+            // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -178,6 +171,14 @@
             this.splitContainer1.Size = new System.Drawing.Size(929, 358);
             this.splitContainer1.SplitterDistance = 197;
             this.splitContainer1.TabIndex = 3;
+            // 
+            // remoteSignatureToolStripMenuItem
+            // 
+            this.remoteSignatureToolStripMenuItem.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.geolocation;
+            this.remoteSignatureToolStripMenuItem.Name = "remoteSignatureToolStripMenuItem";
+            this.remoteSignatureToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.remoteSignatureToolStripMenuItem.Text = "RemoteSignature";
+            this.remoteSignatureToolStripMenuItem.Click += new System.EventHandler(this.remoteSignatureToolStripMenuItem1_Click);
             // 
             // ReleaseManagementForm
             // 
@@ -209,12 +210,12 @@
         private System.Windows.Forms.ColumnHeader columnHeaderSignature;
         private System.Windows.Forms.ColumnHeader columnHeaderTimestamp;
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButtonDelete;
-        private System.Windows.Forms.ToolStripMenuItem remoteSignatureToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButtonFilter;
         private System.Windows.Forms.ToolStripMenuItem showLatestToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton toolStripButtonRefresh;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.ToolStripSplitButton toolStripDropDownButtonDelete;
+        private System.Windows.Forms.ToolStripMenuItem remoteSignatureToolStripMenuItem;
     }
 }
