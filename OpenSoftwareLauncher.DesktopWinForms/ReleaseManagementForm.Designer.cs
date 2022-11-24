@@ -52,10 +52,12 @@
             // treeViewBaseSignature
             // 
             this.treeViewBaseSignature.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeViewBaseSignature.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.treeViewBaseSignature.Location = new System.Drawing.Point(0, 0);
             this.treeViewBaseSignature.Name = "treeViewBaseSignature";
-            this.treeViewBaseSignature.Size = new System.Drawing.Size(156, 358);
+            this.treeViewBaseSignature.Size = new System.Drawing.Size(197, 358);
             this.treeViewBaseSignature.TabIndex = 0;
+            this.treeViewBaseSignature.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewBaseSignature_AfterSelect);
             // 
             // listViewStreamHistory
             // 
@@ -70,7 +72,7 @@
             this.listViewStreamHistory.HideSelection = false;
             this.listViewStreamHistory.Location = new System.Drawing.Point(0, 0);
             this.listViewStreamHistory.Name = "listViewStreamHistory";
-            this.listViewStreamHistory.Size = new System.Drawing.Size(573, 358);
+            this.listViewStreamHistory.Size = new System.Drawing.Size(728, 358);
             this.listViewStreamHistory.TabIndex = 1;
             this.listViewStreamHistory.UseCompatibleStateImageBehavior = false;
             this.listViewStreamHistory.View = System.Windows.Forms.View.Details;
@@ -80,17 +82,17 @@
             // columnHeaderHash
             // 
             this.columnHeaderHash.Text = "Hash";
-            this.columnHeaderHash.Width = 108;
+            this.columnHeaderHash.Width = 120;
             // 
             // columnHeaderSignature
             // 
             this.columnHeaderSignature.Text = "Signature";
-            this.columnHeaderSignature.Width = 122;
+            this.columnHeaderSignature.Width = 325;
             // 
             // columnHeaderTimestamp
             // 
             this.columnHeaderTimestamp.Text = "Timestamp";
-            this.columnHeaderTimestamp.Width = 213;
+            this.columnHeaderTimestamp.Width = 269;
             // 
             // toolStrip1
             // 
@@ -100,8 +102,9 @@
             this.toolStripSeparator1,
             this.toolStripDropDownButtonFilter});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.MinimumSize = new System.Drawing.Size(929, 25);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(733, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(929, 25);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -121,7 +124,7 @@
             // 
             this.remoteSignatureToolStripMenuItem.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.geolocation;
             this.remoteSignatureToolStripMenuItem.Name = "remoteSignatureToolStripMenuItem";
-            this.remoteSignatureToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.remoteSignatureToolStripMenuItem.Size = new System.Drawing.Size(165, 22);
             this.remoteSignatureToolStripMenuItem.Text = "RemoteSignature";
             this.remoteSignatureToolStripMenuItem.Click += new System.EventHandler(this.remoteSignatureToolStripMenuItem_Click);
             // 
@@ -172,15 +175,15 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.listViewStreamHistory);
-            this.splitContainer1.Size = new System.Drawing.Size(733, 358);
-            this.splitContainer1.SplitterDistance = 156;
+            this.splitContainer1.Size = new System.Drawing.Size(929, 358);
+            this.splitContainer1.SplitterDistance = 197;
             this.splitContainer1.TabIndex = 3;
             // 
             // ReleaseManagementForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(733, 383);
+            this.ClientSize = new System.Drawing.Size(929, 383);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.toolStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

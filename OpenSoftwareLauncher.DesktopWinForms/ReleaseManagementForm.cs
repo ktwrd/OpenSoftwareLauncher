@@ -74,7 +74,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         {
             listViewStreamHistory.Items.Clear();
             var targetReleaseList = WorkingReleaseInfo
-                    .Where(v => v.appID == treeViewBaseSignature.SelectedNode.Text)
+                    .Where(v => treeViewBaseSignature.SelectedNode == null ? false : v.appID == treeViewBaseSignature.SelectedNode.Text)
                     .OrderByDescending(s => s.timestamp).ToList();
 
             if (UserConfig.GetBoolean("General", "ShowLatestRelease", true))
@@ -236,6 +236,11 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 RefreshReleaseListView();
                 RefreshReleaseTree();
             }
+        }
+
+        private void treeViewBaseSignature_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            RefreshReleaseListView();
         }
     }
 }
