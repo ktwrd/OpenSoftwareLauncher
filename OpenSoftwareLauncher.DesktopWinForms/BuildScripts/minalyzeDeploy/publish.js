@@ -113,6 +113,18 @@ async function logic()
         fs.mkdirSync('./artifacts/', { recursive: true })
     await zipDirectory(artifactsPath, path.resolve(`./artifacts/osldesktop-win-amd64.zip`))
     
+    fs.writeFileSync('../release/config.ini',
+    [
+`[Authentication]`,
+`Username = `,
+`Token = `,
+`Remember = True`,
+`[Connection]`,
+`Endpoint = http://buildservice.api.minalogger.com`,
+`[General]`,
+`Language = en`,
+`ShowLatestRelease = False`
+    ].join('\r\n'))
 
     let timestamp = parseInt(process.env['CI_COMMIT_TIMESTAMP'] == undefined ? Date.now().toString() : (new Date(process.env['CI_COMMIT_TIMESTAMP'] ?? '')).getTime())
     let uploadParameters = {
