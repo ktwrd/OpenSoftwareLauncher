@@ -78,6 +78,13 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         public static string DumpDataFetch(string token, DataType type)
             => $"{Base}/admin/data/dump?token={encode(token)}&type={encode((int)type)}";
 
+        public static string Release_CommitHash(string token, string hash, string signature)
+            => $"{Base}/admin/release/commitHash?token={encode(token)}&hash={encode(hash)}&signature={encode(signature)}";
+        public static string Release_Signature(string token, string signature)
+            => $"{Base}/admin/release/signature?token={encode(token)}&signature={encode(signature)}";
+        public static string Release_ReleaseInfo(string token)
+            => $"{Base}/admin/release/releaseInfo?token={encode(token)}";
+
         public static string UserList(
             string token,
             string username = "",
