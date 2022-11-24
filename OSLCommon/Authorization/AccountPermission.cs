@@ -3,6 +3,7 @@ namespace OSLCommon.Authorization
 {
     public enum AccountPermission
     {
+        INVALID = -1,
         ADMINISTRATOR,
         CREATE_RELEASE,
         READ_RELEASE_BYPASS,
