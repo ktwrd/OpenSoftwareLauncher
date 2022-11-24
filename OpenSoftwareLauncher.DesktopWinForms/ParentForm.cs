@@ -25,6 +25,12 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             toolStripButtonAuditLog.Text = LocaleManager.Get("Title_AuditLog");
             toolStripButtonAuditLog.ToolTipText = LocaleManager.Get("Title_AuditLog");
 
+            toolStripButtonReleases.Text = LocaleManager.Get(toolStripButtonReleases.Text);
+            toolStripButtonReleases.ToolTipText = toolStripButtonReleases.Text;
+
+            toolStripButtonLogout.Text = LocaleManager.Get(toolStripButtonLogout.Text);
+            toolStripButtonLogout.ToolTipText = toolStripButtonLogout.Text;
+
             Text = LocaleManager.Get(Text);
         }
 
@@ -33,6 +39,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         public AnnouncementManagementForm AnnouncementManagementForm;
         public LogForm LogForm;
         public AuditLogForm AuditLogForm;
+        public ReleaseManagementForm ReleaseManagementForm;
 
         private void ParentForm_Shown(object sender, EventArgs e)
         {
@@ -40,6 +47,14 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             LogForm.MdiParent = this;
             LogForm.Show();
             LogForm.WindowState = FormWindowState.Minimized;
+
+            toolStripButtonUsers.Enabled = Program.Client.HasPermission(OSLCommon.Authorization.AccountPermission.USER_LIST);
+            toolStripButtonAnnouncements.Enabled = Program.Client.HasPermission(OSLCommon.Authorization.AccountPermission.ANNOUNCEMENT_MANAGE);
+            toolStripButtonLicenceManagement.Enabled = Program.Client.HasPermission(OSLCommon.Authorization.AccountPermission.LICENSE_MANAGE);
+            toolStripButtonLicenseKeyCreator.Enabled = Program.Client.HasPermission(OSLCommon.Authorization.AccountPermission.LICENSE_MANAGE);
+            toolStripButtonAuditLog.Enabled = Program.Client.HasPermission(OSLCommon.Authorization.AccountPermission.AUDITLOG_SELF)
+                                           || Program.Client.HasPermission(OSLCommon.Authorization.AccountPermission.AUDITLOG_GLOBAL);
+            toolStripButtonReleases.Enabled = Program.Client.HasPermission(OSLCommon.Authorization.AccountPermission.RELEASE_MANAGE);
         }
 
         private void toolStripButtonUsers_Click(object sender, EventArgs e)
@@ -88,6 +103,24 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             }
             AuditLogForm.MdiParent = this;
             AuditLogForm.Show();
+        }
+
+        private void toolStripButtonReleases_Click(object sender, EventArgs e)
+        {
+            if (!Program.Client.HasPermission(OSLCommon.Authorization.AccountPermission.RELEASE_MANAGE)) return;
+            if (ReleaseManagementForm == null || ReleaseManagementForm.IsDisposed)
+            {
+                ReleaseManagementForm = new ReleaseManagementForm();
+            }
+            ReleaseManagementForm.MdiParent = this;
+            ReleaseManagementForm.Show();
+        }
+
+        private void toolStripButtonLogout_Click(object sender, EventArgs e)
+        {
+            UserConfig.Auth_Token = "";
+            UserConfig.Save();
+            Program.ClientContext.Restart();
         }
     }
 }

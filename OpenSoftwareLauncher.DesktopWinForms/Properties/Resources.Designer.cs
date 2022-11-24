@@ -173,6 +173,16 @@ namespace OpenSoftwareLauncher.DesktopWinForms.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap door_open_out {
+            get {
+                object obj = ResourceManager.GetObject("door_open_out", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap drill {
             get {
                 object obj = ResourceManager.GetObject("drill", resourceCulture);
@@ -206,6 +216,16 @@ namespace OpenSoftwareLauncher.DesktopWinForms.Properties {
         public static System.Drawing.Bitmap gear {
             get {
                 object obj = ResourceManager.GetObject("gear", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap geolocation {
+            get {
+                object obj = ResourceManager.GetObject("geolocation", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
