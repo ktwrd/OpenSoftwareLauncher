@@ -19,6 +19,8 @@ namespace OSLCommon.Logging
             {AuditType.None,                    typeof(object) },
             {AuditType.AccountModify,           typeof(AccountModifyEntryData) },
             {AuditType.AccountDisable,          typeof(AccountDisableEntryData) },
+            {AuditType.AccountDelete,           typeof(AccountDeleteEntryData) },
+            {AuditType.ServiceAccountCreate,    typeof(ServiceAccountCreateEntryData) },
             {AuditType.AccountPermissionGrant,  typeof(AccountPermissionGrantEntryData) },
             {AuditType.AccountPermissionRevoke, typeof(AccountPermissionRevokeEntryData) },
             {AuditType.LicenseRedeem,           typeof(LicenseRedeemEntryData) },

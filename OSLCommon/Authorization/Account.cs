@@ -38,6 +38,7 @@ namespace OSLCommon.Authorization
             enabled = sourceAccount.enabled;
             disableReasons = sourceAccount.disableReasons;
             licenses = sourceAccount.licenses;
+            isServiceAccount = sourceAccount.IsServiceAccount;
         }
 
         #region Fields
@@ -74,6 +75,21 @@ namespace OSLCommon.Authorization
             set
             {
                 groups = value;
+                if (accountManager != null)
+                    accountManager.OnAccountUpdate(this);
+            }
+        }
+
+        internal bool isServiceAccount = false;
+        /// <summary>
+        /// Is this account a service account. Tokens will not be granted from username+password
+        /// </summary>
+        public bool IsServiceAccount
+        {
+            get => isServiceAccount;
+            set
+            {
+                isServiceAccount = value;
                 if (accountManager != null)
                     accountManager.OnAccountUpdate(this);
             }
@@ -511,6 +527,7 @@ namespace OSLCommon.Authorization
             {
                 Username = this.Username ?? "",
                 Enabled = this.Enabled,
+                ServiceAccount = this.IsServiceAccount,
                 Permissions = this.Permissions.ToArray(),
                 DisableReasons = this.DisableReasons.ToArray(),
                 Licenses = this.Licenses,

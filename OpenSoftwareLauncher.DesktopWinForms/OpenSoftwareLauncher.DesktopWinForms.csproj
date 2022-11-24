@@ -133,6 +133,12 @@
     <Compile Include="LogForm.Designer.cs">
       <DependentUpon>LogForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ReleaseManagementForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReleaseManagementForm.Designer.cs">
+      <DependentUpon>ReleaseManagementForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ServerBridge\ContentField.cs" />
     <Compile Include="ServerBridge\LocalContent.cs" />
     <Compile Include="ServerBridge\SystemAnnouncementSummaryAsList.cs" />
@@ -141,6 +147,12 @@
     </Compile>
     <Compile Include="ServerConfigForm.Designer.cs">
       <DependentUpon>ServerConfigForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="User Management\ServiceAccountCreateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="User Management\ServiceAccountCreateForm.Designer.cs">
+      <DependentUpon>ServiceAccountCreateForm.cs</DependentUpon>
     </Compile>
     <Compile Include="TimeRangeModal.cs">
       <SubType>Form</SubType>
@@ -233,6 +245,9 @@
     <EmbeddedResource Include="ParentForm.resx">
       <DependentUpon>ParentForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ReleaseManagementForm.resx">
+      <DependentUpon>ReleaseManagementForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ServerConfigForm.resx">
       <DependentUpon>ServerConfigForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -252,6 +267,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="User Management\ServiceAccountCreateForm.resx">
+      <DependentUpon>ServiceAccountCreateForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="User Management\UserManagementForm.resx">
       <DependentUpon>UserManagementForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -289,6 +307,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <None Include="Resources\door-open-out.png" />
+    <None Include="Resources\geolocation.png" />
+    <None Include="Resources\hard-hat--plus.png" />
     <None Include="Resources\clock-select.png" />
     <None Include="Resources\blue-document-task.png" />
     <None Include="Resources\funnel.png" />

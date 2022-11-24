@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace OpenSoftwareLauncher.DesktopWinForms
@@ -37,7 +38,11 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         }
         public void Restart()
         {
-            Application.Restart();
+            var loc = Assembly.GetExecutingAssembly().Location;
+            if (loc.EndsWith(".exe"))
+                Process.Start(loc);
+            Application.ExitThread();
+            Application.Exit();
         }
 
         public void PromptLoginWindow(bool validate = false, bool silent = false)

@@ -100,7 +100,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         {
             if (caption == null)
             {
-                caption = LocaleManager.Get("MessageBox_Title");
+                caption = LocaleManager.Get("Title");
                 Trace.WriteLine("[MessageBoxShow] \"caption\" Parameter is null, defaulting to locale \"MessageBox_Title\"");
             }
             return MessageBox.Show(text, caption, buttons, icon, defaultButton, options, displayHelpButton);

@@ -64,7 +64,7 @@ namespace OSLCommon.Authorization
         #region Account Boilerplate
 
         internal override Account CreateAccount() => this.CreateAccount(true);
-        internal override Account CreateNewAccount(string username)
+        public override Account CreateNewAccount(string username)
         {
             var check = GetAccountByUsername(username);
             if (check != null)
@@ -105,10 +105,23 @@ namespace OSLCommon.Authorization
 
             var filter = Builders<Account>.Filter.Eq("Username", account.Username);
 
-            collection.ReplaceOne(filter, account);
+            long length = collection.Find(filter).CountDocuments();
+            if (length < 1)
+                collection.InsertOne(account);
+            else
+                collection.ReplaceOne(filter, account);
         }
         #endregion
 
+        public override void DeleteAccount(string username)
+        {
+            var collection = GetAccountCollection<Account>();
+            var filter = Builders<Account>
+                .Filter
+                .Eq("Username", username);
+
+            collection.DeleteMany(filter);
+        }
 
         #region Get Account
         public override Account[] GetAllAccounts()

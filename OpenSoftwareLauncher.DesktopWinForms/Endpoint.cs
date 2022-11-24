@@ -57,6 +57,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 
         public static string AccountDetails(string token)
             => $"{Base}/account?token={encode(token)}";
+        public static string ServiceAccountCreate(string token)
+            => $"{Base}/admin/serviceaccount/create?token={encode(token)}";
 
         public static string AnnouncementLatest()
             => $"{Base}/admin/announcement/latest";
@@ -75,6 +77,13 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             => $"{Base}/admin/data/setdata?token={encode(token)}&type={encode((int)type)}";
         public static string DumpDataFetch(string token, DataType type)
             => $"{Base}/admin/data/dump?token={encode(token)}&type={encode((int)type)}";
+
+        public static string Release_CommitHash(string token, string hash, string signature)
+            => $"{Base}/admin/release/commitHash?token={encode(token)}&hash={encode(hash)}&signature={encode(signature)}";
+        public static string Release_Signature(string token, string signature)
+            => $"{Base}/admin/release/signature?token={encode(token)}&signature={encode(signature)}";
+        public static string Release_ReleaseInfo(string token)
+            => $"{Base}/admin/release/releaseInfo?token={encode(token)}";
 
         public static string UserList(
             string token,
@@ -107,6 +116,10 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             string token,
             string username)
             => $"{Base}/admin/user/pardon?token={encode(token)}&username={encode(username)}";
+        public static string UserDelete(
+            string token,
+            string username)
+            => $"{Base}/admin/user/delete?token={encode(token)}&username={encode(username)}";
 
         #region Audit Log
         public static string AuditLogGetAll_Userspace(

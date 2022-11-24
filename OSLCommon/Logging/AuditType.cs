@@ -11,6 +11,8 @@ namespace OSLCommon.Logging
         
         AccountModify           = 100,
         AccountDisable          = 101,
+        AccountDelete           = 102,
+        ServiceAccountCreate    = 103,
         AccountPermissionGrant  = 120,
         AccountPermissionRevoke = 121,
         LicenseRedeem           = 130,

@@ -69,7 +69,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             },
             {"General", new Dictionary<string, object>()
                 {
-                    {"Language", "en" }
+                    {"Language", "en" },
+                    {"ShowLatestRelease", false }
                 }
             }
         };
