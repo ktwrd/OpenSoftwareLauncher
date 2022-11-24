@@ -35,9 +35,9 @@
             this.checkedListBoxLicenses = new System.Windows.Forms.CheckedListBox();
             this.labelPermissions = new System.Windows.Forms.Label();
             this.labelLicenses = new System.Windows.Forms.Label();
-            this.buttonPush = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.buttonPush = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.SuspendLayout();
@@ -102,20 +102,6 @@
             this.labelLicenses.TabIndex = 4;
             this.labelLicenses.Text = "License_Plural";
             // 
-            // buttonPush
-            // 
-            this.buttonPush.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonPush.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.upload_cloud;
-            this.buttonPush.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonPush.Location = new System.Drawing.Point(542, 465);
-            this.buttonPush.Name = "buttonPush";
-            this.buttonPush.Size = new System.Drawing.Size(75, 23);
-            this.buttonPush.TabIndex = 5;
-            this.buttonPush.Text = "Push";
-            this.buttonPush.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.buttonPush.UseVisualStyleBackColor = true;
-            this.buttonPush.Click += new System.EventHandler(this.buttonPush_Click);
-            // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 3;
@@ -151,6 +137,20 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.Size = new System.Drawing.Size(620, 491);
             this.tableLayoutPanel2.TabIndex = 7;
+            // 
+            // buttonPush
+            // 
+            this.buttonPush.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonPush.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.upload_cloud;
+            this.buttonPush.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonPush.Location = new System.Drawing.Point(542, 465);
+            this.buttonPush.Name = "buttonPush";
+            this.buttonPush.Size = new System.Drawing.Size(75, 23);
+            this.buttonPush.TabIndex = 5;
+            this.buttonPush.Text = "Push";
+            this.buttonPush.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.buttonPush.UseVisualStyleBackColor = true;
+            this.buttonPush.Click += new System.EventHandler(this.buttonPush_Click);
             // 
             // ServiceAccountCreateForm
             // 
