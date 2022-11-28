@@ -47,9 +47,14 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.buttonCBoxSelect_All = new System.Windows.Forms.Button();
+            this.buttonCBoxSelect_Invert = new System.Windows.Forms.Button();
             this.checkedListBoxUsers = new System.Windows.Forms.CheckedListBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.buttonCBoxSelect_Invert = new System.Windows.Forms.Button();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
+            this.buttonCBoxSelect_All_Types = new System.Windows.Forms.Button();
+            this.buttonCBoxSelect_Invert_Types = new System.Windows.Forms.Button();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -62,6 +67,9 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.tableLayoutPanel2.SuspendLayout();
+            this.tableLayoutPanel3.SuspendLayout();
+            this.flowLayoutPanel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -186,11 +194,11 @@
             // 
             // checkedListBoxTypes
             // 
+            this.checkedListBoxTypes.Dock = System.Windows.Forms.DockStyle.Fill;
             this.checkedListBoxTypes.FormattingEnabled = true;
-            this.checkedListBoxTypes.Location = new System.Drawing.Point(0, 0);
-            this.checkedListBoxTypes.MinimumSize = new System.Drawing.Size(176, 182);
+            this.checkedListBoxTypes.Location = new System.Drawing.Point(3, 3);
             this.checkedListBoxTypes.Name = "checkedListBoxTypes";
-            this.checkedListBoxTypes.Size = new System.Drawing.Size(189, 214);
+            this.checkedListBoxTypes.Size = new System.Drawing.Size(175, 222);
             this.checkedListBoxTypes.TabIndex = 3;
             this.checkedListBoxTypes.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedListBoxTypes_ItemCheck);
             // 
@@ -214,8 +222,7 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.tableLayoutPanel1);
-            this.panel1.Controls.Add(this.checkedListBoxTypes);
+            this.panel1.Controls.Add(this.tableLayoutPanel2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
@@ -228,12 +235,14 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel1, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.checkedListBoxUsers, 0, 0);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 383);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(4, 280);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(3, 9, 3, 3);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(183, 100);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(181, 257);
             this.tableLayoutPanel1.TabIndex = 5;
             // 
             // flowLayoutPanel1
@@ -243,7 +252,7 @@
             this.flowLayoutPanel1.Controls.Add(this.buttonCBoxSelect_All);
             this.flowLayoutPanel1.Controls.Add(this.buttonCBoxSelect_Invert);
             this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 70);
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 227);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.flowLayoutPanel1.MinimumSize = new System.Drawing.Size(183, 30);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -252,6 +261,7 @@
             // 
             // buttonCBoxSelect_All
             // 
+            this.buttonCBoxSelect_All.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.table_select_all;
             this.buttonCBoxSelect_All.Location = new System.Drawing.Point(3, 3);
             this.buttonCBoxSelect_All.Name = "buttonCBoxSelect_All";
             this.buttonCBoxSelect_All.Size = new System.Drawing.Size(23, 23);
@@ -259,13 +269,23 @@
             this.buttonCBoxSelect_All.UseVisualStyleBackColor = true;
             this.buttonCBoxSelect_All.Click += new System.EventHandler(this.buttonCBoxSelect_All_Click);
             // 
+            // buttonCBoxSelect_Invert
+            // 
+            this.buttonCBoxSelect_Invert.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.arrow_switch;
+            this.buttonCBoxSelect_Invert.Location = new System.Drawing.Point(32, 3);
+            this.buttonCBoxSelect_Invert.Name = "buttonCBoxSelect_Invert";
+            this.buttonCBoxSelect_Invert.Size = new System.Drawing.Size(23, 23);
+            this.buttonCBoxSelect_Invert.TabIndex = 1;
+            this.buttonCBoxSelect_Invert.UseVisualStyleBackColor = true;
+            this.buttonCBoxSelect_Invert.Click += new System.EventHandler(this.buttonCBoxSelect_Invert_Click);
+            // 
             // checkedListBoxUsers
             // 
             this.checkedListBoxUsers.Dock = System.Windows.Forms.DockStyle.Fill;
             this.checkedListBoxUsers.FormattingEnabled = true;
             this.checkedListBoxUsers.Location = new System.Drawing.Point(3, 3);
             this.checkedListBoxUsers.Name = "checkedListBoxUsers";
-            this.checkedListBoxUsers.Size = new System.Drawing.Size(177, 64);
+            this.checkedListBoxUsers.Size = new System.Drawing.Size(175, 221);
             this.checkedListBoxUsers.TabIndex = 4;
             this.checkedListBoxUsers.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedListBoxUsers_ItemCheck);
             // 
@@ -287,14 +307,72 @@
             this.splitContainer2.SplitterDistance = 527;
             this.splitContainer2.TabIndex = 6;
             // 
-            // buttonCBoxSelect_Invert
+            // tableLayoutPanel2
             // 
-            this.buttonCBoxSelect_Invert.Location = new System.Drawing.Point(32, 3);
-            this.buttonCBoxSelect_Invert.Name = "buttonCBoxSelect_Invert";
-            this.buttonCBoxSelect_Invert.Size = new System.Drawing.Size(23, 23);
-            this.buttonCBoxSelect_Invert.TabIndex = 1;
-            this.buttonCBoxSelect_Invert.UseVisualStyleBackColor = true;
-            this.buttonCBoxSelect_Invert.Click += new System.EventHandler(this.buttonCBoxSelect_Invert_Click);
+            this.tableLayoutPanel2.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.tableLayoutPanel2.ColumnCount = 1;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel3, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel1, 0, 1);
+            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 2;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(189, 541);
+            this.tableLayoutPanel2.TabIndex = 6;
+            // 
+            // tableLayoutPanel3
+            // 
+            this.tableLayoutPanel3.ColumnCount = 1;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.Controls.Add(this.checkedListBoxTypes, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel2, 0, 1);
+            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(4, 4);
+            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(3, 3, 3, 9);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 2;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(181, 257);
+            this.tableLayoutPanel3.TabIndex = 7;
+            // 
+            // flowLayoutPanel2
+            // 
+            this.flowLayoutPanel2.AutoScroll = true;
+            this.flowLayoutPanel2.AutoSize = true;
+            this.flowLayoutPanel2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flowLayoutPanel2.Controls.Add(this.buttonCBoxSelect_All_Types);
+            this.flowLayoutPanel2.Controls.Add(this.buttonCBoxSelect_Invert_Types);
+            this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel2.Location = new System.Drawing.Point(0, 228);
+            this.flowLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
+            this.flowLayoutPanel2.MinimumSize = new System.Drawing.Size(0, 24);
+            this.flowLayoutPanel2.Name = "flowLayoutPanel2";
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(181, 29);
+            this.flowLayoutPanel2.TabIndex = 4;
+            // 
+            // buttonCBoxSelect_All_Types
+            // 
+            this.buttonCBoxSelect_All_Types.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.table_select_all;
+            this.buttonCBoxSelect_All_Types.Location = new System.Drawing.Point(3, 3);
+            this.buttonCBoxSelect_All_Types.Name = "buttonCBoxSelect_All_Types";
+            this.buttonCBoxSelect_All_Types.Size = new System.Drawing.Size(23, 23);
+            this.buttonCBoxSelect_All_Types.TabIndex = 1;
+            this.buttonCBoxSelect_All_Types.UseVisualStyleBackColor = true;
+            this.buttonCBoxSelect_All_Types.Click += new System.EventHandler(this.buttonCBoxSelect_All_Types_Click);
+            // 
+            // buttonCBoxSelect_Invert_Types
+            // 
+            this.buttonCBoxSelect_Invert_Types.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.arrow_switch;
+            this.buttonCBoxSelect_Invert_Types.Location = new System.Drawing.Point(32, 3);
+            this.buttonCBoxSelect_Invert_Types.Name = "buttonCBoxSelect_Invert_Types";
+            this.buttonCBoxSelect_Invert_Types.Size = new System.Drawing.Size(23, 23);
+            this.buttonCBoxSelect_Invert_Types.TabIndex = 2;
+            this.buttonCBoxSelect_Invert_Types.UseVisualStyleBackColor = true;
+            this.buttonCBoxSelect_Invert_Types.Click += new System.EventHandler(this.buttonCBoxSelect_Invert_Types_Click);
             // 
             // AuditLogForm
             // 
@@ -321,6 +399,10 @@
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.tableLayoutPanel2.ResumeLayout(false);
+            this.tableLayoutPanel3.ResumeLayout(false);
+            this.tableLayoutPanel3.PerformLayout();
+            this.flowLayoutPanel2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -349,5 +431,10 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Button buttonCBoxSelect_All;
         private System.Windows.Forms.Button buttonCBoxSelect_Invert;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
+        private System.Windows.Forms.Button buttonCBoxSelect_All_Types;
+        private System.Windows.Forms.Button buttonCBoxSelect_Invert_Types;
     }
 }

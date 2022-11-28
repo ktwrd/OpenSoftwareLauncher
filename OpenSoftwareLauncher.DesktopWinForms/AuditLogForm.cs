@@ -352,6 +352,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 
         private void checkedListBoxUsers_ItemCheck(object sender, ItemCheckEventArgs e)
         {
+            FilterItems();
             RedrawListView();
         }
 
@@ -368,6 +369,22 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             for (int i = 0; i < checkedListBoxUsers.Items.Count; i++)
             {
                 checkedListBoxUsers.SetItemChecked(i, !checkedListBoxUsers.GetItemChecked(i));
+            }
+        }
+
+        private void buttonCBoxSelect_All_Types_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < checkedListBoxTypes.Items.Count; i++)
+            {
+                checkedListBoxTypes.SetItemChecked(i, true);
+            }
+        }
+
+        private void buttonCBoxSelect_Invert_Types_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < checkedListBoxTypes.Items.Count; i++)
+            {
+                checkedListBoxTypes.SetItemChecked(i, !checkedListBoxTypes.GetItemChecked(i));
             }
         }
     }

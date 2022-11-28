@@ -93,6 +93,16 @@ namespace OpenSoftwareLauncher.DesktopWinForms.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap arrow_switch {
+            get {
+                object obj = ResourceManager.GetObject("arrow_switch", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap bin {
             get {
                 object obj = ResourceManager.GetObject("bin", resourceCulture);
@@ -346,6 +356,16 @@ namespace OpenSoftwareLauncher.DesktopWinForms.Properties {
         public static System.Drawing.Bitmap quill {
             get {
                 object obj = ResourceManager.GetObject("quill", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap table_select_all {
+            get {
+                object obj = ResourceManager.GetObject("table_select_all", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
