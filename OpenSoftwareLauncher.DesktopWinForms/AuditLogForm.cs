@@ -76,12 +76,27 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             PullData();
             Trace.WriteLine($"[AuditLogForm->Shown] Took {DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - start}ms");
         }
+        public void PopulateUsernameCheckedBoxList()
+        {
+            var accountList = EntryListSorted.Select(v => v.Username).Distinct().Where(v => v.Length > 0).ToList();
+            accountList.Add("<None>");
 
+            checkedListBoxUsers.Items.Clear();
+            foreach (var username in accountList)
+            {
+                checkedListBoxUsers.Items.Add(username);
+            }
+            for (int i = 0; i < checkedListBoxUsers.Items.Count; i++)
+            {
+                checkedListBoxUsers.SetItemChecked(i, true);
+            }
+        }
         public void RedrawElements()
         {
             long start = OSLHelper.GetMicroseconds();
             Trace.WriteLine($"[AuditLogForm->RedrawElements] Start");
             FilterItems();
+            PopulateUsernameCheckedBoxList();
             RedrawListView();
             Trace.WriteLine($"[AuditLogForm->RedrawElements] Took {OSLHelper.GetMicroseconds() - start}µs");
         }
@@ -118,6 +133,10 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 if (TimestampMin > long.MinValue && TimestampMax < long.MaxValue)
                     if (item.Timestamp < TimestampMin || item.Timestamp > TimestampMax)
                         continue;
+
+                string targetUsername = item.Username;
+                if (targetUsername.Length < 1)
+                    targetUsername = "<None>";
                 var listViewItem = new ListViewItem(new string[]
                 {
                     item.ActionType.ToString(),
@@ -133,14 +152,12 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 }
                 else if (GroupByAccount)
                 {
-                    string targetUsername = item.Username;
-                    if (targetUsername.Length < 1)
-                        targetUsername = "<None>";
                     listViewItem.Group = new List<ListViewGroup>(listView1.Groups.Cast<ListViewGroup>())
                         .Where(v => v.Header == targetUsername)
                         .FirstOrDefault();
                 }
-                listView1.Items.Add(listViewItem);
+                if (checkedListBoxUsers.CheckedItems.Cast<string>().Contains(targetUsername))
+                    listView1.Items.Add(listViewItem);
             }
         }
 
@@ -330,6 +347,11 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             GroupByAction = false;
             groupByActionToolStripMenuItem.Checked = false;
             GroupByAccount = groupByAccountToolStripMenuItem.Checked;
+            RedrawListView();
+        }
+
+        private void checkedListBoxUsers_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
             RedrawListView();
         }
     }
