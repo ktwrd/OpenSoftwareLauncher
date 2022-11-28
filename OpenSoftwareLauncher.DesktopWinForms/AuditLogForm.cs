@@ -354,5 +354,21 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         {
             RedrawListView();
         }
+
+        private void buttonCBoxSelect_All_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < checkedListBoxUsers.Items.Count; i++)
+            {
+                checkedListBoxUsers.SetItemChecked(i, true);
+            }
+        }
+
+        private void buttonCBoxSelect_Invert_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < checkedListBoxUsers.Items.Count; i++)
+            {
+                checkedListBoxUsers.SetItemChecked(i, !checkedListBoxUsers.GetItemChecked(i));
+            }
+        }
     }
 }
