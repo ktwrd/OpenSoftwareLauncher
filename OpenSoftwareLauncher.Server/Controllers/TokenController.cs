@@ -71,6 +71,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [HttpGet("validate")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ObjectResponse<bool>))]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ObjectResponse<bool>))]
+        [OSLAuthRequiredAttribute]
         public ActionResult Validate(string token)
         {
             if (token.Length < 32 || token.Length > 32)
@@ -110,14 +111,9 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [HttpGet("details")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<AccountTokenDetailsResponse>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
+        [OSLAuthRequiredAttribute]
         public ActionResult Details(string token)
         {
-            var authRes = MainClass.Validate(token);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
             var account = MainClass.contentManager.AccountManager.GetAccount(token, true);
 
             var details = account.GetTokenDetails(token);
@@ -141,14 +137,9 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [HttpGet("remove")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<object>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
+        [OSLAuthRequiredAttribute]
         public ActionResult Reset(string token, bool? all = false)
         {
-            var authRes = MainClass.Validate(token);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
             var account = MainClass.contentManager.AccountManager.GetAccount(token, true);
 
             if (all ?? false)

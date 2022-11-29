@@ -8,26 +8,16 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
 {
     [Route("admin/user/permission")]
     [ApiController]
+    [OSLAuthRequired]
+    [OSLAuthPermission(AccountPermission.USER_PERMISSION_MODIFY)]
     public class UserPermissionController : Controller
     {
-        public static AccountPermission[] RequiredPermissions = new AccountPermission[]
-        {
-            AccountPermission.USER_PERMISSION_MODIFY
-        };
-
         [HttpGet("list")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<AccountPermission[]>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         [ProducesResponseType(404, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult List(string token, string username)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
-
             var account = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
             if (account == null)
             {
@@ -52,12 +42,6 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
         [ProducesResponseType(404, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult Grant(string token, string username, AccountPermission permission)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
             var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token);
 
             var account = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
@@ -86,12 +70,6 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
         [ProducesResponseType(404, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult Revoke(string token, string username, AccountPermission permission)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
             var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token);
 
             var account = MainClass.contentManager.AccountManager.GetAccountByUsername(username);

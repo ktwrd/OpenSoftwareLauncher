@@ -12,26 +12,16 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
 {
     [Route("admin/user/group")]
     [ApiController]
+    [OSLAuthRequired]
+    [OSLAuthPermission(AccountPermission.USER_GROUP_MODIFY)]
+    [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
     public class UserGroupController : Controller
     {
-        public static AccountPermission[] RequiredPermissions = new AccountPermission[]
-        {
-            AccountPermission.USER_GROUP_MODIFY
-        };
-
         [HttpGet("list")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<string[]>))]
-        [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         [ProducesResponseType(404, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult List(string token, string username)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
-
             var targetAccount = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
             if (targetAccount == null)
             {
@@ -52,18 +42,9 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
 
         [HttpPost("set")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<object>))]
-        [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         [ProducesResponseType(500, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult SetContent(string token)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
-
-
             var syncIOFeature = HttpContext.Features.Get<IHttpBodyControlFeature>();
             if (syncIOFeature != null)
             {
@@ -118,17 +99,9 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
 
         [HttpGet("grant")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<bool>))]
-        [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         [ProducesResponseType(404, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult Grant(string token, string username, string group)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
-
             var account = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
             if (account == null)
             {
@@ -149,17 +122,9 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
 
         [HttpGet("revoke")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<object>))]
-        [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         [ProducesResponseType(404, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult RevokeGroup(string token, string username, string group)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
-
             var account = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
             if (account == null)
             {

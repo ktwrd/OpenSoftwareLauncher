@@ -14,27 +14,16 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
 {
     [Route("admin/serviceaccount")]
     [ApiController]
+    [OSLAuthRequired]
+    [OSLAuthPermission(AccountPermission.SERVICEACCOUNT_MANAGE)]
     public class ServiceAccountController : Controller
     {
-        public static AccountPermission[] RequiredPermissions = new AccountPermission[]
-        {
-            AccountPermission.SERVICEACCOUNT_MANAGE,
-        };
-
         [HttpPost("create")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<GrantTokenResponse>))]
         [ProducesResponseType(400, Type = typeof(ObjectResponse<HttpException>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult CreateAccount(string token)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
-
-
             var syncIOFeature = HttpContext.Features.Get<IHttpBodyControlFeature>();
             if (syncIOFeature != null)
             {

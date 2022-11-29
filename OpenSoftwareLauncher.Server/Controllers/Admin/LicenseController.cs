@@ -18,26 +18,16 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
 {
     [Route("admin/license")]
     [ApiController]
+    [OSLAuthRequired]
+    [OSLAuthPermission(AccountPermission.LICENSE_MANAGE)]
     public class LicenseController : Controller
     {
-        public static AccountPermission[] RequiredPermissions = new AccountPermission[]
-        {
-            AccountPermission.LICENSE_MANAGE,
-        };
-
         [HttpPost("generateProductKey")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<CreateLicenseKeyResponse>))]
         [ProducesResponseType(400, Type = typeof(ObjectResponse<HttpException>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult CreateProductKey(string token)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
-
             var account = MainClass.contentManager.AccountManager.GetAccount(token);
 
 
@@ -105,13 +95,6 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult GetLicenseKeys(string token)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
-
             return Json(new ObjectResponse<LicenseKeyMetadata[]>
             {
                 Success = true,
@@ -124,13 +107,6 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult GetProductLicenseKeys(string token, string remoteLocation)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
-
             var keys = MainClass.contentManager.AccountLicenseManager.GetLicenseKeys().Result
                 .Where(v => v.Products.Contains(remoteLocation))
                 .ToArray();
@@ -155,13 +131,6 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult DisableKey(string token, string keyId)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
-
             LicenseKeyActionResult response = MainClass.contentManager.AccountLicenseManager.DisableLicenseKey(keyId).Result;
 
             var account = MainClass.contentManager.AccountManager.GetAccount(token);
@@ -182,13 +151,6 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult EnableKey(string token, string keyId)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
-
             LicenseKeyActionResult response = MainClass.contentManager.AccountLicenseManager.EnableLicenseKey(keyId).Result;
 
             var account = MainClass.contentManager.AccountManager.GetAccount(token);

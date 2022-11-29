@@ -14,10 +14,6 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
     [ApiController]
     public class SystemAnnouncementController : Controller
     {
-        public static AccountPermission[] RequiredPermissions = new AccountPermission[]
-        {
-            AccountPermission.ANNOUNCEMENT_MANAGE
-        };
         [HttpGet("latest")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<SystemAnnouncementEntry[]>))]
         public ActionResult Fetch()
@@ -36,14 +32,10 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [HttpGet("new")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<SystemAnnouncementSummary>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
+        [OSLAuthRequired]
+        [OSLAuthPermission(AccountPermission.ANNOUNCEMENT_MANAGE)]
         public ActionResult Set(string token, string content, bool? active=true)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
             var account = MainClass.contentManager.AccountManager.GetAccount(token);
             var announcement = MainClass.contentManager.SystemAnnouncement.Set(content, active ?? true);
             MainClass.contentManager.AuditLogManager.Create(new AnnouncementCreateEntryData(announcement), account).Wait();
@@ -58,14 +50,10 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [HttpGet("update")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<object?>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
+        [OSLAuthRequired]
+        [OSLAuthPermission(AccountPermission.ANNOUNCEMENT_MANAGE)]
         public ActionResult UpdateActiveStatus(string token, bool active)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
             var account = MainClass.contentManager.AccountManager.GetAccount(token);
 
             MainClass.contentManager.SystemAnnouncement.Active = active;
@@ -84,14 +72,10 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [HttpGet("all")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<SystemAnnouncementEntry[]>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
+        [OSLAuthRequired]
+        [OSLAuthPermission(AccountPermission.ANNOUNCEMENT_MANAGE)]
         public ActionResult FetchAll(string token)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
             return Json(new ObjectResponse<SystemAnnouncementEntry[]>()
             {
                 Success = true,
@@ -102,14 +86,10 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [HttpGet("summary")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<SystemAnnouncementSummary>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
+        [OSLAuthRequired]
+        [OSLAuthPermission(AccountPermission.ANNOUNCEMENT_MANAGE)]
         public ActionResult GetSummary(string token)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
             return Json(new ObjectResponse<SystemAnnouncementSummary>()
             {
                 Success = true,
@@ -121,14 +101,10 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [HttpGet("setData")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<SystemAnnouncementSummary>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
+        [OSLAuthRequired]
+        [OSLAuthPermission(AccountPermission.ANNOUNCEMENT_MANAGE)]
         public ActionResult SetData(string token, string content)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
             var account = MainClass.contentManager.AccountManager.GetAccount(token);
 
             var attemptedDeserialized = JsonSerializer.Deserialize<SystemAnnouncementSummary>(content, MainClass.serializerOptions);
@@ -199,14 +175,10 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [HttpGet("remove")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<SystemAnnouncementSummary>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
+        [OSLAuthRequired]
+        [OSLAuthPermission(AccountPermission.ANNOUNCEMENT_MANAGE)]
         public ActionResult RemoveAnnouncement(string token, string id)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
             var account = MainClass.contentManager.AccountManager.GetAccount(token);
 
             bool exists = MainClass.contentManager.SystemAnnouncement.GetAll().Where(v => v.ID == id).Count() > 0;

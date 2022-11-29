@@ -12,14 +12,9 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [HttpGet("redeem")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<GrantLicenseKeyResponse>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
+        [OSLAuthRequired]
         public ActionResult Redeem(string token, string key)
         {
-            var authRes = MainClass.Validate(token);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
             var account = MainClass.contentManager.AccountManager.GetAccount(token);
             var data = MainClass.contentManager.AccountLicenseManager.GetLicenseKey(key).Result;
             if (data == null)

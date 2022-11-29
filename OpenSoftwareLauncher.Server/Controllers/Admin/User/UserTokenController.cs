@@ -12,24 +12,15 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
 {
     [Route("admin/user/token")]
     [ApiController]
+    [OSLAuthRequired]
+    [OSLAuthPermission(AccountPermission.USER_TOKEN_PURGE)]
     public class UserTokenController : Controller
     {
-        public AccountPermission[] RequiredPermissions = new AccountPermission[]
-        {
-            AccountPermission.USER_TOKEN_PURGE
-        };
-
         [HttpGet("purge/all")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<Dictionary<string, int>>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult TokenPurgeAll(string token, bool includeGivenToken=false)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
             var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token);
             var usernameDict = new Dictionary<string, int>();
             foreach (var user in MainClass.contentManager.AccountManager.GetAllAccounts())
@@ -60,13 +51,6 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult TokenPurge(string token, string? username = null, bool? isUsernameFieldRegexPattern = false)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
-
             var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token);
 
             OSLCommon.Authorization.Account[] accountArray;

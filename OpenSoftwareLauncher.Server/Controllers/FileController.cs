@@ -79,17 +79,12 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [HttpGet("{hash}")]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         [ProducesResponseType(200, Type = typeof(List<PublishedReleaseFile>))]
+        [OSLAuthRequired]
         public ActionResult FetchFilesFromHash(string hash, string token)
         {
             var returnContent = new List<PublishedReleaseFile>();
             var contentManager = MainClass.contentManager;
 
-            var authRes = MainClass.Validate(token);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
             var account = MainClass.contentManager.AccountManager.GetAccount(token, true);
 
             if (contentManager != null)
@@ -135,6 +130,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [HttpGet("")]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         [ProducesResponseType(200, Type = typeof(List<PublishedReleaseFile>))]
+        [OSLAuthRequired]
         public ActionResult FetchFilesFromHashByParameter(string hash, string? token = "") => FetchFilesFromHash(hash, token ?? "");
     }
 }
