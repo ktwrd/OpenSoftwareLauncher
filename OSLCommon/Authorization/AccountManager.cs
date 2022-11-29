@@ -14,6 +14,7 @@ namespace OSLCommon.Authorization
     public delegate void AccountDelegate(Account account);
     public partial class AccountManager
     {
+        public const string SuperuserUsername = "webmaster@osl.local";
         public List<Account> AccountList = new List<Account>();
 
         public static List<ITokenGranter> TokenGranters = new List<ITokenGranter>()
