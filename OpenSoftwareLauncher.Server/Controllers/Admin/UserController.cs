@@ -27,13 +27,6 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult List(string token, string? username=null, SearchMethod usernameSearchType = SearchMethod.Equals, long firstSeenTimestamp=0, long lastSeenTimestamp=long.MaxValue)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
-
             var detailList = new List<AccountDetailsResponse>();
             foreach (var account in MainClass.contentManager.AccountManager.GetAllAccounts(false))
             {
@@ -138,12 +131,6 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [OSLAuthPermission(AccountPermission.USER_DISABLE_MODIFY)]
         public ActionResult DisableState(string token, string username, string? reason="No reason")
         {
-            var authRes = MainClass.ValidatePermissions(token, AccountPermission.USER_DISABLE_MODIFY);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
             var bannerAccount = MainClass.contentManager.AccountManager.GetAccount(token);
             var targetAccount = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
             if (targetAccount == null)

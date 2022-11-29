@@ -201,58 +201,6 @@ namespace OpenSoftwareLauncher.Server
             App.MapControllers();
             App.Run();
         }
-        public static ObjectResponse<HttpException>? Validate(string token)
-        {
-            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
-            if (tokenAccount == null)
-            {
-                return new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(StatusCodes.Status401Unauthorized, ServerStringResponse.InvalidCredential)
-                };
-            }
-            if (!tokenAccount.Enabled)
-            {
-                return new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(StatusCodes.Status401Unauthorized, ServerStringResponse.AccountDisabled + "\n====Reason====\n" + tokenAccount.DisableReasons.OrderBy(v => v.Timestamp).First()?.Message)
-                };
-            }
-            return null;
-        }
-        public static ObjectResponse<HttpException>? ValidatePermissions(string token, AccountPermission[] permissions)
-        {
-            if (!contentManager.AccountManager.AccountHasPermission(token, permissions))
-            {
-                return new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(StatusCodes.Status401Unauthorized, ServerStringResponse.InvalidCredential)
-                };
-            }
-            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
-            if (tokenAccount == null)
-            {
-                return new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(StatusCodes.Status401Unauthorized, ServerStringResponse.InvalidCredential)
-                };
-            }
-            if (!tokenAccount.Enabled)
-            {
-                return new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(StatusCodes.Status401Unauthorized, ServerStringResponse.AccountDisabled + "\n====Reason====\n" + tokenAccount.DisableReasons.OrderBy(v => v.Timestamp).First()?.Message)
-                };
-            }
-            return null;
-        }
-        public static ObjectResponse<HttpException>? ValidatePermissions(string token, AccountPermission permission)
-            => ValidatePermissions(token, new AccountPermission[] { permission });
 
         public static void BeforeExit(object sender, EventArgs e)
         {

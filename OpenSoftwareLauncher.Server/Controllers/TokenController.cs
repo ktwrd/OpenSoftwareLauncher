@@ -140,12 +140,6 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [OSLAuthRequiredAttribute]
         public ActionResult Reset(string token, bool? all = false)
         {
-            var authRes = MainClass.Validate(token);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
             var account = MainClass.contentManager.AccountManager.GetAccount(token, true);
 
             if (all ?? false)
