@@ -15,13 +15,10 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
 
     [Route("admin/[controller]")]
     [ApiController]
+    [OSLAuthRequired]
+    [OSLAuthPermission(AccountPermission.ADMINISTRATOR)]
     public class DataController : Controller
     {
-        public static AccountPermission[] RequiredPermissions = new AccountPermission[]
-        {
-            AccountPermission.ADMINISTRATOR
-        };
-
         [HttpPost("restore")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<DataJSON>))]
         [ProducesResponseType(400, Type = typeof(ObjectResponse<HttpException>))]
@@ -29,13 +26,6 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(500, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult Restore(string token)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
-
             HttpContext.Request.Body.Seek(0, SeekOrigin.Begin);
             string content = new StreamReader(HttpContext.Request.Body).ReadToEndAsync().Result.ReplaceLineEndings("");
 
@@ -115,12 +105,6 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(500, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult Fetch(string token)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
 
             DataJSON content;
 
@@ -161,12 +145,6 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult Dump(string token, DataType type)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
 
             if (type == DataType.All)
             {
@@ -213,12 +191,6 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult SetData(string token)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
 
             HttpContext.Request.Body.Seek(0, SeekOrigin.Begin);
             string content = new StreamReader(HttpContext.Request.Body).ReadToEndAsync().Result.ReplaceLineEndings("");

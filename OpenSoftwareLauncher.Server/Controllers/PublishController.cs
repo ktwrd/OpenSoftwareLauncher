@@ -152,20 +152,10 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [HttpGet("hash")]
         [ProducesResponseType(401, Type = typeof(HttpException))]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<PublishedRelease?>))]
+        [OSLAuthRequired]
+        [OSLAuthPermission(AccountPermission.ADMINISTRATOR)]
         public ActionResult ByCommitHashFromParameter(string hash, string? token)
         {
-            var account = MainClass.contentManager.AccountManager.GetAccount(token ?? "", bumpLastUsed: true);
-            if (account == null)
-            {
-                Response.StatusCode = 401;
-                return Json(new HttpException(401, ServerStringResponse.InvalidCredential), MainClass.serializerOptions);
-            }
-            if (!account.HasPermission(AccountPermission.ADMINISTRATOR))
-            {
-                Response.StatusCode = 401;
-                return Json(new HttpException(401, @"Missing permissions"), MainClass.serializerOptions);
-            }
-
             PublishedRelease? commit = MainClass.contentManager?.GetPublishedReleaseByHash(hash);
             return Json(new ObjectResponse<PublishedRelease?>()
             {
@@ -177,6 +167,8 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [HttpGet("hash/{hash}")]
         [ProducesResponseType(401, Type = typeof(HttpException))]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<PublishedRelease?>))]
+        [OSLAuthRequired]
+        [OSLAuthPermission(AccountPermission.ADMINISTRATOR)]
         public ActionResult ByCommitHashFromPath(string? token, string hash) => ByCommitHashFromParameter(token ?? "", hash);
     }
 }

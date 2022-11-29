@@ -5,6 +5,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Account
 {
     [Route("account/token")]
     [ApiController]
+    [OSLAuthRequired]
     public class TokenResetController : Controller
     {
         [HttpGet("reset")]
@@ -12,12 +13,6 @@ namespace OpenSoftwareLauncher.Server.Controllers.Account
         [ProducesResponseType(200, Type = typeof(ObjectResponse<int>))]
         public ActionResult TokenReset(string token, bool allButSupplied=true, bool all=false)
         {
-            var authRes = MainClass.Validate(token);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
             var account = MainClass.contentManager.AccountManager.GetAccount(token, true);
 
             int tokensRemoved = 0;

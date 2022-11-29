@@ -11,13 +11,10 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
 {
     [Route("admin/release")]
     [ApiController]
+    [OSLAuthRequired]
+    [OSLAuthPermission(AccountPermission.RELEASE_MANAGE)]
     public class ReleaseController : Controller
     {
-        public static AccountPermission[] RequiredPermissions = new AccountPermission[]
-        {
-            AccountPermission.RELEASE_MANAGE
-        };
-
         private async Task<long> DeleteFilter(FilterDefinition<ReleaseInfo> releaseFilter, FilterDefinition<PublishedRelease> publishedFilter)
         {
             var publishedCollection = MainClass.contentManager.GetPublishedCollection();
@@ -37,13 +34,6 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public async Task<ActionResult> Get_ReleaseInfo(string token)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
-
             var filter = Builders<ReleaseInfo>
                 .Filter
                 .Empty;
@@ -67,13 +57,6 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public async Task<ActionResult> Signature_Delete(string token, string signature)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
-
 
             var publishedFilter = Builders<PublishedRelease>
                 .Filter
@@ -96,14 +79,6 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public async Task<ActionResult> Signature_Get_ReleaseInfo(string token, string signature)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
-
-
             var filter = Builders<ReleaseInfo>
                 .Filter
                 .Where(v => v.remoteLocation == signature);
@@ -126,13 +101,6 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public async Task<ActionResult> Signature_Get_PublishedRelease(string token, string signature)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
-
             var filter = Builders<PublishedRelease>
                 .Filter
                 .Where(v => v.RemoteLocation == signature);
@@ -156,13 +124,6 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public async Task<ActionResult> CommitHash_Delete(string token, string hash)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
-
             var publishedFilter = Builders<PublishedRelease>
                 .Filter
                 .Where(v => v.CommitHash == hash);
@@ -184,13 +145,6 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public async Task<ActionResult> CommitHash_Get_ReleaseInfo(string token, string hash)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
-
             var filter = Builders<ReleaseInfo>
                 .Filter
                 .Where(v => v.commitHash == hash);
@@ -213,14 +167,6 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public async Task<ActionResult> CommitHash_Get_PublishedRelease(string token, string hash)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
-
-
             var filter = Builders<PublishedRelease>
                 .Filter
                 .Where(v => v.CommitHash == hash);

@@ -13,15 +13,10 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [HttpGet("fetch")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<AuditLogEntry[]>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
+        [OSLAuthPermission(AccountPermission.AUDITLOG_SELF)]
+        [OSLAuthRequired]
         public ActionResult FetchAll(string token)
         {
-            var authRes = MainClass.ValidatePermissions(token, AccountPermission.AUDITLOG_SELF);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
-
             var account = MainClass.contentManager.AccountManager.GetAccount(token);
 
             var result = MainClass.contentManager.AuditLogManager.GetByUsername(account.Username).Result;

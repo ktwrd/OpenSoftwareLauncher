@@ -13,25 +13,16 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
 {
     [Route("admin/[controller]")]
     [ApiController]
+    [OSLAuthRequired]
+    [OSLAuthPermission(AccountPermission.ADMINISTRATOR)]
     public class ConfigController : Controller
     {
-        public static AccountPermission[] RequiredPermissions = new AccountPermission[]
-        {
-            AccountPermission.ADMINISTRATOR
-        };
 
         [HttpGet("get")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<Dictionary<string, Dictionary<string, object>>>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult GetConfig(string token)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
-
             return Json(new ObjectResponse<Dictionary<string, Dictionary<string, object>>>()
             {
                 Data = ServerConfig.Get(),
@@ -46,35 +37,6 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult SetValue_Get(string token, string group, string key, object value)
         {
-            if (!MainClass.contentManager.AccountManager.AccountHasPermission(token, RequiredPermissions))
-            {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
-                }, MainClass.serializerOptions);
-            }
-            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
-            if (tokenAccount == null)
-            {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(401, ServerStringResponse.InvalidCredential)
-                }, MainClass.serializerOptions);
-            }
-            if (!tokenAccount.Enabled)
-            {
-                Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Json(new ObjectResponse<HttpException>()
-                {
-                    Success = false,
-                    Data = new HttpException(401, ServerStringResponse.AccountDisabled)
-                }, MainClass.serializerOptions);
-            }
-
             ServerConfig.Set(group, key, value);
 
             return Json(new ObjectResponse<Dictionary<string, Dictionary<string, object>>>()
@@ -90,14 +52,6 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult SetValue(string token, string group, string key)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
-
-
             var syncIOFeature = HttpContext.Features.Get<IHttpBodyControlFeature>();
             if (syncIOFeature != null)
             {
@@ -135,14 +89,6 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult SetConfig(string token)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
-
-
             var syncIOFeature = HttpContext.Features.Get<IHttpBodyControlFeature>();
             if (syncIOFeature != null)
             {
@@ -189,13 +135,6 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(500, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult ResetConfig(string token)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
-
             try
             {
                 ServerConfig.Set(ServerConfig.DefaultData);
@@ -222,13 +161,6 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult Save(string token)
         {
-            var authRes = MainClass.ValidatePermissions(token, RequiredPermissions);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
-
             ServerConfig.Save();
 
             return Json(new ObjectResponse<Dictionary<string, Dictionary<string, object>>>()

@@ -6,6 +6,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Account
 {
     [Route("[controller]")]
     [ApiController]
+    [OSLAuthRequired]
     public class AccountController : Controller
     {
         [HttpGet("/account")]
@@ -14,12 +15,6 @@ namespace OpenSoftwareLauncher.Server.Controllers.Account
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult AccountDetails(string token)
         {
-            var authRes = MainClass.Validate(token);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
             var account = MainClass.contentManager.AccountManager.GetAccount(token, true);
 
             return Json(new ObjectResponse<AccountDetailsResponse>()

@@ -12,6 +12,8 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
 
     [Route("admin/[controller]")]
     [ApiController]
+    [OSLAuthRequired]
+    [OSLAuthPermission(AccountPermission.USER_LIST)]
     public class UserController : Controller
     {
         public static AccountPermission[] RequiredPermissions = new AccountPermission[]
@@ -76,15 +78,10 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [HttpGet("delete")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<object>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
+        [OSLAuthRequired]
+        [OSLAuthPermission(AccountPermission.USER_DELETE)]
         public ActionResult DeleteAccount(string token, string username)
         {
-            var authRes = MainClass.ValidatePermissions(token, AccountPermission.USER_DELETE);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
-
             MainClass.contentManager.AccountManager.DeleteAccount(username);
             return Json(new ObjectResponse<object>()
             {
@@ -97,14 +94,10 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(200, Type = typeof(ObjectResponse<AccountDetailsResponse>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         [ProducesResponseType(404, Type = typeof(ObjectResponse<HttpException>))]
+        [OSLAuthRequired]
+        [OSLAuthPermission(AccountPermission.USER_DISABLE_MODIFY)]
         public ActionResult PardonState(string token, string username)
         {
-            var authRes = MainClass.ValidatePermissions(token, AccountPermission.USER_DISABLE_MODIFY);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
             var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token);
             var targetAccount = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
             if (targetAccount == null)
@@ -141,6 +134,8 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(200, Type = typeof(ObjectResponse<AccountDetailsResponse>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         [ProducesResponseType(404, Type = typeof(ObjectResponse<HttpException>))]
+        [OSLAuthRequired]
+        [OSLAuthPermission(AccountPermission.USER_DISABLE_MODIFY)]
         public ActionResult DisableState(string token, string username, string? reason="No reason")
         {
             var authRes = MainClass.ValidatePermissions(token, AccountPermission.USER_DISABLE_MODIFY);

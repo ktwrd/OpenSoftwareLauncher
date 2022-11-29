@@ -292,15 +292,10 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [HttpGet("history/at")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<List<ProductReleaseStream>>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
+        [OSLAuthRequired]
+        [OSLAuthPermission(AccountPermission.READ_RELEASE_HISTORY)]
         public ActionResult FromCommitHash(string token, string hash, string? signature = "")
         {
-            var validationResponse = MainClass.ValidatePermissions(token, AccountPermission.READ_RELEASE_HISTORY);
-            if (validationResponse != null)
-            {
-                Response.StatusCode = validationResponse.Data.Code;
-                return Json(validationResponse, MainClass.serializerOptions);
-            }
-
             OSLCommon.Authorization.Account account = MainClass.contentManager.AccountManager.GetAccount(token);
 
             var collection = MainClass.contentManager.GetReleaseCollection();
@@ -335,15 +330,10 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [HttpGet("history/sig")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<List<ProductReleaseStream>>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
+        [OSLAuthRequired]
+        [OSLAuthPermission(AccountPermission.READ_RELEASE_HISTORY)]
         public ActionResult FromSignature(string token, string signature)
         {
-            var validationResponse = MainClass.ValidatePermissions(token, AccountPermission.READ_RELEASE_HISTORY);
-            if (validationResponse != null)
-            {
-                Response.StatusCode = validationResponse.Data.Code;
-                return Json(validationResponse, MainClass.serializerOptions);
-            }
-
             OSLCommon.Authorization.Account account = MainClass.contentManager.AccountManager.GetAccount(token);
 
             var collection = MainClass.contentManager.GetReleaseCollection();

@@ -7,6 +7,8 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.Bot
 {
     [Route("admin/bot")]
     [ApiController]
+    [OSLAuthRequired]
+    [OSLAuthPermission(AccountPermission.ADMINISTRATOR)]
     public class BotListingController : Controller
     {
         /// <summary>
@@ -27,12 +29,6 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.Bot
                 Data = new HttpException(StatusCodes.Status403Forbidden, @"Not Implemented")
             }, MainClass.serializerOptions);
 #endif
-            var authRes = MainClass.ValidatePermissions(token, AccountPermission.ADMINISTRATOR);
-            if (authRes != null)
-            {
-                Response.StatusCode = authRes?.Data.Code ?? 0;
-                return Json(authRes, MainClass.serializerOptions);
-            }
             return Json(new ObjectResponse<object>()
             {
                 Success = true,
