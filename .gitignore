@@ -380,3 +380,4 @@ OpenSoftwareLauncher.Server/Config/**/*
 OpenSoftwareLauncher.Server/Config/*
 OpenSoftwareLauncher.Server/Properties/launchSettings.json
 OpenSoftwareLauncher.DesktopWinForms/BuildScripts/minalyzeDeploy/prod.env
+OpenSoftwareLauncher.Server/superuser-token.txt
