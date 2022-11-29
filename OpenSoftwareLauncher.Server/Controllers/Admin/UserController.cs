@@ -25,6 +25,8 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [Route("list")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<AccountDetailsResponse[]>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
+        [OSLAuthRequired]
+        [OSLAuthPermission(AccountPermission.USER_LIST)]
         public ActionResult List(string token, string? username=null, SearchMethod usernameSearchType = SearchMethod.Equals, long firstSeenTimestamp=0, long lastSeenTimestamp=long.MaxValue)
         {
             var detailList = new List<AccountDetailsResponse>();
