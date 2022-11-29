@@ -152,6 +152,7 @@ namespace OpenSoftwareLauncher.Server
             serializerOptions.Converters.Add(new kate.shared.DateTimeConverterUsingDateTimeOffsetParse());
             serializerOptions.Converters.Add(new kate.shared.DateTimeConverterUsingDateTimeParse());
             contentManager = new ContentManager();
+            CreateSuperuserAccount();
             LoadTokens();
             Builder = WebApplication.CreateBuilder(args);
             Builder.Services.AddControllers();
@@ -200,6 +201,36 @@ namespace OpenSoftwareLauncher.Server
             App.UseAuthorization();
             App.MapControllers();
             App.Run();
+        }
+        /// <returns>Token</returns>
+        public static string? CreateSuperuserAccount()
+        {
+            Account account = contentManager.AccountManager.GetAccountByUsername(AccountManager.SuperuserUsername);
+            if (account == null)
+            {
+                account = contentManager.AccountManager.CreateNewAccount(AccountManager.SuperuserUsername);
+            }
+
+            if (!account.HasPermission(AccountPermission.ADMINISTRATOR))
+            {
+                account.GrantPermission(AccountPermission.ADMINISTRATOR);
+            }
+
+            if (account.Tokens.Length < 1)
+            {
+                var tokenResponse = contentManager.AccountManager.CreateToken(account, "internal", "127.0.0.1");
+                if (tokenResponse.Success)
+                {
+                    Console.WriteLine($"================================================================================");
+                    Console.WriteLine($"Created superuser account.");
+                    Console.WriteLine($"Username: {AccountManager.SuperuserUsername}");
+                    Console.WriteLine($"Token:    {tokenResponse.Token.Token}");
+                    Console.WriteLine($"================================================================================");
+                    File.WriteAllText(Path.Join(DataDirectory, "superuser-token.txt"), tokenResponse.Token.Token);
+                    return tokenResponse.Token.Token;
+                }
+            }
+            return null;
         }
         public static ObjectResponse<HttpException>? Validate(string token)
         {
