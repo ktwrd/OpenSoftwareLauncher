@@ -4,20 +4,22 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using OSLCommon;
 using OSLCommon.Authorization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace OpenSoftwareLauncher.Server
 {
-    public class OSLAuthFilter : ActionFilterAttribute
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+    public class OSLAuthPermissionAttribute : ActionFilterAttribute
     {
         public List<AccountPermission> AccountPermissions;
-        public OSLAuthFilter(AccountPermission[] permissions)
+        public OSLAuthPermissionAttribute(AccountPermission[] permissions)
         {
             AccountPermissions = new List<AccountPermission>();
             AccountPermissions.AddRange(permissions);
         }
-        public OSLAuthFilter(AccountPermission permission)
+        public OSLAuthPermissionAttribute(AccountPermission permission)
         {
             AccountPermissions = new List<AccountPermission>();
             AccountPermissions.Add(permission);
