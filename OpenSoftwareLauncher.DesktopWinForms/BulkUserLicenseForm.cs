@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -66,7 +67,14 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 {
                     taskList.Add(new Task(delegate
                     {
-                        Program.Client.HttpClient.GetAsync(Endpoint.UserLicenseGrant(Program.Client.Token, pair.Key, license)).Wait();
+                        var res = Program.Client.HttpClient.GetAsync(Endpoint.UserLicenseGrant(Program.Client.Token, pair.Key, license)).Result;
+                        var stringcontent = res.Content.ReadAsStringAsync().Result;
+                        if (res.StatusCode != System.Net.HttpStatusCode.OK)
+                        {
+#if DEBUG
+                            Debugger.Break();
+#endif
+                        }
                     }));
                 }
             }
@@ -88,7 +96,14 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 {
                     taskList.Add(new Task(delegate
                     {
-                        Program.Client.HttpClient.GetAsync(Endpoint.UserLicenseRevoke(Program.Client.Token, pair.Key, license)).Wait();
+                        var res = Program.Client.HttpClient.GetAsync(Endpoint.UserLicenseRevoke(Program.Client.Token, pair.Key, license)).Result;
+                        var stringcontent = res.Content.ReadAsStringAsync().Result;
+                        if (res.StatusCode != System.Net.HttpStatusCode.OK)
+                        {
+#if DEBUG
+                            Debugger.Break();
+#endif
+                        }
                     }));
                 }
             }
