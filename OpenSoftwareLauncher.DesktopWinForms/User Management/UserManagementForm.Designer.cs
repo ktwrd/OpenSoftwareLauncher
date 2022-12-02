@@ -49,6 +49,7 @@
             this.columnHeaderPermissions = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderLastSeen = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -62,6 +63,7 @@
             this.toolStripSeparator2,
             this.toolStripButtonBanTool,
             this.toolStripButtonUnban,
+            this.toolStripSeparator3,
             this.toolStripButtonPermissionTool,
             this.toolStripButtonGroupTool,
             this.toolStripButtonLicense,
@@ -237,6 +239,11 @@
             this.imageList1.Images.SetKeyName(0, "hard-hat.png");
             this.imageList1.Images.SetKeyName(1, "cross.png");
             // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
             // UserManagementForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -277,5 +284,6 @@
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.ToolStripButton toolStripButtonCreateServiceAccount;
         private System.Windows.Forms.ToolStripButton toolStripButtonDelete;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
     }
 }
