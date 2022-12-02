@@ -109,6 +109,12 @@
     <Compile Include="AuditLogForm.Designer.cs">
       <DependentUpon>AuditLogForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="BulkUserLicenseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BulkUserLicenseForm.Designer.cs">
+      <DependentUpon>BulkUserLicenseForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="CustomComponents\LabelTextBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -229,6 +235,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AuditLogForm.resx">
       <DependentUpon>AuditLogForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BulkUserLicenseForm.resx">
+      <DependentUpon>BulkUserLicenseForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CustomComponents\LabelTextBox.resx">
       <DependentUpon>LabelTextBox.cs</DependentUpon>
