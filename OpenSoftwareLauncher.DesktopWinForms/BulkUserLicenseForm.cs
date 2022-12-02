@@ -206,13 +206,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 if (selectedAccounts.Contains(account.Username))
                 {
                     var licenseList = new List<string>();
-                    foreach (var item in account.Licenses)
-                    {
-                        if (!selectedLicenses.Contains(item) && allLicenses.Contains(item))
-                            licenseList.Add(item);
-                    }
                     foreach (var item in selectedLicenses)
-                        if (!licenseList.Contains(item) && !account.Licenses.Contains(item))
+                        if (!account.Licenses.Contains(item))
                             licenseList.Add(item);
                     accountDictionary.Add(account.Username, licenseList.ToArray());
                 }
