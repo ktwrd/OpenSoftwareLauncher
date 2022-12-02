@@ -88,6 +88,7 @@
             // 
             // listViewAccounts
             // 
+            this.listViewAccounts.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.listViewAccounts.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderUsername,
             this.columnHeaderEnabled,
@@ -95,6 +96,8 @@
             this.columnHeaderPermissions,
             this.columnHeaderLastSeen});
             this.listViewAccounts.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewAccounts.FullRowSelect = true;
+            this.listViewAccounts.GridLines = true;
             this.listViewAccounts.HideSelection = false;
             this.listViewAccounts.LargeImageList = this.imageList1;
             this.listViewAccounts.Location = new System.Drawing.Point(0, 25);

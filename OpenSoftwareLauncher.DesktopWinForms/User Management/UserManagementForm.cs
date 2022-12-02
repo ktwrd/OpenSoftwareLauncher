@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -74,12 +75,25 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                     var permissionString = new List<string>();
                     foreach (var p in item.Permissions)
                         permissionString.Add(p.ToString());
+
+                    var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                    long value = item.LastSeenTimestamp > 1 ? item.LastSeenTimestamp : 0;
+                    DateTime dt = epoch;
+                    try
+                    {
+                        dt = epoch.AddMilliseconds(value);
+                    }
+                    catch
+                    {
+                        Debugger.Break();
+                    }
                     var lvitem = new ListViewItem(new string[]
                     {
                         item.Username,
                         item.Enabled.ToString(),
                         item.Licenses.Length > 1 ? $"{item.Licenses.Length} " + LocaleManager.Get("License_Plural") : string.Join(", ", item.Licenses),
-                        string.Join(", ", permissionString)
+                        string.Join(", ", permissionString),
+                        value < 1 ? "Never" : dt.ToString()
                     });
                     if (!item.Enabled)
                         lvitem.ImageIndex = 1;
