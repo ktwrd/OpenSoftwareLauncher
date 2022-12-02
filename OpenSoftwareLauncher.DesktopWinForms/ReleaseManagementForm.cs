@@ -77,6 +77,19 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                     .Where(v => treeViewBaseSignature.SelectedNode == null ? false : v.appID == treeViewBaseSignature.SelectedNode.Text)
                     .OrderByDescending(s => s.timestamp).ToList();
 
+            listViewStreamHistory.Groups.Clear();
+            var signautreIndexDict = new Dictionary<string, int>();
+            if (GroupBySignature)
+            {
+                var signatureList = targetReleaseList.Select(v => v.remoteLocation).Distinct();
+                foreach (string item in signatureList)
+                {
+                    var group = new ListViewGroup(item);
+                    listViewStreamHistory.Groups.Add(group);
+                    signautreIndexDict.Add(item, listViewStreamHistory.Groups.IndexOf(group));
+                }
+            }
+
             if (UserConfig.GetBoolean("General", "ShowLatestRelease", true))
             {
                 targetReleaseList = targetReleaseList.GroupBy(v => v.remoteLocation)
@@ -92,6 +105,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                         DateTimeOffset.FromUnixTimeMilliseconds(item.timestamp).ToString()
                     });
                 lvitem.Name = WorkingReleaseInfo.IndexOf(item).ToString();
+                if (GroupBySignature)
+                    lvitem.Group = listViewStreamHistory.Groups[signautreIndexDict[item.remoteLocation]];
                 listViewStreamHistory.Items.Add(lvitem);
             }
         }
@@ -124,6 +139,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 
         public List<ReleaseInfo> SelectedReleases = new List<ReleaseInfo>();
         public event VoidDelegate SelectedReleasesChange;
+        public bool GroupBySignature = false;
         private void listViewStreamHistory_SelectedIndexChanged(object sender, EventArgs e)
         {
             SelectedReleases.Clear();
@@ -251,6 +267,13 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 taskList.Add(RemoveReleaseBySignature(selected.remoteLocation));
             }
             await Task.WhenAll(taskList);
+            RefreshReleaseListView();
+            RefreshReleaseTree();
+        }
+
+        private void groupBySignatureToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GroupBySignature = groupBySignatureToolStripMenuItem.Checked;
             RefreshReleaseListView();
             RefreshReleaseTree();
         }
