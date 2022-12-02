@@ -319,6 +319,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <None Include="Resources\license-key.png" />
     <None Include="Resources\arrow-switch.png" />
     <None Include="Resources\table-select-all.png" />
     <None Include="Resources\door-open-out.png" />
