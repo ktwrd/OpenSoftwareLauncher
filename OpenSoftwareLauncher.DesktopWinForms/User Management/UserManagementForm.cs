@@ -38,9 +38,6 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             toolStripButtonGroupTool.Text = LocaleManager.Get(toolStripButtonGroupTool.Text);
             toolStripButtonGroupTool.ToolTipText = toolStripButtonGroupTool.Text;
             
-            toolStripButtonGroupEditorTool.Text = LocaleManager.Get(toolStripButtonGroupEditorTool.Text);
-            toolStripButtonGroupEditorTool.ToolTipText = toolStripButtonGroupEditorTool.Text;
-            
             toolStripButtonCreateServiceAccount.Text = LocaleManager.Get(toolStripButtonCreateServiceAccount.Text);
             toolStripButtonCreateServiceAccount.ToolTipText = toolStripButtonCreateServiceAccount.Text;
 
