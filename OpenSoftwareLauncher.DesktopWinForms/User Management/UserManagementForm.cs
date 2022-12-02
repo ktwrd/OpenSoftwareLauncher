@@ -26,23 +26,32 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             toolStripButtonEdit.Text = LocaleManager.Get(toolStripButtonEdit.Text);
             toolStripButtonEdit.ToolTipText = toolStripButtonEdit.Text;
 
+            toolStripButtonDelete.Text = LocaleManager.Get(toolStripButtonDelete.Text);
+            toolStripButtonDelete.ToolTipText = toolStripButtonDelete.Text;
+
             toolStripButtonRefresh.Text = LocaleManager.Get(toolStripButtonRefresh.Text);
             toolStripButtonRefresh.ToolTipText = toolStripButtonRefresh.Text;
             
             toolStripButtonBanTool.Text = LocaleManager.Get(toolStripButtonBanTool.Text);
             toolStripButtonBanTool.ToolTipText = toolStripButtonBanTool.Text;
-            
+
+            toolStripButtonUnban.Text = LocaleManager.Get(toolStripButtonUnban.Text);
+            toolStripButtonUnban.ToolTipText = toolStripButtonUnban.Text;
+
             toolStripButtonPermissionTool.Text = LocaleManager.Get(toolStripButtonPermissionTool.Text);
             toolStripButtonPermissionTool.ToolTipText = toolStripButtonPermissionTool.Text;
             
             toolStripButtonGroupTool.Text = LocaleManager.Get(toolStripButtonGroupTool.Text);
             toolStripButtonGroupTool.ToolTipText = toolStripButtonGroupTool.Text;
-            
+
+            toolStripButtonLicense.Text = LocaleManager.Get(toolStripButtonLicense.Text);
+            toolStripButtonLicense.ToolTipText = toolStripButtonLicense.Text;
+
             toolStripButtonCreateServiceAccount.Text = LocaleManager.Get(toolStripButtonCreateServiceAccount.Text);
             toolStripButtonCreateServiceAccount.ToolTipText = toolStripButtonCreateServiceAccount.Text;
 
-            toolStripButtonDelete.Text = LocaleManager.Get(toolStripButtonDelete.Text);
-            toolStripButtonDelete.ToolTipText = toolStripButtonDelete.Text;
+            toolStripButtonLicenseUtility.Text = LocaleManager.Get(toolStripButtonLicenseUtility.Text);
+            toolStripButtonLicenseUtility.ToolTipText = toolStripButtonLicenseUtility.Text;
 
 
             foreach (ColumnHeader col in listViewAccounts.Columns)
@@ -82,12 +91,14 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             }
         }
 
-        private void toolStripButtonRefresh_Click(object sender, EventArgs e)
+        public void toolStripButtonRefresh_Click(object sender, EventArgs e)
         {
             Enabled = false;
             ReloadList(true);
 
             toolStripButtonCreateServiceAccount.Enabled = Program.Client.HasPermission(AccountPermission.SERVICEACCOUNT_MANAGE);
+            toolStripButtonLicenseUtility.Enabled = Program.Client.HasPermission(AccountPermission.USER_LICENSE_MODIFY);
+            toolStripButtonDelete.Enabled = Program.Client.HasPermission(AccountPermission.USER_DELETE);
 
             Enabled = true;
         }
@@ -246,6 +257,20 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 
             MessageBox.Show($"Deleted {count} Accounts");
 
+        }
+
+        public BulkUserLicenseForm BulkUserLicenseForm;
+
+        private void toolStripButtonLicenseUtility_Click(object sender, EventArgs e)
+        {
+            if (!Program.Client.HasPermission(AccountPermission.USER_LICENSE_MODIFY)) return;
+            if (BulkUserLicenseForm == null || BulkUserLicenseForm.IsDisposed)
+            {
+                BulkUserLicenseForm = new BulkUserLicenseForm();
+            }
+            BulkUserLicenseForm.MdiParent = MdiParent;
+            BulkUserLicenseForm.Show();
+            BulkUserLicenseForm.Focus();
         }
     }
 }
