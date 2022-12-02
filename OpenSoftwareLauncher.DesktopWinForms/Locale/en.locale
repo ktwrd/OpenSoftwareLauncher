@@ -24,6 +24,7 @@ File=File
 Filter=Filter
 GroupByAccount=Group by Account
 GroupByAuditType=Group by Audit Type
+GroupBySignature=Group by Signature
 HardwareDrawing=Hardware Rendering
 Hash=Hash
 Install=Install
