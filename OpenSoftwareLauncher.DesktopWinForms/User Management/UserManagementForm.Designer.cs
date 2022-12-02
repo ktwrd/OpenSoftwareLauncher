@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserManagementForm));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonEdit = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonDelete = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonRefresh = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -39,7 +40,6 @@
             this.toolStripButtonUnban = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonPermissionTool = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonGroupTool = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonGroupEditorTool = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonLicense = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonCreateServiceAccount = new System.Windows.Forms.ToolStripButton();
             this.listViewAccounts = new System.Windows.Forms.ListView();
@@ -49,7 +49,6 @@
             this.columnHeaderPermissions = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderLastSeen = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.toolStripButtonDelete = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -65,7 +64,6 @@
             this.toolStripButtonUnban,
             this.toolStripButtonPermissionTool,
             this.toolStripButtonGroupTool,
-            this.toolStripButtonGroupEditorTool,
             this.toolStripButtonLicense,
             this.toolStripButtonCreateServiceAccount});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
@@ -83,6 +81,17 @@
             this.toolStripButtonEdit.Name = "toolStripButtonEdit";
             this.toolStripButtonEdit.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonEdit.Text = "Edit";
+            // 
+            // toolStripButtonDelete
+            // 
+            this.toolStripButtonDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonDelete.Enabled = false;
+            this.toolStripButtonDelete.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.minus;
+            this.toolStripButtonDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonDelete.Name = "toolStripButtonDelete";
+            this.toolStripButtonDelete.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonDelete.Text = "Delete";
+            this.toolStripButtonDelete.Click += new System.EventHandler(this.toolStripButtonDelete_Click);
             // 
             // toolStripSeparator1
             // 
@@ -146,15 +155,6 @@
             this.toolStripButtonGroupTool.Name = "toolStripButtonGroupTool";
             this.toolStripButtonGroupTool.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonGroupTool.Text = "Group_Plural";
-            // 
-            // toolStripButtonGroupEditorTool
-            // 
-            this.toolStripButtonGroupEditorTool.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonGroupEditorTool.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.drill;
-            this.toolStripButtonGroupEditorTool.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonGroupEditorTool.Name = "toolStripButtonGroupEditorTool";
-            this.toolStripButtonGroupEditorTool.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonGroupEditorTool.Text = "GroupUtility";
             // 
             // toolStripButtonLicense
             // 
@@ -237,17 +237,6 @@
             this.imageList1.Images.SetKeyName(0, "hard-hat.png");
             this.imageList1.Images.SetKeyName(1, "cross.png");
             // 
-            // toolStripButtonDelete
-            // 
-            this.toolStripButtonDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonDelete.Enabled = false;
-            this.toolStripButtonDelete.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.minus;
-            this.toolStripButtonDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonDelete.Name = "toolStripButtonDelete";
-            this.toolStripButtonDelete.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonDelete.Text = "Delete";
-            this.toolStripButtonDelete.Click += new System.EventHandler(this.toolStripButtonDelete_Click);
-            // 
             // UserManagementForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -283,7 +272,6 @@
         private System.Windows.Forms.ToolStripButton toolStripButtonBanTool;
         private System.Windows.Forms.ToolStripButton toolStripButtonPermissionTool;
         private System.Windows.Forms.ToolStripButton toolStripButtonGroupTool;
-        private System.Windows.Forms.ToolStripButton toolStripButtonGroupEditorTool;
         private System.Windows.Forms.ToolStripButton toolStripButtonUnban;
         private System.Windows.Forms.ToolStripButton toolStripButtonLicense;
         private System.Windows.Forms.ImageList imageList1;
