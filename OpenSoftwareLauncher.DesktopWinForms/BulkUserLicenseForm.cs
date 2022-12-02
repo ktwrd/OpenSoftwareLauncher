@@ -225,7 +225,6 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             var accountDictionary = new Dictionary<string, string[]>();
             var selectedAccounts = userList.CheckedItems.Cast<string>();
             var selectedLicenses = licenseBox.CheckedItems.Cast<string>();
-            var allLicenses = licenseBox.Items.Cast<string>();
             foreach (var account in Program.LocalContent.AccountDetailList)
             {
                 if (selectedAccounts.Contains(account.Username))
@@ -287,6 +286,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         {
             Enabled = false;
             await Push_Grant();
+            if (Program.ClientContext.ParentForm != null && Program.ClientContext.ParentForm.UserManagementForm != null)
+                Program.ClientContext.ParentForm.UserManagementForm.toolStripButtonRefresh_Click(null, null);
             Enabled = true;
         }
 
@@ -294,6 +295,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         {
             Enabled = false;
             await Push_Revoke();
+            if (Program.ClientContext.ParentForm != null && Program.ClientContext.ParentForm.UserManagementForm != null)
+                Program.ClientContext.ParentForm.UserManagementForm.toolStripButtonRefresh_Click(null, null);
             Enabled = true;
         }
 
