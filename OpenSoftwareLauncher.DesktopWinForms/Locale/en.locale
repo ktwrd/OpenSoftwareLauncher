@@ -64,6 +64,7 @@ Version=Version
 View=View
 
 // plural keywords (including tense)
+Account_Plural=Accounts
 Activate_PastTense=Activated
 Announcement_Plural=Announcements
 Detail_Plural=Details
@@ -99,6 +100,7 @@ Title=${product.name} v${version}
 Title_AnnouncementEditDialog=Announcement Editor
 Title_AnnouncementManagementForm=Announcement Management
 Title_AuditLog=Audit Log
+Title_BulkUserLicense=Bulk License Utility
 Title_ChangelogViewer=Changelog
 Title_Brand=Minalyze Launcher
 Title_BrandWithVersion=Minalyze Launcher v${version}
