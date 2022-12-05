@@ -16,6 +16,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             if (control.Controls.Count > 0)
                 foreach (Control elem in control.Controls)
                     LocaleControl(elem);
+
             foreach (Label elem in control.Controls.OfType<Label>())
                 if (elem.Text.Length > 0)
                     elem.Text = LocaleManager.Get(elem.Text);
@@ -25,6 +26,35 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             foreach (GroupBox elem in control.Controls.OfType<GroupBox>())
                 if (elem.Text.Length > 0)
                     elem.Text = LocaleManager.Get(elem.Text);
+            foreach (ListView elem in control.Controls.OfType<ListView>())
+            {
+                foreach (ColumnHeader header in elem.Columns)
+                    header.Text = LocaleManager.Get(header.Text);
+                foreach (ListViewGroup group in elem.Groups)
+                    group.Header = LocaleManager.Get(group.Header);
+            }
+            foreach (ToolStrip strip in control.Controls.OfType<ToolStrip>())
+                LocaleControl(strip);
+        }
+        public static void LocaleControl(ToolStripItemCollection collection)
+        {
+            foreach (ToolStripItem item in collection)
+                item.ToolTipText = LocaleManager.Get(item.ToolTipText);
+
+            foreach (var elem in collection.OfType<ToolStripButton>())
+                elem.Text = LocaleManager.Get(elem.Text);
+            foreach (var elem in collection.OfType<ToolStripLabel>())
+                elem.Text = LocaleManager.Get(elem.Text);
+            foreach (var elem in collection.OfType<ToolStripDropDownButton>())
+                elem.Text = LocaleManager.Get(elem.Text);
+            foreach (var elem in collection.OfType<ToolStripSplitButton>())
+                elem.Text = LocaleManager.Get(elem.Text);
+            foreach (var elem in collection.OfType<ToolStripDropDownItem>())
+                LocaleControl(elem.DropDownItems);
+        }
+        public static void LocaleControl(ToolStrip strip)
+        {
+            LocaleControl(strip.Items);
         }
         public static void ReloadGenericCheckedboxList(CheckedListBox cbox, object[] newitems)
         {
