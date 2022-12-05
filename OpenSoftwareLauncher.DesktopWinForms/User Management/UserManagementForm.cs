@@ -54,6 +54,9 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             toolStripButtonLicenseUtility.Text = LocaleManager.Get(toolStripButtonLicenseUtility.Text);
             toolStripButtonLicenseUtility.ToolTipText = toolStripButtonLicenseUtility.Text;
 
+            toolStripButtonPermissionUtility.Text = LocaleManager.Get(toolStripButtonPermissionUtility.Text);
+            toolStripButtonPermissionUtility.ToolTipText = toolStripButtonPermissionUtility.Text;
+
 
             foreach (ColumnHeader col in listViewAccounts.Columns)
             {
@@ -112,6 +115,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 
             toolStripButtonCreateServiceAccount.Enabled = Program.Client.HasPermission(AccountPermission.SERVICEACCOUNT_MANAGE);
             toolStripButtonLicenseUtility.Enabled = Program.Client.HasPermission(AccountPermission.USER_LICENSE_MODIFY);
+            toolStripButtonPermissionUtility.Enabled = Program.Client.HasPermission(AccountPermission.USER_PERMISSION_MODIFY);
             toolStripButtonDelete.Enabled = Program.Client.HasPermission(AccountPermission.USER_DELETE);
 
             Enabled = true;
@@ -285,6 +289,18 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             BulkUserLicenseForm.MdiParent = MdiParent;
             BulkUserLicenseForm.Show();
             BulkUserLicenseForm.Focus();
+        }
+        public BulkUserPermissionForm BulkUserPermissionForm;
+        private void toolStripButtonPermissionUtility_Click(object sender, EventArgs e)
+        {
+            if (!Program.Client.HasPermission(AccountPermission.USER_PERMISSION_MODIFY)) return;
+            if (BulkUserPermissionForm == null || BulkUserPermissionForm.IsDisposed)
+            {
+                BulkUserPermissionForm = new BulkUserPermissionForm();
+            }
+            BulkUserPermissionForm.MdiParent = MdiParent;
+            BulkUserPermissionForm.Show();
+            BulkUserPermissionForm.Focus();
         }
     }
 }

@@ -51,6 +51,7 @@
             this.columnHeaderPermissions = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderLastSeen = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.toolStripButtonPermissionUtility = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -69,7 +70,8 @@
             this.toolStripButtonGroupTool,
             this.toolStripButtonLicense,
             this.toolStripButtonCreateServiceAccount,
-            this.toolStripButtonLicenseUtility});
+            this.toolStripButtonLicenseUtility,
+            this.toolStripButtonPermissionUtility});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(924, 25);
@@ -230,7 +232,7 @@
             // 
             // columnHeaderEnabled
             // 
-            this.columnHeaderEnabled.Text = "Enabled";
+            this.columnHeaderEnabled.Text = "Enable_PastTense";
             this.columnHeaderEnabled.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.columnHeaderEnabled.Width = 90;
             // 
@@ -258,6 +260,16 @@
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             this.imageList1.Images.SetKeyName(0, "hard-hat.png");
             this.imageList1.Images.SetKeyName(1, "cross.png");
+            // 
+            // toolStripButtonPermissionUtility
+            // 
+            this.toolStripButtonPermissionUtility.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonPermissionUtility.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.key__arrow;
+            this.toolStripButtonPermissionUtility.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonPermissionUtility.Name = "toolStripButtonPermissionUtility";
+            this.toolStripButtonPermissionUtility.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonPermissionUtility.Text = "Title_BulkUserPermission";
+            this.toolStripButtonPermissionUtility.Click += new System.EventHandler(this.toolStripButtonPermissionUtility_Click);
             // 
             // UserManagementForm
             // 
@@ -301,5 +313,6 @@
         private System.Windows.Forms.ToolStripButton toolStripButtonDelete;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripButton toolStripButtonLicenseUtility;
+        private System.Windows.Forms.ToolStripButton toolStripButtonPermissionUtility;
     }
 }
