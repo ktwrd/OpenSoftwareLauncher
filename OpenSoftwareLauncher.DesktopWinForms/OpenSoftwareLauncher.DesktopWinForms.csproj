@@ -115,6 +115,9 @@
     <Compile Include="BulkUserLicenseForm.Designer.cs">
       <DependentUpon>BulkUserLicenseForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="BulkUserLicenseForm.Designer.cs">
+      <DependentUpon>BulkUserLicenseForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="CustomComponents\LabelTextBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -141,6 +144,12 @@
     </Compile>
     <Compile Include="LogForm.Designer.cs">
       <DependentUpon>LogForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PublishedReleaseFileEditorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PublishedReleaseFileEditorForm.Designer.cs">
+      <DependentUpon>PublishedReleaseFileEditorForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ReleaseManagementForm.cs">
       <SubType>Form</SubType>
@@ -256,6 +265,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ParentForm.resx">
       <DependentUpon>ParentForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PublishedReleaseFileEditorForm.resx">
+      <DependentUpon>PublishedReleaseFileEditorForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ReleaseManagementForm.resx">
       <DependentUpon>ReleaseManagementForm.cs</DependentUpon>
