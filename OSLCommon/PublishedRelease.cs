@@ -87,7 +87,8 @@ namespace OSLCommon
     {
         Other,
         Portable,
-        Installer
+        Installer,
+        Changelog,
     }
     public enum FilePlatform
     {

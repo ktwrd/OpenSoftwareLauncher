@@ -69,7 +69,7 @@ namespace OSLCommon
                 }
                 var stream = new ProductReleaseStream()
                 {
-                    ProductName = release.name,
+                    ProductName = release.productName,
                     ProductVersion = release.version,
                     ProductExpiryTimestamp = 0,
                     BranchName = release.releaseType.ToString(),

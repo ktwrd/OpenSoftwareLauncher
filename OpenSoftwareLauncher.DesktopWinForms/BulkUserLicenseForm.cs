@@ -21,22 +21,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         {
             Text = LocaleManager.Get(Text);
 
-            LocaleControl(this);
-        }
-        public void LocaleControl(Control control)
-        {
-            if (control.Controls.Count > 0)
-                foreach (Control elem in control.Controls)
-                    LocaleControl(elem);
-            foreach (Label elem in control.Controls.OfType<Label>())
-                if (elem.Text.Length > 0)
-                    elem.Text = LocaleManager.Get(elem.Text);
-            foreach (Button elem in control.Controls.OfType<Button>())
-                if (elem.Text.Length > 0)
-                    elem.Text = LocaleManager.Get(elem.Text);
-            foreach (GroupBox elem in control.Controls.OfType<GroupBox>())
-                if (elem.Text.Length > 0)
-                    elem.Text = LocaleManager.Get(elem.Text);
+            FormHelper.LocaleControl(this);
         }
         private void BulkUserLicenseForm_Shown(object sender, EventArgs e)
         {
@@ -123,9 +108,9 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             ReloadRevokeListLicenses();
         }
         public void ReloadRevokeListUsernames()
-            => ReloadGenericListUsernames(checkedListBoxRevoke_Username);
+            => FormHelper.ReloadGenericListUsernames(checkedListBoxRevoke_Username);
         public void ReloadRevokeListLicenses()
-            => RelaodGenericListLicenses(checkedListBoxRevoke_Licenses);
+            => FormHelper.RelaodGenericListLicenses(checkedListBoxRevoke_Licenses);
         #endregion
 
         #region Grant List Reload
@@ -136,64 +121,15 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         }
         public void ReloadGrantListUsernames()
         {
-            ReloadGenericListUsernames(checkedListBoxGrant_Username);
+            FormHelper.ReloadGenericListUsernames(checkedListBoxGrant_Username);
         }
         public void ReloadGrantListLicenses()
         {
-            RelaodGenericListLicenses(checkedListBoxGrant_Licenses);
+            FormHelper.RelaodGenericListLicenses(checkedListBoxGrant_Licenses);
         }
         #endregion
 
         #region Helper Methods
-        public void ReloadGenericCheckedboxList(CheckedListBox cbox, object[] newitems)
-        {
-            var CheckedItems = new List<object>();
-            foreach (var item in cbox.CheckedItems)
-                CheckedItems.Add(item);
-
-            cbox.Items.Clear();
-            int index = 0;
-            foreach (var item in newitems)
-            {
-                cbox.Items.Add(item);
-                if (CheckedItems.Contains(item))
-                    cbox.SetItemChecked(index, true);
-                index++;
-            }
-        }
-        public void ReloadGenericListUsernames(CheckedListBox cbox)
-        {
-            var newitems = Program.LocalContent.AccountDetailList
-                .Select(v => v.Username)
-                .Concat(cbox.Items.Cast<string>())
-                .Distinct()
-                .ToArray();
-            ReloadGenericCheckedboxList(
-                cbox,
-                newitems);
-        }
-        public void RelaodGenericListLicenses(CheckedListBox cbox)
-        {
-            var newitems = cbox.Items.Cast<string>()
-                .Concat(Program.LocalContent.GetRemoteLocations())
-                .Distinct()
-                .ToArray();
-            ReloadGenericCheckedboxList(cbox, newitems);
-        }
-        public void SelectAll(CheckedListBox cbox)
-        {
-            for (int i = 0; i < cbox.Items.Count; i++)
-            {
-                cbox.SetItemChecked(i, true);
-            }
-        }
-        public void SelectInverse(CheckedListBox cbox)
-        {
-            for (int i = 0; i < cbox.Items.Count; i++)
-            {
-                cbox.SetItemChecked(i, !cbox.GetItemChecked(i));
-            }
-        }
         private Dictionary<string, string[]> GenerateAccountLicensePairs(CheckedListBox userList, CheckedListBox licenseBox)
         {
             var accountDictionary = new Dictionary<string, string[]>();
@@ -253,28 +189,28 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 
         #region Selection buttons
         private void buttonGrant_SelectAll_Click(object sender, EventArgs e)
-            => SelectAll(checkedListBoxGrant_Username);
+            => FormHelper.SelectAll(checkedListBoxGrant_Username);
 
         private void buttonGrant_SelectInvert_Click(object sender, EventArgs e)
-            => SelectInverse(checkedListBoxGrant_Username);
+            => FormHelper.SelectInverse(checkedListBoxGrant_Username);
 
         private void buttonRevoke_SelectAll_Click(object sender, EventArgs e)
-            => SelectAll(checkedListBoxRevoke_Username);
+            => FormHelper.SelectAll(checkedListBoxRevoke_Username);
 
         private void buttonRevoke_SelectInvert_Click(object sender, EventArgs e)
-            => SelectInverse(checkedListBoxRevoke_Username);
+            => FormHelper.SelectInverse(checkedListBoxRevoke_Username);
 
 
 
         private void buttonGrant_License_SelectAll_Click(object sender, EventArgs e)
-            => SelectAll(checkedListBoxGrant_Licenses);
+            => FormHelper.SelectAll(checkedListBoxGrant_Licenses);
         private void buttonGrant_License_SelectInvert_Click(object sender, EventArgs e)
-            => SelectInverse(checkedListBoxGrant_Licenses);
+            => FormHelper.SelectInverse(checkedListBoxGrant_Licenses);
 
         private void buttonRevoke_License_SelectAll_Click(object sender, EventArgs e)
-            => SelectAll(checkedListBoxRevoke_Licenses);
+            => FormHelper.SelectAll(checkedListBoxRevoke_Licenses);
         private void buttonRevoke_License_SelectInvert_Click(object sender, EventArgs e)
-            => SelectInverse(checkedListBoxRevoke_Licenses);
+            => FormHelper.SelectInverse(checkedListBoxRevoke_Licenses);
         #endregion
 
         private async void buttonGrant_Push_Click(object sender, EventArgs e)

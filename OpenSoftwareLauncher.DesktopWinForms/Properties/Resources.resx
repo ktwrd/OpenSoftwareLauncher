@@ -220,4 +220,10 @@
   <data name="license_key" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\license-key.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="key__arrow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\key--arrow.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="license_key__arrow" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\license-key--arrow.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>
