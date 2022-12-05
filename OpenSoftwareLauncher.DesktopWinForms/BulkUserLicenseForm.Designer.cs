@@ -32,13 +32,11 @@
             this.checkedListBoxGrant_Username = new System.Windows.Forms.CheckedListBox();
             this.checkedListBoxGrant_Licenses = new System.Windows.Forms.CheckedListBox();
             this.textBoxGrant_CustomLicense = new System.Windows.Forms.TextBox();
-            this.buttonGrant_AddCustomLicense = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.buttonGrant_SelectAll = new System.Windows.Forms.Button();
-            this.buttonGrant_SelectInvert = new System.Windows.Forms.Button();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.labelGrant_AccountPlural = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -50,28 +48,31 @@
             this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel10 = new System.Windows.Forms.TableLayoutPanel();
             this.textBoxRevoke_CustomLicense = new System.Windows.Forms.TextBox();
-            this.buttonRevoke_AddCustomLicense = new System.Windows.Forms.Button();
             this.checkedListBoxRevoke_Licenses = new System.Windows.Forms.CheckedListBox();
+            this.flowLayoutPanel6 = new System.Windows.Forms.FlowLayoutPanel();
             this.tableLayoutPanel11 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
-            this.buttonRevoke_SelectAll = new System.Windows.Forms.Button();
-            this.buttonRevoke_SelectInvert = new System.Windows.Forms.Button();
             this.checkedListBoxRevoke_Username = new System.Windows.Forms.CheckedListBox();
             this.label4 = new System.Windows.Forms.Label();
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
-            this.buttonRevoke_Push = new System.Windows.Forms.Button();
             this.groupBoxGrant = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
-            this.buttonGrant_Push = new System.Windows.Forms.Button();
-            this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
-            this.buttonGrant_License_SelectAll = new System.Windows.Forms.Button();
-            this.buttonGrant_License_SelectInvert = new System.Windows.Forms.Button();
-            this.flowLayoutPanel6 = new System.Windows.Forms.FlowLayoutPanel();
+            this.buttonRevoke_AddCustomLicense = new System.Windows.Forms.Button();
             this.buttonRevoke_License_SelectAll = new System.Windows.Forms.Button();
             this.buttonRevoke_License_SelectInvert = new System.Windows.Forms.Button();
+            this.buttonRevoke_SelectAll = new System.Windows.Forms.Button();
+            this.buttonRevoke_SelectInvert = new System.Windows.Forms.Button();
+            this.buttonRevoke_Push = new System.Windows.Forms.Button();
+            this.buttonGrant_AddCustomLicense = new System.Windows.Forms.Button();
+            this.buttonGrant_License_SelectAll = new System.Windows.Forms.Button();
+            this.buttonGrant_License_SelectInvert = new System.Windows.Forms.Button();
+            this.buttonGrant_SelectAll = new System.Windows.Forms.Button();
+            this.buttonGrant_SelectInvert = new System.Windows.Forms.Button();
+            this.buttonGrant_Push = new System.Windows.Forms.Button();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
+            this.flowLayoutPanel5.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
@@ -81,14 +82,13 @@
             this.tableLayoutPanel8.SuspendLayout();
             this.tableLayoutPanel9.SuspendLayout();
             this.tableLayoutPanel10.SuspendLayout();
+            this.flowLayoutPanel6.SuspendLayout();
             this.tableLayoutPanel11.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
             this.groupBoxGrant.SuspendLayout();
             this.tableLayoutPanel6.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
-            this.flowLayoutPanel5.SuspendLayout();
-            this.flowLayoutPanel6.SuspendLayout();
             this.SuspendLayout();
             // 
             // checkedListBoxGrant_Username
@@ -117,16 +117,6 @@
             this.textBoxGrant_CustomLicense.Name = "textBoxGrant_CustomLicense";
             this.textBoxGrant_CustomLicense.Size = new System.Drawing.Size(251, 20);
             this.textBoxGrant_CustomLicense.TabIndex = 2;
-            // 
-            // buttonGrant_AddCustomLicense
-            // 
-            this.buttonGrant_AddCustomLicense.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.plus;
-            this.buttonGrant_AddCustomLicense.Location = new System.Drawing.Point(262, 3);
-            this.buttonGrant_AddCustomLicense.Name = "buttonGrant_AddCustomLicense";
-            this.buttonGrant_AddCustomLicense.Size = new System.Drawing.Size(23, 23);
-            this.buttonGrant_AddCustomLicense.TabIndex = 3;
-            this.buttonGrant_AddCustomLicense.UseVisualStyleBackColor = true;
-            this.buttonGrant_AddCustomLicense.Click += new System.EventHandler(this.buttonGrant_AddCustomLicense_Click);
             // 
             // tableLayoutPanel1
             // 
@@ -163,6 +153,18 @@
             this.tableLayoutPanel2.Size = new System.Drawing.Size(288, 457);
             this.tableLayoutPanel2.TabIndex = 5;
             // 
+            // flowLayoutPanel5
+            // 
+            this.flowLayoutPanel5.AutoSize = true;
+            this.flowLayoutPanel5.Controls.Add(this.buttonGrant_License_SelectAll);
+            this.flowLayoutPanel5.Controls.Add(this.buttonGrant_License_SelectInvert);
+            this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel5.Location = new System.Drawing.Point(0, 428);
+            this.flowLayoutPanel5.Margin = new System.Windows.Forms.Padding(0);
+            this.flowLayoutPanel5.Name = "flowLayoutPanel5";
+            this.flowLayoutPanel5.Size = new System.Drawing.Size(288, 29);
+            this.flowLayoutPanel5.TabIndex = 5;
+            // 
             // tableLayoutPanel3
             // 
             this.tableLayoutPanel3.ColumnCount = 1;
@@ -190,26 +192,6 @@
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(287, 29);
             this.flowLayoutPanel1.TabIndex = 7;
-            // 
-            // buttonGrant_SelectAll
-            // 
-            this.buttonGrant_SelectAll.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.table_select_all;
-            this.buttonGrant_SelectAll.Location = new System.Drawing.Point(3, 3);
-            this.buttonGrant_SelectAll.Name = "buttonGrant_SelectAll";
-            this.buttonGrant_SelectAll.Size = new System.Drawing.Size(23, 23);
-            this.buttonGrant_SelectAll.TabIndex = 7;
-            this.buttonGrant_SelectAll.UseVisualStyleBackColor = true;
-            this.buttonGrant_SelectAll.Click += new System.EventHandler(this.buttonGrant_SelectAll_Click);
-            // 
-            // buttonGrant_SelectInvert
-            // 
-            this.buttonGrant_SelectInvert.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.arrow_switch;
-            this.buttonGrant_SelectInvert.Location = new System.Drawing.Point(32, 3);
-            this.buttonGrant_SelectInvert.Name = "buttonGrant_SelectInvert";
-            this.buttonGrant_SelectInvert.Size = new System.Drawing.Size(23, 23);
-            this.buttonGrant_SelectInvert.TabIndex = 7;
-            this.buttonGrant_SelectInvert.UseVisualStyleBackColor = true;
-            this.buttonGrant_SelectInvert.Click += new System.EventHandler(this.buttonGrant_SelectInvert_Click);
             // 
             // tableLayoutPanel4
             // 
@@ -366,16 +348,6 @@
             this.textBoxRevoke_CustomLicense.Size = new System.Drawing.Size(251, 20);
             this.textBoxRevoke_CustomLicense.TabIndex = 2;
             // 
-            // buttonRevoke_AddCustomLicense
-            // 
-            this.buttonRevoke_AddCustomLicense.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.plus;
-            this.buttonRevoke_AddCustomLicense.Location = new System.Drawing.Point(262, 3);
-            this.buttonRevoke_AddCustomLicense.Name = "buttonRevoke_AddCustomLicense";
-            this.buttonRevoke_AddCustomLicense.Size = new System.Drawing.Size(23, 23);
-            this.buttonRevoke_AddCustomLicense.TabIndex = 3;
-            this.buttonRevoke_AddCustomLicense.UseVisualStyleBackColor = true;
-            this.buttonRevoke_AddCustomLicense.Click += new System.EventHandler(this.buttonRevoke_AddCustomLicense_Click);
-            // 
             // checkedListBoxRevoke_Licenses
             // 
             this.checkedListBoxRevoke_Licenses.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -384,6 +356,18 @@
             this.checkedListBoxRevoke_Licenses.Name = "checkedListBoxRevoke_Licenses";
             this.checkedListBoxRevoke_Licenses.Size = new System.Drawing.Size(282, 393);
             this.checkedListBoxRevoke_Licenses.TabIndex = 1;
+            // 
+            // flowLayoutPanel6
+            // 
+            this.flowLayoutPanel6.AutoSize = true;
+            this.flowLayoutPanel6.Controls.Add(this.buttonRevoke_License_SelectAll);
+            this.flowLayoutPanel6.Controls.Add(this.buttonRevoke_License_SelectInvert);
+            this.flowLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel6.Location = new System.Drawing.Point(0, 428);
+            this.flowLayoutPanel6.Margin = new System.Windows.Forms.Padding(0);
+            this.flowLayoutPanel6.Name = "flowLayoutPanel6";
+            this.flowLayoutPanel6.Size = new System.Drawing.Size(288, 29);
+            this.flowLayoutPanel6.TabIndex = 5;
             // 
             // tableLayoutPanel11
             // 
@@ -413,26 +397,6 @@
             this.flowLayoutPanel3.Size = new System.Drawing.Size(287, 29);
             this.flowLayoutPanel3.TabIndex = 7;
             // 
-            // buttonRevoke_SelectAll
-            // 
-            this.buttonRevoke_SelectAll.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.table_select_all;
-            this.buttonRevoke_SelectAll.Location = new System.Drawing.Point(3, 3);
-            this.buttonRevoke_SelectAll.Name = "buttonRevoke_SelectAll";
-            this.buttonRevoke_SelectAll.Size = new System.Drawing.Size(23, 23);
-            this.buttonRevoke_SelectAll.TabIndex = 7;
-            this.buttonRevoke_SelectAll.UseVisualStyleBackColor = true;
-            this.buttonRevoke_SelectAll.Click += new System.EventHandler(this.buttonRevoke_SelectAll_Click);
-            // 
-            // buttonRevoke_SelectInvert
-            // 
-            this.buttonRevoke_SelectInvert.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.arrow_switch;
-            this.buttonRevoke_SelectInvert.Location = new System.Drawing.Point(32, 3);
-            this.buttonRevoke_SelectInvert.Name = "buttonRevoke_SelectInvert";
-            this.buttonRevoke_SelectInvert.Size = new System.Drawing.Size(23, 23);
-            this.buttonRevoke_SelectInvert.TabIndex = 7;
-            this.buttonRevoke_SelectInvert.UseVisualStyleBackColor = true;
-            this.buttonRevoke_SelectInvert.Click += new System.EventHandler(this.buttonRevoke_SelectInvert_Click);
-            // 
             // checkedListBoxRevoke_Username
             // 
             this.checkedListBoxRevoke_Username.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -461,19 +425,6 @@
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
             this.flowLayoutPanel4.Size = new System.Drawing.Size(81, 29);
             this.flowLayoutPanel4.TabIndex = 0;
-            // 
-            // buttonRevoke_Push
-            // 
-            this.buttonRevoke_Push.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.upload_cloud;
-            this.buttonRevoke_Push.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonRevoke_Push.Location = new System.Drawing.Point(3, 3);
-            this.buttonRevoke_Push.Name = "buttonRevoke_Push";
-            this.buttonRevoke_Push.Size = new System.Drawing.Size(75, 23);
-            this.buttonRevoke_Push.TabIndex = 0;
-            this.buttonRevoke_Push.Text = "Push";
-            this.buttonRevoke_Push.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.buttonRevoke_Push.UseVisualStyleBackColor = true;
-            this.buttonRevoke_Push.Click += new System.EventHandler(this.buttonRevoke_Push_Click);
             // 
             // groupBoxGrant
             // 
@@ -512,62 +463,15 @@
             this.flowLayoutPanel2.Size = new System.Drawing.Size(81, 29);
             this.flowLayoutPanel2.TabIndex = 0;
             // 
-            // buttonGrant_Push
+            // buttonRevoke_AddCustomLicense
             // 
-            this.buttonGrant_Push.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.upload_cloud;
-            this.buttonGrant_Push.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonGrant_Push.Location = new System.Drawing.Point(3, 3);
-            this.buttonGrant_Push.Name = "buttonGrant_Push";
-            this.buttonGrant_Push.Size = new System.Drawing.Size(75, 23);
-            this.buttonGrant_Push.TabIndex = 0;
-            this.buttonGrant_Push.Text = "Push";
-            this.buttonGrant_Push.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.buttonGrant_Push.UseVisualStyleBackColor = true;
-            this.buttonGrant_Push.Click += new System.EventHandler(this.buttonGrant_Push_Click);
-            // 
-            // flowLayoutPanel5
-            // 
-            this.flowLayoutPanel5.AutoSize = true;
-            this.flowLayoutPanel5.Controls.Add(this.buttonGrant_License_SelectAll);
-            this.flowLayoutPanel5.Controls.Add(this.buttonGrant_License_SelectInvert);
-            this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel5.Location = new System.Drawing.Point(0, 428);
-            this.flowLayoutPanel5.Margin = new System.Windows.Forms.Padding(0);
-            this.flowLayoutPanel5.Name = "flowLayoutPanel5";
-            this.flowLayoutPanel5.Size = new System.Drawing.Size(288, 29);
-            this.flowLayoutPanel5.TabIndex = 5;
-            // 
-            // buttonGrant_License_SelectAll
-            // 
-            this.buttonGrant_License_SelectAll.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.table_select_all;
-            this.buttonGrant_License_SelectAll.Location = new System.Drawing.Point(3, 3);
-            this.buttonGrant_License_SelectAll.Name = "buttonGrant_License_SelectAll";
-            this.buttonGrant_License_SelectAll.Size = new System.Drawing.Size(23, 23);
-            this.buttonGrant_License_SelectAll.TabIndex = 0;
-            this.buttonGrant_License_SelectAll.UseVisualStyleBackColor = true;
-            this.buttonGrant_License_SelectAll.Click += new System.EventHandler(this.buttonGrant_License_SelectAll_Click);
-            // 
-            // buttonGrant_License_SelectInvert
-            // 
-            this.buttonGrant_License_SelectInvert.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.arrow_switch;
-            this.buttonGrant_License_SelectInvert.Location = new System.Drawing.Point(32, 3);
-            this.buttonGrant_License_SelectInvert.Name = "buttonGrant_License_SelectInvert";
-            this.buttonGrant_License_SelectInvert.Size = new System.Drawing.Size(23, 23);
-            this.buttonGrant_License_SelectInvert.TabIndex = 1;
-            this.buttonGrant_License_SelectInvert.UseVisualStyleBackColor = true;
-            this.buttonGrant_License_SelectInvert.Click += new System.EventHandler(this.buttonGrant_License_SelectInvert_Click);
-            // 
-            // flowLayoutPanel6
-            // 
-            this.flowLayoutPanel6.AutoSize = true;
-            this.flowLayoutPanel6.Controls.Add(this.buttonRevoke_License_SelectAll);
-            this.flowLayoutPanel6.Controls.Add(this.buttonRevoke_License_SelectInvert);
-            this.flowLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel6.Location = new System.Drawing.Point(0, 428);
-            this.flowLayoutPanel6.Margin = new System.Windows.Forms.Padding(0);
-            this.flowLayoutPanel6.Name = "flowLayoutPanel6";
-            this.flowLayoutPanel6.Size = new System.Drawing.Size(288, 29);
-            this.flowLayoutPanel6.TabIndex = 5;
+            this.buttonRevoke_AddCustomLicense.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.plus;
+            this.buttonRevoke_AddCustomLicense.Location = new System.Drawing.Point(262, 3);
+            this.buttonRevoke_AddCustomLicense.Name = "buttonRevoke_AddCustomLicense";
+            this.buttonRevoke_AddCustomLicense.Size = new System.Drawing.Size(23, 23);
+            this.buttonRevoke_AddCustomLicense.TabIndex = 3;
+            this.buttonRevoke_AddCustomLicense.UseVisualStyleBackColor = true;
+            this.buttonRevoke_AddCustomLicense.Click += new System.EventHandler(this.buttonRevoke_AddCustomLicense_Click);
             // 
             // buttonRevoke_License_SelectAll
             // 
@@ -589,6 +493,102 @@
             this.buttonRevoke_License_SelectInvert.UseVisualStyleBackColor = true;
             this.buttonRevoke_License_SelectInvert.Click += new System.EventHandler(this.buttonRevoke_License_SelectInvert_Click);
             // 
+            // buttonRevoke_SelectAll
+            // 
+            this.buttonRevoke_SelectAll.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.table_select_all;
+            this.buttonRevoke_SelectAll.Location = new System.Drawing.Point(3, 3);
+            this.buttonRevoke_SelectAll.Name = "buttonRevoke_SelectAll";
+            this.buttonRevoke_SelectAll.Size = new System.Drawing.Size(23, 23);
+            this.buttonRevoke_SelectAll.TabIndex = 7;
+            this.buttonRevoke_SelectAll.UseVisualStyleBackColor = true;
+            this.buttonRevoke_SelectAll.Click += new System.EventHandler(this.buttonRevoke_SelectAll_Click);
+            // 
+            // buttonRevoke_SelectInvert
+            // 
+            this.buttonRevoke_SelectInvert.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.arrow_switch;
+            this.buttonRevoke_SelectInvert.Location = new System.Drawing.Point(32, 3);
+            this.buttonRevoke_SelectInvert.Name = "buttonRevoke_SelectInvert";
+            this.buttonRevoke_SelectInvert.Size = new System.Drawing.Size(23, 23);
+            this.buttonRevoke_SelectInvert.TabIndex = 7;
+            this.buttonRevoke_SelectInvert.UseVisualStyleBackColor = true;
+            this.buttonRevoke_SelectInvert.Click += new System.EventHandler(this.buttonRevoke_SelectInvert_Click);
+            // 
+            // buttonRevoke_Push
+            // 
+            this.buttonRevoke_Push.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.upload_cloud;
+            this.buttonRevoke_Push.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonRevoke_Push.Location = new System.Drawing.Point(3, 3);
+            this.buttonRevoke_Push.Name = "buttonRevoke_Push";
+            this.buttonRevoke_Push.Size = new System.Drawing.Size(75, 23);
+            this.buttonRevoke_Push.TabIndex = 0;
+            this.buttonRevoke_Push.Text = "Push";
+            this.buttonRevoke_Push.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.buttonRevoke_Push.UseVisualStyleBackColor = true;
+            this.buttonRevoke_Push.Click += new System.EventHandler(this.buttonRevoke_Push_Click);
+            // 
+            // buttonGrant_AddCustomLicense
+            // 
+            this.buttonGrant_AddCustomLicense.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.plus;
+            this.buttonGrant_AddCustomLicense.Location = new System.Drawing.Point(262, 3);
+            this.buttonGrant_AddCustomLicense.Name = "buttonGrant_AddCustomLicense";
+            this.buttonGrant_AddCustomLicense.Size = new System.Drawing.Size(23, 23);
+            this.buttonGrant_AddCustomLicense.TabIndex = 3;
+            this.buttonGrant_AddCustomLicense.UseVisualStyleBackColor = true;
+            this.buttonGrant_AddCustomLicense.Click += new System.EventHandler(this.buttonGrant_AddCustomLicense_Click);
+            // 
+            // buttonGrant_License_SelectAll
+            // 
+            this.buttonGrant_License_SelectAll.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.table_select_all;
+            this.buttonGrant_License_SelectAll.Location = new System.Drawing.Point(3, 3);
+            this.buttonGrant_License_SelectAll.Name = "buttonGrant_License_SelectAll";
+            this.buttonGrant_License_SelectAll.Size = new System.Drawing.Size(23, 23);
+            this.buttonGrant_License_SelectAll.TabIndex = 0;
+            this.buttonGrant_License_SelectAll.UseVisualStyleBackColor = true;
+            this.buttonGrant_License_SelectAll.Click += new System.EventHandler(this.buttonGrant_License_SelectAll_Click);
+            // 
+            // buttonGrant_License_SelectInvert
+            // 
+            this.buttonGrant_License_SelectInvert.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.arrow_switch;
+            this.buttonGrant_License_SelectInvert.Location = new System.Drawing.Point(32, 3);
+            this.buttonGrant_License_SelectInvert.Name = "buttonGrant_License_SelectInvert";
+            this.buttonGrant_License_SelectInvert.Size = new System.Drawing.Size(23, 23);
+            this.buttonGrant_License_SelectInvert.TabIndex = 1;
+            this.buttonGrant_License_SelectInvert.UseVisualStyleBackColor = true;
+            this.buttonGrant_License_SelectInvert.Click += new System.EventHandler(this.buttonGrant_License_SelectInvert_Click);
+            // 
+            // buttonGrant_SelectAll
+            // 
+            this.buttonGrant_SelectAll.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.table_select_all;
+            this.buttonGrant_SelectAll.Location = new System.Drawing.Point(3, 3);
+            this.buttonGrant_SelectAll.Name = "buttonGrant_SelectAll";
+            this.buttonGrant_SelectAll.Size = new System.Drawing.Size(23, 23);
+            this.buttonGrant_SelectAll.TabIndex = 7;
+            this.buttonGrant_SelectAll.UseVisualStyleBackColor = true;
+            this.buttonGrant_SelectAll.Click += new System.EventHandler(this.buttonGrant_SelectAll_Click);
+            // 
+            // buttonGrant_SelectInvert
+            // 
+            this.buttonGrant_SelectInvert.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.arrow_switch;
+            this.buttonGrant_SelectInvert.Location = new System.Drawing.Point(32, 3);
+            this.buttonGrant_SelectInvert.Name = "buttonGrant_SelectInvert";
+            this.buttonGrant_SelectInvert.Size = new System.Drawing.Size(23, 23);
+            this.buttonGrant_SelectInvert.TabIndex = 7;
+            this.buttonGrant_SelectInvert.UseVisualStyleBackColor = true;
+            this.buttonGrant_SelectInvert.Click += new System.EventHandler(this.buttonGrant_SelectInvert_Click);
+            // 
+            // buttonGrant_Push
+            // 
+            this.buttonGrant_Push.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.upload_cloud;
+            this.buttonGrant_Push.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonGrant_Push.Location = new System.Drawing.Point(3, 3);
+            this.buttonGrant_Push.Name = "buttonGrant_Push";
+            this.buttonGrant_Push.Size = new System.Drawing.Size(75, 23);
+            this.buttonGrant_Push.TabIndex = 0;
+            this.buttonGrant_Push.Text = "Push";
+            this.buttonGrant_Push.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.buttonGrant_Push.UseVisualStyleBackColor = true;
+            this.buttonGrant_Push.Click += new System.EventHandler(this.buttonGrant_Push_Click);
+            // 
             // BulkUserLicenseForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -605,6 +605,7 @@
             this.tableLayoutPanel1.PerformLayout();
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
+            this.flowLayoutPanel5.ResumeLayout(false);
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
@@ -620,6 +621,7 @@
             this.tableLayoutPanel9.PerformLayout();
             this.tableLayoutPanel10.ResumeLayout(false);
             this.tableLayoutPanel10.PerformLayout();
+            this.flowLayoutPanel6.ResumeLayout(false);
             this.tableLayoutPanel11.ResumeLayout(false);
             this.tableLayoutPanel11.PerformLayout();
             this.flowLayoutPanel3.ResumeLayout(false);
@@ -628,8 +630,6 @@
             this.tableLayoutPanel6.ResumeLayout(false);
             this.tableLayoutPanel6.PerformLayout();
             this.flowLayoutPanel2.ResumeLayout(false);
-            this.flowLayoutPanel5.ResumeLayout(false);
-            this.flowLayoutPanel6.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
