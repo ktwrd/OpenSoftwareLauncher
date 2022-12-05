@@ -23,45 +23,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         public void Locale()
         {
             Text = LocaleManager.Get(Text);
-
-            toolStripButtonEdit.Text = LocaleManager.Get(toolStripButtonEdit.Text);
-            toolStripButtonEdit.ToolTipText = toolStripButtonEdit.Text;
-
-            toolStripButtonDelete.Text = LocaleManager.Get(toolStripButtonDelete.Text);
-            toolStripButtonDelete.ToolTipText = toolStripButtonDelete.Text;
-
-            toolStripButtonRefresh.Text = LocaleManager.Get(toolStripButtonRefresh.Text);
-            toolStripButtonRefresh.ToolTipText = toolStripButtonRefresh.Text;
-            
-            toolStripButtonBanTool.Text = LocaleManager.Get(toolStripButtonBanTool.Text);
-            toolStripButtonBanTool.ToolTipText = toolStripButtonBanTool.Text;
-
-            toolStripButtonUnban.Text = LocaleManager.Get(toolStripButtonUnban.Text);
-            toolStripButtonUnban.ToolTipText = toolStripButtonUnban.Text;
-
-            toolStripButtonPermissionTool.Text = LocaleManager.Get(toolStripButtonPermissionTool.Text);
-            toolStripButtonPermissionTool.ToolTipText = toolStripButtonPermissionTool.Text;
-            
-            toolStripButtonGroupTool.Text = LocaleManager.Get(toolStripButtonGroupTool.Text);
-            toolStripButtonGroupTool.ToolTipText = toolStripButtonGroupTool.Text;
-
-            toolStripButtonLicense.Text = LocaleManager.Get(toolStripButtonLicense.Text);
-            toolStripButtonLicense.ToolTipText = toolStripButtonLicense.Text;
-
-            toolStripButtonCreateServiceAccount.Text = LocaleManager.Get(toolStripButtonCreateServiceAccount.Text);
-            toolStripButtonCreateServiceAccount.ToolTipText = toolStripButtonCreateServiceAccount.Text;
-
-            toolStripButtonLicenseUtility.Text = LocaleManager.Get(toolStripButtonLicenseUtility.Text);
-            toolStripButtonLicenseUtility.ToolTipText = toolStripButtonLicenseUtility.Text;
-
-            toolStripButtonPermissionUtility.Text = LocaleManager.Get(toolStripButtonPermissionUtility.Text);
-            toolStripButtonPermissionUtility.ToolTipText = toolStripButtonPermissionUtility.Text;
-
-
-            foreach (ColumnHeader col in listViewAccounts.Columns)
-            {
-                col.Text = LocaleManager.Get(col.Text);
-            }
+            FormHelper.LocaleControl(this);
         }
 
         public void ReloadList(bool pull=false)
