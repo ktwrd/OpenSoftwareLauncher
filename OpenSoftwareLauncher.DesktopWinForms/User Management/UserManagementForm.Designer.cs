@@ -31,8 +31,19 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserManagementForm));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripButtonEdit = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonDelete = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonRefresh = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonBanTool = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonUnban = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButtonPermissionTool = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonGroupTool = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonLicense = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonCreateServiceAccount = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonLicenseUtility = new System.Windows.Forms.ToolStripButton();
             this.listViewAccounts = new System.Windows.Forms.ListView();
             this.columnHeaderUsername = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderEnabled = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -40,17 +51,6 @@
             this.columnHeaderPermissions = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderLastSeen = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButtonEdit = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonDelete = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonRefresh = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonBanTool = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonUnban = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonPermissionTool = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonGroupTool = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonLicense = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonCreateServiceAccount = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonLicenseUtility = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -76,15 +76,126 @@
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
+            // toolStripButtonEdit
+            // 
+            this.toolStripButtonEdit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonEdit.Enabled = false;
+            this.toolStripButtonEdit.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.pencil;
+            this.toolStripButtonEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonEdit.Name = "toolStripButtonEdit";
+            this.toolStripButtonEdit.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonEdit.Text = "Edit";
+            // 
+            // toolStripButtonDelete
+            // 
+            this.toolStripButtonDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonDelete.Enabled = false;
+            this.toolStripButtonDelete.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.minus;
+            this.toolStripButtonDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonDelete.Name = "toolStripButtonDelete";
+            this.toolStripButtonDelete.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonDelete.Text = "Delete";
+            this.toolStripButtonDelete.Click += new System.EventHandler(this.toolStripButtonDelete_Click);
+            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
+            // toolStripButtonRefresh
+            // 
+            this.toolStripButtonRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonRefresh.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.arrow_circle;
+            this.toolStripButtonRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonRefresh.Name = "toolStripButtonRefresh";
+            this.toolStripButtonRefresh.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonRefresh.Text = "Refresh";
+            this.toolStripButtonRefresh.Click += new System.EventHandler(this.toolStripButtonRefresh_Click);
+            // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButtonBanTool
+            // 
+            this.toolStripButtonBanTool.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonBanTool.Enabled = false;
+            this.toolStripButtonBanTool.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.hammer;
+            this.toolStripButtonBanTool.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonBanTool.Name = "toolStripButtonBanTool";
+            this.toolStripButtonBanTool.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonBanTool.Text = "Banish";
+            this.toolStripButtonBanTool.Click += new System.EventHandler(this.toolStripButtonBanTool_Click);
+            // 
+            // toolStripButtonUnban
+            // 
+            this.toolStripButtonUnban.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonUnban.Enabled = false;
+            this.toolStripButtonUnban.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.hammer__minus;
+            this.toolStripButtonUnban.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonUnban.Name = "toolStripButtonUnban";
+            this.toolStripButtonUnban.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonUnban.Text = "BanishReverse";
+            this.toolStripButtonUnban.Click += new System.EventHandler(this.toolStripButtonUnban_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripButtonPermissionTool
+            // 
+            this.toolStripButtonPermissionTool.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonPermissionTool.Enabled = false;
+            this.toolStripButtonPermissionTool.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.key;
+            this.toolStripButtonPermissionTool.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonPermissionTool.Name = "toolStripButtonPermissionTool";
+            this.toolStripButtonPermissionTool.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonPermissionTool.Text = "Permission_Plural";
+            this.toolStripButtonPermissionTool.Click += new System.EventHandler(this.toolStripButtonPermissionTool_Click);
+            // 
+            // toolStripButtonGroupTool
+            // 
+            this.toolStripButtonGroupTool.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonGroupTool.Enabled = false;
+            this.toolStripButtonGroupTool.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.category_group_select;
+            this.toolStripButtonGroupTool.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonGroupTool.Name = "toolStripButtonGroupTool";
+            this.toolStripButtonGroupTool.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonGroupTool.Text = "Group_Plural";
+            // 
+            // toolStripButtonLicense
+            // 
+            this.toolStripButtonLicense.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonLicense.Enabled = false;
+            this.toolStripButtonLicense.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.briefcase;
+            this.toolStripButtonLicense.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonLicense.Name = "toolStripButtonLicense";
+            this.toolStripButtonLicense.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonLicense.Text = "LicenseUtility";
+            this.toolStripButtonLicense.Click += new System.EventHandler(this.toolStripButtonLicense_Click);
+            // 
+            // toolStripButtonCreateServiceAccount
+            // 
+            this.toolStripButtonCreateServiceAccount.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonCreateServiceAccount.Enabled = false;
+            this.toolStripButtonCreateServiceAccount.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.hard_hat__plus;
+            this.toolStripButtonCreateServiceAccount.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonCreateServiceAccount.Name = "toolStripButtonCreateServiceAccount";
+            this.toolStripButtonCreateServiceAccount.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonCreateServiceAccount.Text = "Create_ServiceAccount";
+            this.toolStripButtonCreateServiceAccount.Click += new System.EventHandler(this.toolStripButtonCreateServiceAccount_Click);
+            // 
+            // toolStripButtonLicenseUtility
+            // 
+            this.toolStripButtonLicenseUtility.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonLicenseUtility.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.license_key__arrow;
+            this.toolStripButtonLicenseUtility.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonLicenseUtility.Name = "toolStripButtonLicenseUtility";
+            this.toolStripButtonLicenseUtility.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonLicenseUtility.Text = "Title_BulkUserLicense";
+            this.toolStripButtonLicenseUtility.Click += new System.EventHandler(this.toolStripButtonLicenseUtility_Click);
             // 
             // listViewAccounts
             // 
@@ -147,117 +258,6 @@
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             this.imageList1.Images.SetKeyName(0, "hard-hat.png");
             this.imageList1.Images.SetKeyName(1, "cross.png");
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripButtonEdit
-            // 
-            this.toolStripButtonEdit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonEdit.Enabled = false;
-            this.toolStripButtonEdit.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.pencil;
-            this.toolStripButtonEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonEdit.Name = "toolStripButtonEdit";
-            this.toolStripButtonEdit.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonEdit.Text = "Edit";
-            // 
-            // toolStripButtonDelete
-            // 
-            this.toolStripButtonDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonDelete.Enabled = false;
-            this.toolStripButtonDelete.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.minus;
-            this.toolStripButtonDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonDelete.Name = "toolStripButtonDelete";
-            this.toolStripButtonDelete.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonDelete.Text = "Delete";
-            this.toolStripButtonDelete.Click += new System.EventHandler(this.toolStripButtonDelete_Click);
-            // 
-            // toolStripButtonRefresh
-            // 
-            this.toolStripButtonRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonRefresh.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.arrow_circle;
-            this.toolStripButtonRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonRefresh.Name = "toolStripButtonRefresh";
-            this.toolStripButtonRefresh.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonRefresh.Text = "Refresh";
-            this.toolStripButtonRefresh.Click += new System.EventHandler(this.toolStripButtonRefresh_Click);
-            // 
-            // toolStripButtonBanTool
-            // 
-            this.toolStripButtonBanTool.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonBanTool.Enabled = false;
-            this.toolStripButtonBanTool.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.hammer;
-            this.toolStripButtonBanTool.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonBanTool.Name = "toolStripButtonBanTool";
-            this.toolStripButtonBanTool.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonBanTool.Text = "Banish";
-            this.toolStripButtonBanTool.Click += new System.EventHandler(this.toolStripButtonBanTool_Click);
-            // 
-            // toolStripButtonUnban
-            // 
-            this.toolStripButtonUnban.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonUnban.Enabled = false;
-            this.toolStripButtonUnban.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.hammer__minus;
-            this.toolStripButtonUnban.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonUnban.Name = "toolStripButtonUnban";
-            this.toolStripButtonUnban.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonUnban.Text = "BanishReverse";
-            this.toolStripButtonUnban.Click += new System.EventHandler(this.toolStripButtonUnban_Click);
-            // 
-            // toolStripButtonPermissionTool
-            // 
-            this.toolStripButtonPermissionTool.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonPermissionTool.Enabled = false;
-            this.toolStripButtonPermissionTool.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.key;
-            this.toolStripButtonPermissionTool.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonPermissionTool.Name = "toolStripButtonPermissionTool";
-            this.toolStripButtonPermissionTool.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonPermissionTool.Text = "Permission_Plural";
-            this.toolStripButtonPermissionTool.Click += new System.EventHandler(this.toolStripButtonPermissionTool_Click);
-            // 
-            // toolStripButtonGroupTool
-            // 
-            this.toolStripButtonGroupTool.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonGroupTool.Enabled = false;
-            this.toolStripButtonGroupTool.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.category_group_select;
-            this.toolStripButtonGroupTool.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonGroupTool.Name = "toolStripButtonGroupTool";
-            this.toolStripButtonGroupTool.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonGroupTool.Text = "Group_Plural";
-            // 
-            // toolStripButtonLicense
-            // 
-            this.toolStripButtonLicense.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonLicense.Enabled = false;
-            this.toolStripButtonLicense.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.briefcase;
-            this.toolStripButtonLicense.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonLicense.Name = "toolStripButtonLicense";
-            this.toolStripButtonLicense.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonLicense.Text = "LicenseUtility";
-            this.toolStripButtonLicense.Click += new System.EventHandler(this.toolStripButtonLicense_Click);
-            // 
-            // toolStripButtonCreateServiceAccount
-            // 
-            this.toolStripButtonCreateServiceAccount.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonCreateServiceAccount.Enabled = false;
-            this.toolStripButtonCreateServiceAccount.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.hard_hat__plus;
-            this.toolStripButtonCreateServiceAccount.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonCreateServiceAccount.Name = "toolStripButtonCreateServiceAccount";
-            this.toolStripButtonCreateServiceAccount.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonCreateServiceAccount.Text = "Create_ServiceAccount";
-            this.toolStripButtonCreateServiceAccount.Click += new System.EventHandler(this.toolStripButtonCreateServiceAccount_Click);
-            // 
-            // toolStripButtonLicenseUtility
-            // 
-            this.toolStripButtonLicenseUtility.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonLicenseUtility.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.license_key;
-            this.toolStripButtonLicenseUtility.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonLicenseUtility.Name = "toolStripButtonLicenseUtility";
-            this.toolStripButtonLicenseUtility.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonLicenseUtility.Text = "Title_BulkUserLicense";
-            this.toolStripButtonLicenseUtility.Click += new System.EventHandler(this.toolStripButtonLicenseUtility_Click);
             // 
             // UserManagementForm
             // 
