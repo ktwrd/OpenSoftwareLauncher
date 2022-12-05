@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Enabled", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Disabled", System.Windows.Forms.HorizontalAlignment.Left);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserManagementForm));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonEdit = new System.Windows.Forms.ToolStripButton();
@@ -44,6 +46,7 @@
             this.toolStripButtonLicense = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonCreateServiceAccount = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonLicenseUtility = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonPermissionUtility = new System.Windows.Forms.ToolStripButton();
             this.listViewAccounts = new System.Windows.Forms.ListView();
             this.columnHeaderUsername = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderEnabled = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -51,7 +54,6 @@
             this.columnHeaderPermissions = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderLastSeen = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.toolStripButtonPermissionUtility = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -74,7 +76,7 @@
             this.toolStripButtonPermissionUtility});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(924, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(1029, 25);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -199,6 +201,16 @@
             this.toolStripButtonLicenseUtility.Text = "Title_BulkUserLicense";
             this.toolStripButtonLicenseUtility.Click += new System.EventHandler(this.toolStripButtonLicenseUtility_Click);
             // 
+            // toolStripButtonPermissionUtility
+            // 
+            this.toolStripButtonPermissionUtility.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonPermissionUtility.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.key__arrow;
+            this.toolStripButtonPermissionUtility.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonPermissionUtility.Name = "toolStripButtonPermissionUtility";
+            this.toolStripButtonPermissionUtility.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonPermissionUtility.Text = "Title_BulkUserPermission";
+            this.toolStripButtonPermissionUtility.Click += new System.EventHandler(this.toolStripButtonPermissionUtility_Click);
+            // 
             // listViewAccounts
             // 
             this.listViewAccounts.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -211,11 +223,18 @@
             this.listViewAccounts.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listViewAccounts.FullRowSelect = true;
             this.listViewAccounts.GridLines = true;
+            listViewGroup1.Header = "Enabled";
+            listViewGroup1.Name = "listViewGroupDefault";
+            listViewGroup2.Header = "Disabled";
+            listViewGroup2.Name = "listViewGroupDisabled";
+            this.listViewAccounts.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
+            listViewGroup1,
+            listViewGroup2});
             this.listViewAccounts.HideSelection = false;
             this.listViewAccounts.LargeImageList = this.imageList1;
             this.listViewAccounts.Location = new System.Drawing.Point(0, 25);
             this.listViewAccounts.Name = "listViewAccounts";
-            this.listViewAccounts.Size = new System.Drawing.Size(924, 436);
+            this.listViewAccounts.Size = new System.Drawing.Size(1029, 495);
             this.listViewAccounts.SmallImageList = this.imageList1;
             this.listViewAccounts.TabIndex = 1;
             this.listViewAccounts.UseCompatibleStateImageBehavior = false;
@@ -261,21 +280,11 @@
             this.imageList1.Images.SetKeyName(0, "hard-hat.png");
             this.imageList1.Images.SetKeyName(1, "cross.png");
             // 
-            // toolStripButtonPermissionUtility
-            // 
-            this.toolStripButtonPermissionUtility.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonPermissionUtility.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.key__arrow;
-            this.toolStripButtonPermissionUtility.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonPermissionUtility.Name = "toolStripButtonPermissionUtility";
-            this.toolStripButtonPermissionUtility.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonPermissionUtility.Text = "Title_BulkUserPermission";
-            this.toolStripButtonPermissionUtility.Click += new System.EventHandler(this.toolStripButtonPermissionUtility_Click);
-            // 
             // UserManagementForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(924, 461);
+            this.ClientSize = new System.Drawing.Size(1029, 520);
             this.Controls.Add(this.listViewAccounts);
             this.Controls.Add(this.toolStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
