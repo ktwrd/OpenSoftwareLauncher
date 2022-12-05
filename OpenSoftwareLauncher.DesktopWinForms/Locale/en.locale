@@ -90,6 +90,7 @@ Save_GroupPlural=Save Groups
 Setting_Plural=Settings
 
 // tenses (past, present, current)
+Disable_PastTense=Disabled
 Enable_PastTense=Enabled
 EnableAnnouncement_Plural=Enable Announcements
 Install_Doing=Installing
