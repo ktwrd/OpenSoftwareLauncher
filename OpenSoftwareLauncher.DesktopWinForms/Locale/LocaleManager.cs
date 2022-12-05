@@ -72,9 +72,15 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 
         public static string Get(string key, string lang = "", string fallback = null, Dictionary<string, object> inject = null)
         {
-            var targetLang = LanguageDatabase.ContainsKey(lang) ? lang : Language;
+            if (key == null)
+                return "";
+            if (lang == null)
+                lang = FallbackLanguage;
             if (fallback == null)
                 fallback = key;
+            if (inject == null)
+                inject = new Dictionary<string, object>();
+            var targetLang = LanguageDatabase.ContainsKey(lang) ? lang : Language;
 
             var value = fallback;
             if (LanguageDatabase[targetLang].ContainsKey(key))
