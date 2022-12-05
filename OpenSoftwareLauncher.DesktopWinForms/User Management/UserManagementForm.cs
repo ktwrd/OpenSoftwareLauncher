@@ -80,9 +80,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             ReloadList(true);
 
             toolStripButtonCreateServiceAccount.Enabled = Program.Client.HasPermission(AccountPermission.SERVICEACCOUNT_MANAGE);
-            toolStripButtonLicenseUtility.Enabled = Program.Client.HasPermission(AccountPermission.USER_LICENSE_MODIFY);
             toolStripButtonPermissionUtility.Enabled = Program.Client.HasPermission(AccountPermission.USER_PERMISSION_MODIFY);
-            toolStripButtonDelete.Enabled = Program.Client.HasPermission(AccountPermission.USER_DELETE);
+            toolStripButtonLicenseUtility.Enabled = Program.Client.HasPermission(AccountPermission.USER_LICENSE_MODIFY);
 
             Enabled = true;
         }
@@ -131,14 +130,14 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             {
                 if (SelectedAccounts.Length < 2)
                 {
-                    toolStripButtonPermissionTool.Enabled = true;
-                    toolStripButtonBanTool.Enabled = true;
-                    toolStripButtonLicense.Enabled = true;
-                    toolStripButtonEdit.Enabled = true;
+                    toolStripButtonPermissionTool.Enabled = Program.Client.HasPermission(AccountPermission.USER_PERMISSION_MODIFY);
+                    toolStripButtonBanTool.Enabled = Program.Client.HasPermission(AccountPermission.USER_DISABLE_MODIFY);
+                    toolStripButtonLicense.Enabled = Program.Client.HasPermission(AccountPermission.USER_LICENSE_MODIFY);
+                    toolStripButtonEdit.Enabled = Program.Client.HasPermission(AccountPermission.ADMINISTRATOR);
                 }
-                toolStripButtonGroupTool.Enabled = true;
-                toolStripButtonUnban.Enabled = true;
-                toolStripButtonDelete.Enabled = true;
+                toolStripButtonGroupTool.Enabled = Program.Client.HasPermission(AccountPermission.USER_GROUP_MODIFY);
+                toolStripButtonUnban.Enabled = Program.Client.HasPermission(AccountPermission.USER_DISABLE_MODIFY);
+                toolStripButtonDelete.Enabled = Program.Client.HasPermission(AccountPermission.USER_DELETE);
             }
         }
 
