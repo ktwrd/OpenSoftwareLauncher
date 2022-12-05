@@ -92,11 +92,11 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         }
         public void ReloadGrantListUsernames()
         {
-            FormHelper.ReloadGenericListUsernames(checkedListBoxAccountRevoke);
+            FormHelper.ReloadGenericListUsernames(checkedListBoxAccountGrant);
         }
         public void ReloadGrantListLicenses()
         {
-            FormHelper.ReloadGenericListPermissions(checkedListBoxPermissionRevoke);
+            FormHelper.ReloadGenericListPermissions(checkedListBoxPermissionGrant);
         }
         #endregion
 
@@ -105,7 +105,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             var accountDictionary = new Dictionary<string, AccountPermission[]>();
 
             var selectedAccounts = userList.CheckedItems.Cast<string>();
-            var selectedPermissions = permissionBox.CheckedItems.Cast<AccountPermission>();
+            var selectedPermissions = permissionBox.CheckedItems.Cast<string>().Select(v => (AccountPermission)Enum.Parse(typeof(AccountPermission), v));
             foreach (var account in Program.LocalContent.AccountDetailList)
             {
                 if (selectedAccounts.Contains(account.Username))
@@ -124,7 +124,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         {
             var accountDictionary = new Dictionary<string, AccountPermission[]>();
             var selectedAccounts = userList.CheckedItems.Cast<string>();
-            var selectedLicenses = permissionBox.CheckedItems.Cast<AccountPermission>();
+            var selectedLicenses = permissionBox.CheckedItems.Cast<string>().Select(v => (AccountPermission)Enum.Parse(typeof(AccountPermission), v));
             foreach (var account in Program.LocalContent.AccountDetailList)
             {
                 if (selectedAccounts.Contains(account.Username))
@@ -206,12 +206,20 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 
         private async void buttonGrantPush_Click(object sender, EventArgs e)
         {
-
+            Enabled = false;
+            await Push_Grant();
+            if (Program.ClientContext.ParentForm != null && Program.ClientContext.ParentForm.UserManagementForm != null)
+                Program.ClientContext.ParentForm.UserManagementForm.toolStripButtonRefresh_Click(null, null);
+            Enabled = true;
         }
 
         private async void buttonRevokePush_Click(object sender, EventArgs e)
         {
-
+            Enabled = false;
+            await Push_Revoke();
+            if (Program.ClientContext.ParentForm != null && Program.ClientContext.ParentForm.UserManagementForm != null)
+                Program.ClientContext.ParentForm.UserManagementForm.toolStripButtonRefresh_Click(null, null);
+            Enabled = true;
         }
     }
 }
