@@ -29,8 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Enabled", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("Disabled", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("Enable_PastTense", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("ServiceAccount", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("Disable_PastTense", System.Windows.Forms.HorizontalAlignment.Left);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserManagementForm));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonEdit = new System.Windows.Forms.ToolStripButton();
@@ -223,13 +224,16 @@
             this.listViewAccounts.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listViewAccounts.FullRowSelect = true;
             this.listViewAccounts.GridLines = true;
-            listViewGroup1.Header = "Enabled";
+            listViewGroup1.Header = "Enable_PastTense";
             listViewGroup1.Name = "listViewGroupDefault";
-            listViewGroup2.Header = "Disabled";
-            listViewGroup2.Name = "listViewGroupDisabled";
+            listViewGroup2.Header = "ServiceAccount";
+            listViewGroup2.Name = "listViewGroupServiceAccount";
+            listViewGroup3.Header = "Disable_PastTense";
+            listViewGroup3.Name = "listViewGroupDisabled";
             this.listViewAccounts.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
             listViewGroup1,
-            listViewGroup2});
+            listViewGroup2,
+            listViewGroup3});
             this.listViewAccounts.HideSelection = false;
             this.listViewAccounts.LargeImageList = this.imageList1;
             this.listViewAccounts.Location = new System.Drawing.Point(0, 25);

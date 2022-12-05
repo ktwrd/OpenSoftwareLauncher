@@ -64,10 +64,12 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                         lvitem.ImageIndex = 1;
                     else if (item.ServiceAccount)
                         lvitem.ImageIndex = 0;
-                    if (item.Enabled)
+                    if (item.ServiceAccount)
+                        lvitem.Group = listViewAccounts.Groups[1];
+                    else if (item.Enabled)
                         lvitem.Group = listViewAccounts.Groups[0];
                     else
-                        lvitem.Group = listViewAccounts.Groups[1];
+                        lvitem.Group = listViewAccounts.Groups[2];
                     lvitem.Name = item.Username;
                     listViewAccounts.Items.Add(lvitem);
                 }
