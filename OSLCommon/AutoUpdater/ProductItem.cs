@@ -18,6 +18,7 @@ namespace OSLCommon.AutoUpdater
         public string LocalDirectoryName = @"product";
         public string LocalPath = @"";
         public string UpdateServerPath = @"";
+        public string Signature => UpdateServerPath;
 
         public ProductSettings Settings = new ProductSettings();
         public ProductExecutable Executable = null;
