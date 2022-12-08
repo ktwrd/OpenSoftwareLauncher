@@ -1,0 +1,4 @@
+OSL Desktop Client 1.2.2.3, 2022-12-08
+------------------------------------------
+Desktop Client
+- [License Management] Add "Filter by License Key" feature.
