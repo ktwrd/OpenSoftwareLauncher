@@ -36,6 +36,37 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             foreach (ToolStrip strip in control.Controls.OfType<ToolStrip>())
                 LocaleControl(strip);
         }
+        public static void LocaleControl(IEnumerable<Control> controls)
+        {
+            if (controls.Count() > 0)
+                foreach (Control elem in controls)
+                    LocaleControl(elem);
+
+            foreach (Label elem in controls.OfType<Label>())
+                if (elem.Text.Length > 0)
+                    elem.Text = LocaleManager.Get(elem.Text);
+            foreach (Button elem in controls.OfType<Button>())
+                if (elem.Text.Length > 0)
+                    elem.Text = LocaleManager.Get(elem.Text);
+            foreach (GroupBox elem in controls.OfType<GroupBox>())
+                if (elem.Text.Length > 0)
+                    elem.Text = LocaleManager.Get(elem.Text);
+            foreach (ListView elem in controls.OfType<ListView>())
+            {
+                foreach (ColumnHeader header in elem.Columns)
+                    header.Text = LocaleManager.Get(header.Text);
+                foreach (ListViewGroup group in elem.Groups)
+                    group.Header = LocaleManager.Get(group.Header);
+            }
+            foreach (ToolStrip strip in controls.OfType<ToolStrip>())
+                LocaleControl(strip);
+        }
+        public static void LocaleControl(Control.ControlCollection collection)
+        {
+            Control[] controlArray = new Control[collection.Count];
+            collection.CopyTo(controlArray, 0);
+            LocaleControl(controlArray);
+        }
         public static void LocaleControl(ToolStripItemCollection collection)
         {
             foreach (ToolStripItem item in collection)
