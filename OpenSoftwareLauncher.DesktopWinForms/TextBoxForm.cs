@@ -54,12 +54,12 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             {
                 if (value)
                 {
-                    tableLayoutPanel1.RowStyles[0].SizeType = SizeType.Absolute;
-                    tableLayoutPanel1.RowStyles[0].Height = 0;
+                    tableLayoutPanel1.RowStyles[0].SizeType = SizeType.AutoSize;
                 }
                 else
                 {
-                    tableLayoutPanel1.RowStyles[0].SizeType = SizeType.AutoSize;
+                    tableLayoutPanel1.RowStyles[0].SizeType = SizeType.Absolute;
+                    tableLayoutPanel1.RowStyles[0].Height = 0;
                 }
             }
         }
