@@ -115,6 +115,7 @@ Section "Desktop Client (required)" SecInstallLauncher
   File    ".\release\*.exe.config"
   File    ".\release\*.txt"
   File /r ".\release\Locale"
+  File    ".\..\..\CHANGELOG.txt"
   
   ;Store installation folder
   WriteRegStr HKCU "Software\OpenSoftwareLauncher_DesktopWinForms" "" "$LOCALAPPDATA\OpenSoftwareLauncher.DesktopWinForms"
