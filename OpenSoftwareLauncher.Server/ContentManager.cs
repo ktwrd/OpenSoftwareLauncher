@@ -11,6 +11,7 @@ using OSLCommon.Licensing;
 using System.Linq;
 using MongoDB.Driver;
 using OSLCommon.Logging;
+using OSLCommon.Features;
 
 namespace OpenSoftwareLauncher.Server
 {
@@ -22,6 +23,7 @@ namespace OpenSoftwareLauncher.Server
         public MongoSystemAnnouncement SystemAnnouncement;
         public MongoAccountLicenseManager AccountLicenseManager;
         public AuditLogManager AuditLogManager;
+        public FeatureManager FeatureManager;
 
         public MongoClient MongoClient;
         public static string ReleaseInfo_Collection = ServerConfig.GetString("MongoDB", "Collection_ReleaseInfo");
@@ -49,6 +51,10 @@ namespace OpenSoftwareLauncher.Server
             AccountLicenseManager.DatabaseName = ServerConfig.GetString("MongoDB", "DatabaseName");
             AccountLicenseManager.CollectionName = ServerConfig.GetString("MongoDB", "Collection_License");
             AccountLicenseManager.GroupCollectionName = ServerConfig.GetString("MongoDB", "Collection_GroupLicense");
+
+            FeatureManager = new FeatureManager(MongoClient);
+            FeatureManager.DatabaseName = ServerConfig.GetString("MongoDB", "DatabaseName");
+            FeatureManager.CollectionName = ServerConfig.GetString("MongoDB", "Collection_Features");
 
             databaseDeserialize();
 
