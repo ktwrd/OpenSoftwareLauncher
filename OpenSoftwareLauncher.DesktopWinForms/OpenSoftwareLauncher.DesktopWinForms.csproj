@@ -173,6 +173,12 @@
     <Compile Include="ServerConfigForm.Designer.cs">
       <DependentUpon>ServerConfigForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="TextBoxForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TextBoxForm.Designer.cs">
+      <DependentUpon>TextBoxForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="User Management\ServiceAccountCreateForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -284,6 +290,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ServerConfigForm.resx">
       <DependentUpon>ServerConfigForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TextBoxForm.resx">
+      <DependentUpon>TextBoxForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TimeRangeModal.resx">
       <DependentUpon>TimeRangeModal.cs</DependentUpon>

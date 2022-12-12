@@ -15,6 +15,7 @@ mkdir BuildScripts\release\
 Copy-Item bin\Release\* BuildScripts\release\
 Copy-Item Locale\*.locale BuildScripts\release\Locale\
 Copy-Item ..\LICENSE BuildScripts\release\LICENSE.txt
+Copy-Item ..\CHANGELOG.txt BuildScripts\release\CHANGELOG.txt
 Remove-Item BuildScripts\release\config.ini
 Remove-Item BuildScripts\release\*.xml
 Remove-Item BuildScripts\release\*.pdb
