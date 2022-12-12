@@ -17,8 +17,6 @@ namespace OpenSoftwareLauncher.Server
 {
     public class ContentManager
     {
-        public List<ReleaseInfo> ReleaseInfoContent = new();
-        public Dictionary<string, PublishedRelease> Published = new();
         public MongoAccountManager AccountManager;
         public MongoSystemAnnouncement SystemAnnouncement;
         public MongoAccountLicenseManager AccountLicenseManager;
@@ -215,6 +213,7 @@ namespace OpenSoftwareLauncher.Server
         {
             ServerConfig.Save();
         }
+        #region Boilerplate Code
         public void SetReleaseInfoContent(ReleaseInfo[] items)
         {
             var uidList = new List<string>();
@@ -349,5 +348,6 @@ namespace OpenSoftwareLauncher.Server
             var collection = db.GetCollection<ReleaseInfo>(ReleaseInfo_Collection);
             return collection;
         }
+        #endregion
     }
 }

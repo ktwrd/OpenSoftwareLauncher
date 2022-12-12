@@ -202,7 +202,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 MainClass.contentManager.SetReleaseInfoContent(new List<ReleaseInfo>(deserializedDynamic.Data).ToArray());
                 success = true;
             }
-            else if (targetType == MainClass.contentManager.Published.GetType())
+            else if (targetType == typeof(Dictionary<string, PublishedRelease>))
             {
                 var des = JsonSerializer.Deserialize<ObjectResponse<Dictionary<string, PublishedRelease>>>(content, MainClass.serializerOptions);
                 MainClass.contentManager?.ForceSetPublishedContent(des.Data.Select(v => v.Value).ToArray());
