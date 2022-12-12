@@ -167,6 +167,7 @@ namespace OpenSoftwareLauncher.Server
 
             App = Builder.Build();
             InitializeServices();
+            LegacyImport.Execute().Wait();
 
             if (App.Environment.IsDevelopment())
             {
