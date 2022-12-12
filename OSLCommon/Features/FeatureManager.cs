@@ -49,5 +49,24 @@ namespace OSLCommon.Features
 
             return GetFeatureCollection<Feature>().Find(filter).CountDocuments() > 0;
         }
+
+        /// <returns>Success</returns>
+        public bool Create(string name, string url)
+        {
+            if (ContainsName(name))
+                return false;
+            if (ContainsURL(url))
+                return false;
+
+            var instance = new Feature()
+            {
+                Name = name,
+                URL = url
+            };
+
+            var collection = GetFeatureCollection<Feature>();
+            collection.InsertOne(instance);
+            return true;
+        }
     }
 }
