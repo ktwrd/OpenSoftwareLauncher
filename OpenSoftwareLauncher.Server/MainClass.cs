@@ -18,6 +18,9 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Runtime.CompilerServices;
 using MongoDB.Driver;
+using OSLCommon.Logging;
+using OSLCommon.Licensing;
+using OSLCommon.Features;
 
 namespace OpenSoftwareLauncher.Server
 {
@@ -243,17 +246,43 @@ namespace OpenSoftwareLauncher.Server
             ServerConfig.Save();
         }
 
-        private static void ConfigureServices(IServiceCollection services)
-        {
-            services.AddSingleton<MongoMiddle>();
-            services.AddSingleton<MongoClient>(contentManager.MongoClient);
-            services.AddSingleton(App);
-        }
         private static void InitializeServices()
         {
             var services = new ServiceCollection();
             ConfigureServices(services);
             Provider = services.BuildServiceProvider();
+
+            var sa = Provider.GetService<MongoSystemAnnouncement>();
+            if (sa != null)
+            {
+                sa.Update += delegate
+                {
+                    ServerConfig.Set("Announcement", "Enable", sa.Active);
+                };
+            }
+        }
+        private static void ConfigureServices(IServiceCollection services)
+        {
+            services.AddSingleton<MongoMiddle>()
+                    .AddSingleton<MongoClient>(MongoCreate())
+                    .AddSingleton(App);
+            ContentCreate(services);
+        }
+
+        private static MongoClient MongoCreate()
+        {
+            Log.Debug($"Connecting to Database");
+            MongoClient client = new(ServerConfig.GetString("Connection", "MongoDBServer"));
+            client.StartSession();
+            return client;
+        }
+        private static void ContentCreate(IServiceCollection services)
+        {
+            services.AddSingleton<AuditLogManager>()
+                    .AddSingleton<MongoAccountManager>()
+                    .AddSingleton<MongoSystemAnnouncement>()
+                    .AddSingleton<MongoAccountLicenseManager>()
+                    .AddSingleton<FeatureManager>();
         }
 
         public static void LoadTokens()
