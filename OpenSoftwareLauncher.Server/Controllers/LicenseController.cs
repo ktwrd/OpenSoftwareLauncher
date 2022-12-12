@@ -11,6 +11,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
     {
         [HttpGet("redeem")]
         [ProducesResponseType(200, Type = typeof(ObjectResponse<GrantLicenseKeyResponse>))]
+        [ProducesResponseType(400, Type = typeof(ObjectResponse<HttpException>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         [OSLAuthRequired]
         public ActionResult Redeem(string token, string key)
