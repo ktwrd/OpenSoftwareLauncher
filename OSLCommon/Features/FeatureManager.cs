@@ -68,5 +68,30 @@ namespace OSLCommon.Features
             collection.InsertOne(instance);
             return true;
         }
+
+        public bool DeleteByName(string name)
+        {
+            if (!ContainsName(name))
+                return false;
+
+            var filter = Builders<Feature>
+                .Filter
+                .Eq("Name", name);
+
+            GetFeatureCollection<Feature>().DeleteOne(filter);
+            return true;
+        }
+        public bool DeleteByURL(string url)
+        {
+            if (!ContainsURL(url))
+                return false;
+
+            var filter = Builders<Feature>
+                .Filter
+                .Eq(field: "URL", url);
+
+            GetFeatureCollection<Feature>().DeleteOne(filter);
+            return true;
+        }
     }
 }

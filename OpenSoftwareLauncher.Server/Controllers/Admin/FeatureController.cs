@@ -44,5 +44,30 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 Data = MainClass.contentManager.FeatureManager.GetAll()
             }, MainClass.serializerOptions);
         }
+
+        [HttpGet("deleteName")]
+        [ProducesResponseType(200, Type = typeof(ObjectResponse<Feature[]>))]
+        [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
+        public ActionResult DeleteName(string token, string name)
+        {
+            MainClass.contentManager.FeatureManager.DeleteByName(name);
+            return Json(new ObjectResponse<Feature[]>()
+            {
+                Success = true,
+                Data = MainClass.contentManager.FeatureManager.GetAll()
+            }, MainClass.serializerOptions);
+        }
+        [HttpGet("deleteUrl")]
+        [ProducesResponseType(200, Type = typeof(ObjectResponse<Feature[]>))]
+        [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
+        public ActionResult DeleteURL(string token, string url)
+        {
+            MainClass.contentManager.FeatureManager.DeleteByURL(url);
+            return Json(new ObjectResponse<Feature[]>()
+            {
+                Success = true,
+                Data = MainClass.contentManager.FeatureManager.GetAll()
+            }, MainClass.serializerOptions);
+        }
     }
 }
