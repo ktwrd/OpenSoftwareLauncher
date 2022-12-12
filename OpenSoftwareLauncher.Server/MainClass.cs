@@ -17,7 +17,6 @@ using OSLCommon.AuthProviders;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Runtime.CompilerServices;
-using Google.Cloud.Firestore;
 
 namespace OpenSoftwareLauncher.Server
 {
