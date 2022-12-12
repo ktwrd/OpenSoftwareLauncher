@@ -155,7 +155,6 @@ namespace OpenSoftwareLauncher.Server
             CreateSuperuserAccount();
             LoadTokens();
             Builder = WebApplication.CreateBuilder(args);
-            InitializeServices();
             Builder.Services.AddControllers();
 
             if (Builder.Environment.IsDevelopment())
@@ -164,6 +163,7 @@ namespace OpenSoftwareLauncher.Server
             }
 
             App = Builder.Build();
+            InitializeServices();
 
             if (App.Environment.IsDevelopment())
             {
@@ -247,6 +247,7 @@ namespace OpenSoftwareLauncher.Server
         {
             services.AddSingleton<MongoMiddle>();
             services.AddSingleton<MongoClient>(contentManager.MongoClient);
+            services.AddSingleton(App);
         }
         private static void InitializeServices()
         {
