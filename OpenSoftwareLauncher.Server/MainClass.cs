@@ -17,6 +17,7 @@ using OSLCommon.AuthProviders;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Runtime.CompilerServices;
+using MongoDB.Driver;
 
 namespace OpenSoftwareLauncher.Server
 {
@@ -154,6 +155,7 @@ namespace OpenSoftwareLauncher.Server
             CreateSuperuserAccount();
             LoadTokens();
             Builder = WebApplication.CreateBuilder(args);
+            InitializeServices();
             Builder.Services.AddControllers();
 
             if (Builder.Environment.IsDevelopment())
@@ -201,7 +203,7 @@ namespace OpenSoftwareLauncher.Server
             App.MapControllers();
             App.Run();
         }
-        
+        public static IServiceProvider Provider;
         /// <returns>Token</returns>
         public static string? CreateSuperuserAccount()
         {
@@ -239,6 +241,18 @@ namespace OpenSoftwareLauncher.Server
             contentManager.SystemAnnouncement.OnUpdate();
             contentManager.AccountManager.ForcePendingWrite();
             ServerConfig.Save();
+        }
+
+        private static void ConfigureServices(IServiceCollection services)
+        {
+            services.AddSingleton<MongoMiddle>();
+            services.AddSingleton<MongoClient>(contentManager.MongoClient);
+        }
+        private static void InitializeServices()
+        {
+            var services = new ServiceCollection();
+            ConfigureServices(services);
+            Provider = services.BuildServiceProvider();
         }
 
         public static void LoadTokens()

@@ -2,12 +2,18 @@
 using MongoDB.Driver;
 using OSLCommon;
 using OSLCommon.AutoUpdater;
+using System;
+using System.Runtime.CompilerServices;
 
 namespace OpenSoftwareLauncher.Server
 {
     public class MongoMiddle
     {
-        public ServiceProvider Provider;
+        public MongoMiddle(IServiceProvider provider)
+        {
+            _provider = provider;
+        }
+        private readonly IServiceProvider _provider;
 
         public string Collection_ReleaseInfo => ServerConfig.GetString("MongoDB", "Collection_ReleaseInfo");
         public string Collection_Published => ServerConfig.GetString("MongoDB", "Collection_Published");
@@ -15,8 +21,7 @@ namespace OpenSoftwareLauncher.Server
         public string DatabaseName => ServerConfig.GetString("MongoDB", "DatabaseName");
         public IMongoDatabase? GetDatabase()
         {
-            var db = Provider.GetService<MongoClient>()?.GetDatabase(DatabaseName);
-            return db;
+            return _provider.GetService<MongoClient>()?.GetDatabase(DatabaseName);
         }
         public IMongoCollection<ReleaseInfo>? GetReleaseCollection()
         {
