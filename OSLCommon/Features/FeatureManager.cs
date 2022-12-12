@@ -32,5 +32,22 @@ namespace OSLCommon.Features
 
             return exec.ToArray();
         }
+
+        public bool ContainsURL(string url)
+        {
+            var filter = Builders<Feature>
+                .Filter
+                .Eq("URL", url);
+
+            return GetFeatureCollection<Feature>().Find(filter).CountDocuments() > 0;
+        }
+        public bool ContainsName(string name)
+        {
+            var filter = Builders<Feature>
+                .Filter
+                .Eq("Name", name);
+
+            return GetFeatureCollection<Feature>().Find(filter).CountDocuments() > 0;
+        }
     }
 }
