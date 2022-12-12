@@ -20,6 +20,9 @@ namespace OSLCommon
 
         public static string UnsupportedMediaType = "ServerResponse_MediaTypeUnsupported";
 
+        public static string FeatureNameExists => "ServerResponse_Feature_NameExists";
+        public static string FeatureURLExists => "ServerResponse_Feature_URLExists";
+
         public static string InvalidParameter(string parameterName)
             => $"Invalid parameter \"{parameterName}\"";
         public static string InvalidBody => "ServerResponse_InvalidBody";

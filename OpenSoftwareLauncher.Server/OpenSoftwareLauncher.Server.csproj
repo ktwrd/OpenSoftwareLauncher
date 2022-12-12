@@ -33,9 +33,7 @@
 	</PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.3.56" />
     <PackageReference Include="BinaryFormatter" Version="3.0.0" />
-    <PackageReference Include="Google.Cloud.Firestore" Version="3.0.0" />
     <PackageReference Include="kate.shared" Version="1.0.1" />
     <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" Version="1.0.1" />
     <PackageReference Include="MongoDB.Driver" Version="2.18.0" />

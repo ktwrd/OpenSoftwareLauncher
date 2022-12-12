@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace OSLCommon
 {
     public class ServerDetailsResponse
@@ -11,5 +13,6 @@ namespace OSLCommon
 
         public string AuthProvider { get; set; }
         public string AuthProviderSignup { get; set; }
+        public Features.Feature[] Features { get; set; }
     }
 }
