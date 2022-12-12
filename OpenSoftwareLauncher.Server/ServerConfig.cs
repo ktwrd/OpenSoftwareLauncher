@@ -1,7 +1,4 @@
-﻿using Amazon.Runtime.Internal.Transform;
-using Google.Api.Gax.Grpc.Gcp;
-using Google.Cloud.Firestore.V1;
-using kate.shared.Helpers;
+﻿using kate.shared.Helpers;
 using Nini.Config;
 using OSLCommon.AutoUpdater;
 using System;
@@ -36,7 +33,7 @@ namespace OpenSoftwareLauncher.Server
             if (File.Exists(OldConfigLocation) && !File.Exists(ConfigLocation))
             {
                 File.Move(OldConfigLocation, ConfigLocation);
-                Console.WriteLine($"[ServerConfig] Moved config to {ConfigLocation}");
+                Log.WriteLine($" Moved config to {ConfigLocation}");
             }
 
             if (!File.Exists(ConfigLocation))
@@ -169,7 +166,7 @@ namespace OpenSoftwareLauncher.Server
             if (!File.Exists(ConfigLocation))
                 File.WriteAllText(ConfigLocation, "");
             Source.Save();
-            Console.WriteLine($"[ServerConfig] Saved {GeneralHelper.GetNanoseconds() - startNS}ns");
+            Log.WriteLine($" Saved {GeneralHelper.GetNanoseconds() - startNS}ns");
             HasChanges = false;
             OnSave?.Invoke();
         }

@@ -32,7 +32,7 @@ namespace OpenSoftwareLauncher.Server
 
         public ContentManager()
         {
-            Console.WriteLine($"[ContentManager] Connecting to Database");
+            Log.WriteLine($" Connecting to Database");
             this.MongoClient = new MongoClient(ServerConfig.GetString("Connection", "MongoDBServer"));
 
             AuditLogManager = new AuditLogManager(MongoClient);
@@ -98,9 +98,8 @@ namespace OpenSoftwareLauncher.Server
                 }
                 catch (Exception except)
                 {
-                    string txt = $"[ContentManager->databaseSerialize:{GeneralHelper.GetNanoseconds()}] [ERR] Failed to read Account Details\n--------\n{except}\n--------\n";
-                    Trace.WriteLine(txt);
-                    Console.Error.WriteLine(txt);
+                    string txt = $"Failed to read Account Details\n--------\n{except}\n--------\n";
+                    Log.Error(txt);
 #if DEBUG
                     throw;
 #endif
@@ -117,9 +116,8 @@ namespace OpenSoftwareLauncher.Server
                 }
                 catch (Exception except)
                 {
-                    string txt = $"[ContentManager->databaseSerialize:{GeneralHelper.GetNanoseconds()}] [ERR] Failed to read Announcement Details\n--------\n{except}\n--------\n";
-                    Trace.WriteLine(txt);
-                    Console.Error.WriteLine(txt);
+                    string txt = $"Failed to read Announcement Details\n--------\n{except}\n--------\n";
+                    Log.Error(txt);
 #if DEBUG
                     throw;
 #endif
@@ -144,9 +142,8 @@ namespace OpenSoftwareLauncher.Server
                 }
                 catch (Exception except)
                 {
-                    string txt = $"[ContentManager->databaseSerialize:{GeneralHelper.GetNanoseconds()}] [ERR] Failed to read Licenses\n--------\n{except}\n--------\n";
-                    Trace.WriteLine(txt);
-                    Console.Error.WriteLine(txt);
+                    string txt = $"Failed to read Licenses\n--------\n{except}\n--------\n";
+                    Log.Error(txt);
 #if DEBUG
                     throw;
 #endif
@@ -163,9 +160,8 @@ namespace OpenSoftwareLauncher.Server
                 }
                 catch (Exception except)
                 {
-                    string txt = $"[ContentManager->databaseSerialize:{GeneralHelper.GetNanoseconds()}] [ERR] Failed to read License Groups\n--------\n{except}\n--------\n";
-                    Trace.WriteLine(txt);
-                    Console.Error.WriteLine(txt);
+                    string txt = $"Failed to read License Groups\n--------\n{except}\n--------\n";
+                    Log.Error(txt);
 #if DEBUG
                     throw;
 #endif
@@ -198,17 +194,17 @@ namespace OpenSoftwareLauncher.Server
                 Console.Error.Write($"\n[ContentManager->RestoreFromJSON] Failed to restore ;w;{addedContent}");
                 return;
             }
-            Console.WriteLine($"[ContentManager->RestoreFromJSON] Restored from JSON.");
+            Log.WriteLine($" Restored from JSON.");
 
             if (!ServerConfig.GetBoolean("Migrated", "ReleaseInfo", false))
             {
-                Console.WriteLine("[ContentManager] Importing ReleaseInfo");
+                Log.WriteLine($" Importing ReleaseInfo");
                 SetReleaseInfoContent(deserialized.ReleaseInfoContent.ToArray());
                 ServerConfig.Set("Migrated", "ReleaseInfo", true);
             }
             if (!ServerConfig.GetBoolean("Migrated", "Published", false))
             {
-                Console.WriteLine("[ContentManager] Importing Published Releases");
+                Log.WriteLine($" Importing Published Releases");
                 ForceSetPublishedContent(deserialized.Published.Select(v => v.Value).ToArray());
                 ServerConfig.Set("Migrated", "Published", true);
             }
