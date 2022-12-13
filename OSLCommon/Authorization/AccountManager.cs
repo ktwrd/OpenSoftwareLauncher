@@ -1,6 +1,7 @@
 ﻿using kate.shared.Helpers;
 using Newtonsoft.Json.Linq;
 using OSLCommon.AuthProviders;
+using OSLCommon.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,7 +12,6 @@ using System.Threading.Tasks;
 
 namespace OSLCommon.Authorization
 {
-    public delegate void AccountDelegate(Account account);
     public partial class AccountManager
     {
         public const string SuperuserUsername = "webmaster@osl.local";

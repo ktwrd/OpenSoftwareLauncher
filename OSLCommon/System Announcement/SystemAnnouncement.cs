@@ -1,7 +1,7 @@
 ﻿using kate.shared.Helpers;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-
+using OSLCommon.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,7 +21,6 @@ namespace OSLCommon
             Active = false;
         }
     }
-    public delegate void AnnouncementDelegate(SystemAnnouncementEntry announcement);
 
     public partial class SystemAnnouncement
     {

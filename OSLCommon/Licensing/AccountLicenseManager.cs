@@ -1,5 +1,6 @@
 ﻿using kate.shared.Helpers;
 using OSLCommon.Authorization;
+using OSLCommon.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,9 +19,6 @@ namespace OSLCommon.Licensing
         #region Events
 
         /// <param name="license">Nullable <see cref="LicenseKeyMetadata"/></param>
-        public delegate void LicenseFieldDelegate(LicenseField field, LicenseKeyMetadata license);
-        public delegate void LicenseGroupDelegate(LicenseGroup group);
-        public delegate void LicenseDelegate(LicenseKeyMetadata license);
         public event LicenseFieldDelegate Update;
         public event LicenseGroupDelegate GroupUpdate;
         public event LicenseDelegate LicenseUpdate;
