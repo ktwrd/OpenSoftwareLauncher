@@ -311,6 +311,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 
         private void checkedListBoxTypes_ItemCheck(object sender, ItemCheckEventArgs e)
         {
+            return;
             FilterItems();
             RedrawListView();
         }
@@ -398,6 +399,12 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         {
             FilterItems();
             RedrawListView();
+        }
+
+        private void checkedListBoxTypes_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == ' ')
+                checkedListBoxTypes_SelectedIndexChanged(null, new EventArgs());
         }
     }
 }
