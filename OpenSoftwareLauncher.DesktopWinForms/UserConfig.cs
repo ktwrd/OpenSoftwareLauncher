@@ -50,6 +50,18 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             get { return GetString("Connection", "Endpoint", ""); }
             set { Set("Connection", "Endpoint", value); }
         }
+
+        public static long AuditLog_DefaultTimeRangeMinOffset
+        {
+            get
+            {
+                return long.Parse(GetString("AuditLog", "DefaultTimeRange_MinOffset", "-86400000"));
+            }
+            set
+            {
+                Set("AuditLog", "DefaultTimeRange_MinOffset", value.ToString());
+            }
+        }
         #endregion
 
 
@@ -71,6 +83,11 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 {
                     {"Language", "en" },
                     {"ShowLatestRelease", false }
+                }
+            },
+            {"AuditLog", new Dictionary<string, object>()
+                {
+                    {"DefaultTimeRange_MinOffset", -86400000 }
                 }
             }
         };

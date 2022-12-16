@@ -201,6 +201,7 @@
             this.checkedListBoxTypes.Size = new System.Drawing.Size(175, 222);
             this.checkedListBoxTypes.TabIndex = 3;
             this.checkedListBoxTypes.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedListBoxTypes_ItemCheck);
+            this.checkedListBoxTypes.SelectedIndexChanged += new System.EventHandler(this.checkedListBoxTypes_SelectedIndexChanged);
             // 
             // splitContainer1
             // 
