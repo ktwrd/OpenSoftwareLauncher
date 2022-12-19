@@ -103,7 +103,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
                 result["releaseAlreadyExists"] = false;
             }
 
-            MainClass.ContentManager?.AuditLogManager.Create(new PublishReleaseEntryData(publishedRelease), null).Wait();
+            MainClass.GetService<AuditLogManager>()?.Create(new PublishReleaseEntryData(publishedRelease), null).Wait();
 
             return Json(result, MainClass.serializerOptions);
         }

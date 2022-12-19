@@ -202,7 +202,7 @@ namespace OpenSoftwareLauncher.Server
         public static IServiceProvider? Provider = null;
         public static T? GetService<T>() where T : class
         {
-            return Provider?.GetService<T>() ?? null;
+            return Provider?.GetRequiredService<T>() ?? null;
         }
         /// <returns>Generated token for Superuser account</returns>
         public static string? CreateSuperuserAccount()
@@ -238,7 +238,7 @@ namespace OpenSoftwareLauncher.Server
         public static void BeforeExit(object? sender, EventArgs e)
         {
             ContentManager?.DatabaseSerialize();
-            ContentManager?.SystemAnnouncement.OnUpdate();
+            GetService<MongoSystemAnnouncement>()?.OnUpdate();
             GetService<MongoAccountManager>()?.ForcePendingWrite();
             ServerConfig.Save();
         }
@@ -260,11 +260,10 @@ namespace OpenSoftwareLauncher.Server
         }
         private static void ConfigureServices(IServiceCollection services)
         {
-            ConfigureServices_AspNet(services);
             services.AddSingleton<MongoMiddle>()
-                    .AddSingleton<MongoClient>(MongoCreate())
-                    .AddSingleton(App);
+                    .AddSingleton<MongoClient>(MongoCreate());
             ConfigureServices_Content(services);
+            ConfigureServices_AspNet(services);
         }
 
         private static MongoClient MongoCreate()

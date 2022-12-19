@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using OSLCommon.Authorization;
@@ -15,9 +16,11 @@ namespace OSLCommon.Licensing
         public string DatabaseName = "opensoftwarelauncher";
         public string CollectionName = "licenses";
         public string GroupCollectionName = "licenseGroups";
-        public MongoAccountLicenseManager(AccountManager accountManager, MongoClient client)
-            : base(accountManager)
+        public MongoAccountLicenseManager(IServiceProvider provider)
+            : base(provider.GetService<MongoAccountManager>())
         {
+            var accountManager = provider.GetService<MongoAccountManager>();
+            var client = provider.GetService<MongoClient>();
             mongoClient = client;
             Update += (field, license) =>
             {

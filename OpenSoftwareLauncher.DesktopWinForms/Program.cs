@@ -56,7 +56,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         static void Main(string[] args)
         {
 #if DEBUG
-            System.Threading.Thread.Sleep(2000);
+            System.Threading.Thread.Sleep(5000);
 #endif
 
             UserConfig.Get();

@@ -39,11 +39,11 @@ namespace OpenSoftwareLauncher.Server
                 CollectionName = ServerConfig.GetString("MongoDB", "Collection_AuditLog")
             };
 
-            AccountManager = new MongoAccountManager(MongoClient, AuditLogManager)
+            /*AccountManager = new MongoAccountManager(MongoClient, AuditLogManager)
             {
                 DatabaseName = ServerConfig.GetString("MongoDB", "DatabaseName"),
                 CollectionName = ServerConfig.GetString("MongoDB", "Collection_Account")
-            };
+            };*/
 
             SystemAnnouncement = new MongoSystemAnnouncement(MongoClient)
             {
@@ -51,12 +51,12 @@ namespace OpenSoftwareLauncher.Server
                 CollectionName = ServerConfig.GetString("MongoDB", "Collection_Announcement")
             };
 
-            AccountLicenseManager = new MongoAccountLicenseManager(AccountManager, MongoClient)
+            /*AccountLicenseManager = new MongoAccountLicenseManager(AccountManager, MongoClient)
             {
                 DatabaseName = ServerConfig.GetString("MongoDB", "DatabaseName"),
                 CollectionName = ServerConfig.GetString("MongoDB", "Collection_License"),
                 GroupCollectionName = ServerConfig.GetString("MongoDB", "Collection_GroupLicense")
-            };
+            };*/
 
             FeatureManager = new FeatureManager(MongoClient)
             {

@@ -1,4 +1,5 @@
 ﻿using kate.shared.Helpers;
+using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using OSLCommon.Logging;
@@ -17,11 +18,11 @@ namespace OSLCommon.Authorization
         public AuditLogManager auditLogManager;
         public string DatabaseName = "opensoftwarelauncher";
         public string CollectionName = "accounts";
-        public MongoAccountManager(MongoClient client, AuditLogManager auditLogManager)
+        public MongoAccountManager(IServiceProvider provider)
             : base()
         {
-            mongoClient = client;
-            this.auditLogManager = auditLogManager;
+            mongoClient = provider.GetService<MongoClient>();
+            auditLogManager = provider.GetService<AuditLogManager>();
             AccountUpdated += (eventAccount) =>
             {
                 var collection = GetAccountCollection<Account>();
