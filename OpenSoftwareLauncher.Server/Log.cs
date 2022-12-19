@@ -76,15 +76,15 @@ namespace OpenSoftwareLauncher.Server
         public static bool ShowTimestamp = false;
         public static void Warn(string content, [CallerMemberName] string methodname = null, [CallerFilePath] string methodfile = null)
         {
-            WriteLine(content, WarnColor, WarnPrefix, ShowMethodName, methodname);
+            WriteLine(content, WarnColor, WarnPrefix, ShowMethodName, methodname, methodfile);
         }
         public static void Error(string content, [CallerMemberName] string methodname = null, [CallerFilePath] string methodfile = null)
         {
-            WriteLine(content, ErrorColor, ErrorPrefix, ShowMethodName, methodname);
+            WriteLine(content, ErrorColor, ErrorPrefix, ShowMethodName, methodname, methodfile);
         }
         public static void Debug(string content, [CallerMemberName] string methodname = null, [CallerFilePath] string methodfile = null)
         {
-            WriteLine(content, DebugColor, DebugPrefix, ShowMethodName, methodname);
+            WriteLine(content, DebugColor, DebugPrefix, ShowMethodName, methodname, methodfile);
         }
         public static void WriteLine(string content, LogColor? color = null, string prefix = null, bool fetchMethodName = true, [CallerMemberName] string methodname = null, [CallerFilePath] string methodfile = null)
         {
@@ -93,10 +93,11 @@ namespace OpenSoftwareLauncher.Server
             if (methodname != null && fetchMethodName && methodfile != null)
                 content = $"{FormatMethodName(methodname, methodfile)}{content}";
             string pfx = (prefix ?? LogPrefix) + " ";
-            Console.WriteLine(pfx + content);
+            Console.Write(pfx + content);
             if (EnableLogFileWrite)
                 linequeue.Add(pfx + content);
             SetColor();
+            Console.Write("\n");
         }
         private static string FormatMethodName(string methodName, string methodFilePath)
         {
