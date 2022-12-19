@@ -9,6 +9,7 @@ using System.Net;
 using System.Text.Json;
 using System.IO;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Admin
 {
@@ -76,11 +77,10 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
 
             try
             {
-                MainClass.contentManager.AccountManager.ReadJSON(JsonSerializer.Serialize(expectedResponse.Data.Account, MainClass.serializerOptions));
-                MainClass.contentManager.SystemAnnouncement.Read(JsonSerializer.Serialize(expectedResponse.Data.SystemAnnouncement, MainClass.serializerOptions));
-                MainClass.contentManager.SetReleaseInfoContent(expectedResponse.Data.Content.ReleaseInfoContent.ToArray());
-                MainClass.contentManager.ForceSetPublishedContent(expectedResponse.Data.Content.Published.Select(v => v.Value).ToArray());
-                MainClass.contentManager.DatabaseSerialize();
+                MainClass.Provider.GetService<MongoAccountManager>()?.ReadJSON(JsonSerializer.Serialize(expectedResponse.Data.Account, MainClass.serializerOptions));
+                MainClass.Provider.GetService<MongoSystemAnnouncement>()?.Read(JsonSerializer.Serialize(expectedResponse.Data.SystemAnnouncement, MainClass.serializerOptions));
+                MainClass.Provider.GetService<MongoMiddle>()?.SetReleaseInfoContent(expectedResponse.Data.Content.ReleaseInfoContent.ToArray());
+                MainClass.Provider.GetService<MongoMiddle>()?.ForceSetPublishedContent(expectedResponse.Data.Content.Published.Select(v => v.Value).ToArray());
             }
             catch (Exception except)
             {
@@ -116,8 +116,8 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                     SystemAnnouncement = MainClass.contentManager.SystemAnnouncement.GetSummary(),
                     Content = new ContentJSON()
                     {
-                        ReleaseInfoContent = MainClass.contentManager.GetReleaseInfoContent().ToList(),
-                        Published = MainClass.contentManager.GetAllPublished()
+                        ReleaseInfoContent = MainClass.Provider.GetService<MongoMiddle>()?.GetReleaseInfoContent().ToList(),
+                        Published = MainClass.Provider.GetService<MongoMiddle>()?.GetAllPublished()
                     }
                 };
             }
@@ -153,8 +153,8 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                     Success = true,
                     Data = new AllDataResult()
                     {
-                        ReleaseInfoContent = MainClass.contentManager.GetReleaseInfoContent().ToList(),
-                        Published = MainClass.contentManager.GetAllPublished()
+                        ReleaseInfoContent = MainClass.Provider.GetService<MongoMiddle>()?.GetReleaseInfoContent().ToList(),
+                        Published = MainClass.Provider.GetService<MongoMiddle>()?.GetAllPublished()
                     }
                 }, MainClass.serializerOptions);
             }
@@ -163,7 +163,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 return Json(new ObjectResponse<ReleaseInfo[]>()
                 {
                     Success = true,
-                    Data = MainClass.contentManager.GetReleaseInfoContent()
+                    Data = MainClass.Provider.GetService<MongoMiddle>()?.GetReleaseInfoContent()
                 }, MainClass.serializerOptions);
             }
             else if (type == DataType.PublishDict)
@@ -171,7 +171,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 return Json(new ObjectResponse<Dictionary<string, PublishedRelease>>()
                 {
                     Success = true,
-                    Data = MainClass.contentManager.GetAllPublished()
+                    Data = MainClass.Provider.GetService<MongoMiddle>()?.GetAllPublished()
                 }, MainClass.serializerOptions); ;
             }
             else
@@ -199,13 +199,13 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
             bool success = false;
             if (targetType == typeof(ReleaseInfo[]))
             {
-                MainClass.contentManager.SetReleaseInfoContent(new List<ReleaseInfo>(deserializedDynamic.Data).ToArray());
+                MainClass.Provider.GetService<MongoMiddle>()?.SetReleaseInfoContent(new List<ReleaseInfo>(deserializedDynamic.Data).ToArray());
                 success = true;
             }
-            else if (targetType == MainClass.contentManager.Published.GetType())
+            else if (targetType == typeof(Dictionary<string, PublishedRelease>))
             {
                 var des = JsonSerializer.Deserialize<ObjectResponse<Dictionary<string, PublishedRelease>>>(content, MainClass.serializerOptions);
-                MainClass.contentManager?.ForceSetPublishedContent(des.Data.Select(v => v.Value).ToArray());
+                MainClass.Provider.GetService<MongoMiddle>()?.ForceSetPublishedContent(des.Data.Select(v => v.Value).ToArray());
                 success = true;
             }
             else if (targetType == typeof(AllDataResult))
@@ -213,14 +213,13 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 var des = JsonSerializer.Deserialize<ObjectResponse<AllDataResult>>(content, MainClass.serializerOptions);
 
                 var c = des.Data;
-                MainClass.contentManager.SetReleaseInfoContent(new List<ReleaseInfo>(c.ReleaseInfoContent).ToArray());
-                MainClass.contentManager?.ForceSetPublishedContent(c.Published.Select(v => v.Value).ToArray());
+                MainClass.Provider.GetService<MongoMiddle>()?.SetReleaseInfoContent(new List<ReleaseInfo>(c.ReleaseInfoContent).ToArray());
+                MainClass.Provider.GetService<MongoMiddle>()?.ForceSetPublishedContent(c.Published.Select(v => v.Value).ToArray());
                 success = true;
             }
 
             if (success)
             {
-                MainClass.contentManager.DatabaseSerialize();
                 return Json(new ObjectResponse<object>()
                 {
                     Success = true,

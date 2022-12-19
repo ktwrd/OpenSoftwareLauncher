@@ -9,6 +9,7 @@ using System;
 using Microsoft.AspNetCore.Http;
 using MongoDB.Driver;
 using System.Runtime.Serialization;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace OpenSoftwareLauncher.Server.Controllers
 {
@@ -38,7 +39,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
                     return Json(new ObjectResponse<Dictionary<string, ProductRelease>>()
                     {
                         Success = true,
-                        Data = ReleaseHelper.TransformReleaseList(MainClass.contentManager?.GetReleaseInfoContent())
+                        Data = ReleaseHelper.TransformReleaseList(MainClass.Provider.GetService<MongoMiddle>()?.GetReleaseInfoContent())
                     }, MainClass.serializerOptions);
                 }
                 if (ServerConfig.GetBoolean("Security", "AllowAdminOverride", true) && account.HasPermission(AccountPermission.ADMINISTRATOR))
@@ -46,7 +47,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
                     return Json(new ObjectResponse<Dictionary<string, ProductRelease>>()
                     {
                         Success = true,
-                        Data = ReleaseHelper.TransformReleaseList(MainClass.contentManager.GetReleaseInfoContent())
+                        Data = ReleaseHelper.TransformReleaseList(MainClass.Provider.GetService<MongoMiddle>()?.GetReleaseInfoContent())
                     }, MainClass.serializerOptions);
                 }
             }
@@ -298,7 +299,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
         {
             OSLCommon.Authorization.Account account = MainClass.contentManager.AccountManager.GetAccount(token);
 
-            var collection = MainClass.contentManager.GetReleaseCollection();
+            var collection = MainClass.Provider.GetService<MongoMiddle>()?.GetReleaseCollection();
             var filter = Builders<ReleaseInfo>
                 .Filter
                 .Eq("commitHash", hash);
@@ -336,7 +337,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
         {
             OSLCommon.Authorization.Account account = MainClass.contentManager.AccountManager.GetAccount(token);
 
-            var collection = MainClass.contentManager.GetReleaseCollection();
+            var collection = MainClass.Provider.GetService<MongoMiddle>()?.GetReleaseCollection();
             var filter = Builders<ReleaseInfo>
                 .Filter
                 .Eq("remoteLocation", signature);

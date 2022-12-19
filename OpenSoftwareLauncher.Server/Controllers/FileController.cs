@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Text.Json;
 using OSLCommon.Authorization;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace OpenSoftwareLauncher.Server.Controllers
 {
@@ -24,12 +25,13 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [ProducesResponseType(500, Type = typeof(HttpException))]
         public ActionResult AddFileToHash(string hash, string token)
         {
+            var mongoMiddle = MainClass.Provider.GetService<MongoMiddle>();
             if (token == null || token.Length < 1 || !MainClass.ValidTokens.ContainsKey(token) || !MainClass.contentManager.AccountManager.AccountHasPermission(token, OSLCommon.Authorization.AccountPermission.RELEASE_MANAGE))
             {
                 Response.StatusCode = 401;
                 return Json(new HttpException(401, ServerStringResponse.InvalidCredential), MainClass.serializerOptions);
             }
-            else if (MainClass.contentManager?.GetPublishedReleaseByHash(hash) == null)
+            else if (mongoMiddle?.GetPublishedReleaseByHash(hash) == null)
             {
                 Response.StatusCode = StatusCodes.Status404NotFound;
                 return Json(new HttpException(404, @"Commit not published"), MainClass.serializerOptions);
@@ -66,13 +68,13 @@ namespace OpenSoftwareLauncher.Server.Controllers
             var fileList = new List<PublishedReleaseFile>();
             foreach (var i in decodedBody)
                 fileList.Add(i.ToPublishedReleaseFile(hash));
-            if (MainClass.contentManager == null)
+            if (mongoMiddle == null)
             {
                 Response.StatusCode = 500;
                 return Json(new HttpException(500, "Content Manager has not been initalized"), MainClass.serializerOptions);
             }
-            MainClass.contentManager?.AddPublishedFilesByHash(hash, fileList.ToArray());
-            var commit = MainClass.contentManager?.GetPublishedReleaseByHash(hash);
+            mongoMiddle?.AddPublishedFilesByHash(hash, fileList.ToArray());
+            var commit = mongoMiddle?.GetPublishedReleaseByHash(hash);
             return Json(commit?.Files ?? Array.Empty<object>(), MainClass.serializerOptions);
         }
 
@@ -82,14 +84,14 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [OSLAuthRequired]
         public ActionResult FetchFilesFromHash(string hash, string token)
         {
+            MongoMiddle? mongoMiddle = MainClass.Provider.GetService<MongoMiddle>();
             var returnContent = new List<PublishedReleaseFile>();
-            var contentManager = MainClass.contentManager;
 
-            var account = MainClass.contentManager.AccountManager.GetAccount(token, true);
+            var account = MainClass.Provider.GetService<MongoAccountManager>()?.GetAccount(token, true);
 
-            if (contentManager != null)
+            if (mongoMiddle != null)
             {
-                var commit = contentManager.GetPublishedReleaseByHash(hash);
+                var commit = mongoMiddle.GetPublishedReleaseByHash(hash);
                 if (commit != null)
                 {
                     var allow = false;
