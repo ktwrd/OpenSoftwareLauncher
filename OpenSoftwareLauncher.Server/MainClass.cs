@@ -21,6 +21,7 @@ using MongoDB.Driver;
 using OSLCommon.Logging;
 using OSLCommon.Licensing;
 using OSLCommon.Features;
+using System.Threading.Tasks;
 
 namespace OpenSoftwareLauncher.Server
 {
@@ -124,8 +125,10 @@ namespace OpenSoftwareLauncher.Server
                 }
             }
         }
+        private static string[] Arguments; 
         public static void Main(params string[] args)
         {
+            Arguments = args;
             SetupOptions(args);
             StartupTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 #if DEBUG
@@ -146,7 +149,9 @@ namespace OpenSoftwareLauncher.Server
                         break;
                     case "Provider":
                         AccountManager.TokenGranters.Clear();
-                        AccountManager.TokenGranters.Add(new OSLCommon.AuthProviders.URLProvider(ServerConfig.GetString("Authentication", "Provider")));
+                        TokenGrantList.Clear();
+                        TokenGrantList.Add(new URLProvider(ServerConfig.GetString("Authentication", "Provider")));
+                        AccountManager.TokenGranters.Add(new URLProvider(ServerConfig.GetString("Authentication", "Provider")));
                         break;
                 }
             };
@@ -155,57 +160,42 @@ namespace OpenSoftwareLauncher.Server
             serializerOptions.Converters.Add(new kate.shared.DateTimeConverterUsingDateTimeOffsetParse());
             serializerOptions.Converters.Add(new kate.shared.DateTimeConverterUsingDateTimeParse());
             contentManager = new ContentManager();
-            CreateSuperuserAccount();
-            LoadTokens();
-            Builder = WebApplication.CreateBuilder(args);
-            Builder.Services.AddControllers();
-
-            if (Builder.Environment.IsDevelopment())
+            var targets = new Dictionary<string, Task>()
             {
-                Builder.Services.AddSwaggerGen();
-            }
-
-            App = Builder.Build();
-            InitializeServices();
-            LegacyImport.Execute().Wait();
-
-            if (App.Environment.IsDevelopment())
-            {
-                App.UseSwagger();
-                App.UseSwaggerUI(options =>
+                {"InitializeASPNetEvents", new Task(InitASPNETEvents) },
+                {"CreateSuperuserAccount", new Task(delegate
                 {
-                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-                    options.RoutePrefix = "swagger/ui";
-                });
-                Log.WriteLine($" In development mode, so swagger is enabled. SwaggerUI can be accessed at 0.0.0.0:5010/swagger/ui");
-            }
-            App.Use((context, next) =>
-            {
-                context.Request.EnableBuffering();
-                var possibleAddress = context.Connection.RemoteIpAddress?.ToString() ?? "";
-                if (context.Request.Headers.ContainsKey("X-Forwarded-For"))
-                    possibleAddress = context.Request.Headers["X-Forwarded-For"];
-                else if (context.Request.Headers.ContainsKey("X-Real-IP"))
-                    possibleAddress = context.Request.Headers["X-Real-IP"];
-                var query = context.Request.Path.ToString();
-                if (!query.Contains("&password"))
-                    query += context.Request.QueryString.ToString();
-               Log.WriteLine($" {context.Request.Method} {possibleAddress} \"{query}\" \"{context.Request.Headers.UserAgent}\"");
-                return next();
-            });
+                    CreateSuperuserAccount();
+                }) },
+                {"LoadTokens", new Task(LoadTokens) },
+                {"InitializeServices", new Task(InitializeServices) },
+                {"LegacyImport", new Task(delegate
+                {
+                    LegacyImport.Execute().Wait();
+                }) },
+                {"TokenGranter", new Task(delegate
+                {
+                    TokenGrantList.Add(new URLProvider(ServerConfig.GetString("Authentication", "Provider")));
+                    AccountManager.TokenGranters.Add(new URLProvider(ServerConfig.GetString("Authentication", "Provider")));
+                }) }
+            };
 
-            TokenGrantList.Add(new OSLCommon.AuthProviders.URLProvider(ServerConfig.GetString("Authentication", "Provider")));
-            AccountManager.TokenGranters.Add(new OSLCommon.AuthProviders.URLProvider(ServerConfig.GetString("Authentication", "Provider")));
-
-            if (ServerConfig.GetBoolean("Telemetry", "Prometheus"))
+            foreach (var pair in targets)
             {
-                App.UseMetricServer();
-                App.UseHttpMetrics();
+                var start = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                pair.Value.Start();
+                pair.Value.Wait();
+                Log.Debug($"{pair.Key} {DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - start}ms");
             }
 
-            App.UseAuthorization();
-            App.MapControllers();
             App.Run();
+        }
+        private static void InitASPNETEvents()
+        {
+            AspNetCreate_PreBuild += AspNetTarget_Swagger_PreBuild;
+            AspNetCreate_PreRun   += AspNetTarget_RequestLog;
+            AspNetCreate_PreRun   += AspNetTarget_Swagger;
+            AspNetCreate_PreRun   += AspNetTarget_Prometheus;
         }
         public static IServiceProvider Provider;
         /// <returns>Token</returns>
@@ -239,7 +229,7 @@ namespace OpenSoftwareLauncher.Server
             return null;
         }
 
-        public static void BeforeExit(object sender, EventArgs e)
+        public static void BeforeExit(object? sender, EventArgs e)
         {
             contentManager.DatabaseSerialize();
             contentManager.SystemAnnouncement.OnUpdate();
@@ -264,10 +254,11 @@ namespace OpenSoftwareLauncher.Server
         }
         private static void ConfigureServices(IServiceCollection services)
         {
+            ConfigureServices_AspNet(services);
             services.AddSingleton<MongoMiddle>()
                     .AddSingleton<MongoClient>(MongoCreate())
                     .AddSingleton(App);
-            ContentCreate(services);
+            ConfigureServices_Content(services);
         }
 
         private static MongoClient MongoCreate()
@@ -277,7 +268,7 @@ namespace OpenSoftwareLauncher.Server
             client.StartSession();
             return client;
         }
-        private static void ContentCreate(IServiceCollection services)
+        private static void ConfigureServices_Content(IServiceCollection services)
         {
             services.AddSingleton<AuditLogManager>()
                     .AddSingleton<MongoAccountManager>()
@@ -285,6 +276,80 @@ namespace OpenSoftwareLauncher.Server
                     .AddSingleton<MongoAccountLicenseManager>()
                     .AddSingleton<FeatureManager>();
         }
+        private static void ConfigureServices_AspNet(IServiceCollection services)
+        {
+            Builder = WebApplication.CreateBuilder(Arguments);
+            Builder.Services.AddControllers()
+                .AddApplicationPart(Assembly.GetAssembly(typeof(MainClass)));
+            if (Builder.Environment.IsDevelopment())
+                Builder.Services.AddSwaggerGen();
+            AspNetCreate_PreBuild?.Invoke(Builder);
+
+            App = Builder.Build();
+            AspNetCreate_PreRun?.Invoke(App);
+            App.UseAuthorization();
+            App.MapControllers();
+
+            services.AddSingleton(App);
+        }
+        public static ParameterDelegate<WebApplicationBuilder>? AspNetCreate_PreBuild;
+        public static ParameterDelegate<WebApplication>? AspNetCreate_PreRun;
+
+        #region ASP.NET Targets
+        private static void AspNetTarget_Swagger_PreBuild(WebApplicationBuilder builder)
+        {
+            if (Builder.Environment.IsDevelopment())
+            {
+                Builder.Services.AddSwaggerGen();
+            }
+        }
+        private static void AspNetTarget_RequestLog(WebApplication app)
+        {
+            app.Use((context, next) =>
+            {
+                context.Request.EnableBuffering();
+                string possibleAddress = ServerHelper.FindClientAddress(context);
+                string userAgent = context.Request.Headers.UserAgent;
+
+                var query = context.Request.Path.ToString();
+                if (!query.Contains("&password"))
+                    query += context.Request.QueryString.ToString();
+                
+                Log.WriteLine($" {context.Request.Method} {possibleAddress} \"{query}\" \"{userAgent}\"");
+                return next();
+            });
+        }
+        private static void AspNetTarget_Swagger(WebApplication app)
+        {
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI(options =>
+                {
+                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+                    options.RoutePrefix = "swagger/ui";
+                });
+                Log.WriteLine($" In development mode, so swagger is enabled. SwaggerUI can be accessed at 0.0.0.0:5010/swagger/ui");
+            }
+            else
+            {
+                Log.Error("In production mode, not enabling swagger");
+            }
+        }
+        private static void AspNetTarget_Prometheus(WebApplication app)
+        {
+            if (ServerConfig.GetBoolean("Telemetry", "Prometheus"))
+            {
+                App.UseMetricServer();
+                App.UseHttpMetrics();
+            }
+            else
+            {
+                Log.Warn("Prometheus Exporter is disabled");
+            }
+        }
+        #endregion
+
 
         public static void LoadTokens()
         {
