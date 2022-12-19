@@ -22,6 +22,8 @@ using OSLCommon.Logging;
 using OSLCommon.Licensing;
 using OSLCommon.Features;
 using System.Threading.Tasks;
+using OSLCommon.Helpers;
+using OpenSoftwareLauncher.Server.Targets;
 
 namespace OpenSoftwareLauncher.Server
 {
@@ -41,8 +43,8 @@ namespace OpenSoftwareLauncher.Server
             }
         }
 
-        public static WebApplicationBuilder Builder;
-        public static WebApplication App;
+        public static WebApplicationBuilder Builder { get; private set; }
+        public static WebApplication App { get; private set; }
         /// <summary>
         /// <para>
         /// Key is the Token
@@ -51,8 +53,8 @@ namespace OpenSoftwareLauncher.Server
         /// Value is the SHA256 of (Username + Password)
         /// </para>
         /// </summary>
-        public static Dictionary<string, string> ValidTokens = new Dictionary<string, string>();
-        public static List<ITokenGranter> TokenGrantList = new List<ITokenGranter>();
+        public static Dictionary<string, string> ValidTokens = new();
+        public static List<ITokenGranter> TokenGrantList = new();
 
         public static ContentManager? ContentManager { get; private set; }
 
@@ -69,18 +71,20 @@ namespace OpenSoftwareLauncher.Server
         public static long StartupTimestamp { get; private set; }
         private static void SetupOptions(params string[] args)
         {
+            Option<string> option = new(
+                            aliases: new string[] { "--dataDirectory", "-d" },
+                            description: "Set the data directory. Default is working directory.");
+            Option<string> dataDirOption = option;
 
-            Option<string> dataDirOption = new Option<string>(
-                aliases: new string[] { "--dataDirectory", "-d" },
-                description: "Set the data directory. Default is working directory.");
-
-            Option<bool>? migrateOption = new Option<bool>(
+            Option<bool>? migrateOption = new(
                 aliases: new string[] { "--databaseMigrate" },
                 description: "Force a database migration, from JSON to MongoDB.");
 
-            RootCommand rootCommand = new RootCommand(
-                description: "Open Software Launcher Backend Server");
-            rootCommand.TreatUnmatchedTokensAsErrors = false;
+            RootCommand rootCommand = new(
+                description: "Open Software Launcher Backend Server")
+            {
+                TreatUnmatchedTokensAsErrors = false
+            };
 
             rootCommand.AddOption(dataDirOption);
             rootCommand.AddOption(migrateOption);
@@ -159,10 +163,13 @@ namespace OpenSoftwareLauncher.Server
             AppDomain.CurrentDomain.ProcessExit += BeforeExit;
             serializerOptions.Converters.Add(new kate.shared.DateTimeConverterUsingDateTimeOffsetParse());
             serializerOptions.Converters.Add(new kate.shared.DateTimeConverterUsingDateTimeParse());
-            contentManager = new ContentManager();
+            ContentManager = new ContentManager();
             var targets = new Dictionary<string, Task>()
             {
-                {"InitializeASPNetEvents", new Task(InitASPNETEvents) },
+                {"InitializeASPNetEvents", new Task(delegate
+                {
+                    new ASPNetTarget()
+                }) },
                 {"CreateSuperuserAccount", new Task(delegate
                 {
                     CreateSuperuserAccount();
@@ -190,22 +197,17 @@ namespace OpenSoftwareLauncher.Server
 
             App?.Run();
         }
-        private static void InitASPNETEvents()
-        {
-            AspNetCreate_PreBuild += AspNetTarget_Swagger_PreBuild;
-            AspNetCreate_PreRun   += AspNetTarget_RequestLog;
-            AspNetCreate_PreRun   += AspNetTarget_Swagger;
-            AspNetCreate_PreRun   += AspNetTarget_Prometheus;
-        }
+
         public static IServiceProvider? Provider = null;
-        /// <returns>Token</returns>
+        public static T? GetService<T>() where T : struct
+        {
+            return Provider?.GetService<T>();
+        }
+        /// <returns>Generated token for Superuser account</returns>
         public static string? CreateSuperuserAccount()
         {
-            Account account = contentManager.AccountManager.GetAccountByUsername(AccountManager.SuperuserUsername);
-            if (account == null)
-            {
-                account = contentManager.AccountManager.CreateNewAccount(AccountManager.SuperuserUsername);
-            }
+            Account account = ContentManager.AccountManager.GetAccountByUsername(AccountManager.SuperuserUsername);
+            account ??= ContentManager.AccountManager.CreateNewAccount(AccountManager.SuperuserUsername);
 
             if (!account.HasPermission(AccountPermission.ADMINISTRATOR))
             {
@@ -214,7 +216,7 @@ namespace OpenSoftwareLauncher.Server
 
             if (account.Tokens.Length < 1)
             {
-                var tokenResponse = contentManager.AccountManager.CreateToken(account, "internal", "127.0.0.1");
+                var tokenResponse = ContentManager.AccountManager.CreateToken(account, "internal", "127.0.0.1");
                 if (tokenResponse.Success)
                 {
                     Console.WriteLine($"================================================================================");
@@ -229,11 +231,14 @@ namespace OpenSoftwareLauncher.Server
             return null;
         }
 
+        /// <summary>
+        /// Shit to run before we quit.
+        /// </summary>
         public static void BeforeExit(object? sender, EventArgs e)
         {
-            contentManager?.DatabaseSerialize();
-            contentManager?.SystemAnnouncement.OnUpdate();
-            contentManager?.AccountManager.ForcePendingWrite();
+            ContentManager?.DatabaseSerialize();
+            ContentManager?.SystemAnnouncement.OnUpdate();
+            ContentManager?.AccountManager.ForcePendingWrite();
             ServerConfig.Save();
         }
 
@@ -295,62 +300,6 @@ namespace OpenSoftwareLauncher.Server
         public static ParameterDelegate<WebApplicationBuilder>? AspNetCreate_PreBuild;
         public static ParameterDelegate<WebApplication>? AspNetCreate_PreRun;
 
-        #region ASP.NET Targets
-        private static void AspNetTarget_Swagger_PreBuild(WebApplicationBuilder builder)
-        {
-            if (Builder.Environment.IsDevelopment())
-            {
-                Builder.Services.AddSwaggerGen();
-            }
-        }
-        private static void AspNetTarget_RequestLog(WebApplication app)
-        {
-            app.Use((context, next) =>
-            {
-                context.Request.EnableBuffering();
-                string possibleAddress = ServerHelper.FindClientAddress(context);
-                string userAgent = context.Request.Headers.UserAgent;
-
-                var query = context.Request.Path.ToString();
-                if (!query.Contains("&password"))
-                    query += context.Request.QueryString.ToString();
-                
-                Log.WriteLine($" {context.Request.Method} {possibleAddress} \"{query}\" \"{userAgent}\"");
-                return next();
-            });
-        }
-        private static void AspNetTarget_Swagger(WebApplication app)
-        {
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI(options =>
-                {
-                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-                    options.RoutePrefix = "swagger/ui";
-                });
-                Log.WriteLine($" In development mode, so swagger is enabled. SwaggerUI can be accessed at 0.0.0.0:5010/swagger/ui");
-            }
-            else
-            {
-                Log.Error("In production mode, not enabling swagger");
-            }
-        }
-        private static void AspNetTarget_Prometheus(WebApplication app)
-        {
-            if (ServerConfig.GetBoolean("Telemetry", "Prometheus"))
-            {
-                App.UseMetricServer();
-                App.UseHttpMetrics();
-            }
-            else
-            {
-                Log.Warn("Prometheus Exporter is disabled");
-            }
-        }
-        #endregion
-
-
         public static void LoadTokens()
         {
             if (!File.Exists(@"tokens.json"))
@@ -379,7 +328,7 @@ namespace OpenSoftwareLauncher.Server
             }
         }
 
-        public static JsonSerializerOptions serializerOptions = new JsonSerializerOptions()
+        public static JsonSerializerOptions serializerOptions = new()
         {
             IgnoreReadOnlyFields = false,
             IgnoreReadOnlyProperties = false,
