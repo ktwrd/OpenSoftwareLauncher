@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using OSLCommon;
 using OSLCommon.Authorization;
 using OSLCommon.Logging;
+using System;
 
 namespace OpenSoftwareLauncher.Server.Controllers
 {
@@ -17,9 +18,9 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [OSLAuthRequired]
         public ActionResult FetchAll(string token)
         {
-            var account = MainClass.ContentManager.AccountManager.GetAccount(token);
+            var account = MainClass.GetService<MongoAccountManager>()?.GetAccount(token);
 
-            var result = MainClass.ContentManager.AuditLogManager.GetByUsername(account.Username).Result;
+            var result = MainClass.GetService<AuditLogManager>()?.GetByUsername(account?.Username).Result ?? Array.Empty<AuditLogEntry>();
 
             return Json(new ObjectResponse<AuditLogEntry[]>()
             {

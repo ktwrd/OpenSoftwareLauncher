@@ -28,7 +28,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult CreateProductKey(string token)
         {
-            var account = MainClass.ContentManager.AccountManager.GetAccount(token);
+            var account = MainClass.GetService<MongoAccountManager>()?.GetAccount(token);
 
 
             var syncIOFeature = HttpContext.Features.Get<IHttpBodyControlFeature>();
@@ -36,7 +36,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
             {
                 syncIOFeature.AllowSynchronousIO = true;
             }
-            Licensing.CreateProductKeyRequest decodedBody;
+            Licensing.CreateProductKeyRequest? decodedBody;
             try
             {
                 StreamReader reader = new StreamReader(Request.Body);
@@ -62,8 +62,8 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 }, MainClass.serializerOptions);
             }
 
-            var res = MainClass.ContentManager.AccountLicenseManager.CreateLicenseKeys(
-                account.Username,
+            var res = MainClass.GetService<MongoAccountLicenseManager>()?.CreateLicenseKeys(
+                account?.Username ?? "unknown",
                 decodedBody.RemoteLocations,
                 decodedBody.Count,
                 decodedBody.Permissions,
@@ -72,18 +72,18 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 decodedBody.GroupLabel).Result;
 
             var taskList = new List<Task>();
-            foreach (var item in res.Keys)
+            foreach (var item in res?.Keys ?? Array.Empty<LicenseKeyMetadata>())
             {
                 taskList.Add(new Task(delegate
                 {
-                    MainClass.ContentManager.AuditLogManager.Create(new LicenseCreateEntryData(item), account).Wait();
+                    MainClass.GetService<AuditLogManager>()?.Create(new LicenseCreateEntryData(item), account).Wait();
                 }));
             }
             foreach (var i in taskList)
                 i.Start();
             Task.WhenAll(taskList);
 
-            return Json(new ObjectResponse<CreateLicenseKeyResponse>
+            return Json(new ObjectResponse<CreateLicenseKeyResponse?>
             {
                 Success = true,
                 Data = res
@@ -98,7 +98,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
             return Json(new ObjectResponse<LicenseKeyMetadata[]>
             {
                 Success = true,
-                Data = MainClass.ContentManager.AccountLicenseManager.GetLicenseKeys().Result
+                Data = MainClass.GetService<MongoAccountLicenseManager>()?.GetLicenseKeys().Result ?? Array.Empty<LicenseKeyMetadata>()
             }, MainClass.serializerOptions);
         }
 
@@ -107,14 +107,14 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult GetProductLicenseKeys(string token, string remoteLocation)
         {
-            var keys = MainClass.ContentManager.AccountLicenseManager.GetLicenseKeys().Result
+            var keys = MainClass.GetService<MongoAccountLicenseManager>()?.GetLicenseKeys().Result
                 .Where(v => v.Products.Contains(remoteLocation))
                 .ToArray();
 
             return Json(new ObjectResponse<LicenseKeyMetadata[]>
             {
                 Success = true,
-                Data = keys
+                Data = keys ?? Array.Empty<LicenseKeyMetadata>()
             }, MainClass.serializerOptions);
         }
 
@@ -127,19 +127,19 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         }*/
 
         [HttpGet("disableKey")]
-        [ProducesResponseType(200, Type = typeof(ObjectResponse<LicenseKeyActionResult>))]
+        [ProducesResponseType(200, Type = typeof(ObjectResponse<LicenseKeyActionResult?>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult DisableKey(string token, string keyId)
         {
-            LicenseKeyActionResult response = MainClass.ContentManager.AccountLicenseManager.DisableLicenseKey(keyId).Result;
+            LicenseKeyActionResult? response = MainClass.GetService<MongoAccountLicenseManager>()?.DisableLicenseKey(keyId).Result;
 
-            var account = MainClass.ContentManager.AccountManager.GetAccount(token);
+            var account = MainClass.GetService<MongoAccountManager>()?.GetAccount(token);
             if (response == LicenseKeyActionResult.Success)
             {
-                MainClass.ContentManager.AuditLogManager.Create(new LicenseDisableEntryData(MainClass.ContentManager.AccountLicenseManager.GetLicenseKeyById(keyId).Result), account).Wait();
+                MainClass.GetService<AuditLogManager>()?.Create(new LicenseDisableEntryData(MainClass.GetService<MongoAccountLicenseManager>()?.GetLicenseKeyById(keyId).Result), account).Wait();
             }
 
-            return Json(new ObjectResponse<LicenseKeyActionResult>
+            return Json(new ObjectResponse<LicenseKeyActionResult?>
             {
                 Success = true,
                 Data = response
@@ -147,18 +147,18 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         }
 
         [HttpGet("enableKey")]
-        [ProducesResponseType(200, Type = typeof(ObjectResponse<LicenseKeyActionResult>))]
+        [ProducesResponseType(200, Type = typeof(ObjectResponse<LicenseKeyActionResult?>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult EnableKey(string token, string keyId)
         {
-            LicenseKeyActionResult response = MainClass.ContentManager.AccountLicenseManager.EnableLicenseKey(keyId).Result;
+            LicenseKeyActionResult? response = MainClass.GetService<MongoAccountLicenseManager>()?.EnableLicenseKey(keyId).Result;
 
-            var account = MainClass.ContentManager.AccountManager.GetAccount(token);
+            var account = MainClass.GetService<MongoAccountManager>()?.GetAccount(token);
             if (response == LicenseKeyActionResult.Success)
             {
-                MainClass.ContentManager.AuditLogManager.Create(new LicenseEnableEntryData(MainClass.ContentManager.AccountLicenseManager.GetLicenseKeyById(keyId).Result), account).Wait();
+                MainClass.GetService<AuditLogManager>()?.Create(new LicenseEnableEntryData(MainClass.GetService<MongoAccountLicenseManager>()?.GetLicenseKeyById(keyId).Result), account).Wait();
             }
-            return Json(new ObjectResponse<LicenseKeyActionResult>
+            return Json(new ObjectResponse<LicenseKeyActionResult?>
             {
                 Success = true,
                 Data = response

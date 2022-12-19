@@ -32,7 +32,7 @@ namespace OpenSoftwareLauncher.Server
             if (context.HttpContext.Request.Query.ContainsKey("token"))
             {
                 var token = context.HttpContext.Request.Query["token"].ToString();
-                var account = MainClass.ContentManager.AccountManager.GetAccount(token, true);
+                var account = MainClass.GetService<MongoAccountManager>()?.GetAccount(token, true);
                 if (account != null)
                 {
                     if (account.Enabled)

@@ -35,11 +35,12 @@ namespace OpenSoftwareLauncher.Server
             {
 #if DEBUG
                 return true;
-#endif
+#else
                 // This warning is only disabled because DEBUG is set.
 #pragma warning disable CS0162 // Unreachable code detected
                 return ServerConfig.GetBoolean("General", "Debug", false);
 #pragma warning restore CS0162 // Unreachable code detected
+#endif
             }
         }
 
@@ -168,7 +169,7 @@ namespace OpenSoftwareLauncher.Server
             {
                 {"InitializeASPNetEvents", new Task(delegate
                 {
-                    new ASPNetTarget()
+                    new ASPNetTarget();
                 }) },
                 {"CreateSuperuserAccount", new Task(delegate
                 {
@@ -199,25 +200,25 @@ namespace OpenSoftwareLauncher.Server
         }
 
         public static IServiceProvider? Provider = null;
-        public static T? GetService<T>() where T : struct
+        public static T? GetService<T>() where T : class
         {
-            return Provider?.GetService<T>();
+            return Provider?.GetService<T>() ?? null;
         }
         /// <returns>Generated token for Superuser account</returns>
         public static string? CreateSuperuserAccount()
         {
-            Account account = ContentManager.AccountManager.GetAccountByUsername(AccountManager.SuperuserUsername);
-            account ??= ContentManager.AccountManager.CreateNewAccount(AccountManager.SuperuserUsername);
+            Account? account = GetService<MongoAccountManager>()?.GetAccountByUsername(AccountManager.SuperuserUsername);
+            account ??= GetService<MongoAccountManager>()?.CreateNewAccount(AccountManager.SuperuserUsername);
 
-            if (!account.HasPermission(AccountPermission.ADMINISTRATOR))
+            if (!account?.HasPermission(AccountPermission.ADMINISTRATOR) ?? false)
             {
-                account.GrantPermission(AccountPermission.ADMINISTRATOR);
+                account?.GrantPermission(AccountPermission.ADMINISTRATOR);
             }
 
-            if (account.Tokens.Length < 1)
+            if (account == null || account?.Tokens.Length < 1)
             {
-                var tokenResponse = ContentManager.AccountManager.CreateToken(account, "internal", "127.0.0.1");
-                if (tokenResponse.Success)
+                var tokenResponse = GetService<MongoAccountManager>()?.CreateToken(account, "internal", "127.0.0.1");
+                if (tokenResponse?.Success ?? false)
                 {
                     Console.WriteLine($"================================================================================");
                     Console.WriteLine($"Created superuser account.");
@@ -238,7 +239,7 @@ namespace OpenSoftwareLauncher.Server
         {
             ContentManager?.DatabaseSerialize();
             ContentManager?.SystemAnnouncement.OnUpdate();
-            ContentManager?.AccountManager.ForcePendingWrite();
+            GetService<MongoAccountManager>()?.ForcePendingWrite();
             ServerConfig.Save();
         }
 

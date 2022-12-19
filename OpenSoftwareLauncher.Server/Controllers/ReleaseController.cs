@@ -22,7 +22,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [ProducesResponseType(200, Type = typeof(ObjectResponse<Dictionary<string, ProductRelease>>))]
         public ActionResult Index(string token)
         {
-            var account = MainClass.ContentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
+            var account = MainClass.GetService<MongoAccountManager>()?.GetAccount(token, bumpLastUsed: true);
             if (account != null)
             {
                 if (!account.Enabled)
@@ -39,7 +39,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
                     return Json(new ObjectResponse<Dictionary<string, ProductRelease>>()
                     {
                         Success = true,
-                        Data = ReleaseHelper.TransformReleaseList(MainClass.Provider.GetService<MongoMiddle>()?.GetReleaseInfoContent())
+                        Data = ReleaseHelper.TransformReleaseList(MainClass.GetService<MongoMiddle>()?.GetReleaseInfoContent())
                     }, MainClass.serializerOptions);
                 }
                 if (ServerConfig.GetBoolean("Security", "AllowAdminOverride", true) && account.HasPermission(AccountPermission.ADMINISTRATOR))
@@ -47,7 +47,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
                     return Json(new ObjectResponse<Dictionary<string, ProductRelease>>()
                     {
                         Success = true,
-                        Data = ReleaseHelper.TransformReleaseList(MainClass.Provider.GetService<MongoMiddle>()?.GetReleaseInfoContent())
+                        Data = ReleaseHelper.TransformReleaseList(MainClass.GetService<MongoMiddle>()?.GetReleaseInfoContent())
                     }, MainClass.serializerOptions);
                 }
             }
@@ -63,9 +63,9 @@ namespace OpenSoftwareLauncher.Server.Controllers
         {
             var returnContent = new List<ProductRelease>();
             var allowFetch = true;
-            bool showExtraBuilds = MainClass.ContentManager.AccountManager.AccountHasPermission(token, AccountPermission.READ_RELEASE_BYPASS)
+            bool showExtraBuilds = MainClass.GetService<MongoAccountManager>()?.AccountHasPermission(token, AccountPermission.READ_RELEASE_BYPASS) ?? false
                 && ServerConfig.GetBoolean("Security", "AllowPermission_ReadReleaseBypass", true);
-            bool contains = MainClass.ContentManager.MongoClient.GetDatabase(ContentManager.DatabaseName)
+            bool contains = MainClass.GetService<MongoClient>()?.GetDatabase(ContentManager.DatabaseName)
                     .GetCollection<ReleaseInfo>(ContentManager.ReleaseInfo_Collection)
                     .Find(Builders<ReleaseInfo>
                         .Filter
@@ -76,13 +76,13 @@ namespace OpenSoftwareLauncher.Server.Controllers
             {
                 var toMap = new Dictionary<string, List<ReleaseInfo>>();
 
-                var cnt = MainClass.ContentManager.MongoClient.GetDatabase(ContentManager.DatabaseName)
+                var cnt = MainClass.GetService<MongoClient>()?.GetDatabase(ContentManager.DatabaseName)
                     .GetCollection<ReleaseInfo>(ContentManager.ReleaseInfo_Collection)
                     .Find(Builders<ReleaseInfo>
                         .Filter
                         .Eq("appID", app))
                     .ToList();
-                foreach (var item in cnt)
+                foreach (var item in cnt ?? new List<ReleaseInfo>())
                 {
                     if (!toMap.ContainsKey(item.remoteLocation))
                         toMap.Add(item.remoteLocation, new List<ReleaseInfo>());
@@ -122,7 +122,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
             }
 
             var filteredReleases = new List<ProductRelease>();
-            var account = MainClass.ContentManager?.AccountManager.GetAccount(token);
+            var account = MainClass.GetService<MongoAccountManager>()?.GetAccount(token);
             foreach (var product in returnContent)
             {
                 var newProduct = new ProductRelease()
@@ -195,17 +195,17 @@ namespace OpenSoftwareLauncher.Server.Controllers
 
         private List<ProductRelease> fetchAllReleases(string token)
         {
-            var appIDlist = MainClass.ContentManager.MongoClient.GetDatabase(ContentManager.DatabaseName)
+            var appIDlist = MainClass.GetService<MongoClient>()?.GetDatabase(ContentManager.DatabaseName)
                     .GetCollection<ReleaseInfo>(ContentManager.ReleaseInfo_Collection)
                     .Find(Builders<ReleaseInfo>.Filter.Empty)
                     .ToList()
                     .Select(v => v.appID)
                     .Distinct()
                     .ToList();
-            appIDlist = appIDlist.Where(v => v.Length > 0).Distinct().ToList();
+            appIDlist = appIDlist?.Where(v => v.Length > 0).Distinct().ToList();
 
             var resultList = new List<ProductRelease>();
-            foreach (var v in appIDlist)
+            foreach (var v in appIDlist ?? new List<string>())
                 resultList = resultList.Concat(fetchReleasesByAppID(v, token ?? "")).ToList();
             return resultList;
         }
@@ -215,7 +215,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult LatestFromPath(string app, string? token = "")
         {
-            var account = MainClass.ContentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
+            var account = MainClass.GetService<MongoAccountManager>()?.GetAccount(token, bumpLastUsed: true);
             if (account != null && !account.Enabled)
             {
                 Response.StatusCode = StatusCodes.Status401Unauthorized;
@@ -233,7 +233,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult LatestFromParameter(string id="", string? token = "")
         {
-            var account = MainClass.ContentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
+            var account = MainClass.GetService<MongoAccountManager>()?.GetAccount(token, bumpLastUsed: true);
             if (account != null && !account.Enabled)
             {
                 Response.StatusCode = StatusCodes.Status401Unauthorized;
@@ -297,9 +297,9 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [OSLAuthPermission(AccountPermission.READ_RELEASE_HISTORY)]
         public ActionResult FromCommitHash(string token, string hash, string? signature = "")
         {
-            OSLCommon.Authorization.Account account = MainClass.ContentManager.AccountManager.GetAccount(token);
+            OSLCommon.Authorization.Account? account = MainClass.GetService<MongoAccountManager>()?.GetAccount(token);
 
-            var collection = MainClass.Provider.GetService<MongoMiddle>()?.GetReleaseCollection();
+            var collection = MainClass.GetService<MongoMiddle>()?.GetReleaseCollection();
             var filter = Builders<ReleaseInfo>
                 .Filter
                 .Eq("commitHash", hash);
@@ -307,7 +307,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
             var result = foundList
                 .Where((v) => 
                 {
-                    return account.HasLicense(v.remoteLocation);
+                    return account?.HasLicense(v.remoteLocation) ?? false;
                 });
 
             if (signature != null && signature.Length > 0)
@@ -335,9 +335,9 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [OSLAuthPermission(AccountPermission.READ_RELEASE_HISTORY)]
         public ActionResult FromSignature(string token, string signature)
         {
-            OSLCommon.Authorization.Account account = MainClass.ContentManager.AccountManager.GetAccount(token);
+            OSLCommon.Authorization.Account? account = MainClass.GetService<MongoAccountManager>()?.GetAccount(token);
 
-            var collection = MainClass.Provider.GetService<MongoMiddle>()?.GetReleaseCollection();
+            var collection = MainClass.GetService<MongoMiddle>()?.GetReleaseCollection();
             var filter = Builders<ReleaseInfo>
                 .Filter
                 .Eq("remoteLocation", signature);
@@ -345,7 +345,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
             var result = foundList
                 .Where((v) =>
                 {
-                    return account.HasLicense(v.remoteLocation);
+                    return account?.HasLicense(v.remoteLocation) ?? false;
                 });
 
             if (signature != null && signature.Length > 0)

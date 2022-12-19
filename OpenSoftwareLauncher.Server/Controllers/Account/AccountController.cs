@@ -15,12 +15,12 @@ namespace OpenSoftwareLauncher.Server.Controllers.Account
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult AccountDetails(string token)
         {
-            var account = MainClass.ContentManager.AccountManager.GetAccount(token, true);
+            var account = MainClass.GetService<MongoAccountManager>()?.GetAccount(token, true);
 
-            return Json(new ObjectResponse<AccountDetailsResponse>()
+            return Json(new ObjectResponse<AccountDetailsResponse?>()
             {
                 Success = true,
-                Data = account.GetDetails()
+                Data = account?.GetDetails()
             }, MainClass.serializerOptions);
         }
     }

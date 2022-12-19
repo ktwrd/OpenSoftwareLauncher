@@ -1,6 +1,7 @@
 ﻿using OSLCommon;
 using OSLCommon.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Account
 {
@@ -12,12 +13,12 @@ namespace OpenSoftwareLauncher.Server.Controllers.Account
         [HttpGet]
         public ActionResult Index(string token)
         {
-            var account = MainClass.ContentManager.AccountManager.GetAccount(token, true);
+            var account = MainClass.GetService<MongoAccountManager>()?.GetAccount(token, true);
 
             return Json(new ObjectResponse<AccountPermission[]>()
             {
                 Success = true,
-                Data = account.Permissions
+                Data = account?.Permissions ?? Array.Empty<AccountPermission>()
             }, MainClass.serializerOptions);
         }
     }

@@ -25,8 +25,8 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [ProducesResponseType(500, Type = typeof(HttpException))]
         public ActionResult AddFileToHash(string hash, string token)
         {
-            var mongoMiddle = MainClass.Provider.GetService<MongoMiddle>();
-            if (token == null || token.Length < 1 || !MainClass.ValidTokens.ContainsKey(token) || !MainClass.ContentManager.AccountManager.AccountHasPermission(token, OSLCommon.Authorization.AccountPermission.RELEASE_MANAGE))
+            var mongoMiddle = MainClass.GetService<MongoMiddle>();
+            if (token == null || token.Length < 1 || !MainClass.ValidTokens.ContainsKey(token) || (!MainClass.GetService<MongoAccountManager>()?.AccountHasPermission(token, AccountPermission.RELEASE_MANAGE) ?? false))
             {
                 Response.StatusCode = 401;
                 return Json(new HttpException(401, ServerStringResponse.InvalidCredential), MainClass.serializerOptions);
@@ -84,10 +84,10 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [OSLAuthRequired]
         public ActionResult FetchFilesFromHash(string hash, string token)
         {
-            MongoMiddle? mongoMiddle = MainClass.Provider.GetService<MongoMiddle>();
+            MongoMiddle? mongoMiddle = MainClass.GetService<MongoMiddle>();
             var returnContent = new List<PublishedReleaseFile>();
 
-            var account = MainClass.Provider.GetService<MongoAccountManager>()?.GetAccount(token, true);
+            var account = MainClass.GetService<MongoAccountManager>()?.GetAccount(token, true);
 
             if (mongoMiddle != null)
             {

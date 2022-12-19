@@ -18,8 +18,8 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
     {
         private async Task<long> DeleteFilter(FilterDefinition<ReleaseInfo> releaseFilter, FilterDefinition<PublishedRelease> publishedFilter)
         {
-            var publishedCollection = MainClass.Provider.GetService<MongoMiddle>()?.GetPublishedCollection();
-            var releaseCollection = MainClass.Provider.GetService<MongoMiddle>()?.GetReleaseCollection();
+            var publishedCollection = MainClass.GetService<MongoMiddle>()?.GetPublishedCollection();
+            var releaseCollection = MainClass.GetService<MongoMiddle>()?.GetReleaseCollection();
 
             long count = 0;
             if (publishedCollection != null)
@@ -39,7 +39,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 .Filter
                 .Empty;
 
-            IMongoCollection<ReleaseInfo>? collection = MainClass.Provider.GetService<MongoMiddle>()?.GetReleaseCollection();
+            IMongoCollection<ReleaseInfo>? collection = MainClass.GetService<MongoMiddle>()?.GetReleaseCollection();
 
             IAsyncCursor<ReleaseInfo>? result = null;
             if (collection != null)
@@ -84,7 +84,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 .Filter
                 .Where(v => v.remoteLocation == signature);
 
-            IMongoCollection<ReleaseInfo>? collection = MainClass.Provider.GetService<MongoMiddle>()?.GetReleaseCollection();
+            IMongoCollection<ReleaseInfo>? collection = MainClass.GetService<MongoMiddle>()?.GetReleaseCollection();
 
             IAsyncCursor<ReleaseInfo>? result = null;
             if (collection != null)
@@ -106,7 +106,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 .Filter
                 .Where(v => v.RemoteLocation == signature);
 
-            IMongoCollection<PublishedRelease>? collection = MainClass.Provider.GetService<MongoMiddle>()?.GetPublishedCollection();
+            IMongoCollection<PublishedRelease>? collection = MainClass.GetService<MongoMiddle>()?.GetPublishedCollection();
 
             IAsyncCursor<PublishedRelease>? result = null;
             if (collection != null)
@@ -150,7 +150,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 .Filter
                 .Where(v => v.commitHash == hash);
 
-            var collection = MainClass.Provider.GetService<MongoMiddle>()?.GetReleaseCollection();
+            var collection = MainClass.GetService<MongoMiddle>()?.GetReleaseCollection();
             IAsyncCursor<ReleaseInfo>? result = null;
             if (collection != null)
                 result = await collection.FindAsync(filter);
@@ -172,7 +172,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 .Filter
                 .Where(v => v.CommitHash == hash);
 
-            var collection = MainClass.Provider.GetService<MongoMiddle>()?.GetPublishedCollection();
+            var collection = MainClass.GetService<MongoMiddle>()?.GetPublishedCollection();
             IAsyncCursor<PublishedRelease>? result = null;
             if (collection != null)
                 result = await collection.FindAsync(filter);

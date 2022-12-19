@@ -16,7 +16,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
     public class TokenController : Controller
     {
         [HttpGet("grant")]
-        [Produces(typeof(ObjectResponse<GrantTokenResponse>))]
+        [Produces(typeof(ObjectResponse<GrantTokenResponse?>))]
         public ActionResult Grant(string username, string password)
         {
             var possibleAddress = Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "";
@@ -25,7 +25,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
             else if (Request.Headers.ContainsKey("X-Real-IP"))
                 possibleAddress = Request.Headers["X-Real-IP"];
 
-            var accountUsername = MainClass.ContentManager.AccountManager.GetAccountByUsername(username);
+            var accountUsername = MainClass.GetService<MongoAccountManager>()?.GetAccountByUsername(username);
             if (accountUsername != null && accountUsername.IsServiceAccount)
             {
                 return Json(new ObjectResponse<GrantTokenResponse>()
@@ -35,27 +35,27 @@ namespace OpenSoftwareLauncher.Server.Controllers
                 }, MainClass.serializerOptions);
             }
 
-            var grantTokenResponse = MainClass.ContentManager.AccountManager.GrantTokenAndOrAccount(
+            var grantTokenResponse = MainClass.GetService<MongoAccountManager>()?.GrantTokenAndOrAccount(
                 WebUtility.UrlDecode(username),
                 WebUtility.UrlDecode(password),
                 userAgent: Request.Headers.UserAgent,
                 host: possibleAddress);
-            if (!grantTokenResponse.Success)
+            if (!grantTokenResponse?.Success ?? false)
                 Response.StatusCode = StatusCodes.Status401Unauthorized;
 
-            if (grantTokenResponse.Success)
+            if (grantTokenResponse?.Success ?? false)
             {
-                var account = MainClass.ContentManager.AccountManager.GetAccountByUsername(username);
-                MainClass.ContentManager.AuditLogManager.Create(
+                var account = MainClass.GetService<MongoAccountManager>()?.GetAccountByUsername(username);
+                MainClass.GetService<AuditLogManager>()?.Create(
                     new TokenCreateEntryData(
                         account,
                         grantTokenResponse.Token),
                     account).Wait();
             }
 
-            return Json(new ObjectResponse<GrantTokenResponse>()
+            return Json(new ObjectResponse<GrantTokenResponse?>()
             {
-                Success = grantTokenResponse.Success,
+                Success = grantTokenResponse?.Success ?? false,
                 Data = grantTokenResponse
             }, MainClass.serializerOptions);
         }
@@ -86,7 +86,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
 
             try
             {
-                var res = MainClass.ContentManager.AccountManager.ValidateToken(token);
+                var res = MainClass.GetService<MongoAccountManager>()?.ValidateToken(token) ?? false;
                 if (!res)
                 {
                     Response.StatusCode = StatusCodes.Status401Unauthorized;
@@ -114,9 +114,9 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [OSLAuthRequiredAttribute]
         public ActionResult Details(string token)
         {
-            var account = MainClass.ContentManager.AccountManager.GetAccount(token, true);
+            var account = MainClass.GetService<MongoAccountManager>()?.GetAccount(token, true);
 
-            var details = account.GetTokenDetails(token);
+            var details = account?.GetTokenDetails(token);
             if (details == null)
             {
                 Response.StatusCode = StatusCodes.Status401Unauthorized;
@@ -140,12 +140,12 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [OSLAuthRequiredAttribute]
         public ActionResult Reset(string token, bool? all = false)
         {
-            var account = MainClass.ContentManager.AccountManager.GetAccount(token, true);
+            var account = MainClass.GetService<MongoAccountManager>()?.GetAccount(token, true);
 
             if (all ?? false)
             {
-                account.RemoveTokens();
-                return Json(new ObjectResponse<object>()
+                account?.RemoveTokens();
+                return Json(new ObjectResponse<object?>()
                 {
                     Success = true,
                     Data = null
@@ -153,11 +153,11 @@ namespace OpenSoftwareLauncher.Server.Controllers
             }
             else
             {
-                var tokenData = account.Tokens.Where(v => v.Token == token).FirstOrDefault();
+                var tokenData = account?.Tokens.Where(v => v.Token == token).FirstOrDefault();
                 if (tokenData != null)
-                    MainClass.ContentManager.AuditLogManager.Create(new TokenDeleteEntryData(account, tokenData), account).Wait();
-                account.RemoveToken(token);
-                return Json(new ObjectResponse<object>()
+                    MainClass.GetService<AuditLogManager>()?.Create(new TokenDeleteEntryData(account, tokenData), account).Wait();
+                account?.RemoveToken(token);
+                return Json(new ObjectResponse<object?>()
                 {
                     Success = true,
                     Data = null

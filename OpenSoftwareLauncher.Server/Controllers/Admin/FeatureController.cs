@@ -2,6 +2,7 @@
 using OSLCommon;
 using OSLCommon.Authorization;
 using OSLCommon.Features;
+using System;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Admin
 {
@@ -17,7 +18,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(409, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult Add(string token, string name, string url)
         {
-            if (MainClass.ContentManager.FeatureManager.ContainsName(name))
+            if (MainClass.GetService<FeatureManager>()?.ContainsName(name) ?? false)
             {
                 Response.StatusCode = 409;
                 return Json(new ObjectResponse<HttpException>()
@@ -26,7 +27,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                     Data = new HttpException(409, ServerStringResponse.FeatureNameExists)
                 }, MainClass.serializerOptions);
             }
-            if (MainClass.ContentManager.FeatureManager.ContainsURL(url))
+            if (MainClass.GetService<FeatureManager>()?.ContainsURL(url) ?? false)
             {
                 Response.StatusCode = 409;
                 return Json(new ObjectResponse<HttpException>()
@@ -36,12 +37,12 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 }, MainClass.serializerOptions);
             }
 
-            MainClass.ContentManager.FeatureManager.Create(name, url);
+            MainClass.GetService<FeatureManager>()?.Create(name, url);
 
             return Json(new ObjectResponse<Feature[]>()
             {
                 Success = true,
-                Data = MainClass.ContentManager.FeatureManager.GetAll()
+                Data = MainClass.GetService<FeatureManager>()?.GetAll() ?? Array.Empty<Feature>()
             }, MainClass.serializerOptions);
         }
 
@@ -50,11 +51,11 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult DeleteName(string token, string name)
         {
-            MainClass.ContentManager.FeatureManager.DeleteByName(name);
+            MainClass.GetService<FeatureManager>()?.DeleteByName(name);
             return Json(new ObjectResponse<Feature[]>()
             {
                 Success = true,
-                Data = MainClass.ContentManager.FeatureManager.GetAll()
+                Data = MainClass.GetService<FeatureManager>()?.GetAll() ?? Array.Empty<Feature>()
             }, MainClass.serializerOptions);
         }
         [HttpGet("deleteUrl")]
@@ -62,11 +63,11 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult DeleteURL(string token, string url)
         {
-            MainClass.ContentManager.FeatureManager.DeleteByURL(url);
+            MainClass.GetService<FeatureManager>()?.DeleteByURL(url);
             return Json(new ObjectResponse<Feature[]>()
             {
                 Success = true,
-                Data = MainClass.ContentManager.FeatureManager.GetAll()
+                Data = MainClass.GetService<FeatureManager>()?.GetAll() ?? Array.Empty<Feature>()
             }, MainClass.serializerOptions);
         }
     }

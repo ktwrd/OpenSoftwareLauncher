@@ -29,7 +29,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
             {
                 syncIOFeature.AllowSynchronousIO = true;
             }
-            ServiceAccountCreateRequest decodedBody;
+            ServiceAccountCreateRequest? decodedBody;
             try
             {
                 StreamReader reader = new StreamReader(Request.Body);
@@ -55,7 +55,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 }, MainClass.serializerOptions);
             }
 
-            var tokenAccount = MainClass.ContentManager.AccountManager.GetAccount(token);
+            var tokenAccount = MainClass.GetService<MongoAccountManager>()?.GetAccount(token);
 
             var emailRegex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,63})+)$");
             if (!emailRegex.Match(decodedBody.Username).Success)
@@ -68,7 +68,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 }, MainClass.serializerOptions);
             }
 
-            var account = MainClass.ContentManager.AccountManager.CreateNewAccount(decodedBody.Username);
+            var account = MainClass.GetService<MongoAccountManager>()?.CreateNewAccount(decodedBody.Username);
 
             if (account == null)
             {
@@ -100,9 +100,9 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
 
             var grantTokenResponse = new GrantTokenResponse(ServerStringResponse.AccountTokenGranted, true, freshtoken, account.Groups.ToArray(), account.Licenses.ToArray(), account.Permissions.ToArray());
 
-            MainClass.ContentManager.AccountManager.SetAccount(account);
+            MainClass.GetService<MongoAccountManager>()?.SetAccount(account);
 
-            MainClass.ContentManager.AuditLogManager.Create(new ServiceAccountCreateEntryData(account), tokenAccount).Wait();
+            MainClass.GetService<AuditLogManager>()?.Create(new ServiceAccountCreateEntryData(account), tokenAccount).Wait();
 
             return Json(new ObjectResponse<GrantTokenResponse>()
             {

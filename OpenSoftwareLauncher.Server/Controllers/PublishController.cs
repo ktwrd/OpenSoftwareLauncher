@@ -87,7 +87,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
                 { "releaseAlreadyExists", true },
                 { "attemptSave", false }
             };
-            var mongoMiddle = MainClass.Provider.GetService<MongoMiddle>();
+            var mongoMiddle = MainClass.GetService<MongoMiddle>();
             bool saveRelease = mongoMiddle?.GetPublishedReleaseByHash(parameters.releaseInfo.commitHash) == null;
             bool saveReleaseInfo = !mongoMiddle?.GetReleaseInfoContent().ToList().Contains(parameters.releaseInfo) ?? false;
             if (saveRelease)
@@ -113,7 +113,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [ProducesResponseType(200, Type = typeof(ObjectResponse<Dictionary<string, PublishedRelease>>))]
         public ActionResult All(string token)
         {
-            var account = MainClass.ContentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
+            var account = MainClass.GetService<MongoAccountManager>()?.GetAccount(token, bumpLastUsed: true);
             if (!MainClass.ValidTokens.ContainsKey(token))
             {
                 if (account == null)
@@ -144,7 +144,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
                     }, MainClass.serializerOptions);
                 }
             }
-            var mongoMiddle = MainClass.Provider.GetService<MongoMiddle>();
+            var mongoMiddle = MainClass.GetService<MongoMiddle>();
             return Json(new ObjectResponse<Dictionary<string, PublishedRelease>>()
             {
                 Data = mongoMiddle?.GetAllPublished() ?? new Dictionary<string, PublishedRelease>(),
@@ -159,7 +159,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [OSLAuthPermission(AccountPermission.ADMINISTRATOR)]
         public ActionResult ByCommitHashFromParameter(string hash, string? token)
         {
-            var mongoMiddle = MainClass.Provider.GetService<MongoMiddle>();
+            var mongoMiddle = MainClass.GetService<MongoMiddle>();
             PublishedRelease? commit = mongoMiddle?.GetPublishedReleaseByHash(hash);
             return Json(new ObjectResponse<PublishedRelease?>()
             {

@@ -33,26 +33,36 @@ namespace OpenSoftwareLauncher.Server
             Log.WriteLine($" Connecting to Database");
             this.MongoClient = new MongoClient(ServerConfig.GetString("Connection", "MongoDBServer"));
 
-            AuditLogManager = new AuditLogManager(MongoClient);
-            AuditLogManager.DatabaseName = ServerConfig.GetString("MongoDB", "DatabaseName");
-            AuditLogManager.CollectionName = ServerConfig.GetString("MongoDB", "Collection_AuditLog");
+            AuditLogManager = new AuditLogManager(MongoClient)
+            {
+                DatabaseName = ServerConfig.GetString("MongoDB", "DatabaseName"),
+                CollectionName = ServerConfig.GetString("MongoDB", "Collection_AuditLog")
+            };
 
-            AccountManager = new MongoAccountManager(MongoClient, AuditLogManager);
-            AccountManager.DatabaseName = ServerConfig.GetString("MongoDB", "DatabaseName");
-            AccountManager.CollectionName = ServerConfig.GetString("MongoDB", "Collection_Account");
+            AccountManager = new MongoAccountManager(MongoClient, AuditLogManager)
+            {
+                DatabaseName = ServerConfig.GetString("MongoDB", "DatabaseName"),
+                CollectionName = ServerConfig.GetString("MongoDB", "Collection_Account")
+            };
 
-            SystemAnnouncement = new MongoSystemAnnouncement(MongoClient);
-            SystemAnnouncement.DatabaseName = ServerConfig.GetString("MongoDB", "DatabaseName");
-            SystemAnnouncement.CollectionName = ServerConfig.GetString("MongoDB", "Collection_Announcement");
+            SystemAnnouncement = new MongoSystemAnnouncement(MongoClient)
+            {
+                DatabaseName = ServerConfig.GetString("MongoDB", "DatabaseName"),
+                CollectionName = ServerConfig.GetString("MongoDB", "Collection_Announcement")
+            };
 
-            AccountLicenseManager = new MongoAccountLicenseManager(AccountManager, MongoClient);
-            AccountLicenseManager.DatabaseName = ServerConfig.GetString("MongoDB", "DatabaseName");
-            AccountLicenseManager.CollectionName = ServerConfig.GetString("MongoDB", "Collection_License");
-            AccountLicenseManager.GroupCollectionName = ServerConfig.GetString("MongoDB", "Collection_GroupLicense");
+            AccountLicenseManager = new MongoAccountLicenseManager(AccountManager, MongoClient)
+            {
+                DatabaseName = ServerConfig.GetString("MongoDB", "DatabaseName"),
+                CollectionName = ServerConfig.GetString("MongoDB", "Collection_License"),
+                GroupCollectionName = ServerConfig.GetString("MongoDB", "Collection_GroupLicense")
+            };
 
-            FeatureManager = new FeatureManager(MongoClient);
-            FeatureManager.DatabaseName = ServerConfig.GetString("MongoDB", "DatabaseName");
-            FeatureManager.CollectionName = ServerConfig.GetString("MongoDB", "Collection_Features");
+            FeatureManager = new FeatureManager(MongoClient)
+            {
+                DatabaseName = ServerConfig.GetString("MongoDB", "DatabaseName"),
+                CollectionName = ServerConfig.GetString("MongoDB", "Collection_Features")
+            };
 
             SystemAnnouncement.Update += SystemAnnouncement_Update;
         }
