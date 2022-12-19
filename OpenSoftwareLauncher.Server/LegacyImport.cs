@@ -61,7 +61,7 @@ namespace OpenSoftwareLauncher.Server
                 deserialized = JsonSerializer.Deserialize<JSONBackupContent>(fileContent, MainClass.serializerOptions);
 
             }
-            catch (Exception e)
+            catch
             {
 #if DEBUG
                 throw;
@@ -72,7 +72,7 @@ namespace OpenSoftwareLauncher.Server
                 return Task.CompletedTask;
             
 
-            var mongoMiddle = MainClass.Provider.GetService<MongoMiddle>();
+            var mongoMiddle = MainClass.Provider?.GetService<MongoMiddle>();
             if (!ServerConfig.GetBoolean("Migrated", "ReleaseInfo", false))
             {
                 mongoMiddle?.SetReleaseInfoContent(deserialized.ReleaseInfoContent.ToArray());
@@ -91,7 +91,7 @@ namespace OpenSoftwareLauncher.Server
             if (ServerConfig.GetBoolean("Migrated", "Account", false))
                 return Task.CompletedTask;
 
-            MainClass.Provider.GetService<MongoAccountManager>()?.ReadJSON(fileContent);
+            MainClass.Provider?.GetService<MongoAccountManager>()?.ReadJSON(fileContent);
             ServerConfig.Set("Migrated", "Account", true);
 
             return Task.CompletedTask;
@@ -102,7 +102,7 @@ namespace OpenSoftwareLauncher.Server
             if (ServerConfig.GetBoolean("Migrated", "Announcement", false))
                 return Task.CompletedTask;
 
-            MainClass.Provider.GetService<MongoSystemAnnouncement>()?.Read(fileContent);
+            MainClass.Provider?.GetService<MongoSystemAnnouncement>()?.Read(fileContent);
             ServerConfig.Set("Migrated", "Announcement", true);
             return Task.CompletedTask;
         }
@@ -113,16 +113,16 @@ namespace OpenSoftwareLauncher.Server
                 return Task.CompletedTask;
             if (licenseFileContent.Length > 1)
             {
-                var licenseContent = JsonSerializer.Deserialize<Dictionary<string, LicenseKeyMetadata>>(licenseFileContent, MainClass.serializerOptions)
+                var licenseContent = (JsonSerializer.Deserialize<Dictionary<string, LicenseKeyMetadata>>(licenseFileContent.ToString(), MainClass.serializerOptions) ?? new Dictionary<string, LicenseKeyMetadata>())
                         .Select(v => v.Value).ToArray();
 
-                MainClass.Provider.GetService<MongoAccountLicenseManager>()?.SetLicenseKeys(licenseContent, false).Wait();
+                MainClass.Provider?.GetService<MongoAccountLicenseManager>()?.SetLicenseKeys(licenseContent, false).Wait();
             }
             if (groupFileContent.Length > 1)
             {
-                var groupContent = JsonSerializer.Deserialize<Dictionary<string, LicenseGroup>>(groupFileContent, MainClass.serializerOptions)
+                var groupContent = (JsonSerializer.Deserialize<Dictionary<string, LicenseGroup>>(groupFileContent, MainClass.serializerOptions) ?? new Dictionary<string, LicenseGroup>())
                     .Select(v => v.Value).ToArray();
-                MainClass.Provider.GetService<MongoAccountLicenseManager>()?.SetGroups(groupContent, false);
+                MainClass.Provider?.GetService<MongoAccountLicenseManager>()?.SetGroups(groupContent, false);
             }
 
             ServerConfig.Set("Migrated", "License", true);

@@ -54,7 +54,7 @@ namespace OpenSoftwareLauncher.Server
         public static Dictionary<string, string> ValidTokens = new Dictionary<string, string>();
         public static List<ITokenGranter> TokenGrantList = new List<ITokenGranter>();
 
-        public static ContentManager contentManager;
+        public static ContentManager? contentManager;
 
         private static string? dataDirectory = null;
         public static string DataDirectory
@@ -88,7 +88,7 @@ namespace OpenSoftwareLauncher.Server
             bool forceMigrate = false;
             rootCommand.SetHandler((opt) =>
             {
-                if (opt != null && opt)
+                if (opt)
                 {
                     forceMigrate = true;
                 }
@@ -125,7 +125,7 @@ namespace OpenSoftwareLauncher.Server
                 }
             }
         }
-        private static string[] Arguments; 
+        private static string[] Arguments = Array.Empty<string>(); 
         public static void Main(params string[] args)
         {
             Arguments = args;
@@ -188,7 +188,7 @@ namespace OpenSoftwareLauncher.Server
                 Log.Debug($"{pair.Key} {DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - start}ms");
             }
 
-            App.Run();
+            App?.Run();
         }
         private static void InitASPNETEvents()
         {
@@ -197,7 +197,7 @@ namespace OpenSoftwareLauncher.Server
             AspNetCreate_PreRun   += AspNetTarget_Swagger;
             AspNetCreate_PreRun   += AspNetTarget_Prometheus;
         }
-        public static IServiceProvider Provider;
+        public static IServiceProvider? Provider = null;
         /// <returns>Token</returns>
         public static string? CreateSuperuserAccount()
         {
@@ -231,9 +231,9 @@ namespace OpenSoftwareLauncher.Server
 
         public static void BeforeExit(object? sender, EventArgs e)
         {
-            contentManager.DatabaseSerialize();
-            contentManager.SystemAnnouncement.OnUpdate();
-            contentManager.AccountManager.ForcePendingWrite();
+            contentManager?.DatabaseSerialize();
+            contentManager?.SystemAnnouncement.OnUpdate();
+            contentManager?.AccountManager.ForcePendingWrite();
             ServerConfig.Save();
         }
 
@@ -280,7 +280,7 @@ namespace OpenSoftwareLauncher.Server
         {
             Builder = WebApplication.CreateBuilder(Arguments);
             Builder.Services.AddControllers()
-                .AddApplicationPart(Assembly.GetAssembly(typeof(MainClass)));
+                .AddApplicationPart(Assembly.GetAssembly(typeof(MainClass)) ?? Assembly.GetExecutingAssembly());
             if (Builder.Environment.IsDevelopment())
                 Builder.Services.AddSwaggerGen();
             AspNetCreate_PreBuild?.Invoke(Builder);
@@ -385,20 +385,5 @@ namespace OpenSoftwareLauncher.Server
             IgnoreReadOnlyProperties = false,
             IncludeFields = true
         };
-
-        public static string[] GetFileList(string directory, string filename)
-        {
-            var allFiles = new List<string>();
-            foreach (var file in Directory.GetFiles(directory))
-            {
-                if (file.EndsWith(filename))
-                    allFiles.Add(file);
-            }
-            foreach (var dir in Directory.GetDirectories(directory))
-            {
-                allFiles = new List<string>(allFiles.Concat(GetFileList(dir, filename)));
-            }
-            return allFiles.ToArray();
-        }
     }
 }

@@ -37,15 +37,16 @@ namespace OpenSoftwareLauncher.Server
         #endregion
 
         private static List<string> linequeue = new List<string>();
-        private static System.Timers.Timer _timer = null;
+        private static System.Timers.Timer? _timer = null;
         public static string LogOutput => Path.Combine(Directory.GetCurrentDirectory(), "Logs", $"log_{MainClass.StartupTimestamp}.txt");
         public static bool EnableLogFileWrite = false;
         private static void CreateTimer()
         {
             if (!EnableLogFileWrite) return;
             if (_timer != null) return;
-            if (!Directory.Exists(Path.GetDirectoryName(LogOutput)))
-                Directory.CreateDirectory(Path.GetDirectoryName(LogOutput));
+            string logDirectory = Path.GetDirectoryName(LogOutput) ?? Path.Combine(Directory.GetCurrentDirectory(), "Logs");
+            if (!Directory.Exists(logDirectory))
+                Directory.CreateDirectory(logDirectory);
             _timer = new System.Timers.Timer();
             _timer.Interval = 5000;
             _timer.Elapsed += _timer_Elapsed;
@@ -53,13 +54,13 @@ namespace OpenSoftwareLauncher.Server
             _timer.Start();
         }
 
-        private static void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private static void _timer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
-            _timer.Stop();
+            _timer?.Stop();
             string[] lines = linequeue.ToArray();
             linequeue.Clear();
             File.AppendAllLines(LogOutput, lines);
-            _timer.Start();
+            _timer?.Start();
         }
 
         public static void SetColor(LogColor? color = null)
@@ -88,11 +89,16 @@ namespace OpenSoftwareLauncher.Server
         }
         public static void WriteLine(string content, LogColor? color = null, string prefix = null, bool fetchMethodName = true, [CallerMemberName] string methodname = null, [CallerFilePath] string methodfile = null)
         {
+            string pfx = (prefix ?? LogPrefix) + " ";
+            // Create log file timer if it's not made yet
             CreateTimer();
             SetColor(color);
+            // If apliciable, prepend the formatted method/class name to the content
             if (methodname != null && fetchMethodName && methodfile != null)
                 content = $"{FormatMethodName(methodname, methodfile)}{content}";
-            string pfx = (prefix ?? LogPrefix) + " ";
+
+
+            // Write content with custom color, reset color, then add new line.
             Console.Write(pfx + content);
             if (EnableLogFileWrite)
                 linequeue.Add(pfx + content);
