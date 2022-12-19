@@ -13,4 +13,6 @@ namespace OSLCommon.Helpers
     public delegate void LicenseDelegate(LicenseKeyMetadata license);
 
     public delegate void AnnouncementDelegate(SystemAnnouncementEntry announcement);
+
+    public delegate void ParameterDelegate<T>(T arg);
 }
