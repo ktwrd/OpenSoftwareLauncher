@@ -22,7 +22,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
         [ProducesResponseType(404, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult List(string token, string username)
         {
-            var targetAccount = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
+            var targetAccount = MainClass.ContentManager.AccountManager.GetAccountByUsername(username);
             if (targetAccount == null)
             {
                 Response.StatusCode = StatusCodes.Status404NotFound;
@@ -78,7 +78,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
 
             try
             {            
-                MainClass.contentManager.AccountManager.SetUserGroups(decodedBody.Data);
+                MainClass.ContentManager.AccountManager.SetUserGroups(decodedBody.Data);
             }
             catch (Exception except)
             {
@@ -102,7 +102,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
         [ProducesResponseType(404, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult Grant(string token, string username, string group)
         {
-            var account = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
+            var account = MainClass.ContentManager.AccountManager.GetAccountByUsername(username);
             if (account == null)
             {
                 Response.StatusCode = StatusCodes.Status404NotFound;
@@ -125,7 +125,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
         [ProducesResponseType(404, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult RevokeGroup(string token, string username, string group)
         {
-            var account = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
+            var account = MainClass.ContentManager.AccountManager.GetAccountByUsername(username);
             if (account == null)
             {
                 Response.StatusCode = StatusCodes.Status404NotFound;

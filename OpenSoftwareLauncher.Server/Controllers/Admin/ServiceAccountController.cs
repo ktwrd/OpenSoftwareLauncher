@@ -55,7 +55,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 }, MainClass.serializerOptions);
             }
 
-            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token);
+            var tokenAccount = MainClass.ContentManager.AccountManager.GetAccount(token);
 
             var emailRegex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,63})+)$");
             if (!emailRegex.Match(decodedBody.Username).Success)
@@ -68,7 +68,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 }, MainClass.serializerOptions);
             }
 
-            var account = MainClass.contentManager.AccountManager.CreateNewAccount(decodedBody.Username);
+            var account = MainClass.ContentManager.AccountManager.CreateNewAccount(decodedBody.Username);
 
             if (account == null)
             {
@@ -100,9 +100,9 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
 
             var grantTokenResponse = new GrantTokenResponse(ServerStringResponse.AccountTokenGranted, true, freshtoken, account.Groups.ToArray(), account.Licenses.ToArray(), account.Permissions.ToArray());
 
-            MainClass.contentManager.AccountManager.SetAccount(account);
+            MainClass.ContentManager.AccountManager.SetAccount(account);
 
-            MainClass.contentManager.AuditLogManager.Create(new ServiceAccountCreateEntryData(account), tokenAccount).Wait();
+            MainClass.ContentManager.AuditLogManager.Create(new ServiceAccountCreateEntryData(account), tokenAccount).Wait();
 
             return Json(new ObjectResponse<GrantTokenResponse>()
             {

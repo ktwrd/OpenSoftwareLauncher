@@ -103,7 +103,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
                 result["releaseAlreadyExists"] = false;
             }
 
-            MainClass.contentManager?.AuditLogManager.Create(new PublishReleaseEntryData(publishedRelease), null).Wait();
+            MainClass.ContentManager?.AuditLogManager.Create(new PublishReleaseEntryData(publishedRelease), null).Wait();
 
             return Json(result, MainClass.serializerOptions);
         }
@@ -113,7 +113,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [ProducesResponseType(200, Type = typeof(ObjectResponse<Dictionary<string, PublishedRelease>>))]
         public ActionResult All(string token)
         {
-            var account = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
+            var account = MainClass.ContentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
             if (!MainClass.ValidTokens.ContainsKey(token))
             {
                 if (account == null)

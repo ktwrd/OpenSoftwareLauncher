@@ -54,7 +54,7 @@ namespace OpenSoftwareLauncher.Server
         public static Dictionary<string, string> ValidTokens = new Dictionary<string, string>();
         public static List<ITokenGranter> TokenGrantList = new List<ITokenGranter>();
 
-        public static ContentManager? contentManager;
+        public static ContentManager? ContentManager { get; private set; }
 
         private static string? dataDirectory = null;
         public static string DataDirectory

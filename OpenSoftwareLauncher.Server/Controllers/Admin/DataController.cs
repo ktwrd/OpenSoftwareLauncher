@@ -112,8 +112,8 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
             {
                 content = new DataJSON()
                 {
-                    Account = MainClass.contentManager.AccountManager.GetAllAccounts().ToList(),
-                    SystemAnnouncement = MainClass.contentManager.SystemAnnouncement.GetSummary(),
+                    Account = MainClass.ContentManager.AccountManager.GetAllAccounts().ToList(),
+                    SystemAnnouncement = MainClass.ContentManager.SystemAnnouncement.GetSummary(),
                     Content = new ContentJSON()
                     {
                         ReleaseInfoContent = MainClass.Provider.GetService<MongoMiddle>()?.GetReleaseInfoContent().ToList(),

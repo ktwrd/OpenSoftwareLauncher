@@ -13,7 +13,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Account
         [ProducesResponseType(200, Type = typeof(ObjectResponse<int>))]
         public ActionResult TokenReset(string token, bool allButSupplied=true, bool all=false)
         {
-            var account = MainClass.contentManager.AccountManager.GetAccount(token, true);
+            var account = MainClass.ContentManager.AccountManager.GetAccount(token, true);
 
             int tokensRemoved = 0;
 

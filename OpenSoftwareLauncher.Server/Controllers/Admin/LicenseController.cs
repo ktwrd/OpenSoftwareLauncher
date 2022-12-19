@@ -28,7 +28,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult CreateProductKey(string token)
         {
-            var account = MainClass.contentManager.AccountManager.GetAccount(token);
+            var account = MainClass.ContentManager.AccountManager.GetAccount(token);
 
 
             var syncIOFeature = HttpContext.Features.Get<IHttpBodyControlFeature>();
@@ -62,7 +62,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 }, MainClass.serializerOptions);
             }
 
-            var res = MainClass.contentManager.AccountLicenseManager.CreateLicenseKeys(
+            var res = MainClass.ContentManager.AccountLicenseManager.CreateLicenseKeys(
                 account.Username,
                 decodedBody.RemoteLocations,
                 decodedBody.Count,
@@ -76,7 +76,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
             {
                 taskList.Add(new Task(delegate
                 {
-                    MainClass.contentManager.AuditLogManager.Create(new LicenseCreateEntryData(item), account).Wait();
+                    MainClass.ContentManager.AuditLogManager.Create(new LicenseCreateEntryData(item), account).Wait();
                 }));
             }
             foreach (var i in taskList)
@@ -98,7 +98,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
             return Json(new ObjectResponse<LicenseKeyMetadata[]>
             {
                 Success = true,
-                Data = MainClass.contentManager.AccountLicenseManager.GetLicenseKeys().Result
+                Data = MainClass.ContentManager.AccountLicenseManager.GetLicenseKeys().Result
             }, MainClass.serializerOptions);
         }
 
@@ -107,7 +107,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult GetProductLicenseKeys(string token, string remoteLocation)
         {
-            var keys = MainClass.contentManager.AccountLicenseManager.GetLicenseKeys().Result
+            var keys = MainClass.ContentManager.AccountLicenseManager.GetLicenseKeys().Result
                 .Where(v => v.Products.Contains(remoteLocation))
                 .ToArray();
 
@@ -131,12 +131,12 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult DisableKey(string token, string keyId)
         {
-            LicenseKeyActionResult response = MainClass.contentManager.AccountLicenseManager.DisableLicenseKey(keyId).Result;
+            LicenseKeyActionResult response = MainClass.ContentManager.AccountLicenseManager.DisableLicenseKey(keyId).Result;
 
-            var account = MainClass.contentManager.AccountManager.GetAccount(token);
+            var account = MainClass.ContentManager.AccountManager.GetAccount(token);
             if (response == LicenseKeyActionResult.Success)
             {
-                MainClass.contentManager.AuditLogManager.Create(new LicenseDisableEntryData(MainClass.contentManager.AccountLicenseManager.GetLicenseKeyById(keyId).Result), account).Wait();
+                MainClass.ContentManager.AuditLogManager.Create(new LicenseDisableEntryData(MainClass.ContentManager.AccountLicenseManager.GetLicenseKeyById(keyId).Result), account).Wait();
             }
 
             return Json(new ObjectResponse<LicenseKeyActionResult>
@@ -151,12 +151,12 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult EnableKey(string token, string keyId)
         {
-            LicenseKeyActionResult response = MainClass.contentManager.AccountLicenseManager.EnableLicenseKey(keyId).Result;
+            LicenseKeyActionResult response = MainClass.ContentManager.AccountLicenseManager.EnableLicenseKey(keyId).Result;
 
-            var account = MainClass.contentManager.AccountManager.GetAccount(token);
+            var account = MainClass.ContentManager.AccountManager.GetAccount(token);
             if (response == LicenseKeyActionResult.Success)
             {
-                MainClass.contentManager.AuditLogManager.Create(new LicenseEnableEntryData(MainClass.contentManager.AccountLicenseManager.GetLicenseKeyById(keyId).Result), account).Wait();
+                MainClass.ContentManager.AuditLogManager.Create(new LicenseEnableEntryData(MainClass.ContentManager.AccountLicenseManager.GetLicenseKeyById(keyId).Result), account).Wait();
             }
             return Json(new ObjectResponse<LicenseKeyActionResult>
             {

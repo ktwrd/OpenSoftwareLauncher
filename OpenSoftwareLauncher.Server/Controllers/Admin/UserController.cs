@@ -30,7 +30,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         public ActionResult List(string token, string? username=null, SearchMethod usernameSearchType = SearchMethod.Equals, long firstSeenTimestamp=0, long lastSeenTimestamp=long.MaxValue)
         {
             var detailList = new List<AccountDetailsResponse>();
-            foreach (var account in MainClass.contentManager.AccountManager.GetAllAccounts(false))
+            foreach (var account in MainClass.ContentManager.AccountManager.GetAllAccounts(false))
             {
                 if (account.FirstSeenTimestamp >= firstSeenTimestamp
                     && account.LastSeenTimestamp <= lastSeenTimestamp)
@@ -77,7 +77,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [OSLAuthPermission(AccountPermission.USER_DELETE)]
         public ActionResult DeleteAccount(string token, string username)
         {
-            MainClass.contentManager.AccountManager.DeleteAccount(username);
+            MainClass.ContentManager.AccountManager.DeleteAccount(username);
             return Json(new ObjectResponse<object>()
             {
                 Success = true,
@@ -93,8 +93,8 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [OSLAuthPermission(AccountPermission.USER_DISABLE_MODIFY)]
         public ActionResult PardonState(string token, string username)
         {
-            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token);
-            var targetAccount = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
+            var tokenAccount = MainClass.ContentManager.AccountManager.GetAccount(token);
+            var targetAccount = MainClass.ContentManager.AccountManager.GetAccountByUsername(username);
             if (targetAccount == null)
             {
                 Response.StatusCode = StatusCodes.Status404NotFound;
@@ -107,13 +107,13 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
 
             targetAccount.Pardon();
 
-            MainClass.contentManager.AuditLogManager.Create(new AccountDisableEntryData(targetAccount)
+            MainClass.ContentManager.AuditLogManager.Create(new AccountDisableEntryData(targetAccount)
             {
                 Reason = "",
                 State = false
             }, tokenAccount).Wait();
 
-            MainClass.contentManager.AuditLogManager.Create(new AccountDeleteEntryData()
+            MainClass.ContentManager.AuditLogManager.Create(new AccountDeleteEntryData()
             {
                 Username = username
             }, tokenAccount).Wait();
@@ -133,8 +133,8 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [OSLAuthPermission(AccountPermission.USER_DISABLE_MODIFY)]
         public ActionResult DisableState(string token, string username, string? reason="No reason")
         {
-            var bannerAccount = MainClass.contentManager.AccountManager.GetAccount(token);
-            var targetAccount = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
+            var bannerAccount = MainClass.ContentManager.AccountManager.GetAccount(token);
+            var targetAccount = MainClass.ContentManager.AccountManager.GetAccountByUsername(username);
             if (targetAccount == null)
             {
                 Response.StatusCode = StatusCodes.Status404NotFound;
@@ -152,7 +152,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                     targetAccount.DisableAccount();
             }
 
-            MainClass.contentManager.AuditLogManager.Create(new AccountDisableEntryData(targetAccount)
+            MainClass.ContentManager.AuditLogManager.Create(new AccountDisableEntryData(targetAccount)
             {
                 Reason = reason,
                 State = true

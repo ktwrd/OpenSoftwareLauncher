@@ -12,7 +12,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Account
         [HttpGet]
         public ActionResult Index(string token)
         {
-            var account = MainClass.contentManager.AccountManager.GetAccount(token, true);
+            var account = MainClass.ContentManager.AccountManager.GetAccount(token, true);
 
             return Json(new ObjectResponse<AccountPermission[]>()
             {

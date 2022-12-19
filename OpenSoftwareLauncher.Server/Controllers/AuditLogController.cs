@@ -17,9 +17,9 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [OSLAuthRequired]
         public ActionResult FetchAll(string token)
         {
-            var account = MainClass.contentManager.AccountManager.GetAccount(token);
+            var account = MainClass.ContentManager.AccountManager.GetAccount(token);
 
-            var result = MainClass.contentManager.AuditLogManager.GetByUsername(account.Username).Result;
+            var result = MainClass.ContentManager.AuditLogManager.GetByUsername(account.Username).Result;
 
             return Json(new ObjectResponse<AuditLogEntry[]>()
             {

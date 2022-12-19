@@ -15,7 +15,7 @@ namespace OpenSoftwareLauncher.Server
             if (context.HttpContext.Request.Query.ContainsKey("token"))
             {
                 var token = context.HttpContext.Request.Query["token"].ToString();
-                var account = MainClass.contentManager.AccountManager.GetAccount(token);
+                var account = MainClass.ContentManager.AccountManager.GetAccount(token);
                 if (account != null && account.Enabled)
                 {
                     base.OnActionExecuting(context);

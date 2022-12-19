@@ -25,7 +25,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
             else if (Request.Headers.ContainsKey("X-Real-IP"))
                 possibleAddress = Request.Headers["X-Real-IP"];
 
-            var accountUsername = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
+            var accountUsername = MainClass.ContentManager.AccountManager.GetAccountByUsername(username);
             if (accountUsername != null && accountUsername.IsServiceAccount)
             {
                 return Json(new ObjectResponse<GrantTokenResponse>()
@@ -35,7 +35,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
                 }, MainClass.serializerOptions);
             }
 
-            var grantTokenResponse = MainClass.contentManager.AccountManager.GrantTokenAndOrAccount(
+            var grantTokenResponse = MainClass.ContentManager.AccountManager.GrantTokenAndOrAccount(
                 WebUtility.UrlDecode(username),
                 WebUtility.UrlDecode(password),
                 userAgent: Request.Headers.UserAgent,
@@ -45,8 +45,8 @@ namespace OpenSoftwareLauncher.Server.Controllers
 
             if (grantTokenResponse.Success)
             {
-                var account = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
-                MainClass.contentManager.AuditLogManager.Create(
+                var account = MainClass.ContentManager.AccountManager.GetAccountByUsername(username);
+                MainClass.ContentManager.AuditLogManager.Create(
                     new TokenCreateEntryData(
                         account,
                         grantTokenResponse.Token),
@@ -86,7 +86,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
 
             try
             {
-                var res = MainClass.contentManager.AccountManager.ValidateToken(token);
+                var res = MainClass.ContentManager.AccountManager.ValidateToken(token);
                 if (!res)
                 {
                     Response.StatusCode = StatusCodes.Status401Unauthorized;
@@ -114,7 +114,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [OSLAuthRequiredAttribute]
         public ActionResult Details(string token)
         {
-            var account = MainClass.contentManager.AccountManager.GetAccount(token, true);
+            var account = MainClass.ContentManager.AccountManager.GetAccount(token, true);
 
             var details = account.GetTokenDetails(token);
             if (details == null)
@@ -140,7 +140,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [OSLAuthRequiredAttribute]
         public ActionResult Reset(string token, bool? all = false)
         {
-            var account = MainClass.contentManager.AccountManager.GetAccount(token, true);
+            var account = MainClass.ContentManager.AccountManager.GetAccount(token, true);
 
             if (all ?? false)
             {
@@ -155,7 +155,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
             {
                 var tokenData = account.Tokens.Where(v => v.Token == token).FirstOrDefault();
                 if (tokenData != null)
-                    MainClass.contentManager.AuditLogManager.Create(new TokenDeleteEntryData(account, tokenData), account).Wait();
+                    MainClass.ContentManager.AuditLogManager.Create(new TokenDeleteEntryData(account, tokenData), account).Wait();
                 account.RemoveToken(token);
                 return Json(new ObjectResponse<object>()
                 {

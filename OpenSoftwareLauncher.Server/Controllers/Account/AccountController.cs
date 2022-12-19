@@ -15,7 +15,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Account
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult AccountDetails(string token)
         {
-            var account = MainClass.contentManager.AccountManager.GetAccount(token, true);
+            var account = MainClass.ContentManager.AccountManager.GetAccount(token, true);
 
             return Json(new ObjectResponse<AccountDetailsResponse>()
             {

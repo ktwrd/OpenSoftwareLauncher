@@ -21,9 +21,9 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult TokenPurgeAll(string token, bool includeGivenToken=false)
         {
-            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token);
+            var tokenAccount = MainClass.ContentManager.AccountManager.GetAccount(token);
             var usernameDict = new Dictionary<string, int>();
-            foreach (var user in MainClass.contentManager.AccountManager.GetAllAccounts())
+            foreach (var user in MainClass.ContentManager.AccountManager.GetAllAccounts())
             {
                 string[] exclude = Array.Empty<string>();
                 if (includeGivenToken)
@@ -34,7 +34,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                 usernameDict[user.Username] += value;
             }
 
-            MainClass.contentManager.AuditLogManager.Create(new BulkTokenDeleteEntryData()
+            MainClass.ContentManager.AuditLogManager.Create(new BulkTokenDeleteEntryData()
             {
                 Dict = usernameDict
             }, tokenAccount).Wait();
@@ -51,7 +51,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult TokenPurge(string token, string? username = null, bool? isUsernameFieldRegexPattern = false)
         {
-            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token);
+            var tokenAccount = MainClass.ContentManager.AccountManager.GetAccount(token);
 
             OSLCommon.Authorization.Account[] accountArray;
 
@@ -80,21 +80,21 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                     }, MainClass.serializerOptions);
                 }
 
-                accountArray = MainClass.contentManager.AccountManager.GetAccountsByRegex(expression, AccountField.Username);
+                accountArray = MainClass.ContentManager.AccountManager.GetAccountsByRegex(expression, AccountField.Username);
             }
             // When username is null, that means we want to purge our own tokens.
             else if (username == null)
             {
                 accountArray = new OSLCommon.Authorization.Account[]
                 {
-                    MainClass.contentManager.AccountManager.GetAccount(token)
+                    MainClass.ContentManager.AccountManager.GetAccount(token)
                 };
             }
             else
             {
                 accountArray = new OSLCommon.Authorization.Account[]
                 {
-                    MainClass.contentManager.AccountManager.GetAccountByUsername(username)
+                    MainClass.ContentManager.AccountManager.GetAccountByUsername(username)
                 };
             }
 
@@ -103,7 +103,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
             {
                 usernameDict.Add(a.Username, a.RemoveTokens());
             }
-            MainClass.contentManager.AuditLogManager.Create(new BulkTokenDeleteEntryData()
+            MainClass.ContentManager.AuditLogManager.Create(new BulkTokenDeleteEntryData()
             {
                 Dict = usernameDict
             }, tokenAccount).Wait();

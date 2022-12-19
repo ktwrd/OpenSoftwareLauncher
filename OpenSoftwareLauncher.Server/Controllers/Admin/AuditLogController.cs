@@ -19,7 +19,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult FetchAll(string token)
         {
-            var result = MainClass.contentManager.AuditLogManager.GetAll().Result;
+            var result = MainClass.ContentManager.AuditLogManager.GetAll().Result;
 
             return Json(new ObjectResponse<AuditLogEntry[]>()
             {
@@ -33,7 +33,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult FetchByAction(string token, AuditType auditType)
         {
-            var result = MainClass.contentManager.AuditLogManager.GetByType(auditType).Result;
+            var result = MainClass.ContentManager.AuditLogManager.GetByType(auditType).Result;
 
             return Json(new ObjectResponse<AuditLogEntry[]>()
             {
@@ -50,13 +50,13 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
             AuditLogEntry[] result;
             if (username == null)
             {
-                result = MainClass.contentManager.AuditLogManager.GetWithFilter(Builders<AuditLogEntry>
+                result = MainClass.ContentManager.AuditLogManager.GetWithFilter(Builders<AuditLogEntry>
                     .Filter
                     .Eq("Username", "")).Result;
             }
             else
             {
-                result = MainClass.contentManager.AuditLogManager.GetByUsername(username).Result;
+                result = MainClass.ContentManager.AuditLogManager.GetByUsername(username).Result;
             }
 
             return Json(new ObjectResponse<AuditLogEntry[]>()
@@ -71,7 +71,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult FetchByTimestampRange(string token, long min, long max, AuditType auditType = AuditType.Any)
         {
-            AuditLogEntry[] result = MainClass.contentManager.AuditLogManager.GetWithFilter(
+            AuditLogEntry[] result = MainClass.ContentManager.AuditLogManager.GetWithFilter(
                 Builders<AuditLogEntry>
                     .Filter
                     .Where(v => v.Timestamp > min && v.Timestamp < max)).Result;
