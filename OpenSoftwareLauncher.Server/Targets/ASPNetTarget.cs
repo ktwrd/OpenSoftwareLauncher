@@ -5,14 +5,14 @@ using Prometheus;
 
 namespace OpenSoftwareLauncher.Server.Targets
 {
-    public class ASPNetTarget
+    public static class ASPNetTarget
     {
-        public ASPNetTarget()
+        public static void Register()
         {
             MainClass.AspNetCreate_PreBuild += Swagger_PreBuild;
-            MainClass.AspNetCreate_PreRun += RequestLog;
-            MainClass.AspNetCreate_PreRun += Swagger;
-            MainClass.AspNetCreate_PreRun += Prometheus;
+            MainClass.AspNetCreate_PreRun   += RequestLog;
+            MainClass.AspNetCreate_PreRun   += Swagger;
+            MainClass.AspNetCreate_PreRun   += Prometheus;
         }
         private static void Swagger_PreBuild(WebApplicationBuilder builder)
         {

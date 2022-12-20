@@ -169,7 +169,7 @@ namespace OpenSoftwareLauncher.Server
             {
                 {"InitializeASPNetEvents", new Task(delegate
                 {
-                    new ASPNetTarget();
+                    ASPNetTarget.Register();
                 }) },
                 {"CreateSuperuserAccount", new Task(delegate
                 {
