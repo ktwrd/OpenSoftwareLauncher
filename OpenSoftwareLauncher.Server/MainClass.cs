@@ -211,34 +211,40 @@ namespace OpenSoftwareLauncher.Server
         {
             var dict = new Dictionary<string, Task>();
             var server = new Server();
-            var targetAssembly = typeof(MainClass).Assembly;
-            var typeList = OSLHelper.GetTypesWithAttribute<LaunchTargetAttribute>(targetAssembly);
-            foreach (var item in typeList)
+            var targetAssemblyList = new List<Assembly>()
             {
-                if (!item.IsClass)
-                    continue;
+                typeof(MainClass).Assembly
+            };
+            foreach (var targetAssembly in targetAssemblyList)
+            {
+                var typeList = OSLHelper.GetTypesWithAttribute<LaunchTargetAttribute>(targetAssembly);
+                foreach (var item in typeList)
+                {
+                    if (!item.IsClass)
+                        continue;
 
-                if (!item.IsAssignableTo(typeof(BaseTarget)))
-                {
-                    Log.Error($"{item.FullName} does not extend OpenSoftwareLauncher.Server.BaseTarget");
-                    continue;
-                }
-                try
-                {
-                    var attr = item.GetCustomAttribute<LaunchTargetAttribute>();
-                    var instance = (BaseTarget)Activator.CreateInstance(item);
-                    var prop = item.GetProperty("Server");
-                    prop?.SetValue(instance, server, null);
-                    dict.Add("Attr_" + attr?.Name ?? "<unknown>", new Task(delegate
+                    if (!item.IsAssignableTo(typeof(BaseTarget)))
                     {
-                        instance?.Register();
-                    }));
-                }
-                catch (Exception ex)
-                {
-                    Log.Error($"Failed to register {item.AssemblyQualifiedName}");
-                    Log.Error(ex.ToString());
-                    Environment.Exit(10);
+                        Log.Error($"{item.FullName} does not extend OpenSoftwareLauncher.Server.BaseTarget");
+                        continue;
+                    }
+                    try
+                    {
+                        var attr = item.GetCustomAttribute<LaunchTargetAttribute>();
+                        var instance = (BaseTarget)Activator.CreateInstance(item);
+                        var prop = item.GetProperty("Server");
+                        prop?.SetValue(instance, server, null);
+                        dict.Add("Attr_" + attr?.Name ?? "<unknown>", new Task(delegate
+                        {
+                            instance?.Register();
+                        }));
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error($"Failed to register {item.AssemblyQualifiedName}");
+                        Log.Error(ex.ToString());
+                        Environment.Exit(10);
+                    }
                 }
             }
 
