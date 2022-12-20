@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace OSLCommon
@@ -37,6 +38,18 @@ namespace OSLCommon
                 allFiles = new List<string>(allFiles.Concat(GetFileList(dir, filename)));
             }
             return allFiles.ToArray();
+        }
+        public static List<Type> GetTypesWithAttribute<T>(Assembly assembly)
+        {
+            List<Type> types = new List<Type>();
+
+            foreach (Type type in assembly.GetTypes())
+            {
+                if (type.GetCustomAttributes(typeof(T), true).Length > 0)
+                    types.Add(type);
+            }
+
+            return types;
         }
     }
 }

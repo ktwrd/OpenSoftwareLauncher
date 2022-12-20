@@ -165,18 +165,19 @@ namespace OpenSoftwareLauncher.Server
             serializerOptions.Converters.Add(new kate.shared.DateTimeConverterUsingDateTimeOffsetParse());
             serializerOptions.Converters.Add(new kate.shared.DateTimeConverterUsingDateTimeParse());
             ContentManager = new ContentManager();
+            RunLaunchTarget();
+            App?.Run();
+        }
+        private static void RunLaunchTarget()
+        {
             var targets = new Dictionary<string, Task>()
             {
-                {"InitializeASPNetEvents", new Task(delegate
-                {
-                    ASPNetTarget.Register();
-                }) },
+                {"InitializeServices", new Task(InitializeServices) },
                 {"CreateSuperuserAccount", new Task(delegate
                 {
                     CreateSuperuserAccount();
                 }) },
                 {"LoadTokens", new Task(LoadTokens) },
-                {"InitializeServices", new Task(InitializeServices) },
                 {"LegacyImport", new Task(delegate
                 {
                     LegacyImport.Execute().Wait();
@@ -188,15 +189,60 @@ namespace OpenSoftwareLauncher.Server
                 }) }
             };
 
+            targets = targets.Concat(FindAttributes()).ToDictionary(v => v.Key, k => k.Value);
+
+            var startAll = OSLHelper.GetMilliseconds();
             foreach (var pair in targets)
             {
-                var start = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                var start = OSLHelper.GetMilliseconds();
                 pair.Value.Start();
                 pair.Value.Wait();
-                Log.Debug($"{pair.Key} {DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - start}ms");
+                Log.Debug($"{pair.Key} {OSLHelper.GetMilliseconds() - start}ms");
+            }
+            Log.Debug($"{OSLHelper.GetMilliseconds() - startAll}ms for {targets.Count} target" + (targets.Count > 1 ? "s" : ""));
+        }
+        internal class Server : IServer
+        {
+            public IServiceProvider Provider => MainClass.Provider;
+            public event ParameterDelegate<WebApplicationBuilder> AspNetCreate_PreBuild;
+            public event ParameterDelegate<WebApplication> AspNetCreate_PreRun;
+        }
+        private static Dictionary<string, Task> FindAttributes()
+        {
+            var dict = new Dictionary<string, Task>();
+            var server = new Server();
+            var targetAssembly = typeof(MainClass).Assembly;
+            var typeList = OSLHelper.GetTypesWithAttribute<LaunchTargetAttribute>(targetAssembly);
+            foreach (var item in typeList)
+            {
+                if (!item.IsClass)
+                    continue;
+
+                if (!item.IsAssignableTo(typeof(BaseTarget)))
+                {
+                    Log.Error($"{item.FullName} does not extend OpenSoftwareLauncher.Server.BaseTarget");
+                    continue;
+                }
+                try
+                {
+                    var attr = item.GetCustomAttribute<LaunchTargetAttribute>();
+                    var instance = (BaseTarget)Activator.CreateInstance(item);
+                    var prop = item.GetProperty("Server");
+                    prop?.SetValue(instance, server, null);
+                    dict.Add("Attr_" + attr?.Name ?? "<unknown>", new Task(delegate
+                    {
+                        instance?.Register();
+                    }));
+                }
+                catch (Exception ex)
+                {
+                    Log.Error($"Failed to register {item.AssemblyQualifiedName}");
+                    Log.Error(ex.ToString());
+                    Environment.Exit(10);
+                }
             }
 
-            App?.Run();
+            return dict;
         }
 
         public static IServiceProvider? Provider = null;

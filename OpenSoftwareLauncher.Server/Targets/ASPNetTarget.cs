@@ -2,26 +2,30 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Prometheus;
+using System.Diagnostics;
+using static OpenSoftwareLauncher.Server.MainClass;
 
 namespace OpenSoftwareLauncher.Server.Targets
 {
-    public static class ASPNetTarget
+    [LaunchTarget("AspNetEvents")]
+    public class ASPNetInstanceTarget : BaseTarget
     {
-        public static void Register()
+        public IServer Server { get; set; }
+        public override void Register()
         {
-            MainClass.AspNetCreate_PreBuild += Swagger_PreBuild;
-            MainClass.AspNetCreate_PreRun   += RequestLog;
-            MainClass.AspNetCreate_PreRun   += Swagger;
-            MainClass.AspNetCreate_PreRun   += Prometheus;
+            Server.AspNetCreate_PreBuild += Swagger_PreBuild;
+            Server.AspNetCreate_PreRun += RequestLog;
+            Server.AspNetCreate_PreRun += Swagger;
+            Server.AspNetCreate_PreRun += Prometheus;
         }
-        private static void Swagger_PreBuild(WebApplicationBuilder builder)
+        private void Swagger_PreBuild(WebApplicationBuilder builder)
         {
             if (builder.Environment.IsDevelopment())
             {
                 builder.Services.AddSwaggerGen();
             }
         }
-        private static void RequestLog(WebApplication app)
+        private void RequestLog(WebApplication app)
         {
             app.Use((context, next) =>
             {
@@ -36,7 +40,7 @@ namespace OpenSoftwareLauncher.Server.Targets
                 return next();
             });
         }
-        private static void Swagger(WebApplication app)
+        private void Swagger(WebApplication app)
         {
             if (app.Environment.IsDevelopment())
             {
@@ -53,7 +57,7 @@ namespace OpenSoftwareLauncher.Server.Targets
                 Log.Error("In production mode, not enabling swagger");
             }
         }
-        private static void Prometheus(WebApplication app)
+        private void Prometheus(WebApplication app)
         {
             if (ServerConfig.GetBoolean("Telemetry", "Prometheus"))
             {
