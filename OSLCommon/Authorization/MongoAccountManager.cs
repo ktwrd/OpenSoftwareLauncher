@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using OSLCommon.Logging;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,7 @@ namespace OSLCommon.Authorization
         public AuditLogManager auditLogManager;
         public string DatabaseName = "opensoftwarelauncher";
         public string CollectionName = "accounts";
+        public string CollectionName_PermissionGroup = "permissionGroups";
         public MongoAccountManager(IServiceProvider provider)
             : base()
         {
@@ -35,6 +37,10 @@ namespace OSLCommon.Authorization
         private IMongoCollection<T> GetAccountCollection<T>()
         {
             return mongoClient.GetDatabase(DatabaseName).GetCollection<T>(CollectionName);
+        }
+        private IMongoCollection<T> GetPermissionGroupCollection<T>()
+        {
+            return mongoClient.GetDatabase(DatabaseName).GetCollection<T>(CollectionName_PermissionGroup);
         }
         internal void HookAccountEvent(Account account)
         {
@@ -242,6 +248,24 @@ namespace OSLCommon.Authorization
                 TokenUsed(token);
             account.accountManager = this;
             return AccountHasPermission(account, permissions, ignoreAdmin);
+        }
+        public override PermissionGroup[] GetPermissionGroups()
+        {
+            var collection = GetPermissionGroupCollection<PermissionGroup>();
+            var filter = Builders<PermissionGroup>
+                .Filter
+                .Empty;
+            var result = collection.Find(filter).ToList();
+            return result.ToArray();
+        }
+        public override PermissionGroup[] GetPermissionGroups(string uid)
+        {
+            var collection = GetPermissionGroupCollection<PermissionGroup>();
+            var filter = Builders<PermissionGroup>
+                .Filter
+                .Eq("UID", uid);
+            var result = collection.Find(filter).ToList();
+            return result.ToArray();
         }
 
         public override void ReadJSON(string jsonContent)

@@ -292,6 +292,15 @@ namespace OSLCommon.Authorization
         #endregion
 
         #region Account Permission
+        public virtual PermissionGroup[] GetPermissionGroups()
+        {
+            throw new NotImplementedException();
+        }
+        public virtual PermissionGroup[] GetPermissionGroups(string uid)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// 
         /// </summary>
