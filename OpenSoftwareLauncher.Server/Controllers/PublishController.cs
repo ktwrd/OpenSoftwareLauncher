@@ -30,8 +30,32 @@ namespace OpenSoftwareLauncher.Server.Controllers
         {
             if (!MainClass.ValidTokens.ContainsKey(token))
             {
-                Response.StatusCode = 401;
-                return Json(new HttpException(401, ServerStringResponse.InvalidCredential), MainClass.serializerOptions);
+                var account = MainClass.contentManager.AccountManager.GetAccount(token, true);
+                bool allow = false;
+                if (account != null)
+                {
+                    if (account.Enabled)
+                    {
+                        if (account.Permissions.Contains(AccountPermission.ADMINISTRATOR))
+                        {
+                            allow = true;
+                        }
+                    }
+                    else
+                    {
+                        HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                        return new JsonResult(new ObjectResponse<HttpException>()
+                        {
+                            Success = false,
+                            Data = new HttpException(StatusCodes.Status401Unauthorized, ServerStringResponse.AccountDisabled + "\n====Reason====\n" + account.DisableReasons.OrderBy(v => v.Timestamp).First()?.Message)
+                        }, MainClass.serializerOptions);
+                    }
+                }
+                if (!allow)
+                {
+                    Response.StatusCode = 401;
+                    return Json(new HttpException(401, ServerStringResponse.InvalidCredential), MainClass.serializerOptions);
+                }
             }
             if (!Request.HasJsonContentType())
             {
