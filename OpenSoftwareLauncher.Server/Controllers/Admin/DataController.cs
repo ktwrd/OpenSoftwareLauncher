@@ -9,6 +9,7 @@ using System.Net;
 using System.Text.Json;
 using System.IO;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Admin
 {
@@ -29,7 +30,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
             HttpContext.Request.Body.Seek(0, SeekOrigin.Begin);
             string content = new StreamReader(HttpContext.Request.Body).ReadToEndAsync().Result.ReplaceLineEndings("");
 
-            ObjectResponse<dynamic> dynamicBody;
+            ObjectResponse<dynamic>? dynamicBody;
             try
             {
                 dynamicBody = JsonSerializer.Deserialize<ObjectResponse<dynamic>>(content, MainClass.serializerOptions);
@@ -76,11 +77,10 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
 
             try
             {
-                MainClass.contentManager.AccountManager.ReadJSON(JsonSerializer.Serialize(expectedResponse.Data.Account, MainClass.serializerOptions));
-                MainClass.contentManager.SystemAnnouncement.Read(JsonSerializer.Serialize(expectedResponse.Data.SystemAnnouncement, MainClass.serializerOptions));
-                MainClass.contentManager.SetReleaseInfoContent(expectedResponse.Data.Content.ReleaseInfoContent.ToArray());
-                MainClass.contentManager.ForceSetPublishedContent(expectedResponse.Data.Content.Published.Select(v => v.Value).ToArray());
-                MainClass.contentManager.DatabaseSerialize();
+                MainClass.GetService<MongoAccountManager>()?.ReadJSON(JsonSerializer.Serialize(expectedResponse.Data.Account, MainClass.serializerOptions));
+                MainClass.GetService<MongoSystemAnnouncement>()?.Read(JsonSerializer.Serialize(expectedResponse.Data.SystemAnnouncement, MainClass.serializerOptions));
+                MainClass.GetService<MongoMiddle>()?.SetReleaseInfoContent(expectedResponse.Data.Content.ReleaseInfoContent.ToArray());
+                MainClass.GetService<MongoMiddle>()?.ForceSetPublishedContent(expectedResponse.Data.Content.Published.Select(v => v.Value).ToArray());
             }
             catch (Exception except)
             {
@@ -112,12 +112,12 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
             {
                 content = new DataJSON()
                 {
-                    Account = MainClass.contentManager.AccountManager.GetAllAccounts().ToList(),
-                    SystemAnnouncement = MainClass.contentManager.SystemAnnouncement.GetSummary(),
+                    Account = MainClass.GetService<MongoAccountManager>()?.GetAllAccounts().ToList(),
+                    SystemAnnouncement = MainClass.GetService<MongoSystemAnnouncement>()?.GetSummary(),
                     Content = new ContentJSON()
                     {
-                        ReleaseInfoContent = MainClass.contentManager.GetReleaseInfoContent().ToList(),
-                        Published = MainClass.contentManager.GetAllPublished()
+                        ReleaseInfoContent = MainClass.GetService<MongoMiddle>()?.GetReleaseInfoContent().ToList(),
+                        Published = MainClass.GetService<MongoMiddle>()?.GetAllPublished()
                     }
                 };
             }
@@ -153,8 +153,8 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                     Success = true,
                     Data = new AllDataResult()
                     {
-                        ReleaseInfoContent = MainClass.contentManager.GetReleaseInfoContent().ToList(),
-                        Published = MainClass.contentManager.GetAllPublished()
+                        ReleaseInfoContent = MainClass.GetService<MongoMiddle>()?.GetReleaseInfoContent().ToList(),
+                        Published = MainClass.GetService<MongoMiddle>()?.GetAllPublished()
                     }
                 }, MainClass.serializerOptions);
             }
@@ -163,7 +163,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 return Json(new ObjectResponse<ReleaseInfo[]>()
                 {
                     Success = true,
-                    Data = MainClass.contentManager.GetReleaseInfoContent()
+                    Data = MainClass.GetService<MongoMiddle>()?.GetReleaseInfoContent() ?? Array.Empty<ReleaseInfo>()
                 }, MainClass.serializerOptions);
             }
             else if (type == DataType.PublishDict)
@@ -171,7 +171,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                 return Json(new ObjectResponse<Dictionary<string, PublishedRelease>>()
                 {
                     Success = true,
-                    Data = MainClass.contentManager.GetAllPublished()
+                    Data = MainClass.GetService<MongoMiddle>()?.GetAllPublished() ?? new Dictionary<string, PublishedRelease>()
                 }, MainClass.serializerOptions); ;
             }
             else
@@ -199,28 +199,27 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
             bool success = false;
             if (targetType == typeof(ReleaseInfo[]))
             {
-                MainClass.contentManager.SetReleaseInfoContent(new List<ReleaseInfo>(deserializedDynamic.Data).ToArray());
+                MainClass.GetService<MongoMiddle>()?.SetReleaseInfoContent(new List<ReleaseInfo>(deserializedDynamic.Data).ToArray());
                 success = true;
             }
-            else if (targetType == MainClass.contentManager.Published.GetType())
+            else if (targetType == typeof(Dictionary<string, PublishedRelease>))
             {
                 var des = JsonSerializer.Deserialize<ObjectResponse<Dictionary<string, PublishedRelease>>>(content, MainClass.serializerOptions);
-                MainClass.contentManager?.ForceSetPublishedContent(des.Data.Select(v => v.Value).ToArray());
+                MainClass.GetService<MongoMiddle>()?.ForceSetPublishedContent(des?.Data.Select(v => v.Value).ToArray() ?? Array.Empty<PublishedRelease>());
                 success = true;
             }
             else if (targetType == typeof(AllDataResult))
             {
                 var des = JsonSerializer.Deserialize<ObjectResponse<AllDataResult>>(content, MainClass.serializerOptions);
 
-                var c = des.Data;
-                MainClass.contentManager.SetReleaseInfoContent(new List<ReleaseInfo>(c.ReleaseInfoContent).ToArray());
-                MainClass.contentManager?.ForceSetPublishedContent(c.Published.Select(v => v.Value).ToArray());
+                var c = des?.Data;
+                MainClass.GetService<MongoMiddle>()?.SetReleaseInfoContent(new List<ReleaseInfo>(c?.ReleaseInfoContent ?? new List<ReleaseInfo>()).ToArray());
+                MainClass.GetService<MongoMiddle>()?.ForceSetPublishedContent(c?.Published.Select(v => v.Value).ToArray() ?? Array.Empty<PublishedRelease>());
                 success = true;
             }
 
             if (success)
             {
-                MainClass.contentManager.DatabaseSerialize();
                 return Json(new ObjectResponse<object>()
                 {
                     Success = true,

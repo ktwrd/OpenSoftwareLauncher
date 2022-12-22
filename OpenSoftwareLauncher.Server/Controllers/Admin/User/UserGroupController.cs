@@ -22,7 +22,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
         [ProducesResponseType(404, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult List(string token, string username)
         {
-            var targetAccount = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
+            var targetAccount = MainClass.GetService<MongoAccountManager>()?.GetAccountByUsername(username);
             if (targetAccount == null)
             {
                 Response.StatusCode = StatusCodes.Status404NotFound;
@@ -78,7 +78,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
 
             try
             {            
-                MainClass.contentManager.AccountManager.SetUserGroups(decodedBody.Data);
+                MainClass.GetService<MongoAccountManager>()?.SetUserGroups(decodedBody.Data);
             }
             catch (Exception except)
             {
@@ -86,11 +86,11 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                 return Json(new ObjectResponse<HttpException>()
                 {
                     Success = false,
-                    Data = new HttpException(500, $"Exception when invoking MainClass.contentManager.AccountManager.SetUserGroups", except)
+                    Data = new HttpException(500, $"Exception when invoking MainClass.GetService<MongoAccountManager>()?.SetUserGroups", except)
                 }, MainClass.serializerOptions);
             }
 
-            return Json(new ObjectResponse<object>()
+            return Json(new ObjectResponse<object?>()
             {
                 Success = true,
                 Data = null
@@ -102,7 +102,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
         [ProducesResponseType(404, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult Grant(string token, string username, string group)
         {
-            var account = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
+            var account = MainClass.GetService<MongoAccountManager>()?.GetAccountByUsername(username);
             if (account == null)
             {
                 Response.StatusCode = StatusCodes.Status404NotFound;
@@ -125,7 +125,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
         [ProducesResponseType(404, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult RevokeGroup(string token, string username, string group)
         {
-            var account = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
+            var account = MainClass.GetService<MongoAccountManager>()?.GetAccountByUsername(username);
             if (account == null)
             {
                 Response.StatusCode = StatusCodes.Status404NotFound;

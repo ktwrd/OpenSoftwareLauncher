@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using OSLCommon.Authorization;
 using System.Linq;
 using OSLCommon.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace OpenSoftwareLauncher.Server.Controllers
 {
@@ -110,22 +111,23 @@ namespace OpenSoftwareLauncher.Server.Controllers
                 { "releaseAlreadyExists", true },
                 { "attemptSave", false }
             };
-            bool saveRelease = MainClass.contentManager?.GetPublishedReleaseByHash(parameters.releaseInfo.commitHash) == null;
-            bool saveReleaseInfo = !MainClass.contentManager?.GetReleaseInfoContent().ToList().Contains(parameters.releaseInfo) ?? false;
+            var mongoMiddle = MainClass.GetService<MongoMiddle>();
+            bool saveRelease = mongoMiddle?.GetPublishedReleaseByHash(parameters.releaseInfo.commitHash) == null;
+            bool saveReleaseInfo = !mongoMiddle?.GetReleaseInfoContent().ToList().Contains(parameters.releaseInfo) ?? false;
             if (saveRelease)
             {
-                MainClass.contentManager?.SetPublishedRelease(publishedRelease);
+                mongoMiddle?.SetPublishedRelease(publishedRelease);
                 result["alreadyPublished"] = false;
             }
             if (saveReleaseInfo)
             {
-                var cnt = MainClass.contentManager?.GetReleaseInfoContent().ToList() ?? new List<ReleaseInfo>();
+                var cnt = mongoMiddle?.GetReleaseInfoContent().ToList() ?? new List<ReleaseInfo>();
                 cnt.Add(parameters.releaseInfo);
-                MainClass.contentManager.SetReleaseInfoContent(cnt.ToArray());
+                mongoMiddle?.SetReleaseInfoContent(cnt.ToArray());
                 result["releaseAlreadyExists"] = false;
             }
 
-            MainClass.contentManager?.AuditLogManager.Create(new PublishReleaseEntryData(publishedRelease), null).Wait();
+            MainClass.GetService<AuditLogManager>()?.Create(new PublishReleaseEntryData(publishedRelease), null).Wait();
 
             return Json(result, MainClass.serializerOptions);
         }
@@ -135,7 +137,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [ProducesResponseType(200, Type = typeof(ObjectResponse<Dictionary<string, PublishedRelease>>))]
         public ActionResult All(string token)
         {
-            var account = MainClass.contentManager.AccountManager.GetAccount(token, bumpLastUsed: true);
+            var account = MainClass.GetService<MongoAccountManager>()?.GetAccount(token, bumpLastUsed: true);
             if (!MainClass.ValidTokens.ContainsKey(token))
             {
                 if (account == null)
@@ -166,9 +168,10 @@ namespace OpenSoftwareLauncher.Server.Controllers
                     }, MainClass.serializerOptions);
                 }
             }
+            var mongoMiddle = MainClass.GetService<MongoMiddle>();
             return Json(new ObjectResponse<Dictionary<string, PublishedRelease>>()
             {
-                Data = MainClass.contentManager?.GetAllPublished() ?? new Dictionary<string, PublishedRelease>(),
+                Data = mongoMiddle?.GetAllPublished() ?? new Dictionary<string, PublishedRelease>(),
                 Success = true
             }, MainClass.serializerOptions);
         }
@@ -180,7 +183,8 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [OSLAuthPermission(AccountPermission.ADMINISTRATOR)]
         public ActionResult ByCommitHashFromParameter(string hash, string? token)
         {
-            PublishedRelease? commit = MainClass.contentManager?.GetPublishedReleaseByHash(hash);
+            var mongoMiddle = MainClass.GetService<MongoMiddle>();
+            PublishedRelease? commit = mongoMiddle?.GetPublishedReleaseByHash(hash);
             return Json(new ObjectResponse<PublishedRelease?>()
             {
                 Data = commit,

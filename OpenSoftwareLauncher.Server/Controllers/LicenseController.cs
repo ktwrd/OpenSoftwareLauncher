@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OSLCommon;
+using OSLCommon.Authorization;
 using OSLCommon.Licensing;
 using OSLCommon.Logging;
 
@@ -16,8 +17,8 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [OSLAuthRequired]
         public ActionResult Redeem(string token, string key)
         {
-            var account = MainClass.contentManager.AccountManager.GetAccount(token);
-            var data = MainClass.contentManager.AccountLicenseManager.GetLicenseKey(key).Result;
+            var account = MainClass.GetService<MongoAccountManager>()?.GetAccount(token);
+            var data = MainClass.GetService<MongoAccountLicenseManager>()?.GetLicenseKey(key).Result;
             if (data == null)
             {
                 Response.StatusCode = 400;
@@ -28,17 +29,17 @@ namespace OpenSoftwareLauncher.Server.Controllers
                 }, MainClass.serializerOptions);
             }
 
-            var responseCode = MainClass.contentManager.AccountLicenseManager.GrantLicenseKey(account.Username, key).Result;
+            var responseCode = MainClass.GetService<MongoAccountLicenseManager>()?.GrantLicenseKey(account?.Username, key).Result;
             var response = new GrantLicenseKeyResponse
             {
-                Code = responseCode,
+                Code = responseCode ?? 0,
                 Products = data.ProductsApplied,
                 Permissions = data.PermissionsApplied
             };
 
             if (responseCode == GrantLicenseKeyResponseCode.Granted)
             {
-                MainClass.contentManager.AuditLogManager.Create(new LicenseRedeemEntryData(data), account).Wait();
+                MainClass.GetService<AuditLogManager>()?.Create(new LicenseRedeemEntryData(data), account).Wait();
             }
 
             return Json(new ObjectResponse<GrantLicenseKeyResponse>

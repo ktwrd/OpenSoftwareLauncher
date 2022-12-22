@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Linq;
 using OSLCommon.Logging;
 using JsonDiffPatchDotNet;
+using System;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Admin
 {
@@ -18,7 +19,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(200, Type = typeof(ObjectResponse<SystemAnnouncementEntry[]>))]
         public ActionResult Fetch()
         {
-            var item = MainClass.contentManager.SystemAnnouncement.GetLatest();
+            var item = MainClass.GetService<MongoSystemAnnouncement>()?.GetLatest();
             var list = new List<SystemAnnouncementEntry>();
             if (item != null)
                 list.Add(item);
@@ -30,20 +31,20 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         }
 
         [HttpGet("new")]
-        [ProducesResponseType(200, Type = typeof(ObjectResponse<SystemAnnouncementSummary>))]
+        [ProducesResponseType(200, Type = typeof(ObjectResponse<SystemAnnouncementSummary?>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         [OSLAuthRequired]
         [OSLAuthPermission(AccountPermission.ANNOUNCEMENT_MANAGE)]
         public ActionResult Set(string token, string content, bool? active=true)
         {
-            var account = MainClass.contentManager.AccountManager.GetAccount(token);
-            var announcement = MainClass.contentManager.SystemAnnouncement.Set(content, active ?? true);
-            MainClass.contentManager.AuditLogManager.Create(new AnnouncementCreateEntryData(announcement), account).Wait();
+            var account = MainClass.GetService<MongoAccountManager>()?.GetAccount(token);
+            var announcement = MainClass.GetService<MongoSystemAnnouncement>()?.Set(content, active ?? true);
+            MainClass.GetService<AuditLogManager>()?.Create(new AnnouncementCreateEntryData(announcement), account).Wait();
 
-            return Json(new ObjectResponse<SystemAnnouncementSummary>()
+            return Json(new ObjectResponse<SystemAnnouncementSummary?>()
             {
                 Success = true,
-                Data = MainClass.contentManager.SystemAnnouncement.GetSummary()
+                Data = MainClass.GetService<MongoSystemAnnouncement>()?.GetSummary()
             }, MainClass.serializerOptions);
         }
 
@@ -54,15 +55,16 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [OSLAuthPermission(AccountPermission.ANNOUNCEMENT_MANAGE)]
         public ActionResult UpdateActiveStatus(string token, bool active)
         {
-            var account = MainClass.contentManager.AccountManager.GetAccount(token);
-
-            MainClass.contentManager.SystemAnnouncement.Active = active;
-            MainClass.contentManager.SystemAnnouncement.OnUpdate();
-            MainClass.contentManager.AuditLogManager.Create(new AnnouncementStateToggleEntryData
+            var account = MainClass.GetService<MongoAccountManager>()?.GetAccount(token);
+            var announce = MainClass.GetService<MongoSystemAnnouncement>();
+            if (announce != null)
+                announce.Active = active;
+            announce?.OnUpdate();
+            MainClass.GetService<AuditLogManager>()?.Create(new AnnouncementStateToggleEntryData
             {
                 State = active
             }, account).Wait();
-            return Json(new ObjectResponse<object>()
+            return Json(new ObjectResponse<object?>()
             {
                 Success = true,
                 Data = null
@@ -79,33 +81,33 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
             return Json(new ObjectResponse<SystemAnnouncementEntry[]>()
             {
                 Success = true,
-                Data = MainClass.contentManager.SystemAnnouncement.Entries.ToArray()
+                Data = MainClass.GetService<MongoSystemAnnouncement>()?.Entries.ToArray() ?? Array.Empty<SystemAnnouncementEntry>()
             }, MainClass.serializerOptions);
         }
 
         [HttpGet("summary")]
-        [ProducesResponseType(200, Type = typeof(ObjectResponse<SystemAnnouncementSummary>))]
+        [ProducesResponseType(200, Type = typeof(ObjectResponse<SystemAnnouncementSummary?>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         [OSLAuthRequired]
         [OSLAuthPermission(AccountPermission.ANNOUNCEMENT_MANAGE)]
         public ActionResult GetSummary(string token)
         {
-            return Json(new ObjectResponse<SystemAnnouncementSummary>()
+            return Json(new ObjectResponse<SystemAnnouncementSummary?>()
             {
                 Success = true,
-                Data = MainClass.contentManager.SystemAnnouncement.GetSummary()
+                Data = MainClass.GetService<MongoSystemAnnouncement>()?.GetSummary()
             }, MainClass.serializerOptions);
         }
 
     
         [HttpGet("setData")]
-        [ProducesResponseType(200, Type = typeof(ObjectResponse<SystemAnnouncementSummary>))]
+        [ProducesResponseType(200, Type = typeof(ObjectResponse<SystemAnnouncementSummary?>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         [OSLAuthRequired]
         [OSLAuthPermission(AccountPermission.ANNOUNCEMENT_MANAGE)]
         public ActionResult SetData(string token, string content)
         {
-            var account = MainClass.contentManager.AccountManager.GetAccount(token);
+            var account = MainClass.GetService<MongoAccountManager>()?.GetAccount(token);
 
             var attemptedDeserialized = JsonSerializer.Deserialize<SystemAnnouncementSummary>(content, MainClass.serializerOptions);
             if (attemptedDeserialized == null) {
@@ -116,18 +118,19 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                     Data = "Attempted to deserialized, but it failed (returned null)"
                 }, MainClass.serializerOptions);
             }
+            var announce = MainClass.GetService<MongoSystemAnnouncement>();
 
             var idList = attemptedDeserialized.Entries.ToList().Select(v => v.ID).ToList();
-            var prevIdList = MainClass.contentManager.SystemAnnouncement.GetAll().Select(v => v.ID).ToArray();
+            var prevIdList = announce?.GetAll().Select(v => v.ID).ToArray() ?? Array.Empty<string>();
             foreach (var item in attemptedDeserialized.Entries)
             {
-                if (!prevIdList.Contains(item.ID))
+                if (!prevIdList?.Contains(item.ID) ?? false)
                 {
-                    MainClass.contentManager.AuditLogManager.Create(new AnnouncementCreateEntryData(item), account).Wait();
+                    MainClass.GetService<AuditLogManager>()?.Create(new AnnouncementCreateEntryData(item), account).Wait();
                 }
                 else
                 {
-                    var current = MainClass.contentManager.SystemAnnouncement.GetAll().Where(v => v.ID == item.ID).FirstOrDefault();
+                    var current = announce?.GetAll().Where(v => v.ID == item.ID).FirstOrDefault();
                     if (current != null)
                     {
                         var diff = (new JsonDiffPatch()).Diff(
@@ -136,10 +139,10 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                         if (diff != null)
                         {
                             diff = diff.ReplaceLineEndings("");
-                            var count = JsonSerializer.Deserialize<Dictionary<string, dynamic[]>>(diff, MainClass.serializerOptions);
+                            var count = JsonSerializer.Deserialize<Dictionary<string, dynamic[]>>(diff, MainClass.serializerOptions) ?? new Dictionary<string, dynamic[]>();
                             if (count.Count > 0)
                             {
-                                MainClass.contentManager.AuditLogManager.Create(new AnnouncementModifyEntryData(current, item), account).Wait();
+                                MainClass.GetService<AuditLogManager>()?.Create(new AnnouncementModifyEntryData(current, item), account).Wait();
                             }
                         }
                     }
@@ -147,22 +150,23 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
             }
             foreach (var item in attemptedDeserialized.Entries)
             {
-                MainClass.contentManager.SystemAnnouncement.Set(item.ID, item);
+                announce?.Set(item.ID, item);
             }
-            foreach (var item in MainClass.contentManager.SystemAnnouncement.GetAll().Where(v => !idList.Contains(v.ID)))
+            foreach (var item in announce?.GetAll().Where(v => !idList.Contains(v.ID)).ToArray() ?? Array.Empty<SystemAnnouncementEntry>())
             {
-                MainClass.contentManager.SystemAnnouncement.RemoveId(item.ID);
-                MainClass.contentManager.AuditLogManager.Create(new AnnouncementDeleteEntryData(item), account).Wait();
+                announce?.RemoveId(item.ID);
+                MainClass.GetService<AuditLogManager>()?.Create(new AnnouncementDeleteEntryData(item), account).Wait();
             }
 
-            if (attemptedDeserialized.Active != MainClass.contentManager.SystemAnnouncement.Active)
+            if (attemptedDeserialized.Active != announce?.Active)
             {
-                MainClass.contentManager.AuditLogManager.Create(new AnnouncementStateToggleEntryData
+                MainClass.GetService<AuditLogManager>()?.Create(new AnnouncementStateToggleEntryData
                 {
                     State = attemptedDeserialized.Active
                 }, account).Wait();
-                MainClass.contentManager.SystemAnnouncement.Active = attemptedDeserialized.Active;
-                MainClass.contentManager.SystemAnnouncement.OnUpdate();
+                if (announce != null)
+                    announce.Active = attemptedDeserialized.Active;
+                announce?.OnUpdate();
             }
 
             return Json(new ObjectResponse<SystemAnnouncementSummary>()
@@ -173,26 +177,26 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         }
 
         [HttpGet("remove")]
-        [ProducesResponseType(200, Type = typeof(ObjectResponse<SystemAnnouncementSummary>))]
+        [ProducesResponseType(200, Type = typeof(ObjectResponse<SystemAnnouncementSummary?>))]
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         [OSLAuthRequired]
         [OSLAuthPermission(AccountPermission.ANNOUNCEMENT_MANAGE)]
         public ActionResult RemoveAnnouncement(string token, string id)
         {
-            var account = MainClass.contentManager.AccountManager.GetAccount(token);
+            var account = MainClass.GetService<MongoAccountManager>()?.GetAccount(token);
 
-            bool exists = MainClass.contentManager.SystemAnnouncement.GetAll().Where(v => v.ID == id).Count() > 0;
+            bool exists = MainClass.GetService<MongoSystemAnnouncement>()?.GetAll().Where(v => v.ID == id).Count() > 0;
             if (exists)
             {
-                var item = MainClass.contentManager.SystemAnnouncement.GetAll().Where(v => v.ID == id).FirstOrDefault();
-                MainClass.contentManager.AuditLogManager.Create(new AnnouncementDeleteEntryData(item), account).Wait();
-                MainClass.contentManager.SystemAnnouncement.RemoveId(id);
+                var item = MainClass.GetService<MongoSystemAnnouncement>()?.GetAll().Where(v => v.ID == id).FirstOrDefault();
+                MainClass.GetService<AuditLogManager>()?.Create(new AnnouncementDeleteEntryData(item), account).Wait();
+                MainClass.GetService<MongoSystemAnnouncement>()?.RemoveId(id);
             }
 
-            return Json(new ObjectResponse<SystemAnnouncementSummary>()
+            return Json(new ObjectResponse<SystemAnnouncementSummary?>()
             {
                 Success = true,
-                Data = MainClass.contentManager.SystemAnnouncement.GetSummary()
+                Data = MainClass.GetService<MongoSystemAnnouncement>()?.GetSummary()
             }, MainClass.serializerOptions);
         }
     }

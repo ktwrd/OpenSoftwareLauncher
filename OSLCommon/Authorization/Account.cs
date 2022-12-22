@@ -39,6 +39,7 @@ namespace OSLCommon.Authorization
             disableReasons = sourceAccount.disableReasons;
             licenses = sourceAccount.licenses;
             isServiceAccount = sourceAccount.IsServiceAccount;
+
         }
 
         #region Fields
@@ -451,6 +452,8 @@ namespace OSLCommon.Authorization
         #endregion
 
         #region Permission Management
+        public string[] PermissionGroupIds { get; set; } = Array.Empty<string>();
+        
         /// <summary>
         /// Grant to the account a permission if they don't have it already.
         /// </summary>
@@ -469,12 +472,62 @@ namespace OSLCommon.Authorization
         }
 
         /// <summary>
+        /// Grant to the account a permission group.
+        /// </summary>
+        /// <param name="group">PermissionGroup to grant</param>
+        /// <returns>If the user has the permission group already</returns>
+        public bool GrantPermissionGroup(PermissionGroup group)
+        {
+            int previousLength = PermissionGroupIds.Length;
+            PermissionGroupIds = PermissionGroupIds
+                .Append(group.UID)
+                .Distinct()
+                .ToArray();
+            PendingWrite = true;
+            return previousLength == PermissionGroupIds.Length;
+        }
+
+        /// <summary>
+        /// Remove to the account a permission group.
+        /// </summary>
+        /// <param name="group">PermissionGroup to remove</param>
+        /// <returns>If the user didn't have the permission group</returns>
+        public bool RemovePermissionGroup(string uid)
+        {
+            int previousLength = PermissionGroupIds.Length;
+            PermissionGroupIds = PermissionGroupIds
+                .Where(v => v != uid)
+                .Distinct()
+                .ToArray();
+            PendingWrite = true;
+            return previousLength == PermissionGroupIds.Length;
+        }
+
+        public bool HasPermissionGroup(string uid)
+        {
+            foreach (var item in PermissionGroupIds)
+                if (item == uid)
+                    return true;
+            return false;
+        }
+        public bool HasPermissionGroup(PermissionGroup group)
+            => HasPermissionGroup(group.UID);
+
+        /// <summary>
         /// Check if the account has a certian permission
         /// </summary>
         /// <param name="target">Permission to look for.</param>
         /// <returns><see cref="true"/> if the account has the permission, <see cref="false"/> if they do not have it.</returns>
         public bool HasPermission(AccountPermission target)
         {
+            foreach (var groupUid in PermissionGroupIds)
+            {
+                var res = accountManager.GetPermissionGroups(groupUid);
+                foreach (var item in res)
+                    foreach (var perm in item.Permissions)
+                        if (perm == target)
+                            return true;
+            }
             foreach (var item in Permissions.ToArray())
                 if (item == target)
                     return true;

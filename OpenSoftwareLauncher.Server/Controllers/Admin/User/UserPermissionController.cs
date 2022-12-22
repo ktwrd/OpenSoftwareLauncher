@@ -18,7 +18,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
         [ProducesResponseType(404, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult List(string token, string username)
         {
-            var account = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
+            OSLCommon.Authorization.Account? account = MainClass.GetService<MongoAccountManager>()?.GetAccountByUsername(username);
             if (account == null)
             {
                 Response.StatusCode = StatusCodes.Status404NotFound;
@@ -42,9 +42,9 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
         [ProducesResponseType(404, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult Grant(string token, string username, AccountPermission permission)
         {
-            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token);
+            var tokenAccount = MainClass.GetService<MongoAccountManager>()?.GetAccount(token);
 
-            var account = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
+            var account = MainClass.GetService<MongoAccountManager>()?.GetAccountByUsername(username);
             if (account == null)
             {
                 Response.StatusCode = StatusCodes.Status404NotFound;
@@ -55,7 +55,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                 }, MainClass.serializerOptions);
             }
 
-            MainClass.contentManager.AuditLogManager.Create(new AccountPermissionGrantEntryData(account, permission, false), tokenAccount).Wait();
+            MainClass.GetService<AuditLogManager>()?.Create(new AccountPermissionGrantEntryData(account, permission, false), tokenAccount).Wait();
 
             return Json(new ObjectResponse<bool>()
             {
@@ -70,9 +70,9 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
         [ProducesResponseType(404, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult Revoke(string token, string username, AccountPermission permission)
         {
-            var tokenAccount = MainClass.contentManager.AccountManager.GetAccount(token);
+            var tokenAccount = MainClass.GetService<MongoAccountManager>()?.GetAccount(token);
 
-            var account = MainClass.contentManager.AccountManager.GetAccountByUsername(username);
+            var account = MainClass.GetService<MongoAccountManager>()?.GetAccountByUsername(username);
             if (account == null)
             {
                 Response.StatusCode = StatusCodes.Status404NotFound;
@@ -83,7 +83,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin.User
                 }, MainClass.serializerOptions);
             }
 
-            MainClass.contentManager.AuditLogManager.Create(new AccountPermissionRevokeEntryData(account, permission), tokenAccount).Wait();
+            MainClass.GetService<AuditLogManager>()?.Create(new AccountPermissionRevokeEntryData(account, permission), tokenAccount).Wait();
 
             return Json(new ObjectResponse<bool>()
             {
