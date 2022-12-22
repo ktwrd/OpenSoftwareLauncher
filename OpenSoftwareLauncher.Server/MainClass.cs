@@ -152,7 +152,6 @@ namespace OpenSoftwareLauncher.Server
             serializerOptions.Converters.Add(new kate.shared.DateTimeConverterUsingDateTimeParse());
             contentManager = new ContentManager();
             CreateSuperuserAccount();
-            LoadTokens();
             Builder = WebApplication.CreateBuilder(args);
             Builder.Services.AddControllers();
 
