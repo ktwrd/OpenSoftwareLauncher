@@ -210,7 +210,7 @@ namespace OSLCommon.Authorization
         /// </summary>
         /// <param name="account">Target account</param>
         /// <returns></returns>
-        public virtual GrantTokenResponse CreateToken(Account account, string userAgent = "", string host = "")
+        public virtual GrantTokenResponse CreateToken(Account account, string userAgent = "", string host = "", string tokenGranter="<none>")
         {
             bool accountFound = false;
             var targetAccount = GetAccountByUsername(account.Username);
@@ -229,6 +229,7 @@ namespace OSLCommon.Authorization
                             OnPendingWrite();
                         token.UserAgent = userAgent;
                         token.Host = host;
+                        token.TokenGranter = tokenGranter;
                         if (account.Groups == null)
                             account.Groups = Array.Empty<string>();
                         if (account.Permissions == null)
@@ -253,7 +254,7 @@ namespace OSLCommon.Authorization
             var success = granter.Grant(username, password);
             if (success)
             {
-                return CreateToken(account, userAgent: userAgent, host: host);
+                return CreateToken(account, userAgent: userAgent, host: host, tokenGranter: granter.Name);
             }
             return null;
         }

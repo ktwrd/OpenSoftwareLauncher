@@ -22,6 +22,7 @@ namespace OSLCommon.Authorization
             Host = "0.0.0.0";
             CreatedTimestamp = 0;
             LastUsed = 0;
+            TokenGranter = "<none>";
         }
         public AccountToken() : this(parentAccount: null)
         {
@@ -31,6 +32,7 @@ namespace OSLCommon.Authorization
             UserAgent = "unknown";
             Host = "0.0.0.0";
             LastUsed = 0;
+            TokenGranter = "<none>";
         }
 
         public AccountToken(AccountTokenDetailsResponse res)
@@ -41,6 +43,7 @@ namespace OSLCommon.Authorization
             Host = res.Host;
             CreatedTimestamp = res.CreatedTimestamp;
             LastUsed = res.LastUsed;
+            TokenGranter = res.Granter;
         }
 
         public bool Allow { get; set; } = true;
@@ -69,7 +72,7 @@ namespace OSLCommon.Authorization
         public string Host { get; set; }
         public long CreatedTimestamp { get; set; }
         public long LastUsed { get; set; }
-
+        public string TokenGranter { get; set; }
         public static AccountToken FromObject(Account parentAccount, object source)
         {
             var jsonOptions = new JsonSerializerOptions()
@@ -92,6 +95,8 @@ namespace OSLCommon.Authorization
                 instance.Host = dict["Host"].ToString();
             if (dict.ContainsKey("UserAgent"))
                 instance.UserAgent = dict["UserAgent"].ToString();
+            if (dict.ContainsKey("TokenGranter"))
+                instance.TokenGranter = dict["TokenGranter"].ToString();
             return instance;
         }
     }

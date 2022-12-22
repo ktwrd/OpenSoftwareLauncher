@@ -10,6 +10,7 @@ namespace OSLCommon.AuthProviders
         {
             public string message { get; set; }
         }
+        public string Name { get; set; }
         public HttpClient httpClient { get; private set; }
         public string Endpoint { get; private set; }
         private HttpClientHandler httpClientHandler;
@@ -47,6 +48,7 @@ namespace OSLCommon.AuthProviders
             httpClient = new HttpClient(httpClientHandler);
 
             Endpoint = endpoint;
+            Name = "AuthProvider:URL";
         }
     }
 }

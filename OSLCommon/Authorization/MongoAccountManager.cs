@@ -55,7 +55,7 @@ namespace OSLCommon.Authorization
             IncludeFields = true
         };
 
-        public override GrantTokenResponse CreateToken(Account account, string userAgent = "", string host = "")
+        public override GrantTokenResponse CreateToken(Account account, string userAgent = "", string host = "", string tokenGranter = "<none>")
         {
             var b = base.CreateToken(account, userAgent, host);
             return b;
