@@ -127,6 +127,11 @@ namespace OpenSoftwareLauncher.Server
                     {"ReleaseInfo", false },
                     {"Published", false }
                 }
+            },
+            {"Announcement", new Dictionary<string, object>()
+                {
+                    {"Enable", false }
+                }
             }
         };
 
