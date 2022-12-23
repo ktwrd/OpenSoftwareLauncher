@@ -2,7 +2,7 @@
 
 namespace OSLCommon
 {
-    public class HttpException
+    public class HttpException : Exception
     {
         public HttpException()
             : this(0, "", null)

@@ -134,6 +134,12 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="FormHelper.cs" />
+    <Compile Include="HttpExceptionModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HttpExceptionModal.Designer.cs">
+      <DependentUpon>HttpExceptionModal.cs</DependentUpon>
+    </Compile>
     <Compile Include="LicenseManagement\LicenseKeyCreateDialog.cs">
       <SubType>Form</SubType>
     </Compile>
