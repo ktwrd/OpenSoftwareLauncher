@@ -273,6 +273,9 @@
     <EmbeddedResource Include="CustomComponents\LabelTextBox.resx">
       <DependentUpon>LabelTextBox.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="HttpExceptionModal.resx">
+      <DependentUpon>HttpExceptionModal.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LicenseManagement\LicenseKeyCreateDialog.resx">
       <DependentUpon>LicenseKeyCreateDialog.cs</DependentUpon>
     </EmbeddedResource>
