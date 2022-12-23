@@ -163,7 +163,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 return;
 
             Enabled = false;
-            var response = Program.Client.Auth.ValidateToken(save: true);
+            var response = Program.Client.Auth.ValidateToken(save: true, showMessageBox: true);
             if (response != null)
             {
                 Program.Client.FetchAccountDetails();
