@@ -16,7 +16,8 @@ namespace OpenSoftwareLauncher.Server.Controllers
     public class TokenController : Controller
     {
         [HttpGet("grant")]
-        [Produces(typeof(ObjectResponse<GrantTokenResponse?>))]
+        [ProducesResponseType(200, Type = typeof(ObjectResponse<GrantTokenResponse?>))]
+        [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult Grant(string username, string password)
         {
             var possibleAddress = Request.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "";
@@ -28,11 +29,23 @@ namespace OpenSoftwareLauncher.Server.Controllers
             var accountUsername = MainClass.GetService<MongoAccountManager>()?.GetAccountByUsername(username);
             if (accountUsername != null && accountUsername.IsServiceAccount)
             {
-                return Json(new ObjectResponse<GrantTokenResponse>()
+                if (accountUsername.IsServiceAccount)
                 {
-                    Success = false,
-                    Data = new GrantTokenResponse(ServerStringResponse.AccountTokenGrantFailed, false)
-                }, MainClass.serializerOptions);
+                    return Json(new ObjectResponse<GrantTokenResponse>()
+                    {
+                        Success = false,
+                        Data = new GrantTokenResponse(ServerStringResponse.AccountTokenGrantFailed, false)
+                    }, MainClass.serializerOptions);
+                }
+                else if (accountUsername.Enabled == false)
+                {
+                    Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    return Json(new ObjectResponse<HttpException>()
+                    {
+                        Success = false,
+                        Data = new HttpException(StatusCodes.Status401Unauthorized, ServerStringResponse.AccountDisabled + "\n====Reason====\n" + accountUsername.DisableReasons.OrderBy(v => v.Timestamp).First()?.Message)
+                    }, MainClass.serializerOptions);
+                }
             }
 
             var grantTokenResponse = MainClass.GetService<MongoAccountManager>()?.GrantTokenAndOrAccount(
