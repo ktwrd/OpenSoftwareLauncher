@@ -173,6 +173,7 @@
             this.textBoxContent.Multiline = true;
             this.textBoxContent.Name = "textBoxContent";
             this.textBoxContent.ReadOnly = true;
+            this.textBoxContent.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBoxContent.Size = new System.Drawing.Size(507, 252);
             this.textBoxContent.TabIndex = 3;
             // 
@@ -230,6 +231,7 @@
             this.textBoxStack.Multiline = true;
             this.textBoxStack.Name = "textBoxStack";
             this.textBoxStack.ReadOnly = true;
+            this.textBoxStack.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBoxStack.Size = new System.Drawing.Size(177, 167);
             this.textBoxStack.TabIndex = 0;
             // 
