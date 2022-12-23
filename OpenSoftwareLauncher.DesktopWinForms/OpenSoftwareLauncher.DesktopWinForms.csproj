@@ -158,6 +158,7 @@
     <Compile Include="LogForm.Designer.cs">
       <DependentUpon>LogForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="LoginMethod.cs" />
     <Compile Include="PublishedReleaseFileEditorForm.cs">
       <SubType>Form</SubType>
     </Compile>
