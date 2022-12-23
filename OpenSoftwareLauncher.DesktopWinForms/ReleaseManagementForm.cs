@@ -126,7 +126,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 case 401:
                     var failDeser = JsonSerializer.Deserialize<ObjectResponse<HttpException>>(stringContent, Program.serializerOptions);
                     Trace.WriteLine($"[ReleaseManagementForm.Pull] Failed. Code 401 at {url}\n================\n{failDeser.Data.Message}\n{failDeser.Data.Error}\n================");
-                    MessageBox.Show($"Code: {(int)response.StatusCode}\n{LocaleManager.Get(failDeser.Data.Message)}\n{failDeser.Data.Error}", "Pull Failure");
+                    new HttpExceptionModal(failDeser.Data, (int)response.StatusCode, stringContent, url).Show();
                     return false;
                     break;
                 default:
@@ -196,7 +196,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 case 401:
                     var failDeser = JsonSerializer.Deserialize<ObjectResponse<HttpException>>(stringContent, Program.serializerOptions);
                     Trace.WriteLine($"[ReleaseManagementForm.RemoveRelease] Failed. Code 401 at {url}\n================\n{failDeser.Data.Message}\n{failDeser.Data.Error}\n================");
-                    MessageBox.Show($"Code: {(int)response.StatusCode}\n{LocaleManager.Get(failDeser.Data.Message)}\n{failDeser.Data.Error}", "RemoveRelease Failure");
+                    new HttpExceptionModal(failDeser.Data, (int)response.StatusCode, stringContent, url).Show();
                     return false;
                     break;
                 default:
@@ -223,7 +223,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 case 401:
                     var failDeser = JsonSerializer.Deserialize<ObjectResponse<HttpException>>(stringContent, Program.serializerOptions);
                     Trace.WriteLine($"[ReleaseManagementForm.RemoveReleaseBySignature] Failed. Code 401 at {url}\n================\n{failDeser.Data.Message}\n{failDeser.Data.Error}\n================");
-                    MessageBox.Show($"Code: {(int)response.StatusCode}\n{LocaleManager.Get(failDeser.Data.Message)}\n{failDeser.Data.Error}", "RemoveReleaseBySignature Failure");
+                    new HttpExceptionModal(failDeser.Data, (int)response.StatusCode, stringContent, url).Show();
                     break;
                 default:
                     Trace.WriteLine($"[ReleaseManagementForm.RemoveReleaseBySignature] Failed. Code {(int)response.StatusCode} at {url}\n================\n{stringContent}\n================");

@@ -1,4 +1,5 @@
-﻿using OSLCommon.Authorization;
+﻿using OSLCommon;
+using OSLCommon.Authorization;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -151,10 +152,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             {
                 taskList.Add(new Task(delegate
                 {
-                    var result = Program.Client.AccountParson(account.Username).Result;
-                    if (result != null)
-                        MessageBox.Show(LocaleManager.Get(result.Message, @"Failed to ban user"));
-                    else
+                    HttpException result = Program.Client.AccountPardon(account.Username).Result;
+                    if (result == null)
                         count++;
                 }));
             }
@@ -229,9 +228,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 taskList.Add(new Task(delegate
                 {
                     var result = Program.Client.AccountDelete(account.Username).Result;
-                    if (result != null)
-                        MessageBox.Show(LocaleManager.Get(result.Message, @"Failed to delete user"));
-                    else
+                    if (result == null)
                         count++;
                 }));
             }

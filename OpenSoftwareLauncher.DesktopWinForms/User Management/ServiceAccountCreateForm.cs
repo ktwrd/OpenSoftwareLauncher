@@ -8,6 +8,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -72,12 +73,12 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             if ((int)request.StatusCode == 400)
             {
                 var exceptionDeser = JsonSerializer.Deserialize<ObjectResponse<HttpException>>(stringContent, Program.serializerOptions);
-                Program.MessageBoxShow(exceptionDeser.Data.Message);
+                new HttpExceptionModal(exceptionDeser.Data, (int)request.StatusCode, stringContent, url).Show();
             }
             else if ((int)request.StatusCode == 401)
             {
                 var exceptionDeser = JsonSerializer.Deserialize<ObjectResponse<HttpException>>(stringContent, Program.serializerOptions);
-                Program.MessageBoxShow(exceptionDeser.Data.Message);
+                new HttpExceptionModal(exceptionDeser.Data, (int)request.StatusCode, stringContent, url).Show();
                 Close();
             }
             else if ((int)request.StatusCode == 200)

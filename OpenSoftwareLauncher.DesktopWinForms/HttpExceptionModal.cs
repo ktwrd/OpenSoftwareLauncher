@@ -65,6 +65,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         private void HttpExceptionModal_Shown(object sender, EventArgs e)
         {
             Locale();
+            Focus();
         }
     }
 }

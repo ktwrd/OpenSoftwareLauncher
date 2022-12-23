@@ -37,9 +37,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             Enabled = false;
             var response = Program.Client.AccountBan(Account.Username, textBoxReason.Text).Result;
             if (response != null)
-            {
-                MessageBox.Show(LocaleManager.Get(response.Message, @"Failed to ban user"));
-            }
+                return;
             if (Program.ClientContext.ParentForm != null && Program.ClientContext.ParentForm.UserManagementForm != null)
             {
                 Program.ClientContext.ParentForm.UserManagementForm.ReloadList(false);

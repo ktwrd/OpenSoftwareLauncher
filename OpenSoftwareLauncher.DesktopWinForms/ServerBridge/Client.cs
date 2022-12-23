@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Policy;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -95,7 +96,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
                 case 401:
                     var exceptionDeserialized = JsonSerializer.Deserialize<ObjectResponse<HttpException>>(stringContent, Program.serializerOptions);
                     Trace.WriteLine($"[Client->CreateLicenseKeys] Failed to create license keys\n--------\n{stringContent}\n--------\n");
-                    MessageBox.Show(LocaleManager.Get(exceptionDeserialized.Data.Message) + "\n\n" + exceptionDeserialized.Data.Exception, "Failed to create license keys");
+                    new HttpExceptionModal(exceptionDeserialized.Data, (int)response.StatusCode, stringContent, url).Show();
                     return new CreateLicenseKeyResponse
                     {
                         Keys = Array.Empty<LicenseKeyMetadata>(),
@@ -175,6 +176,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     var deser = JsonSerializer.Deserialize<ObjectResponse<HttpException>>(stringContent, Program.serializerOptions);
+                    new HttpExceptionModal(deser.Data, (int)response.StatusCode, stringContent, url).Show();
                     return deser.Data;
                 }
             }
@@ -203,6 +205,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     var deser = JsonSerializer.Deserialize<ObjectResponse<HttpException>>(stringContent, Program.serializerOptions);
+                    new HttpExceptionModal(deser.Data, (int)response.StatusCode, stringContent, url).Show();
                     return deser.Data;
                 }
             }
@@ -233,12 +236,13 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     var deser = JsonSerializer.Deserialize<ObjectResponse<HttpException>>(stringContent, Program.serializerOptions);
+                    new HttpExceptionModal(deser.Data, (int)response.StatusCode, stringContent, url).Show();
                     return deser.Data;
                 }
             }
             return null;
         }
-        public async Task<HttpException> AccountParson(string username)
+        public async Task<HttpException> AccountPardon(string username)
         {
             var url = Endpoint.UserPardon(Token, username);
             var response = await HttpClient.GetAsync(url);
@@ -256,6 +260,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
                 if (response.StatusCode == System.Net.HttpStatusCode.NotFound || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     var deser = JsonSerializer.Deserialize<ObjectResponse<HttpException>>(stringContent, Program.serializerOptions);
+                    new HttpExceptionModal(deser.Data, (int)response.StatusCode, stringContent, url).Show();
                     return deser.Data;
                 }
             }
@@ -265,7 +270,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
         {
             var url = Endpoint.UserDelete(Token, username);
             var response = await HttpClient.GetAsync(url);
-            var stringContent = await response.Content.ReadAsStreamAsync();
+            var stringContent = await response.Content.ReadAsStringAsync();
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
@@ -276,6 +281,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
             else if (response.StatusCode == System.Net.HttpStatusCode.NotFound || response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 var deser = JsonSerializer.Deserialize<ObjectResponse<HttpException>>(stringContent, Program.serializerOptions);
+                new HttpExceptionModal(deser.Data, (int)response.StatusCode, stringContent, url).Show();
                 return deser.Data;
             }
             return null;
@@ -320,7 +326,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
             {
                 var exceptionDeserialized = JsonSerializer.Deserialize<ObjectResponse<HttpException>>(stringContent, Program.serializerOptions);
                 Trace.WriteLine($"[AuthClient->FetchAccountDetails] Recieved HttpException. {exceptionDeserialized.Data.Message}");
-                Program.MessageBoxShow(LocaleManager.Get(exceptionDeserialized.Data.Message), LocaleManager.Get("ServerResponse_HttpException"));
+                new HttpExceptionModal(exceptionDeserialized.Data, (int)response.StatusCode, stringContent, targetURL).Show();
                 return null;
             }
             else if (response.StatusCode != System.Net.HttpStatusCode.OK)

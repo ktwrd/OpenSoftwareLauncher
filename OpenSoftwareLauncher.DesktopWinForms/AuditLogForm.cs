@@ -190,8 +190,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                     $"    Exception: {exceptionDeserialized.Data.Exception}",
                     $"    Code     : {exceptionDeserialized.Data.Code}"
                 }));
-
-                Program.MessageBoxShow(LocaleManager.Get(exceptionDeserialized.Data.Message) + addon);
+                new HttpExceptionModal(exceptionDeserialized.Data, (int)response.StatusCode, stringContent, url).Show();
                 if (exceptionDeserialized.Data.Message == ServerStringResponse.InvalidPermission)
                 {
                     Close();
