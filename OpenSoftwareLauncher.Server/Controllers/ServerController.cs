@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Reflection;
+using OSLCommon.Features;
 
 namespace OpenSoftwareLauncher.Server.Controllers
 {
@@ -45,7 +46,8 @@ namespace OpenSoftwareLauncher.Server.Controllers
                 Uptime = ServerUptime(),
                 Version = ServerVersion(),
                 AuthProvider = ServerConfig.GetString("Authentication", "Provider"),
-                AuthProviderSignup = ServerConfig.GetString("Authentication", "ProviderSignupURL")
+                AuthProviderSignup = ServerConfig.GetString("Authentication", "ProviderSignupURL"),
+                Features = MainClass.GetService<FeatureManager>()?.GetAll() ?? Array.Empty<Feature>()
             }, MainClass.serializerOptions);
         }
     }

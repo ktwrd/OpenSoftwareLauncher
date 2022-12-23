@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using OSLCommon;
+using OSLCommon.Authorization;
 using System;
 using System.Linq;
 
@@ -15,7 +16,7 @@ namespace OpenSoftwareLauncher.Server
             if (context.HttpContext.Request.Query.ContainsKey("token"))
             {
                 var token = context.HttpContext.Request.Query["token"].ToString();
-                var account = MainClass.contentManager.AccountManager.GetAccount(token);
+                var account = MainClass.GetService<MongoAccountManager>()?.GetAccount(token);
                 if (account != null && account.Enabled)
                 {
                     base.OnActionExecuting(context);

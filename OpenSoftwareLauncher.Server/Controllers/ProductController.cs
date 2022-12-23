@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using OSLCommon.Authorization;
 using OSLCommon.AutoUpdater;
@@ -15,7 +16,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
         [Produces(typeof(string[]))]
         public ActionResult FetchAvailable(string? token="")
         {
-            return Json(MainClass.contentManager.GetAllProductIds(), MainClass.serializerOptions);
+            return Json(MainClass.GetService<MongoMiddle>()?.GetAllProductIds(), MainClass.serializerOptions);
         }
 
         [HttpGet("streams")]
@@ -25,9 +26,9 @@ namespace OpenSoftwareLauncher.Server.Controllers
             var signatureList = new List<string>();
             signatureList = signatureList.Concat(AccountManager.DefaultLicenses).ToList();
 
-            var account = MainClass.contentManager.AccountManager.GetAccount(token ?? "");
+            var account = MainClass.GetService<MongoAccountManager>()?.GetAccount(token ?? "");
 
-            var collection = MainClass.contentManager.GetReleaseCollection();
+            var collection = MainClass.GetService<MongoMiddle>()?.GetReleaseCollection();
 
             IFindFluent<ReleaseInfo, ReleaseInfo>? result;
             if (account != null && account.Enabled)

@@ -1,5 +1,4 @@
-﻿using Grpc.Core;
-using OSLCommon.Licensing;
+﻿using OSLCommon.Licensing;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

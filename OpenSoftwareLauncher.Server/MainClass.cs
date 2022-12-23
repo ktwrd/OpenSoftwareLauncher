@@ -17,7 +17,13 @@ using OSLCommon.AuthProviders;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Runtime.CompilerServices;
-using Google.Cloud.Firestore;
+using MongoDB.Driver;
+using OSLCommon.Logging;
+using OSLCommon.Licensing;
+using OSLCommon.Features;
+using System.Threading.Tasks;
+using OSLCommon.Helpers;
+using OpenSoftwareLauncher.Server.Targets;
 
 namespace OpenSoftwareLauncher.Server
 {
@@ -29,16 +35,17 @@ namespace OpenSoftwareLauncher.Server
             {
 #if DEBUG
                 return true;
-#endif
+#else
                 // This warning is only disabled because DEBUG is set.
 #pragma warning disable CS0162 // Unreachable code detected
                 return ServerConfig.GetBoolean("General", "Debug", false);
 #pragma warning restore CS0162 // Unreachable code detected
+#endif
             }
         }
 
-        public static WebApplicationBuilder Builder;
-        public static WebApplication App;
+        public static WebApplicationBuilder Builder { get; private set; }
+        public static WebApplication App { get; private set; }
         /// <summary>
         /// <para>
         /// Key is the Token
@@ -47,10 +54,10 @@ namespace OpenSoftwareLauncher.Server
         /// Value is the SHA256 of (Username + Password)
         /// </para>
         /// </summary>
-        public static Dictionary<string, string> ValidTokens = new Dictionary<string, string>();
-        public static List<ITokenGranter> TokenGrantList = new List<ITokenGranter>();
+        public static Dictionary<string, string> ValidTokens = new();
+        public static List<ITokenGranter> TokenGrantList = new();
 
-        public static ContentManager contentManager;
+        public static ContentManager? ContentManager { get; private set; }
 
         private static string? dataDirectory = null;
         public static string DataDirectory
@@ -65,18 +72,20 @@ namespace OpenSoftwareLauncher.Server
         public static long StartupTimestamp { get; private set; }
         private static void SetupOptions(params string[] args)
         {
+            Option<string> option = new(
+                            aliases: new string[] { "--dataDirectory", "-d" },
+                            description: "Set the data directory. Default is working directory.");
+            Option<string> dataDirOption = option;
 
-            Option<string> dataDirOption = new Option<string>(
-                aliases: new string[] { "--dataDirectory", "-d" },
-                description: "Set the data directory. Default is working directory.");
-
-            Option<bool>? migrateOption = new Option<bool>(
+            Option<bool>? migrateOption = new(
                 aliases: new string[] { "--databaseMigrate" },
                 description: "Force a database migration, from JSON to MongoDB.");
 
-            RootCommand rootCommand = new RootCommand(
-                description: "Open Software Launcher Backend Server");
-            rootCommand.TreatUnmatchedTokensAsErrors = false;
+            RootCommand rootCommand = new(
+                description: "Open Software Launcher Backend Server")
+            {
+                TreatUnmatchedTokensAsErrors = false
+            };
 
             rootCommand.AddOption(dataDirOption);
             rootCommand.AddOption(migrateOption);
@@ -84,7 +93,7 @@ namespace OpenSoftwareLauncher.Server
             bool forceMigrate = false;
             rootCommand.SetHandler((opt) =>
             {
-                if (opt != null && opt)
+                if (opt)
                 {
                     forceMigrate = true;
                 }
@@ -102,14 +111,14 @@ namespace OpenSoftwareLauncher.Server
                         ServerConfig.Set(parent.Key, child.Key, child.Value);
                     }
                 }
-                Console.WriteLine("[INFO] Enforced Mirgration");
+                Log.WriteLine($" Enforced Mirgration");
             }
         }
         public static void SetDataDirectory(string dataDirectory)
         {
             if (dataDirectory == null) return;
             MainClass.dataDirectory = dataDirectory.Trim('"');
-            Console.WriteLine($"[OSLServer] Set data directory to \"{MainClass.dataDirectory}\"");
+            Log.WriteLine($" Set data directory to \"{MainClass.dataDirectory}\"");
         }
         private static void PrintConfig()
         {
@@ -117,12 +126,14 @@ namespace OpenSoftwareLauncher.Server
             {
                 foreach (var child in parent.Value)
                 {
-                    Console.WriteLine($"[Config] {parent.Key}.{child.Key} = {child.Value}");
+                    Log.WriteLine($" {parent.Key}.{child.Key} = {child.Value}");
                 }
             }
         }
+        private static string[] Arguments = Array.Empty<string>(); 
         public static void Main(params string[] args)
         {
+            Arguments = args;
             SetupOptions(args);
             StartupTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 #if DEBUG
@@ -131,7 +142,7 @@ namespace OpenSoftwareLauncher.Server
             ServerConfig.Get();
             if (ServerConfig.GetString("Connection", "MongoDBServer", "").Length < 1)
             {
-                Console.WriteLine("[ERROR] MongoDB Connection URL is invalid. Please set it in `config.ini`");
+                Log.WriteLine($" MongoDB Connection URL is invalid. Please set it in `config.ini`");
                 Environment.Exit(1);
             }
             ServerConfig.OnWrite += (group, key, value) =>
@@ -143,7 +154,9 @@ namespace OpenSoftwareLauncher.Server
                         break;
                     case "Provider":
                         AccountManager.TokenGranters.Clear();
-                        AccountManager.TokenGranters.Add(new OSLCommon.AuthProviders.URLProvider(ServerConfig.GetString("Authentication", "Provider")));
+                        TokenGrantList.Clear();
+                        TokenGrantList.Add(new URLProvider(ServerConfig.GetString("Authentication", "Provider")));
+                        AccountManager.TokenGranters.Add(new URLProvider(ServerConfig.GetString("Authentication", "Provider")));
                         break;
                 }
             };
@@ -151,76 +164,113 @@ namespace OpenSoftwareLauncher.Server
             AppDomain.CurrentDomain.ProcessExit += BeforeExit;
             serializerOptions.Converters.Add(new kate.shared.DateTimeConverterUsingDateTimeOffsetParse());
             serializerOptions.Converters.Add(new kate.shared.DateTimeConverterUsingDateTimeParse());
-            contentManager = new ContentManager();
-            CreateSuperuserAccount();
-            LoadTokens();
-            Builder = WebApplication.CreateBuilder(args);
-            Builder.Services.AddControllers();
-
-            if (Builder.Environment.IsDevelopment())
-            {
-                Builder.Services.AddSwaggerGen();
-            }
-
-            App = Builder.Build();
-
-            if (App.Environment.IsDevelopment())
-            {
-                App.UseSwagger();
-                App.UseSwaggerUI(options =>
-                {
-                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-                    options.RoutePrefix = "swagger/ui";
-                });
-                Console.WriteLine($"[OpenSoftwareLauncher.Server] In development mode, so swagger is enabled. SwaggerUI can be accessed at 0.0.0.0:5010/swagger/ui");
-            }
-            App.Use((context, next) =>
-            {
-                context.Request.EnableBuffering();
-                var possibleAddress = context.Connection.RemoteIpAddress?.ToString() ?? "";
-                if (context.Request.Headers.ContainsKey("X-Forwarded-For"))
-                    possibleAddress = context.Request.Headers["X-Forwarded-For"];
-                else if (context.Request.Headers.ContainsKey("X-Real-IP"))
-                    possibleAddress = context.Request.Headers["X-Real-IP"];
-                var query = context.Request.Path.ToString();
-                if (!query.Contains("&password"))
-                    query += context.Request.QueryString.ToString();
-               Console.WriteLine($"[OpenSoftwareLauncher.Server] {context.Request.Method} {possibleAddress} \"{query}\" \"{context.Request.Headers.UserAgent}\"");
-                return next();
-            });
-
-            TokenGrantList.Add(new OSLCommon.AuthProviders.URLProvider(ServerConfig.GetString("Authentication", "Provider")));
-            AccountManager.TokenGranters.Add(new OSLCommon.AuthProviders.URLProvider(ServerConfig.GetString("Authentication", "Provider")));
-
-            if (ServerConfig.GetBoolean("Telemetry", "Prometheus"))
-            {
-                App.UseMetricServer();
-                App.UseHttpMetrics();
-            }
-
-            App.UseAuthorization();
-            App.MapControllers();
-            App.Run();
+            ContentManager = new ContentManager();
+            RunLaunchTarget();
+            App?.Run();
         }
-        
-        /// <returns>Token</returns>
+        private static void RunLaunchTarget()
+        {
+            var targets = new Dictionary<string, Task>()
+            {
+                {"InitializeServices", new Task(InitializeServices) },
+                {"CreateSuperuserAccount", new Task(delegate
+                {
+                    CreateSuperuserAccount();
+                }) },
+                {"LoadTokens", new Task(LoadTokens) },
+                {"LegacyImport", new Task(delegate
+                {
+                    LegacyImport.Execute().Wait();
+                }) },
+                {"TokenGranter", new Task(delegate
+                {
+                    TokenGrantList.Add(new URLProvider(ServerConfig.GetString("Authentication", "Provider")));
+                    AccountManager.TokenGranters.Add(new URLProvider(ServerConfig.GetString("Authentication", "Provider")));
+                }) }
+            };
+
+            targets = targets.Concat(FindAttributes()).ToDictionary(v => v.Key, k => k.Value);
+
+            var startAll = OSLHelper.GetMilliseconds();
+            foreach (var pair in targets)
+            {
+                var start = OSLHelper.GetMilliseconds();
+                pair.Value.Start();
+                pair.Value.Wait();
+                Log.Debug($"{pair.Key} {OSLHelper.GetMilliseconds() - start}ms");
+            }
+            Log.Debug($"{OSLHelper.GetMilliseconds() - startAll}ms for {targets.Count} target" + (targets.Count > 1 ? "s" : ""));
+        }
+        internal class Server : IServer
+        {
+            public IServiceProvider Provider => MainClass.Provider;
+            public event ParameterDelegate<WebApplicationBuilder> AspNetCreate_PreBuild;
+            public event ParameterDelegate<WebApplication> AspNetCreate_PreRun;
+        }
+        private static Dictionary<string, Task> FindAttributes()
+        {
+            var dict = new Dictionary<string, Task>();
+            var server = new Server();
+            var targetAssemblyList = new List<Assembly>()
+            {
+                typeof(MainClass).Assembly
+            };
+            foreach (var targetAssembly in targetAssemblyList)
+            {
+                var typeList = OSLHelper.GetTypesWithAttribute<LaunchTargetAttribute>(targetAssembly);
+                foreach (var item in typeList)
+                {
+                    if (!item.IsClass)
+                        continue;
+
+                    if (!item.IsAssignableTo(typeof(BaseTarget)))
+                    {
+                        Log.Error($"{item.FullName} does not extend OpenSoftwareLauncher.Server.BaseTarget");
+                        continue;
+                    }
+                    try
+                    {
+                        var attr = item.GetCustomAttribute<LaunchTargetAttribute>();
+                        var instance = (BaseTarget)Activator.CreateInstance(item);
+                        var prop = item.GetProperty("Server");
+                        prop?.SetValue(instance, server, null);
+                        dict.Add("Attr_" + attr?.Name ?? "<unknown>", new Task(delegate
+                        {
+                            instance?.Register();
+                        }));
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error($"Failed to register {item.AssemblyQualifiedName}");
+                        Log.Error(ex.ToString());
+                        Environment.Exit(10);
+                    }
+                }
+            }
+
+            return dict;
+        }
+
+        public static IServiceProvider? Provider = null;
+        public static T? GetService<T>() where T : class
+        {
+            return Provider?.GetRequiredService<T>() ?? null;
+        }
+        /// <returns>Generated token for Superuser account</returns>
         public static string? CreateSuperuserAccount()
         {
-            Account account = contentManager.AccountManager.GetAccountByUsername(AccountManager.SuperuserUsername);
-            if (account == null)
+            Account? account = GetService<MongoAccountManager>()?.GetAccountByUsername(AccountManager.SuperuserUsername);
+            account ??= GetService<MongoAccountManager>()?.CreateNewAccount(AccountManager.SuperuserUsername);
+
+            if (!account?.HasPermission(AccountPermission.ADMINISTRATOR) ?? false)
             {
-                account = contentManager.AccountManager.CreateNewAccount(AccountManager.SuperuserUsername);
+                account?.GrantPermission(AccountPermission.ADMINISTRATOR);
             }
 
-            if (!account.HasPermission(AccountPermission.ADMINISTRATOR))
+            if (account == null || account?.Tokens.Length < 1)
             {
-                account.GrantPermission(AccountPermission.ADMINISTRATOR);
-            }
-
-            if (account.Tokens.Length < 1)
-            {
-                var tokenResponse = contentManager.AccountManager.CreateToken(account, "internal", "127.0.0.1");
-                if (tokenResponse.Success)
+                var tokenResponse = GetService<MongoAccountManager>()?.CreateToken(account, "internal", "127.0.0.1");
+                if (tokenResponse?.Success ?? false)
                 {
                     Console.WriteLine($"================================================================================");
                     Console.WriteLine($"Created superuser account.");
@@ -234,13 +284,73 @@ namespace OpenSoftwareLauncher.Server
             return null;
         }
 
-        public static void BeforeExit(object sender, EventArgs e)
+        /// <summary>
+        /// Shit to run before we quit.
+        /// </summary>
+        public static void BeforeExit(object? sender, EventArgs e)
         {
-            contentManager.DatabaseSerialize();
-            contentManager.SystemAnnouncement.OnUpdate();
-            contentManager.AccountManager.ForcePendingWrite();
+            ContentManager?.DatabaseSerialize();
+            GetService<MongoSystemAnnouncement>()?.OnUpdate();
+            GetService<MongoAccountManager>()?.ForcePendingWrite();
             ServerConfig.Save();
         }
+
+        private static void InitializeServices()
+        {
+            var services = new ServiceCollection();
+            ConfigureServices(services);
+            Provider = services.BuildServiceProvider();
+
+            var sa = Provider.GetService<MongoSystemAnnouncement>();
+            if (sa != null)
+            {
+                sa.Update += delegate
+                {
+                    ServerConfig.Set("Announcement", "Enable", sa.Active);
+                };
+            }
+        }
+        private static void ConfigureServices(IServiceCollection services)
+        {
+            services.AddSingleton<MongoMiddle>()
+                    .AddSingleton<MongoClient>(MongoCreate());
+            ConfigureServices_Content(services);
+            ConfigureServices_AspNet(services);
+        }
+
+        private static MongoClient MongoCreate()
+        {
+            Log.Debug($"Connecting to Database");
+            MongoClient client = new(ServerConfig.GetString("Connection", "MongoDBServer"));
+            client.StartSession();
+            return client;
+        }
+        private static void ConfigureServices_Content(IServiceCollection services)
+        {
+            services.AddSingleton<AuditLogManager>()
+                    .AddSingleton<MongoAccountManager>()
+                    .AddSingleton<MongoSystemAnnouncement>()
+                    .AddSingleton<MongoAccountLicenseManager>()
+                    .AddSingleton<FeatureManager>();
+        }
+        private static void ConfigureServices_AspNet(IServiceCollection services)
+        {
+            Builder = WebApplication.CreateBuilder(Arguments);
+            Builder.Services.AddControllers()
+                .AddApplicationPart(Assembly.GetAssembly(typeof(MainClass)) ?? Assembly.GetExecutingAssembly());
+            if (Builder.Environment.IsDevelopment())
+                Builder.Services.AddSwaggerGen();
+            AspNetCreate_PreBuild?.Invoke(Builder);
+
+            App = Builder.Build();
+            AspNetCreate_PreRun?.Invoke(App);
+            App.UseAuthorization();
+            App.MapControllers();
+
+            services.AddSingleton(App);
+        }
+        public static ParameterDelegate<WebApplicationBuilder>? AspNetCreate_PreBuild;
+        public static ParameterDelegate<WebApplication>? AspNetCreate_PreRun;
 
         public static void LoadTokens()
         {
@@ -260,7 +370,7 @@ namespace OpenSoftwareLauncher.Server
                 var response = JsonSerializer.Deserialize<List<string>>(content, serializerOptions); ;
                 if (response == null)
                 {
-                    Console.Error.WriteLine($"Failed to parse 'tokens.json' with content of\n{content}");
+                    Log.Error($"Failed to parse 'tokens.json' with content of\n{content}");
                     return;
                 }
                 var dict = new Dictionary<string, string>();
@@ -270,26 +380,11 @@ namespace OpenSoftwareLauncher.Server
             }
         }
 
-        public static JsonSerializerOptions serializerOptions = new JsonSerializerOptions()
+        public static JsonSerializerOptions serializerOptions = new()
         {
             IgnoreReadOnlyFields = false,
             IgnoreReadOnlyProperties = false,
             IncludeFields = true
         };
-
-        public static string[] GetFileList(string directory, string filename)
-        {
-            var allFiles = new List<string>();
-            foreach (var file in Directory.GetFiles(directory))
-            {
-                if (file.EndsWith(filename))
-                    allFiles.Add(file);
-            }
-            foreach (var dir in Directory.GetDirectories(directory))
-            {
-                allFiles = new List<string>(allFiles.Concat(GetFileList(dir, filename)));
-            }
-            return allFiles.ToArray();
-        }
     }
 }

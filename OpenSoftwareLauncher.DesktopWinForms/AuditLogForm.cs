@@ -20,6 +20,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         public AuditLogForm()
         {
             InitializeComponent();
+            TimestampMin = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + UserConfig.AuditLog_DefaultTimeRangeMinOffset;
         }
 
         public AuditLogEntry[] EntryList = Array.Empty<AuditLogEntry>();
@@ -102,6 +103,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         }
         public void RedrawListView()
         {
+            IgnoreListViewChange = true;
             listView1.Groups.Clear();
             if (GroupByAction)
             {
@@ -130,9 +132,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             listView1.Items.Clear();
             foreach (var item in EntryListSorted)
             {
-                if (TimestampMin > long.MinValue && TimestampMax < long.MaxValue)
-                    if (item.Timestamp < TimestampMin || item.Timestamp > TimestampMax)
-                        continue;
+                if (item.Timestamp < TimestampMin || item.Timestamp > TimestampMax)
+                    continue;
 
                 string targetUsername = item.Username;
                 if (targetUsername.Length < 1)
@@ -159,6 +160,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 if (checkedListBoxUsers.CheckedItems.Cast<string>().Contains(targetUsername))
                     listView1.Items.Add(listViewItem);
             }
+            IgnoreListViewChange = false;
         }
 
         public void PullData()
@@ -188,8 +190,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                     $"    Exception: {exceptionDeserialized.Data.Exception}",
                     $"    Code     : {exceptionDeserialized.Data.Code}"
                 }));
-
-                Program.MessageBoxShow(LocaleManager.Get(exceptionDeserialized.Data.Message) + addon);
+                new HttpExceptionModal(exceptionDeserialized.Data, (int)response.StatusCode, stringContent, url).Show();
                 if (exceptionDeserialized.Data.Message == ServerStringResponse.InvalidPermission)
                 {
                     Close();
@@ -271,10 +272,12 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         {
             PullData();
         }
-
+        private bool IgnoreListViewChange = false;
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            dynamic targetItem = null;
+            if (IgnoreListViewChange)
+                return;
+            object targetItem = null;
             if (listView1.SelectedItems.Count > 0)
             {
                 string targetUID = listView1.SelectedItems[0].Name;
@@ -307,6 +310,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 
         private void checkedListBoxTypes_ItemCheck(object sender, ItemCheckEventArgs e)
         {
+            return;
             FilterItems();
             RedrawListView();
         }
@@ -339,6 +343,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             GroupByAction = groupByActionToolStripMenuItem.Checked;
             groupByAccountToolStripMenuItem.Checked = false;
             GroupByAccount = false;
+            FilterItems();
             RedrawListView();
         }
 
@@ -347,6 +352,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             GroupByAction = false;
             groupByActionToolStripMenuItem.Checked = false;
             GroupByAccount = groupByAccountToolStripMenuItem.Checked;
+            FilterItems();
             RedrawListView();
         }
 
@@ -386,6 +392,18 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             {
                 checkedListBoxTypes.SetItemChecked(i, !checkedListBoxTypes.GetItemChecked(i));
             }
+        }
+
+        private void checkedListBoxTypes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            FilterItems();
+            RedrawListView();
+        }
+
+        private void checkedListBoxTypes_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == ' ')
+                checkedListBoxTypes_SelectedIndexChanged(null, new EventArgs());
         }
     }
 }

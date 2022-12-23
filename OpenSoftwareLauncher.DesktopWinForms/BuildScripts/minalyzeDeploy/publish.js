@@ -50,6 +50,9 @@ function zipDirectory(fullPath, outputFilename) {
     })
 }
 async function s3upload (uploadParameters) {
+    let changelogContent = fs.readFileSync('../../../CHANGELOG.txt').toString()
+    changelogContent = `<pre><code>${changelogContent}</code></pre>`
+    fs.writeFileSync('./artifacts/CHANGELOG.html', changelogContent)
     let fileLocations = fs.readdirSync(path.resolve('./artifacts/')).filter(f => !path.basename(f).startsWith('.'))
     console.log(fileLocations)
     let base = `${uploadParameters.organization}/${uploadParameters.product}/${uploadParameters.timestamp}/`

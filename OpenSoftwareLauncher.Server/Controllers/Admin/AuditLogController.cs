@@ -4,6 +4,7 @@ using MongoDB.Driver;
 using OSLCommon;
 using OSLCommon.Authorization;
 using OSLCommon.Logging;
+using System;
 using System.Linq;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Admin
@@ -19,7 +20,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult FetchAll(string token)
         {
-            var result = MainClass.contentManager.AuditLogManager.GetAll().Result;
+            var result = MainClass.GetService<AuditLogManager>()?.GetAll().Result ?? Array.Empty<AuditLogEntry>();
 
             return Json(new ObjectResponse<AuditLogEntry[]>()
             {
@@ -33,7 +34,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult FetchByAction(string token, AuditType auditType)
         {
-            var result = MainClass.contentManager.AuditLogManager.GetByType(auditType).Result;
+            var result = MainClass.GetService<AuditLogManager>()?.GetByType(auditType).Result ?? Array.Empty<AuditLogEntry>();
 
             return Json(new ObjectResponse<AuditLogEntry[]>()
             {
@@ -47,22 +48,22 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult FetchByAccount(string token, string? username = null)
         {
-            AuditLogEntry[] result;
+            AuditLogEntry[]? result;
             if (username == null)
             {
-                result = MainClass.contentManager.AuditLogManager.GetWithFilter(Builders<AuditLogEntry>
+                result = MainClass.GetService<AuditLogManager>()?.GetWithFilter(Builders<AuditLogEntry>
                     .Filter
                     .Eq("Username", "")).Result;
             }
             else
             {
-                result = MainClass.contentManager.AuditLogManager.GetByUsername(username).Result;
+                result = MainClass.GetService<AuditLogManager>()?.GetByUsername(username).Result;
             }
 
             return Json(new ObjectResponse<AuditLogEntry[]>()
             {
                 Success = true,
-                Data = result
+                Data = result ?? Array.Empty<AuditLogEntry>()
             }, MainClass.serializerOptions);
         }
 
@@ -71,10 +72,10 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult FetchByTimestampRange(string token, long min, long max, AuditType auditType = AuditType.Any)
         {
-            AuditLogEntry[] result = MainClass.contentManager.AuditLogManager.GetWithFilter(
+            AuditLogEntry[] result = MainClass.GetService<AuditLogManager>()?.GetWithFilter(
                 Builders<AuditLogEntry>
                     .Filter
-                    .Where(v => v.Timestamp > min && v.Timestamp < max)).Result;
+                    .Where(v => v.Timestamp > min && v.Timestamp < max)).Result ?? Array.Empty<AuditLogEntry>();
             if (auditType != AuditType.Any)
             {
                 result = result.Where(v => v.ActionType == auditType).ToArray();

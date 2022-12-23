@@ -1,0 +1,20 @@
+OSL Server 1.2.2.3, 2022-12-23
+------------------------------------------
+- `/token/grant` returns code `401` with type `ObjectResponse<HttpException>` if the account you want a token is disabled.
+- Manager classes are access with an `IServiceProvider` now. If you want to access the account manager you would do `Program.Provider.GetService<MongoAccountManager>()`. This was apart of the `serverRestructure` branch.
+- Add API Endpoints for the new FeatureManager. This means the response of `/server/details` has changed.
+- General bug fixes and codebase restructure.
+- Launch targets can be added with the attribute `LaunchTargetAttribute`.
+
+OSL Desktop Client 1.2.2.3, 2022-12-23
+------------------------------------------
+- Add ability to login via token.
+- Add new error window for handling Http Exceptions.
+- [License Management] Add No filter feature (shows everything).
+- [Audit Log] Fix checkboxes not working as intended.
+- [Audit Log] By default, it will only show events in the past 24hr. Offset can be changed in AuditLog.DefaultTimeRange_MinOffset
+
+OSL Desktop Client 1.2.2.3, 2022-12-08
+------------------------------------------
+Desktop Client
+- [License Management] Add "Filter by License Key" feature.

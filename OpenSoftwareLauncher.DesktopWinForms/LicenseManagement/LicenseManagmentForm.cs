@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static OpenSoftwareLauncher.DesktopWinForms.LicenseManagmentForm;
 
 namespace OpenSoftwareLauncher.DesktopWinForms
 {
@@ -25,6 +26,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             labelGroups.Text = LocaleManager.Get("Group_Plural");
             labelKeys.Text = LocaleManager.Get("Key_Plural");
             labelDetails.Text = LocaleManager.Get("Detail_Plural");
+            toolStripDropDownButtonFilter.Text = LocaleManager.Get(toolStripDropDownButtonFilter.Text);
+            toolStripDropDownButtonFilter.ToolTipText = toolStripDropDownButtonFilter.Text;
 
             foreach (ListViewGroup group in listViewKeys.Groups)
             {
@@ -79,15 +82,32 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             }
             RedrawProps();
         }
-        public string FilterGroup = "";
-        public string FilterProduct = "";
+        public enum eFilterAction
+        {
+            None,
+            Group,
+            Product,
+            GroupAndProduct,
+            LicenseKey
+        }
+        public string TargetGroup = "";
+        public string TargetProduct = "";
+        public string TargetLicenseKey = "";
+        public eFilterAction FilterAction = eFilterAction.None;
         public void ReloadKeyList()
         {
             listViewKeys.Items.Clear();
             foreach (var key in Program.LocalContent.LicenseKeyList)
             {
-                if (FilterGroup.Length > 1 && key.GroupId != FilterGroup) continue;
-                if (FilterProduct.Length > 1 && !key.Products.Contains(FilterProduct)) continue;
+                if (FilterAction == eFilterAction.LicenseKey && key.Key != TargetLicenseKey)
+                    continue;
+                else if (FilterAction == eFilterAction.GroupAndProduct)
+                    if (key.GroupId != TargetGroup || !key.Products.Contains(TargetGroup))
+                        continue;
+                else if (FilterAction == eFilterAction.Group && key.GroupId != TargetGroup)
+                    continue;
+                else if (FilterAction == eFilterAction.Product && !key.Products.Contains(TargetProduct))
+                    continue;
                 var node = new ListViewItem(new String[]
                 {
                     key.UID,
@@ -128,16 +148,16 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         {
             var selected = treeViewGroups.SelectedNode;
             var splitted = selected.Name.Split(new String[]{ "\n" }, StringSplitOptions.None);
-            FilterGroup = "";
-            FilterProduct = "";
             if (splitted.Length < 2)
             {
-                FilterGroup = selected.Name;
+                FilterAction = eFilterAction.Group;
+                TargetGroup = selected.Name;
             }
             if (selected.Name.Contains("\n"))
             {
-                FilterGroup = splitted[0];
-                FilterProduct = splitted[1];
+                FilterAction = eFilterAction.GroupAndProduct;
+                TargetGroup = splitted[0];
+                TargetProduct = splitted[1];
             }
             ReloadKeyList();
         }
@@ -200,6 +220,28 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 i.Start();
             Task.WhenAll(taskList).Wait();
             RefreshControls();
+        }
+        private void byLicenseKeyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = new TextBoxForm(MessageBoxButtons.OK, true, "Enter license key", "License Key Filter");
+            form.MdiParent = MdiParent;
+            form.Done += (action) =>
+            {
+                if (action == DialogResult.OK)
+                {
+                    FilterAction = eFilterAction.LicenseKey;
+                    TargetLicenseKey = form.textBoxContent.Text;
+                    System.Threading.Thread.Sleep(100);
+                    ReloadKeyList();
+                }
+            };
+            form.Show();
+        }
+
+        private void noneToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FilterAction = eFilterAction.None;
+            ReloadKeyList();
         }
     }
 }

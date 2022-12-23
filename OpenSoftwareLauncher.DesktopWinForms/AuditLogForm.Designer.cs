@@ -116,7 +116,7 @@
             // 
             this.timeRangeToolStripMenuItem.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.clock_select;
             this.timeRangeToolStripMenuItem.Name = "timeRangeToolStripMenuItem";
-            this.timeRangeToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.timeRangeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.timeRangeToolStripMenuItem.Text = "TimeRange";
             this.timeRangeToolStripMenuItem.Click += new System.EventHandler(this.timeRangeToolStripMenuItem_Click);
             // 
@@ -124,7 +124,7 @@
             // 
             this.groupByActionToolStripMenuItem.CheckOnClick = true;
             this.groupByActionToolStripMenuItem.Name = "groupByActionToolStripMenuItem";
-            this.groupByActionToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.groupByActionToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.groupByActionToolStripMenuItem.Text = "GroupByAuditType";
             this.groupByActionToolStripMenuItem.Click += new System.EventHandler(this.groupByActionToolStripMenuItem_Click);
             // 
@@ -132,7 +132,7 @@
             // 
             this.groupByAccountToolStripMenuItem.CheckOnClick = true;
             this.groupByAccountToolStripMenuItem.Name = "groupByAccountToolStripMenuItem";
-            this.groupByAccountToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.groupByAccountToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.groupByAccountToolStripMenuItem.Text = "GroupByAccount";
             this.groupByAccountToolStripMenuItem.Click += new System.EventHandler(this.groupByAccountToolStripMenuItem_Click);
             // 
@@ -201,6 +201,8 @@
             this.checkedListBoxTypes.Size = new System.Drawing.Size(175, 222);
             this.checkedListBoxTypes.TabIndex = 3;
             this.checkedListBoxTypes.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.checkedListBoxTypes_ItemCheck);
+            this.checkedListBoxTypes.SelectedIndexChanged += new System.EventHandler(this.checkedListBoxTypes_SelectedIndexChanged);
+            this.checkedListBoxTypes.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.checkedListBoxTypes_KeyPress);
             // 
             // splitContainer1
             // 

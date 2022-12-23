@@ -10,5 +10,6 @@
         public string UserAgent { get; set; }
         public string Host { get; set; }
         public string Hash { get; set; }
+        public string Granter { get; set; }
     }
 }

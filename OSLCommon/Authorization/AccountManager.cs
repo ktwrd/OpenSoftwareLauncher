@@ -1,6 +1,7 @@
 ﻿using kate.shared.Helpers;
 using Newtonsoft.Json.Linq;
 using OSLCommon.AuthProviders;
+using OSLCommon.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,7 +12,6 @@ using System.Threading.Tasks;
 
 namespace OSLCommon.Authorization
 {
-    public delegate void AccountDelegate(Account account);
     public partial class AccountManager
     {
         public const string SuperuserUsername = "webmaster@osl.local";
@@ -210,7 +210,7 @@ namespace OSLCommon.Authorization
         /// </summary>
         /// <param name="account">Target account</param>
         /// <returns></returns>
-        public virtual GrantTokenResponse CreateToken(Account account, string userAgent = "", string host = "")
+        public virtual GrantTokenResponse CreateToken(Account account, string userAgent = "", string host = "", string tokenGranter="<none>")
         {
             bool accountFound = false;
             var targetAccount = GetAccountByUsername(account.Username);
@@ -229,6 +229,7 @@ namespace OSLCommon.Authorization
                             OnPendingWrite();
                         token.UserAgent = userAgent;
                         token.Host = host;
+                        token.TokenGranter = tokenGranter;
                         if (account.Groups == null)
                             account.Groups = Array.Empty<string>();
                         if (account.Permissions == null)
@@ -253,7 +254,7 @@ namespace OSLCommon.Authorization
             var success = granter.Grant(username, password);
             if (success)
             {
-                return CreateToken(account, userAgent: userAgent, host: host);
+                return CreateToken(account, userAgent: userAgent, host: host, tokenGranter: granter.Name);
             }
             return null;
         }
@@ -292,6 +293,15 @@ namespace OSLCommon.Authorization
         #endregion
 
         #region Account Permission
+        public virtual PermissionGroup[] GetPermissionGroups()
+        {
+            throw new NotImplementedException();
+        }
+        public virtual PermissionGroup[] GetPermissionGroups(string uid)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// 
         /// </summary>

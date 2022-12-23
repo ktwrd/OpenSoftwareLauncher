@@ -6,5 +6,6 @@ namespace OSLCommon.AuthProviders
     {
         HttpClient httpClient { get; }
         bool Grant(string username, string password);
+        string Name { get; set; }
     }
 }
