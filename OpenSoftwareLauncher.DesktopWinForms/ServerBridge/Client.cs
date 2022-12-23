@@ -339,6 +339,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
             }
             AccountDetails = detailsDeserialized.Data;
             Permissions = detailsDeserialized.Data.Permissions;
+            UserConfig.Auth_Username = AccountDetails.Username;
             return AccountDetails;
         }
     }
