@@ -31,7 +31,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
         {
             if (!MainClass.ValidTokens.ContainsKey(token))
             {
-                var account = MainClass.contentManager.AccountManager.GetAccount(token, true);
+                var account = MainClass.GetService<MongoAccountManager>().GetAccount(token, true);
                 bool allow = false;
                 if (account != null)
                 {
