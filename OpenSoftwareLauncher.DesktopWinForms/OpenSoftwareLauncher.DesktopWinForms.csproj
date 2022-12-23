@@ -359,6 +359,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <None Include="Resources\Chisaki_Tapris_CSharp.png" />
     <None Include="Resources\key--arrow.png" />
     <None Include="Resources\license-key--arrow.png" />
     <None Include="Resources\license-key.png" />
