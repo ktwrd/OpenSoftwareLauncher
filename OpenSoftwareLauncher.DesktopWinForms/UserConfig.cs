@@ -71,7 +71,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 {
                     {"Username", "" },
                     {"Token", "" },
-                    {"Remember", false }
+                    {"Remember", false },
+                    {"LoginType", LoginMethod.Username }
                 }
             },
             {"Connection", new Dictionary<string, object>()
