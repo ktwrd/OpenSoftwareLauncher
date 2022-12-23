@@ -75,7 +75,10 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
                 if (throwHttpException)
                     throw exceptionDeserialized.Data;
             }
-            Program.MessageBoxShow($"URL: {url}\nCode: {(int)response.StatusCode}\n======== Content ========\n{stringContent}", LocaleManager.Get("ServerResponse_Invalid"));
+            else
+            {
+                Program.MessageBoxShow($"URL: {url}\nCode: {(int)response.StatusCode}\n======== Content ========\n{stringContent}", LocaleManager.Get("ServerResponse_Invalid"));
+            }
             return null;
         }
     
