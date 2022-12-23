@@ -48,9 +48,23 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 {"stack", Stack },
                 {"message", Exception.Message }
             };
+            groupBox1.Text = LocaleManager.Get(groupBox1.Text);
+            groupBox2.Text = LocaleManager.Get(groupBox1.Text);
+
+            labelRequest.Text = LocaleManager.Get(labelRequest.Text);
+            labelResponse.Text = LocaleManager.Get(labelResponse.Text);
+
+            labelCode.Text = LocaleManager.Get("HttpException_Code", inject: injectDict);
             labelURL.Text = LocaleManager.Get("HttpException_URL", inject: injectDict);
-            textBoxStack.Text = Stack;
             labelExceptionMessage.Text = LocaleManager.Get("HttpException_Message", inject: injectDict);
+
+            textBoxStack.Text = Stack;
+            textBoxContent.Text = Content;
+        }
+
+        private void HttpExceptionModal_Shown(object sender, EventArgs e)
+        {
+            Locale();
         }
     }
 }
