@@ -124,6 +124,12 @@
     <Compile Include="BulkUserPermissionForm.Designer.cs">
       <DependentUpon>BulkUserPermissionForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="CopyableErrorModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CopyableErrorModal.Designer.cs">
+      <DependentUpon>CopyableErrorModal.cs</DependentUpon>
+    </Compile>
     <Compile Include="CustomComponents\LabelTextBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -270,6 +276,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="BulkUserPermissionForm.resx">
       <DependentUpon>BulkUserPermissionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CopyableErrorModal.resx">
+      <DependentUpon>CopyableErrorModal.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CustomComponents\LabelTextBox.resx">
       <DependentUpon>LabelTextBox.cs</DependentUpon>

@@ -2,8 +2,11 @@
 using OSLCommon.Authorization;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -19,7 +22,18 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
         }
         private Client Client = null;
         private HttpClient HttpClient => Client?.HttpClient;
-        
+        private string[] aggExcp(Exception ex, int level = 0)
+        {
+            var lines = new List<string>();
+            lines.Add("-" + ex.Message);
+            if (ex.InnerException != null)
+            {
+                var re = aggExcp(ex.InnerException, level + 1);
+                foreach (var i in re)
+                    lines.Add("".PadLeft(level * 2, ' ') + i);
+            }
+            return lines.ToArray();
+        }
         /// <summary>
         /// Validate current token or a fresh token.
         /// </summary>
@@ -45,7 +59,18 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
             }
 
             var url = Endpoint.TokenDetails(token);
-            var response = HttpClient?.GetAsync(url).Result;
+            HttpResponseMessage response = null;
+            try
+            {
+                var tsk = HttpClient.GetAsync(url);
+                tsk.Wait();
+                response = tsk.Result;
+            }
+            catch (Exception agg)
+            {
+                new CopyableErrorModal(aggExcp(agg), "Failed to connect").Show();
+                return null;
+            }
             var stringContent = response.Content.ReadAsStringAsync().Result;
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
@@ -105,7 +130,18 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
             Endpoint.Base = endpoint;
 
             var url = Endpoint.TokenGrant(username, password);
-            var response = HttpClient.GetAsync(url).Result;
+            HttpResponseMessage response = null;
+            try
+            {
+                var tsk = HttpClient.GetAsync(url);
+                tsk.Wait();
+                response = tsk.Result;
+            }
+            catch (Exception agg)
+            {
+                new CopyableErrorModal(aggExcp(agg), "Failed to connect").Show();
+                return null;
+            }
             var stringContent = response.Content.ReadAsStringAsync().Result;
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
