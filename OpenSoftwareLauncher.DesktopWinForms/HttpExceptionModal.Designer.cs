@@ -79,7 +79,7 @@
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel1.MinimumSize = new System.Drawing.Size(366, 83);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(513, 83);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(436, 83);
             this.flowLayoutPanel1.TabIndex = 2;
             // 
             // labelRequest
@@ -118,7 +118,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(525, 392);
+            this.groupBox1.Size = new System.Drawing.Size(448, 392);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Details";
@@ -135,7 +135,7 @@
             this.tableLayoutPanel3.RowCount = 2;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(519, 373);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(442, 373);
             this.tableLayoutPanel3.TabIndex = 4;
             // 
             // tableLayoutPanel2
@@ -151,7 +151,7 @@
             this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(513, 278);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(436, 278);
             this.tableLayoutPanel2.TabIndex = 3;
             // 
             // labelResponse
@@ -168,13 +168,14 @@
             // 
             this.textBoxContent.BackColor = System.Drawing.Color.White;
             this.textBoxContent.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxContent.Font = new System.Drawing.Font("Cascadia Mono", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxContent.ForeColor = System.Drawing.Color.Black;
             this.textBoxContent.Location = new System.Drawing.Point(3, 23);
             this.textBoxContent.Multiline = true;
             this.textBoxContent.Name = "textBoxContent";
             this.textBoxContent.ReadOnly = true;
             this.textBoxContent.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxContent.Size = new System.Drawing.Size(507, 252);
+            this.textBoxContent.Size = new System.Drawing.Size(430, 252);
             this.textBoxContent.TabIndex = 3;
             // 
             // splitContainer1
@@ -191,7 +192,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.groupBox1);
             this.splitContainer1.Size = new System.Drawing.Size(718, 392);
-            this.splitContainer1.SplitterDistance = 189;
+            this.splitContainer1.SplitterDistance = 266;
             this.splitContainer1.TabIndex = 5;
             // 
             // tableLayoutPanel1
@@ -204,9 +205,9 @@
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 200F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 150F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(189, 392);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(266, 392);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // groupBox2
@@ -214,10 +215,10 @@
             this.groupBox2.AutoSize = true;
             this.groupBox2.Controls.Add(this.textBoxStack);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox2.Location = new System.Drawing.Point(3, 203);
+            this.groupBox2.Location = new System.Drawing.Point(3, 153);
             this.groupBox2.MinimumSize = new System.Drawing.Size(100, 83);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(183, 186);
+            this.groupBox2.Size = new System.Drawing.Size(260, 236);
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Stack";
@@ -226,22 +227,23 @@
             // 
             this.textBoxStack.BackColor = System.Drawing.Color.White;
             this.textBoxStack.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxStack.Font = new System.Drawing.Font("Cascadia Mono", 8.25F);
             this.textBoxStack.ForeColor = System.Drawing.Color.Black;
             this.textBoxStack.Location = new System.Drawing.Point(3, 16);
             this.textBoxStack.Multiline = true;
             this.textBoxStack.Name = "textBoxStack";
             this.textBoxStack.ReadOnly = true;
             this.textBoxStack.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxStack.Size = new System.Drawing.Size(177, 167);
+            this.textBoxStack.Size = new System.Drawing.Size(254, 217);
             this.textBoxStack.TabIndex = 0;
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Left;
             this.pictureBox1.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.Chisaki_Tapris_CSharp;
             this.pictureBox1.Location = new System.Drawing.Point(3, 3);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(183, 194);
+            this.pictureBox1.Size = new System.Drawing.Size(133, 144);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 5;
             this.pictureBox1.TabStop = false;
