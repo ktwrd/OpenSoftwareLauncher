@@ -37,8 +37,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
         /// <summary>
         /// Validate current token or a fresh token.
         /// </summary>
-        /// <param name="token">Default <see cref="UserConfig.Auth_Token"/></param>
-        /// <param name="endpoint">Target endpoint. Default <see cref="UserConfig.Connection_Endpoint"/></param>
+        /// <param name="token">Default <see cref="Program.Config.Auth.Token"/></param>
+        /// <param name="endpoint">Target endpoint. Default <see cref="Program.Config.Endpoint"/></param>
         /// <param name="save">Save to config if token success</param>
         /// <param name="showMessageBox">Show message box on error</param>
         /// <param name="throwHttpException">throw <see cref="HttpException"/> if unauthorized</param>
@@ -51,10 +51,11 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
             bool throwHttpException = false)
         {
             if (token == null)
-                token = UserConfig.Auth_Token;
+                token = Program.Config.Auth.Token;
             if (endpoint != null)
             {
-                UserConfig.Connection_Endpoint = endpoint;
+                Program.Config.Endpoint = endpoint;
+                Program.ConfigSave();
                 Endpoint.Base = endpoint;
             }
 
@@ -83,8 +84,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
                         Token = token
                     };
                     Client.Token = Client.TokenData.Token;
-                    UserConfig.Auth_Token = token;
-                    UserConfig.Save();
+                    Program.Config.Auth.Token = token;
+                    Program.ConfigSave();
                 }
                 return deserialized.Data;
             }
@@ -125,8 +126,9 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
             bool showMessageBox = true,
             bool throwHttpException = false)
         {
-            endpoint = endpoint ?? UserConfig.Connection_Endpoint;
-            UserConfig.Connection_Endpoint = endpoint;
+            endpoint = endpoint ?? Program.Config.Endpoint;
+            Program.Config.Endpoint = endpoint;
+            Program.ConfigSave();
             Endpoint.Base = endpoint;
 
             var url = Endpoint.TokenGrant(username, password);
@@ -154,8 +156,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms.ServerBridge
                     Client.Token = Client.TokenData.Token;
                     if (save)
                     {
-                        UserConfig.Auth_Token = Client.TokenData.Token;
-                        UserConfig.Save();
+                        Program.Config.Auth.Token = Client.TokenData.Token;
+                        Program.ConfigSave();
                     }
                     Client.Permissions = deserialized.Data.Permissions;
                 }

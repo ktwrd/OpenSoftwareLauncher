@@ -118,8 +118,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 
         private void toolStripButtonLogout_Click(object sender, EventArgs e)
         {
-            UserConfig.Auth_Token = "";
-            UserConfig.Save();
+            Program.Config.Auth.Token = "";
+            Program.ConfigSave();
             Program.ClientContext.Restart();
         }
     }

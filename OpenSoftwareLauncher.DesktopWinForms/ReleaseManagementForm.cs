@@ -90,7 +90,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 }
             }
 
-            if (UserConfig.GetBoolean("General", "ShowLatestRelease", true))
+            if (Program.Config.ShowLatestRelease)
             {
                 targetReleaseList = targetReleaseList.GroupBy(v => v.remoteLocation)
                     .Select(v => v.First()).ToList();
@@ -163,7 +163,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 
         private void showLatestToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            UserConfig.Set("General", "ShowLatestRelease", showLatestToolStripMenuItem.Checked);
+            Program.Config.ShowLatestRelease = showLatestToolStripMenuItem.Checked;
+            Program.ConfigSave();
             RefreshReleaseListView();
         }
 

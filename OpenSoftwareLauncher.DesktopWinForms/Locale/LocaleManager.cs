@@ -27,7 +27,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         }
         static LocaleManager()
         {
-            SetLocale(UserConfig.GetString("General", "Language"));
+            SetLocale(Program.Config.Language);
         }
         public static event VoidDelegate OnUpdate;
         public static void Load()
@@ -66,8 +66,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             }
 
             Language = code;
-            UserConfig.Set("General", "Language", code);
-            UserConfig.Save();
+            Program.Config.Language = code;
+            Program.ConfigSave();
         }
 
         public static string Get(string key, string lang = "", string fallback = null, Dictionary<string, object> inject = null)
