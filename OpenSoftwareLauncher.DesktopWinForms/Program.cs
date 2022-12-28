@@ -1,5 +1,5 @@
 ﻿using CommandLine;
-using FastConfig;
+using kate.FastConfig;
 using kate.shared;
 using OpenSoftwareLauncher.DesktopWinForms.ServerBridge;
 using System;

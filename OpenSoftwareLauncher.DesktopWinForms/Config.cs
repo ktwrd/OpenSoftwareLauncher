@@ -1,4 +1,4 @@
-﻿using FastConfig;
+﻿using kate.FastConfig;
 using System;
 using System.Collections.Generic;
 using System.Linq;
