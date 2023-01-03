@@ -6,7 +6,9 @@ namespace OSLCommon.Licensing
     {
         Invalid,
         AlreadyRedeemed,
-        Granted
+        Granted,
+        Details,
+        Available
     }
     public class GrantLicenseKeyResponse
     {
