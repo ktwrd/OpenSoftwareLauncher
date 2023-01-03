@@ -34,6 +34,7 @@
 
   <ItemGroup>
     <PackageReference Include="BinaryFormatter" Version="3.0.0" />
+    <PackageReference Include="kate.FastConfig" Version="1.0.2" />
     <PackageReference Include="kate.shared" Version="1.0.1" />
     <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" Version="1.0.1" />
     <PackageReference Include="MongoDB.Driver" Version="2.18.0" />

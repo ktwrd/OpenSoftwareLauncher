@@ -24,6 +24,7 @@ using OSLCommon.Features;
 using System.Threading.Tasks;
 using OSLCommon.Helpers;
 using OpenSoftwareLauncher.Server.Targets;
+using kate.FastConfig;
 
 namespace OpenSoftwareLauncher.Server
 {
@@ -301,6 +302,15 @@ namespace OpenSoftwareLauncher.Server
         {
             // Save legacy config
             ServerConfig.Save();
+            if (Provider == null)
+                return;
+
+            // Safely get the config, then the configsource, then save if both exist.
+            var conf = Provider.GetService<OSLCommon.ServerConfig>();
+            var src = Provider.GetService<FastConfigSource<OSLCommon.ServerConfig>>();
+
+            if (conf != null && src != null)
+                src.Save(conf);
         }
 
         private static void InitializeServices()
@@ -320,10 +330,24 @@ namespace OpenSoftwareLauncher.Server
         }
         private static void ConfigureServices(IServiceCollection services)
         {
+            //ConfigureConfigService(services);
             services.AddSingleton<MongoMiddle>()
                     .AddSingleton<MongoClient>(MongoCreate());
             ConfigureServices_Content(services);
             ConfigureServices_AspNet(services);
+        }
+        public static string ConfigLocation
+        => Path.Combine(
+            DataDirectory,
+            "Config",
+            "config.ini");
+        private static void ConfigureConfigService(IServiceCollection services)
+        {
+            var source = new FastConfigSource<OSLCommon.ServerConfig>(ConfigLocation);
+            var parsed = source.Parse();
+
+            services.AddSingleton(source);
+            services.AddSingleton(parsed);
         }
 
         private static MongoClient MongoCreate()
