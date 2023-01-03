@@ -1,4 +1,16 @@
 {
+  "profiles": {
+    "OpenSoftwareLauncher.Server": {
+      "commandName": "Project",
+      "commandLineArgs": "--dataDirectory=\"C:\\Users\\kate\\Desktop\\OSLServer_Data\"",
+      "workingDirectory": "C:\\Users\\kate\\Desktop\\OSLServer_Data",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://0.0.0.0:5010",
+      "dotnetRunMessages": true
+    }
+  },
   "$schema": "https://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "windowsAuthentication": false,
@@ -6,25 +18,6 @@
     "iisExpress": {
       "applicationUrl": "http://localhost:3217",
       "sslPort": 0
-    }
-  },
-  "profiles": {
-    "OpenSoftwareLauncher.Server": {
-      "commandName": "Project",
-      "launchUrl": "",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "http://localhost:5010",
-      "dotnetRunMessages": true
-    },
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "launchUrl": "weatherforecast",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
     }
   }
 }
