@@ -73,7 +73,7 @@ namespace OpenSoftwareLauncher.Server
         }
         public void DatabaseSerialize()
         {
-            MainClass.Save();
+            ServerConfig.Save();
         }
         
     }
