@@ -293,6 +293,14 @@ namespace OpenSoftwareLauncher.Server
             ContentManager?.DatabaseSerialize();
             GetService<MongoSystemAnnouncement>()?.OnUpdate();
             GetService<MongoAccountManager>()?.ForcePendingWrite();
+            Save();
+        }
+        /// <summary>
+        /// Save, Usually called before we quit.
+        /// </summary>
+        public static void Save()
+        {
+            // Save legacy config
             ServerConfig.Save();
             if (Provider == null)
                 return;
