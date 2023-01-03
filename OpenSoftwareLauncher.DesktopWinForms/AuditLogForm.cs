@@ -20,7 +20,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         public AuditLogForm()
         {
             InitializeComponent();
-            TimestampMin = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + UserConfig.AuditLog_DefaultTimeRangeMinOffset;
+            TimestampMin = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + Program.Config.AuditLog.DefaultTimeRange_MinOffset;
         }
 
         public AuditLogEntry[] EntryList = Array.Empty<AuditLogEntry>();

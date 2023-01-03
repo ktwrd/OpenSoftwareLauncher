@@ -1,12 +1,15 @@
 ﻿using CommandLine;
+using kate.FastConfig;
 using kate.shared;
 using OpenSoftwareLauncher.DesktopWinForms.ServerBridge;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Remoting.Contexts;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -56,10 +59,9 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         static void Main(string[] args)
         {
 #if DEBUG
-            System.Threading.Thread.Sleep(5000);
+/*            System.Threading.Thread.Sleep(5000);*/
 #endif
-
-            UserConfig.Get();
+            InitConfig();
             LocaleManager.Load();
             try
             {
@@ -67,14 +69,14 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                 var parsed = parser.ParseArguments<CommandlineOptions>(args);
                 Options = parsed.Value;
                 if (Options.Token.Length > 0)
-                    UserConfig.Auth_Token = Options.Token;
+                    Program.Config.Auth.Token = Options.Token;
                 if (Options.Username.Length > 0)
-                    UserConfig.Auth_Username = Options.Username;
+                    Program.Config.Auth.Username = Options.Username;
                 if (Options.Endpoint.Length > 0)
-                    UserConfig.Connection_Endpoint = Options.Endpoint;
+                    Program.Config.Endpoint = Options.Endpoint;
                 if (Options.AutoLogin)
-                    UserConfig.Auth_Remember = Options.AutoLogin;
-
+                    Program.Config.Auth.Remember = Options.AutoLogin;
+                Program.ConfigSave();
 
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
@@ -98,6 +100,18 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             }
         }
 
+        private static FastConfigSource<Config> ConfigSource;
+        internal static Config Config;
+        private static void InitConfig()
+        {
+            string configLocation = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath) ?? Directory.GetCurrentDirectory(), "config.ini");
+            ConfigSource = new FastConfigSource<Config>(configLocation);
+            Config = ConfigSource.Parse();
+        }
+        public static void ConfigSave()
+        {
+            ConfigSource.Save(Config).Wait();
+        }
         private static bool PendingLogLines = false;
         private static void DebugListener_Updated(DebugListener instance)
         {

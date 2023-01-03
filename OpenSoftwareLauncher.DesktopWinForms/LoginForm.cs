@@ -38,17 +38,17 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         }
         public LoginForm(bool validate = false, bool silent = false) : this()
         {
-            if (UserConfig.Auth_Remember == false)
+            if (Program.Config.Auth.Remember == false)
                 validate = false;
-            ValidateOnShow = validate || UserConfig.Auth_Remember;
+            ValidateOnShow = validate || Program.Config.Auth.Remember;
         }
         private bool ValidateOnShow = false;
         public void SaveFields()
         {
-            UserConfig.Auth_Username = textBoxUsername.Text;
-            UserConfig.Auth_Remember = checkBoxRemember.Checked;
-            UserConfig.Connection_Endpoint = textBoxServer.Text;
-            UserConfig.Save();
+            Program.Config.Auth.Username = textBoxUsername.Text;
+            Program.Config.Auth.Remember = checkBoxRemember.Checked;
+            Program.Config.Endpoint = textBoxServer.Text;
+            Program.ConfigSave();
         }
         private void buttonLogin_Click(object sender, EventArgs e)
         {
@@ -99,8 +99,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                     if (usernameValidateResponse == null || !usernameValidateResponse.Success)
                         break;
 
-                    UserConfig.Auth_Token = usernameValidateResponse.Token.Token;
-                    UserConfig.Save();
+                    Program.Config.Auth.Token = usernameValidateResponse.Token.Token;
+                    Program.ConfigSave();
                     break;
                 case LoginMethod.Token:
                     AccountTokenDetailsResponse tokenValidateResponse = Program.Client.Auth.ValidateToken(textBoxToken.Text, textBoxServer.Text, showMessageBox: true);
@@ -109,15 +109,15 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                         break;
 
                     // Save token if valid, and allow us to continue
-                    UserConfig.Auth_Token = textBoxToken.Text;
-                    UserConfig.Save();
+                    Program.Config.Auth.Token = textBoxToken.Text;
+                    Program.ConfigSave();
                     break;
             }
             if (response != null)
             {
                 Trace.WriteLine($"[LoginForm.buttonLogin_Click] Validation Success!");
-                UserConfig.Connection_Endpoint = textBoxServer.Text;
-                UserConfig.Save();
+                Program.Config.Endpoint = textBoxServer.Text;
+                Program.ConfigSave();
                 Program.Client.UpdateProperties();
                 Program.ClientContext.InitializeParentForm(true);
                 Enabled = true;
@@ -142,9 +142,9 @@ namespace OpenSoftwareLauncher.DesktopWinForms
         {
             Locale();
 
-            textBoxUsername.Text = UserConfig.Auth_Username;
-            checkBoxRemember.Checked = UserConfig.Auth_Remember;
-            textBoxServer.Text = UserConfig.Connection_Endpoint;
+            textBoxUsername.Text = Program.Config.Auth.Username;
+            checkBoxRemember.Checked = Program.Config.Auth.Remember;
+            textBoxServer.Text = Program.Config.Endpoint;
 
             switch (GetSelectedTabMethod())
             {
@@ -159,7 +159,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                     textBoxToken.Focus();
                     break;
             }
-            if (!ValidateOnShow || UserConfig.Auth_Token.Length < 8)
+            if (!ValidateOnShow || Program.Config.Auth.Token.Length < 8)
                 return;
 
             Enabled = false;
@@ -199,7 +199,7 @@ namespace OpenSoftwareLauncher.DesktopWinForms
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UserConfig.Set("Authentication", "LoginType", GetSelectedTabMethod());
+            /*UserConfig.Set("Authentication", "LoginType", GetSelectedTabMethod());*/
         }
     }
 }

@@ -44,6 +44,9 @@
     <Reference Include="CommandLine, Version=2.9.1.0, Culture=neutral, PublicKeyToken=5a870481e358d379, processorArchitecture=MSIL">
       <HintPath>..\packages\CommandLineParser.2.9.1\lib\net461\CommandLine.dll</HintPath>
     </Reference>
+    <Reference Include="kate.FastConfig, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\kate.FastConfig.1.0.2\lib\netstandard2.0\kate.FastConfig.dll</HintPath>
+    </Reference>
     <Reference Include="kate.shared, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\kate.shared.1.0.1\lib\net48\kate.shared.dll</HintPath>
     </Reference>
@@ -124,6 +127,7 @@
     <Compile Include="BulkUserPermissionForm.Designer.cs">
       <DependentUpon>BulkUserPermissionForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Config.cs" />
     <Compile Include="CopyableErrorModal.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -237,7 +241,6 @@
     <Compile Include="ServerBridge\ContentField.cs" />
     <Compile Include="Delegates.cs" />
     <Compile Include="ServerBridge\LocalContent.cs" />
-    <Compile Include="UserConfig.cs" />
     <Compile Include="User Management\UserManagementForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -347,6 +350,7 @@
     <None Include="Locale\en-server.locale">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="packages.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
