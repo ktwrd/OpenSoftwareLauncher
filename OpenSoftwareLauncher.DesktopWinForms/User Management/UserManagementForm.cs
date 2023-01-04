@@ -136,7 +136,8 @@ namespace OpenSoftwareLauncher.DesktopWinForms
                     toolStripButtonPermissionTool.Enabled = Program.Client.HasPermission(AccountPermission.USER_PERMISSION_MODIFY);
                     toolStripButtonBanTool.Enabled = Program.Client.HasPermission(AccountPermission.USER_DISABLE_MODIFY);
                     toolStripButtonLicense.Enabled = Program.Client.HasPermission(AccountPermission.USER_LICENSE_MODIFY);
-                    toolStripButtonEdit.Enabled = Program.Client.HasPermission(AccountPermission.ADMINISTRATOR);
+                    if (false)
+                        toolStripButtonEdit.Enabled = Program.Client.HasPermission(AccountPermission.ADMINISTRATOR);
                 }
                 toolStripButtonGroupTool.Enabled = Program.Client.HasPermission(AccountPermission.USER_GROUP_MODIFY);
                 toolStripButtonUnban.Enabled = Program.Client.HasPermission(AccountPermission.USER_DISABLE_MODIFY);
