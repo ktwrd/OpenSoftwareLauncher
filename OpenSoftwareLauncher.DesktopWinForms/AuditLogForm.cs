@@ -278,6 +278,12 @@ namespace OpenSoftwareLauncher.DesktopWinForms
             if (IgnoreListViewChange)
                 return;
             object targetItem = null;
+            if (listView1.SelectedItems.Count == 0)
+            {
+                propertyGrid1.SelectedObject = new object();
+                propertyGrid1.ExpandAllGridItems();
+                return;
+            }
             if (listView1.SelectedItems.Count > 0)
             {
                 string targetUID = listView1.SelectedItems[0].Name;

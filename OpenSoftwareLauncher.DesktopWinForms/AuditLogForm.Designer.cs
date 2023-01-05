@@ -30,12 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AuditLogForm));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripButtonRefresh = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripDropDownButtonFilter = new System.Windows.Forms.ToolStripDropDownButton();
-            this.timeRangeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.groupByActionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.groupByAccountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.listView1 = new System.Windows.Forms.ListView();
             this.columnHeaderType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderUsername = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -47,14 +42,19 @@
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
-            this.buttonCBoxSelect_All_Types = new System.Windows.Forms.Button();
-            this.buttonCBoxSelect_Invert_Types = new System.Windows.Forms.Button();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.buttonCBoxSelect_All = new System.Windows.Forms.Button();
-            this.buttonCBoxSelect_Invert = new System.Windows.Forms.Button();
             this.checkedListBoxUsers = new System.Windows.Forms.CheckedListBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.buttonCBoxSelect_All_Types = new System.Windows.Forms.Button();
+            this.buttonCBoxSelect_Invert_Types = new System.Windows.Forms.Button();
+            this.buttonCBoxSelect_All = new System.Windows.Forms.Button();
+            this.buttonCBoxSelect_Invert = new System.Windows.Forms.Button();
+            this.toolStripButtonRefresh = new System.Windows.Forms.ToolStripButton();
+            this.toolStripDropDownButtonFilter = new System.Windows.Forms.ToolStripDropDownButton();
+            this.timeRangeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.groupByActionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.groupByAccountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -84,57 +84,10 @@
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // toolStripButtonRefresh
-            // 
-            this.toolStripButtonRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonRefresh.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.arrow_circle;
-            this.toolStripButtonRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonRefresh.Name = "toolStripButtonRefresh";
-            this.toolStripButtonRefresh.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonRefresh.Text = "Refresh";
-            this.toolStripButtonRefresh.Click += new System.EventHandler(this.toolStripButtonRefresh_Click);
-            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripDropDownButtonFilter
-            // 
-            this.toolStripDropDownButtonFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripDropDownButtonFilter.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.timeRangeToolStripMenuItem,
-            this.groupByActionToolStripMenuItem,
-            this.groupByAccountToolStripMenuItem});
-            this.toolStripDropDownButtonFilter.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.funnel;
-            this.toolStripDropDownButtonFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripDropDownButtonFilter.Name = "toolStripDropDownButtonFilter";
-            this.toolStripDropDownButtonFilter.Size = new System.Drawing.Size(29, 22);
-            this.toolStripDropDownButtonFilter.Text = "Filter";
-            // 
-            // timeRangeToolStripMenuItem
-            // 
-            this.timeRangeToolStripMenuItem.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.clock_select;
-            this.timeRangeToolStripMenuItem.Name = "timeRangeToolStripMenuItem";
-            this.timeRangeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.timeRangeToolStripMenuItem.Text = "TimeRange";
-            this.timeRangeToolStripMenuItem.Click += new System.EventHandler(this.timeRangeToolStripMenuItem_Click);
-            // 
-            // groupByActionToolStripMenuItem
-            // 
-            this.groupByActionToolStripMenuItem.CheckOnClick = true;
-            this.groupByActionToolStripMenuItem.Name = "groupByActionToolStripMenuItem";
-            this.groupByActionToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.groupByActionToolStripMenuItem.Text = "GroupByAuditType";
-            this.groupByActionToolStripMenuItem.Click += new System.EventHandler(this.groupByActionToolStripMenuItem_Click);
-            // 
-            // groupByAccountToolStripMenuItem
-            // 
-            this.groupByAccountToolStripMenuItem.CheckOnClick = true;
-            this.groupByAccountToolStripMenuItem.Name = "groupByAccountToolStripMenuItem";
-            this.groupByAccountToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.groupByAccountToolStripMenuItem.Text = "GroupByAccount";
-            this.groupByAccountToolStripMenuItem.Click += new System.EventHandler(this.groupByAccountToolStripMenuItem_Click);
             // 
             // listView1
             // 
@@ -278,26 +231,6 @@
             this.flowLayoutPanel2.Size = new System.Drawing.Size(181, 29);
             this.flowLayoutPanel2.TabIndex = 4;
             // 
-            // buttonCBoxSelect_All_Types
-            // 
-            this.buttonCBoxSelect_All_Types.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.table_select_all;
-            this.buttonCBoxSelect_All_Types.Location = new System.Drawing.Point(3, 3);
-            this.buttonCBoxSelect_All_Types.Name = "buttonCBoxSelect_All_Types";
-            this.buttonCBoxSelect_All_Types.Size = new System.Drawing.Size(23, 23);
-            this.buttonCBoxSelect_All_Types.TabIndex = 1;
-            this.buttonCBoxSelect_All_Types.UseVisualStyleBackColor = true;
-            this.buttonCBoxSelect_All_Types.Click += new System.EventHandler(this.buttonCBoxSelect_All_Types_Click);
-            // 
-            // buttonCBoxSelect_Invert_Types
-            // 
-            this.buttonCBoxSelect_Invert_Types.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.arrow_switch;
-            this.buttonCBoxSelect_Invert_Types.Location = new System.Drawing.Point(32, 3);
-            this.buttonCBoxSelect_Invert_Types.Name = "buttonCBoxSelect_Invert_Types";
-            this.buttonCBoxSelect_Invert_Types.Size = new System.Drawing.Size(23, 23);
-            this.buttonCBoxSelect_Invert_Types.TabIndex = 2;
-            this.buttonCBoxSelect_Invert_Types.UseVisualStyleBackColor = true;
-            this.buttonCBoxSelect_Invert_Types.Click += new System.EventHandler(this.buttonCBoxSelect_Invert_Types_Click);
-            // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 1;
@@ -328,26 +261,6 @@
             this.flowLayoutPanel1.Size = new System.Drawing.Size(183, 30);
             this.flowLayoutPanel1.TabIndex = 0;
             // 
-            // buttonCBoxSelect_All
-            // 
-            this.buttonCBoxSelect_All.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.table_select_all;
-            this.buttonCBoxSelect_All.Location = new System.Drawing.Point(3, 3);
-            this.buttonCBoxSelect_All.Name = "buttonCBoxSelect_All";
-            this.buttonCBoxSelect_All.Size = new System.Drawing.Size(23, 23);
-            this.buttonCBoxSelect_All.TabIndex = 0;
-            this.buttonCBoxSelect_All.UseVisualStyleBackColor = true;
-            this.buttonCBoxSelect_All.Click += new System.EventHandler(this.buttonCBoxSelect_All_Click);
-            // 
-            // buttonCBoxSelect_Invert
-            // 
-            this.buttonCBoxSelect_Invert.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.arrow_switch;
-            this.buttonCBoxSelect_Invert.Location = new System.Drawing.Point(32, 3);
-            this.buttonCBoxSelect_Invert.Name = "buttonCBoxSelect_Invert";
-            this.buttonCBoxSelect_Invert.Size = new System.Drawing.Size(23, 23);
-            this.buttonCBoxSelect_Invert.TabIndex = 1;
-            this.buttonCBoxSelect_Invert.UseVisualStyleBackColor = true;
-            this.buttonCBoxSelect_Invert.Click += new System.EventHandler(this.buttonCBoxSelect_Invert_Click);
-            // 
             // checkedListBoxUsers
             // 
             this.checkedListBoxUsers.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -375,6 +288,95 @@
             this.splitContainer2.Size = new System.Drawing.Size(1009, 541);
             this.splitContainer2.SplitterDistance = 527;
             this.splitContainer2.TabIndex = 6;
+            // 
+            // buttonCBoxSelect_All_Types
+            // 
+            this.buttonCBoxSelect_All_Types.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.table_select_all;
+            this.buttonCBoxSelect_All_Types.Location = new System.Drawing.Point(3, 3);
+            this.buttonCBoxSelect_All_Types.Name = "buttonCBoxSelect_All_Types";
+            this.buttonCBoxSelect_All_Types.Size = new System.Drawing.Size(23, 23);
+            this.buttonCBoxSelect_All_Types.TabIndex = 1;
+            this.buttonCBoxSelect_All_Types.UseVisualStyleBackColor = true;
+            this.buttonCBoxSelect_All_Types.Click += new System.EventHandler(this.buttonCBoxSelect_All_Types_Click);
+            // 
+            // buttonCBoxSelect_Invert_Types
+            // 
+            this.buttonCBoxSelect_Invert_Types.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.arrow_switch;
+            this.buttonCBoxSelect_Invert_Types.Location = new System.Drawing.Point(32, 3);
+            this.buttonCBoxSelect_Invert_Types.Name = "buttonCBoxSelect_Invert_Types";
+            this.buttonCBoxSelect_Invert_Types.Size = new System.Drawing.Size(23, 23);
+            this.buttonCBoxSelect_Invert_Types.TabIndex = 2;
+            this.buttonCBoxSelect_Invert_Types.UseVisualStyleBackColor = true;
+            this.buttonCBoxSelect_Invert_Types.Click += new System.EventHandler(this.buttonCBoxSelect_Invert_Types_Click);
+            // 
+            // buttonCBoxSelect_All
+            // 
+            this.buttonCBoxSelect_All.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.table_select_all;
+            this.buttonCBoxSelect_All.Location = new System.Drawing.Point(3, 3);
+            this.buttonCBoxSelect_All.Name = "buttonCBoxSelect_All";
+            this.buttonCBoxSelect_All.Size = new System.Drawing.Size(23, 23);
+            this.buttonCBoxSelect_All.TabIndex = 0;
+            this.buttonCBoxSelect_All.UseVisualStyleBackColor = true;
+            this.buttonCBoxSelect_All.Click += new System.EventHandler(this.buttonCBoxSelect_All_Click);
+            // 
+            // buttonCBoxSelect_Invert
+            // 
+            this.buttonCBoxSelect_Invert.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.arrow_switch;
+            this.buttonCBoxSelect_Invert.Location = new System.Drawing.Point(32, 3);
+            this.buttonCBoxSelect_Invert.Name = "buttonCBoxSelect_Invert";
+            this.buttonCBoxSelect_Invert.Size = new System.Drawing.Size(23, 23);
+            this.buttonCBoxSelect_Invert.TabIndex = 1;
+            this.buttonCBoxSelect_Invert.UseVisualStyleBackColor = true;
+            this.buttonCBoxSelect_Invert.Click += new System.EventHandler(this.buttonCBoxSelect_Invert_Click);
+            // 
+            // toolStripButtonRefresh
+            // 
+            this.toolStripButtonRefresh.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonRefresh.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.arrow_circle;
+            this.toolStripButtonRefresh.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonRefresh.Name = "toolStripButtonRefresh";
+            this.toolStripButtonRefresh.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonRefresh.Text = "Refresh";
+            this.toolStripButtonRefresh.Click += new System.EventHandler(this.toolStripButtonRefresh_Click);
+            // 
+            // toolStripDropDownButtonFilter
+            // 
+            this.toolStripDropDownButtonFilter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripDropDownButtonFilter.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.timeRangeToolStripMenuItem,
+            this.groupByActionToolStripMenuItem,
+            this.groupByAccountToolStripMenuItem});
+            this.toolStripDropDownButtonFilter.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.funnel;
+            this.toolStripDropDownButtonFilter.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripDropDownButtonFilter.Name = "toolStripDropDownButtonFilter";
+            this.toolStripDropDownButtonFilter.Size = new System.Drawing.Size(29, 22);
+            this.toolStripDropDownButtonFilter.Text = "Filter";
+            // 
+            // timeRangeToolStripMenuItem
+            // 
+            this.timeRangeToolStripMenuItem.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.clock_select;
+            this.timeRangeToolStripMenuItem.Name = "timeRangeToolStripMenuItem";
+            this.timeRangeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.timeRangeToolStripMenuItem.Text = "TimeRange";
+            this.timeRangeToolStripMenuItem.Click += new System.EventHandler(this.timeRangeToolStripMenuItem_Click);
+            // 
+            // groupByActionToolStripMenuItem
+            // 
+            this.groupByActionToolStripMenuItem.CheckOnClick = true;
+            this.groupByActionToolStripMenuItem.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.script;
+            this.groupByActionToolStripMenuItem.Name = "groupByActionToolStripMenuItem";
+            this.groupByActionToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.groupByActionToolStripMenuItem.Text = "GroupByAuditType";
+            this.groupByActionToolStripMenuItem.Click += new System.EventHandler(this.groupByActionToolStripMenuItem_Click);
+            // 
+            // groupByAccountToolStripMenuItem
+            // 
+            this.groupByAccountToolStripMenuItem.CheckOnClick = true;
+            this.groupByAccountToolStripMenuItem.Image = global::OpenSoftwareLauncher.DesktopWinForms.Properties.Resources.users;
+            this.groupByAccountToolStripMenuItem.Name = "groupByAccountToolStripMenuItem";
+            this.groupByAccountToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.groupByAccountToolStripMenuItem.Text = "GroupByAccount";
+            this.groupByAccountToolStripMenuItem.Click += new System.EventHandler(this.groupByAccountToolStripMenuItem_Click);
             // 
             // AuditLogForm
             // 
