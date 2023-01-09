@@ -94,7 +94,11 @@ namespace OpenSoftwareLauncher.AdminClient.ServerBridge
                 var exceptionDeserialized = JsonSerializer.Deserialize<ObjectResponse<HttpException>>(stringContent, Program.serializerOptions);
                 if (showMessageBox)
                 {
-                    var modal = new HttpExceptionModal(exceptionDeserialized.Data, (int)response.StatusCode, stringContent, url);
+                    var modal = new CopyableErrorModal(new string[]
+                    {
+                        $"Error {(int)response.StatusCode}",
+                        LocaleManager.Get(exceptionDeserialized.Data.Message)
+                    });
                     modal.Show();
                     modal.Focus();
                 }
@@ -174,7 +178,11 @@ namespace OpenSoftwareLauncher.AdminClient.ServerBridge
                 var exceptionDeserialized = JsonSerializer.Deserialize<ObjectResponse<HttpException>>(stringContent, Program.serializerOptions);
                 if (showMessageBox)
                 {
-                    var modal = new HttpExceptionModal(exceptionDeserialized.Data, (int)response.StatusCode, stringContent, url);
+                    var modal = new CopyableErrorModal(new string[]
+                    {
+                        $"Error {(int)response.StatusCode}",
+                        LocaleManager.Get(exceptionDeserialized.Data.Message)
+                    });
                     modal.Show();
                     modal.Focus();
                 }
