@@ -327,6 +327,12 @@ namespace OpenSoftwareLauncher.Server
                     ServerConfig.Set("Announcement", "Enable", sa.Active);
                 };
             }
+            if (Provider.GetService<OSLCommon.ServerConfig>()?.Telemetry.Prometheus ?? false)
+            {
+                var app = Provider.GetService<WebApplication>();
+                app?.UseMetricServer();
+                app?.UseHttpMetrics();
+            }
         }
         private static void ConfigureServices(IServiceCollection services)
         {
