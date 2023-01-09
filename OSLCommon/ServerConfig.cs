@@ -32,6 +32,15 @@ namespace OSLCommon.Config
         public bool RequireAuthentication { get; set; }
         public string DefaultSignatures { get; set; }
         public string ImmuneUsers { get; set; }
+        public ServerSecurity()
+        {
+            AllowAdminOverride = true;
+            AllowPermissionReadReleaseBypass = true;
+            AllowGroupRestriction = false;
+            RequireAuthentication = true;
+            DefaultSignatures = "";
+            ImmuneUsers = "";
+        }
     }
     [ConfigSerialize]
     [Group("Authentication")]
@@ -59,6 +68,17 @@ namespace OSLCommon.Config
         public string Collection_Published {get;set;}
         public string Collection_AuditLog {get;set;}
         public string Collection_Features {get;set;}
+        public ServerMongoDB()
+        {
+            DatabaseName = "opensoftwarelauncher";
+            Collection_Account = "accounts";
+            Collection_Announcement = "announcements";
+            Collection_License = "licenses";
+            Collection_GroupLicense = "licenseGroups";
+            Collection_ReleaseInfo = "releaseInfo";
+            Collection_Published = "published";
+            Collection_AuditLog = "auditLog";
+        }
     }
     [ConfigSerialize]
     [Group("Migrated")]
