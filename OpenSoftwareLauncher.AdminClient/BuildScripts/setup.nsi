@@ -114,7 +114,6 @@ Section "Admin Client (required)" SecInstallLauncher
   File    ".\release\*.dll"
   File    ".\release\*.exe.config"
   File    ".\release\*.txt"
-  File    ".\release\*.pdb"
   File /r ".\release\Locale"
   File    ".\..\..\CHANGELOG.txt"
   File    ".\..\..\LICENSE"
