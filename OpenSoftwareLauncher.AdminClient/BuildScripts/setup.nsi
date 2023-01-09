@@ -17,7 +17,7 @@
   Unicode True
 
   ;Default installation folder
-  InstallDir "$LOCALAPPDATA\OpenSoftwareLauncher.DesktopWinForms"
+  InstallDir "$LOCALAPPDATA\OpenSoftwareLauncher.AdminClient"
   
   ;Get installation folder from registry if available
   InstallDirRegKey HKCU "Software\OpenSoftwareLauncher_DesktopWinForms" ""
@@ -107,7 +107,7 @@ ${Index_RemoveFilesAndSubDirs}-done:
 Section "Admin Client (required)" SecInstallLauncher
 
   SectionIn RO
-  SetOutPath "$LOCALAPPDATA\OpenSoftwareLauncher.DesktopWinForms"
+  SetOutPath "$LOCALAPPDATA\OpenSoftwareLauncher.AdminClient"
   
   ;ADD YOUR OWN FILES HERE...
   File    ".\release\*.exe"
@@ -119,19 +119,19 @@ Section "Admin Client (required)" SecInstallLauncher
   File    ".\..\..\LICENSE"
   
   ;Store installation folder
-  WriteRegStr HKCU "Software\OpenSoftwareLauncher_DesktopWinForms" "" "$LOCALAPPDATA\OpenSoftwareLauncher.DesktopWinForms"
+  WriteRegStr HKCU "Software\OpenSoftwareLauncher_DesktopWinForms" "" "$LOCALAPPDATA\OpenSoftwareLauncher.AdminClient"
   
   ;Create uninstaller
-  WriteUninstaller "$LOCALAPPDATA\OpenSoftwareLauncher.DesktopWinForms\Uninstall.exe"
+  WriteUninstaller "$LOCALAPPDATA\OpenSoftwareLauncher.AdminClient\Uninstall.exe"
 
 SectionEnd
 
 Section "Start Menu Shortcuts" SecMenuShortcut
 
   CreateDirectory "$SMPROGRAMS\Open Software Launcher"
-  CreateDirectory "$SMPROGRAMS\Open Software Launcher\Desktop"
-  CreateShortcut "$SMPROGRAMS\Open Software Launcher\Desktop\Uninstall OSL Desktop.lnk" "$LOCALAPPDATA\OpenSoftwareLauncher.DesktopWinForms\Uninstall.exe"
-  CreateShortcut "$SMPROGRAMS\Open Software Launcher\Desktop\OSL Desktop.lnk" "$LOCALAPPDATA\OpenSoftwareLauncher.DesktopWinForms\OpenSoftwareLauncher.DesktopWinForms.exe"
+  CreateDirectory "$SMPROGRAMS\Open Software Launcher\Admin Client"
+  CreateShortcut "$SMPROGRAMS\Open Software Launcher\Admin Client\Uninstall OSL Desktop.lnk" "$LOCALAPPDATA\OpenSoftwareLauncher.AdminClient\Uninstall.exe"
+  CreateShortcut "$SMPROGRAMS\Open Software Launcher\Admin Client\OSL Desktop.lnk" "$LOCALAPPDATA\OpenSoftwareLauncher.AdminClient\OpenSoftwareLauncher.AdminClient.exe"
   
 SectionEnd
 
@@ -155,12 +155,12 @@ SectionEnd
 ;--------------------------------
 ;Start after Install
   Function LaunchLink
-    ExecShell "" "$SMPROGRAMS\Open Software Launcher\Desktop\OSL Desktop.lnk"
+    ExecShell "" "$SMPROGRAMS\Open Software Launcher\Admin Client\OSL Admin Client.lnk"
   FunctionEnd
   # These indented statements modify settings for MUI_PAGE_FINISH
     !define MUI_FINISHPAGE_NOAUTOCLOSE
     !define MUI_FINISHPAGE_RUN
-    !define MUI_FINISHPAGE_RUN_TEXT "Start OSL Desktop"
+    !define MUI_FINISHPAGE_RUN_TEXT "Start OSL Admin Client"
     !define MUI_FINISHPAGE_RUN_FUNCTION "LaunchLink"
   !insertmacro MUI_PAGE_FINISH
 
@@ -169,12 +169,12 @@ SectionEnd
 
 Section "Uninstall"
 
-  Delete "$LOCALAPPDATA\OpenSoftwareLauncher.DesktopWinForms\Uninstall.exe"
-  Delete "$LOCALAPPDATA\OpenSoftwareLauncher.DesktopWinForms\*"
-  Delete "$SMPROGRAMS\Open Software Launcher\Desktop\*"
-  RMDir "$SMPROGRAMS\Open Software Launcher\Desktop"
+  Delete "$LOCALAPPDATA\OpenSoftwareLauncher.AdminClient\Uninstall.exe"
+  Delete "$LOCALAPPDATA\OpenSoftwareLauncher.AdminClient\*"
+  Delete "$SMPROGRAMS\Open Software Launcher\Admin Client\*"
+  RMDir "$SMPROGRAMS\Open Software Launcher\Admin Client"
 
-  RMDir "$LOCALAPPDATA\OpenSoftwareLauncher.DesktopWinForms"
+  RMDir "$LOCALAPPDATA\OpenSoftwareLauncher.AdminClient"
 
   DeleteRegKey /ifempty HKCU "Software\OpenSoftwareLauncher_DesktopWinForms"
 
