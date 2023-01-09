@@ -105,6 +105,8 @@ namespace OpenSoftwareLauncher.AdminClient
         private static void InitConfig()
         {
             string configLocation = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath) ?? Directory.GetCurrentDirectory(), "config.ini");
+            if (!File.Exists(configLocation))
+                File.WriteAllText(configLocation, "");
             ConfigSource = new FastConfigSource<Config>(configLocation);
             Config = ConfigSource.Parse();
         }

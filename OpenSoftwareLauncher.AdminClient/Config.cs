@@ -17,6 +17,12 @@ namespace OpenSoftwareLauncher.AdminClient
         public string Endpoint { get; set; }
         public ConfigAuth Auth { get; set; }
         public ConfigAuditLog AuditLog { get; set; }
+        public Config()
+        {
+            Language = "en";
+            ShowLatestRelease = true;
+            Endpoint = "";
+        }
     }
     [ConfigSerialize]
     [Group("Authentication")]
