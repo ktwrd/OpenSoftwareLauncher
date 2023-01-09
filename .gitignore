@@ -365,8 +365,8 @@ tokens.json
 *tokens.json
 **tokens.json
 
-OpenSoftwareLauncher.DesktopWinForms/BuildScripts/release/
-OpenSoftwareLauncher.DesktopWinForms/BuildScripts/**/.exe
+OpenSoftwareLauncher.AdminClient/BuildScripts/release/
+OpenSoftwareLauncher.AdminClient/BuildScripts/**/.exe
 *.Update.exe
 OpenSoftwareLauncher/account.json
 OpenSoftwareLauncher/systemAnnouncement.json
@@ -379,5 +379,5 @@ OpenSoftwareLauncher.Server/licenses.json
 OpenSoftwareLauncher.Server/Config/**/*
 OpenSoftwareLauncher.Server/Config/*
 OpenSoftwareLauncher.Server/Properties/launchSettings.json
-OpenSoftwareLauncher.DesktopWinForms/BuildScripts/minalyzeDeploy/prod.env
+OpenSoftwareLauncher.AdminClient/BuildScripts/minalyzeDeploy/prod.env
 OpenSoftwareLauncher.Server/superuser-token.txt
