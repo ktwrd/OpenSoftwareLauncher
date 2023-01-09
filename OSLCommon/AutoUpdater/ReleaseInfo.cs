@@ -1,5 +1,6 @@
 ﻿using kate.shared.Helpers;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -29,10 +30,10 @@ namespace OSLCommon.AutoUpdater
         string commitHash { get; set; }
         string commitHashShort { get; set; }
         ReleaseType releaseType { get; set; }
-        Dictionary<string, string> files { get; set; }
         Dictionary<string, string> executable { get; set; }
     }
     [Serializable]
+    [BsonIgnoreExtraElements]
     public class ReleaseInfo : IReleaseInfo, bSerializable
     {
         [JsonIgnore]
