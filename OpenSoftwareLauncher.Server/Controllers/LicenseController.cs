@@ -48,5 +48,37 @@ namespace OpenSoftwareLauncher.Server.Controllers
                 Data = response
             }, MainClass.serializerOptions);
         }
+
+        [HttpGet("info")]
+        [ProducesResponseType(200, Type = typeof(ObjectResponse<GrantLicenseKeyResponse>))]
+        [ProducesResponseType(400, Type = typeof(ObjectResponse<HttpException>))]
+        [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
+        [OSLAuthRequired]
+        public ActionResult Info(string token, string key)
+        {
+            var data = MainClass.GetService<MongoAccountLicenseManager>()?.GetLicenseKey(key).Result;
+            if (data == null)
+            {
+                Response.StatusCode = 400;
+                return Json(new ObjectResponse<HttpException>
+                {
+                    Success = false,
+                    Data = new HttpException(400, ServerStringResponse.InvalidLicenseKey)
+                }, MainClass.serializerOptions);
+            }
+
+            var responseData = new GrantLicenseKeyResponse
+            {
+                Code = data.Activated ? GrantLicenseKeyResponseCode.AlreadyRedeemed : GrantLicenseKeyResponseCode.Available,
+                Products = data.Products,
+                Permissions = data.Permissions
+            };
+
+            return Json(new ObjectResponse<GrantLicenseKeyResponse>
+            {
+                Success = true,
+                Data = responseData
+            }, MainClass.serializerOptions);
+        }
     }
 }

@@ -61,7 +61,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
 
             var publishedFilter = Builders<PublishedRelease>
                 .Filter
-                .Where(v => v.RemoteLocation == signature);
+                .Where(v => v.Release.remoteLocation == signature);
 
             var releaseFilter = Builders<ReleaseInfo>
                 .Filter
@@ -104,7 +104,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         {
             var filter = Builders<PublishedRelease>
                 .Filter
-                .Where(v => v.RemoteLocation == signature);
+                .Where(v => v.Release.remoteLocation == signature);
 
             IMongoCollection<PublishedRelease>? collection = MainClass.GetService<MongoMiddle>()?.GetPublishedCollection();
 

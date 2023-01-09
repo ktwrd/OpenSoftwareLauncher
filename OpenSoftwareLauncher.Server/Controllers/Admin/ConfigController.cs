@@ -161,7 +161,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
         [ProducesResponseType(401, Type = typeof(ObjectResponse<HttpException>))]
         public ActionResult Save(string token)
         {
-            ServerConfig.Save();
+            MainClass.Save();
 
             return Json(new ObjectResponse<Dictionary<string, Dictionary<string, object>>>()
             {

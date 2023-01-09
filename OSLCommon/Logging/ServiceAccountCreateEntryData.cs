@@ -13,6 +13,7 @@ namespace OSLCommon.Logging
             Username = "";
             Permissions = Array.Empty<AccountPermission>();
             Licenses = Array.Empty<string>();
+            AuditType = AuditType.ServiceAccountCreate;
         }
 
         public ServiceAccountCreateEntryData(Account account)
@@ -21,6 +22,7 @@ namespace OSLCommon.Logging
             Username = account.Username;
             Permissions = account.Permissions;
             Licenses = account.Licenses;
+            AuditType = AuditType.ServiceAccountCreate;
         }
 
         public string Username { get; set; }
