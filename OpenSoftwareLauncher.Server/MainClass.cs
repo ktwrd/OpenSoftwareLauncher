@@ -31,20 +31,6 @@ namespace OpenSoftwareLauncher.Server
 {
     public static class MainClass
     {
-        public static bool DebugMode
-        {
-            get
-            {
-#if DEBUG
-                return true;
-#else
-                // This warning is only disabled because DEBUG is set.
-#pragma warning disable CS0162 // Unreachable code detected
-                return ServerConfig.GetBoolean("General", "Debug", false);
-#pragma warning restore CS0162 // Unreachable code detected
-#endif
-            }
-        }
 
         public static WebApplicationBuilder Builder { get; private set; }
         public static WebApplication App { get; private set; }
