@@ -18,20 +18,24 @@ namespace OpenSoftwareLauncher.AdminClient
             InitializeComponent();
         }
         public CopyableErrorModal(string content, string title="Error", VoidDelegate onClose=null)
+            : this()
         {
-            InitializeComponent();
             textBox1.Text = content;
             Text = title;
+            if (onClose == null)
+                return;
             FormClosed += (sender, e) =>
             {
                 onClose?.Invoke();
             };
         }
         public CopyableErrorModal(string[] lines, string title="Error", VoidDelegate onClose = null)
+            : this()
         {
-            InitializeComponent();
             textBox1.Lines = lines;
             Text = title;
+            if (onClose == null)
+                return;
             FormClosed += (sender, e) =>
             {
                 onClose?.Invoke();
