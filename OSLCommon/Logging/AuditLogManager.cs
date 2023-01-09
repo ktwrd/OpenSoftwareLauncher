@@ -67,6 +67,22 @@ namespace OSLCommon.Logging
             var collection = GetAuditCollection();
             await collection.InsertOneAsync(instance);
         }
+        public async Task Create<T>(T entry, Account account) where T : IAuditEntryData
+        {
+            var instance = new AuditLogEntry(this);
+            instance.ActionData = JsonSerializer.Serialize((object)entry, new JsonSerializerOptions
+            {
+                IgnoreReadOnlyFields = true,
+                IgnoreReadOnlyProperties = true,
+                IncludeFields = true
+            });
+            instance.ActionType = entry.AuditType;
+            if (account != null)
+                instance.Username = account.Username;
+
+            var collection = GetAuditCollection();
+            await collection.InsertOneAsync(instance);
+        }
 
         public async Task<AuditLogEntry[]> GetAll()
         {
