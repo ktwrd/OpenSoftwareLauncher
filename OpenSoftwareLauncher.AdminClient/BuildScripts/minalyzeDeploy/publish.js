@@ -103,12 +103,14 @@ function safeGet(value, fallback)
 }
 const parameters = {
     timestamp: safeGet(process.env['CI_COMMIT_TIMESTAMP'], Date.now().toString()),
-    productName: 'osladminclient',
+    name: 'osladminclient',
+    productName: 'OSL Admin Client',
     organization: 'osl',
     appId: 'pet.kate.osl.desktop',
     commitHash: safeGet(process.env['CI_COMMIT_SHA'], localCommitHash),
     commitHashShort: safeGet(process.env['CI_COMMIT_SHA_SHORT'], localCommitHash.substring(0, 7)),
-    branch: safeGet(process.env['CI_COMMIT_BRANCH'], 'main')
+    branch: safeGet(process.env['CI_COMMIT_BRANCH'], 'main'),
+    exe: 'OpenSoftwareLauncher.AdminClient.exe'
 }
 async function logic()
 {
@@ -118,36 +120,27 @@ async function logic()
         fs.mkdirSync('./artifacts/', { recursive: true })
     await zipDirectory(artifactsPath, path.resolve(`./artifacts/adminclient-win-amd64.zip`))
 
-    let timestamp = parseInt(process.env['CI_COMMIT_TIMESTAMP'] == undefined ? Date.now().toString() : (new Date(process.env['CI_COMMIT_TIMESTAMP'] ?? '')).getTime())
     let uploadParameters = {
-        organization: 'osl',
-        product: 'osladminclient',
-        branch: process.env['CI_COMMIT_BRANCH'] || 'main',
-        timestamp,
+        organization: parameters.organization,
+        product: `${parameters.name}-${parameters.branch}`,
+        branch: parameters.branch,
+        timestamp: parameters.timestamp,
         releaseInfo: {
             version: fetchTargetVersion(),
-            name: 'osladminclient',
-            envtimestamp: timestamp,
-            timestamp,
-            productName: 'OSL Admin Client',
-            appID: 'pet.kate.osl.desktop.adminclient',
-            files: {
-                windows: 'adminclient-win-amd64.zip',
-                linux: ''
-            },
+            name: parameters.name,
+            envtimestamp: parameters.timestamp,
+            timestamp: parameters.timestamp,
+            productName: parameters.productName,
+            appID: parameters.appId,
             executable: {
-                windows: 'OpenSoftwareLauncher.AdminClient.exe',
+                windows: parameters.exe,
                 linux: ''
             },
             commitHash: parameters.commitHash,
             commitHashShort: parameters.commitHashShort,
-            remoteLocation: 'osl/osladminclient'
+            remoteLocation: `${parameters.organization}/${parameters.name}-${parameters.branch}`
         },
         files: []
-    }
-    uploadParameters.releaseInfo.remoteLocation = `osl/${uploadParameters.product}-${uploadParameters.branch}`
-    if (process.env['CI_COMMIT_BRANCH'] != undefined && process.env['CI_COMMIT_BRANCH'] != 'main') {
-        uploadParameters.product = uploadParameters.product + '-' + process.env['CI_COMMIT_BRANCH']
     }
     console.log(uploadParameters)
     let files = await s3upload(uploadParameters)
@@ -174,21 +167,19 @@ async function logic()
             'Content-Type': 'application/json'
         }
     }).then((d) => {
+        console.log(d.status)
         console.log('================================================================ SUCCESS OUTPUT START')
-        console.log(util.inspect(d, { showHidden: true, depth: null, colorize: true }))
+        console.log(util.inspect(d.data, { showHidden: true, depth: null, colorize: true }))
         if (d.toJSON != undefined) {
-            console.log('================================================================ JSON OUTPUT START')
             console.log(util.inspect(d.toJSON(), { showHidden: true, depth: null, colorize: true }))
-            console.log('================================================================ JSON OUTPUT END')
         }
         console.log('================================================================ SUCCESS OUTPUT END')
     }).catch((e) => {
+        console.log(e.status, e.code)
         console.log('================================================================ FAIL OUTPUT START')
-        console.log(util.inspect(e, { showHidden: true, depth: null, colorize: true }))
+        console.log(util.inspect(e.data, { showHidden: true, depth: null, colorize: true }))
         if (e.toJSON != undefined) {
-            console.log('================================================================ JSON OUTPUT START')
             console.log(util.inspect(e.toJSON(), { showHidden: true, depth: null, colorize: true }))
-            console.log('================================================================ JSON OUTPUT END')
         }
         console.log('================================================================ FAIL OUTPUT END')
     })
