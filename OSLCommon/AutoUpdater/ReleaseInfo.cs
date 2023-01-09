@@ -51,7 +51,6 @@ namespace OSLCommon.AutoUpdater
         public string commitHash { get; set; }
         public string commitHashShort { get; set; }
         public ReleaseType releaseType { get; set; }
-        public Dictionary<string, string> files { get; set; }
         public Dictionary<string, string> executable { get; set; }
         public static ReleaseInfo Blank()
         {
@@ -70,7 +69,6 @@ namespace OSLCommon.AutoUpdater
             commitHash = @"";
             commitHashShort = @"";
             releaseType = ReleaseType.Other;
-            files = new Dictionary<string, string>();
             executable = new Dictionary<string, string>();
         }
 
@@ -87,7 +85,7 @@ namespace OSLCommon.AutoUpdater
             commitHash = sr.ReadString();
             commitHashShort = sr.ReadString();
             releaseType = (ReleaseType)sr.ReadInt32();
-            files = (Dictionary<string, string>)sr.ReadDictionary<string, string>();
+            var empty = (Dictionary<string, string>)sr.ReadDictionary<string, string>();
             executable = (Dictionary<string, string>)sr.ReadDictionary<string, string>();
             UID = sr.ReadString();
         }
@@ -103,7 +101,7 @@ namespace OSLCommon.AutoUpdater
             sw.Write(commitHash);
             sw.Write(commitHashShort);
             sw.Write(Convert.ToInt32(releaseType));
-            sw.Write(files);
+            sw.Write(new Dictionary<string, string>());
             sw.Write(executable);
             sw.Write(UID);
         }

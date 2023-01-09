@@ -77,8 +77,7 @@ async function s3upload (uploadParameters) {
     }
     return items
 }
-let commitHash = process.env['CI_COMMIT_SHA'] || require('child_process').execSync(`git rev-parse HEAD`).toString().split('\n')[0]
-let commitHashShort = process.env['CI_COMMIT_SHORT_SHA'] || require('child_process').execSync(`git rev-parse --short HEAD`).toString().split('\n')[0]
+let localCommitHash = require('child_process').execSync(`git rev-parse HEAD`).toString().split('\n')[0].toString()
 function fetchTargetVersion()
 {
     let versionInfoPath = path.resolve('../../Properties/AssemblyInfo.cs')
@@ -106,7 +105,10 @@ const parameters = {
     timestamp: safeGet(process.env['CI_COMMIT_TIMESTAMP'], Date.now().toString()),
     productName: 'osladminclient',
     organization: 'osl',
-    appId: 'pet.kate.osl.desktop'
+    appId: 'pet.kate.osl.desktop',
+    commitHash: safeGet(process.env['CI_COMMIT_SHA'], localCommitHash),
+    commitHashShort: safeGet(process.env['CI_COMMIT_SHA_SHORT'], localCommitHash.substring(0, 7)),
+    branch: safeGet(process.env['CI_COMMIT_BRANCH'], 'main')
 }
 async function logic()
 {
@@ -137,8 +139,8 @@ async function logic()
                 windows: 'OpenSoftwareLauncher.AdminClient.exe',
                 linux: ''
             },
-            commitHash,
-            commitHashShort,
+            commitHash: parameters.commitHash,
+            commitHashShort: parameters.commitHashShort,
             remoteLocation: 'osl/osladminclient'
         },
         files: []
