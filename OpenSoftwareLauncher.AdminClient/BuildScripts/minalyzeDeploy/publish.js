@@ -102,7 +102,7 @@ function safeGet(value, fallback)
     return value
 }
 const parameters = {
-    timestamp: safeGet(process.env['CI_COMMIT_TIMESTAMP'], Date.now().toString()),
+    timestamp: parseInt(safeGet(process.env['CI_COMMIT_TIMESTAMP'], Date.now().toString())),
     name: 'osladminclient',
     productName: 'OSL Admin Client',
     organization: 'osl',

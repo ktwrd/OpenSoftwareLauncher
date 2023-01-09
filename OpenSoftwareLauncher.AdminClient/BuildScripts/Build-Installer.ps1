@@ -1,4 +1,4 @@
-$env:OSLDesktopVersion=((Get-Item $env:TargetProjectDirectory\bin\Release\OpenSoftwareLauncher.DesktopWinForms.exe).VersionInfo.FileVersion);
+$env:OSLDesktopVersion=((Get-Item $env:TargetProjectDirectory\bin\Release\OpenSoftwareLauncher.AdminClient.exe).VersionInfo.FileVersion);
 
 & "C:\Program Files (x86)\NSIS\makensis.exe" setup.nsi /V4
 Write-Output "============================= SHA256 Sum"
