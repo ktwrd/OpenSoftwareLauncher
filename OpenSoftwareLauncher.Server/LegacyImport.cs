@@ -70,46 +70,49 @@ namespace OpenSoftwareLauncher.Server
 
             if (deserialized == null)
                 return Task.CompletedTask;
-            
 
             var mongoMiddle = MainClass.Provider?.GetService<MongoMiddle>();
-            if (!ServerConfig.GetBoolean("Migrated", "ReleaseInfo", false))
+            
+            if (!MainClass.Config.Migrated.ReleaseInfo)
             {
                 mongoMiddle?.SetReleaseInfoContent(deserialized.ReleaseInfoContent.ToArray());
-                ServerConfig.Set("Migrated", "ReleaseInfo", true);
+                MainClass.Config.Migrated.ReleaseInfo = true;
             }
-            if (!ServerConfig.GetBoolean("Migrated", "Published", false))
+            if (!MainClass.Config.Migrated.Published)
             {
                 mongoMiddle?.ForceSetPublishedContent(deserialized.Published.Select(v => v.Value).ToArray());
-                ServerConfig.Set("Migrated", "Published", true);
+                MainClass.Config.Migrated.Published = true;
             }
+            MainClass.Save();
             return Task.CompletedTask;
         }
 
         public static Task ImportAccount(string fileContent)
         {
-            if (ServerConfig.GetBoolean("Migrated", "Account", false))
+            if (MainClass.Config.Migrated.Account)
                 return Task.CompletedTask;
 
             MainClass.Provider?.GetService<MongoAccountManager>()?.ReadJSON(fileContent);
-            ServerConfig.Set("Migrated", "Account", true);
+            MainClass.Config.Migrated.Account = true;
+            MainClass.Save();
 
             return Task.CompletedTask;
         }
 
         public static Task ImportAnnouncement(string fileContent)
         {
-            if (ServerConfig.GetBoolean("Migrated", "Announcement", false))
+            if (MainClass.Config.Migrated.Announcement)
                 return Task.CompletedTask;
 
             MainClass.Provider?.GetService<MongoSystemAnnouncement>()?.Read(fileContent);
-            ServerConfig.Set("Migrated", "Announcement", true);
+            MainClass.Config.Migrated.Announcement = true;
+            MainClass.Save();
             return Task.CompletedTask;
         }
 
         public static Task ImportLicense(string licenseFileContent, string groupFileContent)
         {
-            if (ServerConfig.GetBoolean("Migrated", "License", false))
+            if (MainClass.Config.Migrated.License)
                 return Task.CompletedTask;
             if (licenseFileContent.Length > 1)
             {
@@ -124,8 +127,8 @@ namespace OpenSoftwareLauncher.Server
                     .Select(v => v.Value).ToArray();
                 MainClass.Provider?.GetService<MongoAccountLicenseManager>()?.SetGroups(groupContent, false);
             }
-
-            ServerConfig.Set("Migrated", "License", true);
+            MainClass.Config.Migrated.License = true;
+            MainClass.Save();
             return Task.CompletedTask;
         }
     }

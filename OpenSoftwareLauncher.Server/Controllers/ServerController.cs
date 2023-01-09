@@ -45,8 +45,8 @@ namespace OpenSoftwareLauncher.Server.Controllers
             {
                 Uptime = ServerUptime(),
                 Version = ServerVersion(),
-                AuthProvider = ServerConfig.GetString("Authentication", "Provider"),
-                AuthProviderSignup = ServerConfig.GetString("Authentication", "ProviderSignupURL"),
+                AuthProvider = MainClass.Config.Auth.Provider,
+                AuthProviderSignup = MainClass.Config.Auth.ProviderSignupURL,
                 Features = MainClass.GetService<FeatureManager>()?.GetAll() ?? Array.Empty<Feature>()
             }, MainClass.serializerOptions);
         }

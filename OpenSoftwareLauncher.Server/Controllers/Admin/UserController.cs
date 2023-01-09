@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using OSLCommon.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace OpenSoftwareLauncher.Server.Controllers.Admin
 {
@@ -144,7 +145,7 @@ namespace OpenSoftwareLauncher.Server.Controllers.Admin
                     Data = new HttpException(404, ServerStringResponse.AccountNotFound)
                 }, MainClass.serializerOptions);
             }
-            if (!ServerConfig.Security_ImmuneUsers.Contains(targetAccount.Username) && username != bannerAccount?.Username)
+            if (!MainClass.Config.Security.ImmuneUsers.Contains(targetAccount.Username) && username != bannerAccount?.Username)
             {
                 if (reason != null)
                     targetAccount.DisableAccount(reason);

@@ -17,10 +17,10 @@ namespace OpenSoftwareLauncher.Server
         }
         private readonly IServiceProvider _provider;
 
-        public string Collection_ReleaseInfo => ServerConfig.GetString("MongoDB", "Collection_ReleaseInfo");
-        public string Collection_Published => ServerConfig.GetString("MongoDB", "Collection_Published");
-
-        public string DatabaseName => ServerConfig.GetString("MongoDB", "DatabaseName");
+        public string Collection_ReleaseInfo => MainClass.Config.MongoDB.Collection_ReleaseInfo;
+        public string Collection_Published => MainClass.Config.MongoDB.Collection_Published;
+        
+        public string DatabaseName => MainClass.Config.MongoDB.DatabaseName;
         #region MongoDB Boilerplate
         public IMongoDatabase? GetDatabase()
         {

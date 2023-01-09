@@ -34,7 +34,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
                         Data = new HttpException(StatusCodes.Status401Unauthorized, ServerStringResponse.AccountDisabled)
                     }, MainClass.serializerOptions);
                 }
-                if (ServerConfig.GetBoolean("Security", "AllowPermission_ReadReleaseBypass", true) && account.HasPermission(AccountPermission.READ_RELEASE_BYPASS))
+                if (MainClass.Config.Security.AllowPermissionReadReleaseBypass && account.HasPermission(AccountPermission.READ_RELEASE_BYPASS))
                 {
                     return Json(new ObjectResponse<Dictionary<string, ProductRelease>>()
                     {
@@ -42,7 +42,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
                         Data = ReleaseHelper.TransformReleaseList(MainClass.GetService<MongoMiddle>()?.GetReleaseInfoContent())
                     }, MainClass.serializerOptions);
                 }
-                if (ServerConfig.GetBoolean("Security", "AllowAdminOverride", true) && account.HasPermission(AccountPermission.ADMINISTRATOR))
+                if (MainClass.Config.Security.AllowAdminOverride && account.HasPermission(AccountPermission.ADMINISTRATOR))
                 {
                     return Json(new ObjectResponse<Dictionary<string, ProductRelease>>()
                     {
@@ -64,9 +64,9 @@ namespace OpenSoftwareLauncher.Server.Controllers
             var returnContent = new List<ProductRelease>();
             var allowFetch = true;
             bool showExtraBuilds = MainClass.GetService<MongoAccountManager>()?.AccountHasPermission(token, AccountPermission.READ_RELEASE_BYPASS) ?? false
-                && ServerConfig.GetBoolean("Security", "AllowPermission_ReadReleaseBypass", true);
-            bool contains = MainClass.GetService<MongoClient>()?.GetDatabase(ContentManager.DatabaseName)
-                    .GetCollection<ReleaseInfo>(ContentManager.ReleaseInfo_Collection)
+                && MainClass.Config.Security.AllowPermissionReadReleaseBypass;
+            bool contains = MainClass.GetService<MongoClient>()?.GetDatabase(MainClass.Config.MongoDB.DatabaseName)
+                    .GetCollection<ReleaseInfo>(MainClass.Config.MongoDB.Collection_ReleaseInfo)
                     .Find(Builders<ReleaseInfo>
                         .Filter
                         .Eq("appID", app))
@@ -76,8 +76,8 @@ namespace OpenSoftwareLauncher.Server.Controllers
             {
                 var toMap = new Dictionary<string, List<ReleaseInfo>>();
 
-                var cnt = MainClass.GetService<MongoClient>()?.GetDatabase(ContentManager.DatabaseName)
-                    .GetCollection<ReleaseInfo>(ContentManager.ReleaseInfo_Collection)
+                var cnt = MainClass.GetService<MongoClient>()?.GetDatabase(MainClass.Config.MongoDB.DatabaseName)
+                    .GetCollection<ReleaseInfo>(MainClass.Config.MongoDB.Collection_ReleaseInfo)
                     .Find(Builders<ReleaseInfo>
                         .Filter
                         .Eq("appID", app))
@@ -158,7 +158,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
 
                     if (account != null)
                     {
-                        if (ServerConfig.GetBoolean("Security", "AllowAdminOverride", true))
+                        if (MainClass.Config.Security.AllowAdminOverride)
                         {
                             if (account != null && account.HasPermission(AccountPermission.ADMINISTRATOR))
                                 allowStream = true;
@@ -166,7 +166,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
 
                         if (isOtherBranch)
                         {
-                            if (ServerConfig.GetBoolean("Security", "AllowPermission_ReadReleaseBypass", true))
+                            if (MainClass.Config.Security.AllowPermissionReadReleaseBypass)
                                 if (account != null && account.HasPermission(AccountPermission.READ_RELEASE_BYPASS))
                                     allowStream = true;
                                 else
@@ -195,8 +195,8 @@ namespace OpenSoftwareLauncher.Server.Controllers
 
         private List<ProductRelease> fetchAllReleases(string token)
         {
-            var appIDlist = MainClass.GetService<MongoClient>()?.GetDatabase(ContentManager.DatabaseName)
-                    .GetCollection<ReleaseInfo>(ContentManager.ReleaseInfo_Collection)
+            var appIDlist = MainClass.GetService<MongoClient>()?.GetDatabase(MainClass.Config.MongoDB.DatabaseName)
+                    .GetCollection<ReleaseInfo>(MainClass.Config.MongoDB.Collection_ReleaseInfo)
                     .Find(Builders<ReleaseInfo>.Filter.Empty)
                     .ToList()
                     .Select(v => v.appID)

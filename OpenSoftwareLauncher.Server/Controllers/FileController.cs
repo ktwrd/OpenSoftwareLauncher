@@ -101,7 +101,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
                         {
                             allow = MainClass.CanUserGroupsAccessStream(commit.Release.groupBlacklist.ToArray(), commit.Release.groupWhitelist.ToArray(), account);
                         }*/
-                        if (ServerConfig.GetBoolean("Security", "AllowAdminOverride", true))
+                        if (MainClass.Config.Security.AllowAdminOverride)
                         {
                             if (account.HasPermission(OSLCommon.Authorization.AccountPermission.ADMINISTRATOR))
                                 allow = true;
@@ -109,7 +109,7 @@ namespace OpenSoftwareLauncher.Server.Controllers
 
                         if (commit.Release.releaseType == ReleaseType.Other)
                         {
-                            if (ServerConfig.GetBoolean("Security", "AllowPermission_ReadReleaseBypass", true))
+                            if (MainClass.Config.Security.AllowPermissionReadReleaseBypass)
                                 if (account.HasPermission(OSLCommon.Authorization.AccountPermission.READ_RELEASE_BYPASS))
                                     allow = true;
                         }

@@ -3,20 +3,18 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Prometheus;
 using System.Diagnostics;
-using static OpenSoftwareLauncher.Server.MainClass;
 
 namespace OpenSoftwareLauncher.Server.Targets
 {
     [LaunchTarget("AspNetEvents")]
     public class ASPNetInstanceTarget : BaseTarget
     {
-        public IServer Server { get; set; }
         public override void Register()
         {
-            Server.AspNetCreate_PreBuild += Swagger_PreBuild;
-            Server.AspNetCreate_PreRun += RequestLog;
-            Server.AspNetCreate_PreRun += Swagger;
-            Server.AspNetCreate_PreRun += Prometheus;
+            MainClass.AspNetCreate_PreBuild += Swagger_PreBuild;
+            MainClass.AspNetCreate_PreRun += RequestLog;
+            MainClass.AspNetCreate_PreRun += Swagger;
+            MainClass.AspNetCreate_PreRun += Prometheus;
         }
         private void Swagger_PreBuild(WebApplicationBuilder builder)
         {
@@ -59,7 +57,7 @@ namespace OpenSoftwareLauncher.Server.Targets
         }
         private void Prometheus(WebApplication app)
         {
-            if (ServerConfig.GetBoolean("Telemetry", "Prometheus"))
+            if (MainClass.Config.Telemetry.Prometheus)
             {
                 app.UseMetricServer();
                 app.UseHttpMetrics();

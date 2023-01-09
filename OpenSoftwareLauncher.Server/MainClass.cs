@@ -25,6 +25,7 @@ using System.Threading.Tasks;
 using OSLCommon.Helpers;
 using OpenSoftwareLauncher.Server.Targets;
 using kate.FastConfig;
+using Nini.Config;
 
 namespace OpenSoftwareLauncher.Server
 {
@@ -57,8 +58,6 @@ namespace OpenSoftwareLauncher.Server
         /// </summary>
         public static Dictionary<string, string> ValidTokens = new();
         public static List<ITokenGranter> TokenGrantList = new();
-
-        public static ContentManager? ContentManager { get; private set; }
 
         private static string? dataDirectory = null;
         public static string DataDirectory
@@ -103,15 +102,12 @@ namespace OpenSoftwareLauncher.Server
 
             if (forceMigrate)
             {
-                foreach (var parent in ServerConfig.DefaultData)
-                {
-                    if (parent.Key != "Migrated")
-                        continue;
-                    foreach (var child in parent.Value)
-                    {
-                        ServerConfig.Set(parent.Key, child.Key, child.Value);
-                    }
-                }
+                MainClass.Config.Migrated.Account = true;
+                MainClass.Config.Migrated.Announcement = true;
+                MainClass.Config.Migrated.License = true;
+                MainClass.Config.Migrated.Published = true;
+                MainClass.Config.Migrated.ReleaseInfo = true;
+                Save();
                 Log.WriteLine($" Enforced Mirgration");
             }
         }
@@ -121,57 +117,29 @@ namespace OpenSoftwareLauncher.Server
             MainClass.dataDirectory = dataDirectory.Trim('"');
             Log.WriteLine($" Set data directory to \"{MainClass.dataDirectory}\"");
         }
-        private static void PrintConfig()
-        {
-            foreach (var parent in ServerConfig.Get())
-            {
-                foreach (var child in parent.Value)
-                {
-                    Log.WriteLine($" {parent.Key}.{child.Key} = {child.Value}");
-                }
-            }
-        }
         private static string[] Arguments = Array.Empty<string>(); 
         public static void Main(params string[] args)
         {
             Arguments = args;
             SetupOptions(args);
             StartupTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-#if DEBUG
-            PrintConfig();
-#endif
-            ServerConfig.Get();
-            if (ServerConfig.GetString("Connection", "MongoDBServer", "").Length < 1)
+            InitConfig();
+            AppDomain.CurrentDomain.ProcessExit += BeforeExit;
+            serializerOptions.Converters.Add(new kate.shared.DateTimeConverterUsingDateTimeOffsetParse());
+            serializerOptions.Converters.Add(new kate.shared.DateTimeConverterUsingDateTimeParse());
+            RunLaunchTarget();
+            AccountManager.DefaultLicenses = Config.Security.DefaultSignatures.Split(' ');
+            if (Config.MongoDBServer.Length < 1)
             {
                 Log.WriteLine($" MongoDB Connection URL is invalid. Please set it in `config.ini`");
                 Environment.Exit(1);
             }
-            ServerConfig.OnWrite += (group, key, value) =>
-            {
-                switch (group)
-                {
-                    case "Security":
-                        AccountManager.DefaultLicenses = ServerConfig.Security_DefaultSignatures;
-                        break;
-                    case "Provider":
-                        AccountManager.TokenGranters.Clear();
-                        TokenGrantList.Clear();
-                        TokenGrantList.Add(new URLProvider(ServerConfig.GetString("Authentication", "Provider")));
-                        AccountManager.TokenGranters.Add(new URLProvider(ServerConfig.GetString("Authentication", "Provider")));
-                        break;
-                }
-            };
-            AccountManager.DefaultLicenses = ServerConfig.Security_DefaultSignatures;
-            AppDomain.CurrentDomain.ProcessExit += BeforeExit;
-            serializerOptions.Converters.Add(new kate.shared.DateTimeConverterUsingDateTimeOffsetParse());
-            serializerOptions.Converters.Add(new kate.shared.DateTimeConverterUsingDateTimeParse());
-            ContentManager = new ContentManager();
-            RunLaunchTarget();
             App?.Run();
         }
         private static void RunLaunchTarget()
         {
-            var targets = new Dictionary<string, Task>()
+            var targets = FindAttributes();
+            targets = targets.Concat(new Dictionary<string, Task>()
             {
                 {"InitializeServices", new Task(InitializeServices) },
                 {"CreateSuperuserAccount", new Task(delegate
@@ -185,12 +153,10 @@ namespace OpenSoftwareLauncher.Server
                 }) },
                 {"TokenGranter", new Task(delegate
                 {
-                    TokenGrantList.Add(new URLProvider(ServerConfig.GetString("Authentication", "Provider")));
-                    AccountManager.TokenGranters.Add(new URLProvider(ServerConfig.GetString("Authentication", "Provider")));
+                    TokenGrantList.Add(new URLProvider(Config.Auth.Provider));
+                    AccountManager.TokenGranters.Add(new URLProvider(Config.Auth.Provider));
                 }) }
-            };
-
-            targets = targets.Concat(FindAttributes()).ToDictionary(v => v.Key, k => k.Value);
+            }).ToDictionary(v => v.Key, k => k.Value);
 
             var startAll = OSLHelper.GetMilliseconds();
             foreach (var pair in targets)
@@ -290,7 +256,6 @@ namespace OpenSoftwareLauncher.Server
         /// </summary>
         public static void BeforeExit(object? sender, EventArgs e)
         {
-            ContentManager?.DatabaseSerialize();
             GetService<MongoSystemAnnouncement>()?.OnUpdate();
             GetService<MongoAccountManager>()?.ForcePendingWrite();
             Save();
@@ -298,19 +263,9 @@ namespace OpenSoftwareLauncher.Server
         /// <summary>
         /// Save, Usually called before we quit.
         /// </summary>
-        public static void Save()
+        public static void Save(ServerConfig? config = null)
         {
-            // Save legacy config
-            ServerConfig.Save();
-            if (Provider == null)
-                return;
-
-            // Safely get the config, then the configsource, then save if both exist.
-            var conf = Provider.GetService<OSLCommon.ServerConfig>();
-            var src = Provider.GetService<FastConfigSource<OSLCommon.ServerConfig>>();
-
-            if (conf != null && src != null)
-                src.Save(conf);
+            ConfigSource.Save(config ?? MainClass.Config);
         }
 
         private static void InitializeServices()
@@ -324,19 +279,14 @@ namespace OpenSoftwareLauncher.Server
             {
                 sa.Update += delegate
                 {
-                    ServerConfig.Set("Announcement", "Enable", sa.Active);
+                    Config.AnnouncementEnable = sa.Active;
+                    Save();
                 };
-            }
-            if (Provider.GetService<OSLCommon.ServerConfig>()?.Telemetry.Prometheus ?? false)
-            {
-                var app = Provider.GetService<WebApplication>();
-                app?.UseMetricServer();
-                app?.UseHttpMetrics();
             }
         }
         private static void ConfigureServices(IServiceCollection services)
         {
-            //ConfigureConfigService(services);
+            ConfigureConfigService(services);
             services.AddSingleton<MongoMiddle>()
                     .AddSingleton<MongoClient>(MongoCreate());
             ConfigureServices_Content(services);
@@ -347,19 +297,23 @@ namespace OpenSoftwareLauncher.Server
             DataDirectory,
             "Config",
             "config.ini");
+        private static void InitConfig()
+        {
+            ConfigSource = new FastConfigSource<OSLCommon.ServerConfig>(ConfigLocation);
+            Config = ConfigSource.Parse();
+        }
         private static void ConfigureConfigService(IServiceCollection services)
         {
-            var source = new FastConfigSource<OSLCommon.ServerConfig>(ConfigLocation);
-            var parsed = source.Parse();
-
-            services.AddSingleton(source);
-            services.AddSingleton(parsed);
+            services.AddSingleton(ConfigSource);
+            services.AddSingleton(Config);
         }
+        public static FastConfigSource<ServerConfig> ConfigSource;
+        public static ServerConfig Config;
 
         private static MongoClient MongoCreate()
         {
             Log.Debug($"Connecting to Database");
-            MongoClient client = new(ServerConfig.GetString("Connection", "MongoDBServer"));
+            MongoClient client = new(Config.MongoDBServer);
             client.StartSession();
             return client;
         }
@@ -374,8 +328,9 @@ namespace OpenSoftwareLauncher.Server
         private static void ConfigureServices_AspNet(IServiceCollection services)
         {
             Builder = WebApplication.CreateBuilder(Arguments);
+            var targetAssembly = Assembly.GetAssembly(typeof(MainClass)) ?? Assembly.GetExecutingAssembly();
             Builder.Services.AddControllers()
-                .AddApplicationPart(Assembly.GetAssembly(typeof(MainClass)) ?? Assembly.GetExecutingAssembly());
+                .AddApplicationPart(targetAssembly);
             if (Builder.Environment.IsDevelopment())
                 Builder.Services.AddSwaggerGen();
             AspNetCreate_PreBuild?.Invoke(Builder);
