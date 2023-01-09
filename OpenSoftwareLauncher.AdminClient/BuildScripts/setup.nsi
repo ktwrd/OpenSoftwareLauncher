@@ -20,7 +20,7 @@
   InstallDir "$LOCALAPPDATA\OpenSoftwareLauncher.AdminClient"
   
   ;Get installation folder from registry if available
-  InstallDirRegKey HKCU "Software\OpenSoftwareLauncher_DesktopWinForms" ""
+  InstallDirRegKey HKCU "Software\OpenSoftwareLauncher_AdminClient" ""
 
   ;Request application privileges for Windows Vista
   RequestExecutionLevel user
@@ -114,12 +114,13 @@ Section "Admin Client (required)" SecInstallLauncher
   File    ".\release\*.dll"
   File    ".\release\*.exe.config"
   File    ".\release\*.txt"
+  File    ".\release\*.pdb"
   File /r ".\release\Locale"
   File    ".\..\..\CHANGELOG.txt"
   File    ".\..\..\LICENSE"
   
   ;Store installation folder
-  WriteRegStr HKCU "Software\OpenSoftwareLauncher_DesktopWinForms" "" "$LOCALAPPDATA\OpenSoftwareLauncher.AdminClient"
+  WriteRegStr HKCU "Software\OpenSoftwareLauncher_AdminClient" "" "$LOCALAPPDATA\OpenSoftwareLauncher.AdminClient"
   
   ;Create uninstaller
   WriteUninstaller "$LOCALAPPDATA\OpenSoftwareLauncher.AdminClient\Uninstall.exe"
@@ -130,8 +131,8 @@ Section "Start Menu Shortcuts" SecMenuShortcut
 
   CreateDirectory "$SMPROGRAMS\Open Software Launcher"
   CreateDirectory "$SMPROGRAMS\Open Software Launcher\Admin Client"
-  CreateShortcut "$SMPROGRAMS\Open Software Launcher\Admin Client\Uninstall OSL Desktop.lnk" "$LOCALAPPDATA\OpenSoftwareLauncher.AdminClient\Uninstall.exe"
-  CreateShortcut "$SMPROGRAMS\Open Software Launcher\Admin Client\OSL Desktop.lnk" "$LOCALAPPDATA\OpenSoftwareLauncher.AdminClient\OpenSoftwareLauncher.AdminClient.exe"
+  CreateShortcut "$SMPROGRAMS\Open Software Launcher\Admin Client\Uninstall OSL Admin Client.lnk" "$LOCALAPPDATA\OpenSoftwareLauncher.AdminClient\Uninstall.exe"
+  CreateShortcut "$SMPROGRAMS\Open Software Launcher\Admin Client\OSL Admin Client.lnk" "$LOCALAPPDATA\OpenSoftwareLauncher.AdminClient\OpenSoftwareLauncher.AdminClient.exe"
   
 SectionEnd
 
@@ -139,12 +140,12 @@ SectionEnd
 ;Descriptions
 
   ;Language strings
-  LangString DESC_SecInstallLauncher ${LANG_ENGLISH} "Desktop Client"
+  LangString DESC_SecInstallLauncher ${LANG_ENGLISH} "Admin Client"
   LangString DESC_SecMenuShortcut ${LANG_ENGLISH} "Create Start Menu Shortcuts"
   LangString MUI_BUTTONTEXT_FINISH ${LANG_ENGLISH} "Close"
-  LangString MUI_TEXT_FINISH_INFO_TITLE ${LANG_ENGLISH} "Open Software Launcher Desktop"
+  LangString MUI_TEXT_FINISH_INFO_TITLE ${LANG_ENGLISH} "Open Software Launcher Admin Client"
   LangString MUI_TEXT_FINISH_REBOOTNOW ${LANG_ENGLISH} "MUI_TEXT_FINISH_REBOOTNOW"
-  LangString MUI_TEXT_FINISH_INFO_TEXT ${LANG_ENGLISH} "OSL Desktop has finished installing. Enjoy!"
+  LangString MUI_TEXT_FINISH_INFO_TEXT ${LANG_ENGLISH} "OSL Admin Client has finished installing. Enjoy!"
 
   ;Assign language strings to sections
   !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
@@ -176,6 +177,6 @@ Section "Uninstall"
 
   RMDir "$LOCALAPPDATA\OpenSoftwareLauncher.AdminClient"
 
-  DeleteRegKey /ifempty HKCU "Software\OpenSoftwareLauncher_DesktopWinForms"
+  DeleteRegKey /ifempty HKCU "Software\OpenSoftwareLauncher_AdminClient"
 
 SectionEnd
