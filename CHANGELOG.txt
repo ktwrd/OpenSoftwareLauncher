@@ -1,6 +1,7 @@
 OSL Server 1.2.3.1, 2023-01-09
 ------------------------------------------
 - Fix Prometheus not working
+- Overhaul usage of configs, this fixes the implementation of FastConfig.
 
 OSL Admin Panel 1.2.3, 2023-01-09
 ------------------------------------------
