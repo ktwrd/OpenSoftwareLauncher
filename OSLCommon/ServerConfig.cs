@@ -78,6 +78,7 @@ namespace OSLCommon.Config
             Collection_ReleaseInfo = "releaseInfo";
             Collection_Published = "published";
             Collection_AuditLog = "auditLog";
+            Collection_Features = "features";
         }
     }
     [ConfigSerialize]
