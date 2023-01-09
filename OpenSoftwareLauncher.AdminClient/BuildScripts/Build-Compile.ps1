@@ -10,7 +10,7 @@ Write-Output "================================================================ R
 msbuild /t:Restore  /p:Configuration=Release -maxcpucount:4
 Write-Output "================================================================ Compiling"
 msbuild /p:Configuration=Release -maxcpucount:4
-$env:OSLDesktopVersion=((Get-Item $env:TargetProjectDirectory\bin\Release\OpenSoftwareLauncher.DesktopWinForms.exe).VersionInfo.FileVersion);
+$env:OSLDesktopVersion=((Get-Item $env:TargetProjectDirectory\bin\Release\OpenSoftwareLauncher.AdminClient.exe).VersionInfo.FileVersion);
 
 Remove-Item -Recurse -Force BuildScripts\release
 mkdir BuildScripts\release\

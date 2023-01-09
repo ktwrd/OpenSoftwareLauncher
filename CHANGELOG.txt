@@ -1,3 +1,15 @@
+OSL Admin Panel 1.2.3, 2023-01-09
+------------------------------------------
+- Installer shows license page
+- Fixed some viisual issues with HttpExceptionModal
+- Port config system to FastConfig
+- With AuthClient Errors a new CopyableErrorModal now shows instead of the HttpExceptionModal.
+
+OSL Server 1.2.3, 2023-01-09
+------------------------------------------
+- Add endpoint `/license/info` to fetch information about a license key
+- Port config system to FastConfig
+
 OSL Server 1.2.2.3, 2022-12-23
 ------------------------------------------
 - `/token/grant` returns code `401` with type `ObjectResponse<HttpException>` if the account you want a token is disabled.
