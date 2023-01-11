@@ -317,7 +317,7 @@ namespace OpenSoftwareLauncher.Server
             var targetAssembly = Assembly.GetAssembly(typeof(MainClass)) ?? Assembly.GetExecutingAssembly();
             Builder.Services.AddControllers()
                 .AddApplicationPart(targetAssembly);
-            if (Builder.Environment.IsDevelopment())
+            if (Builder.Environment.IsDevelopment() || Arguments.Contains("--swagger"))
                 Builder.Services.AddSwaggerGen();
             AspNetCreate_PreBuild?.Invoke(Builder);
 
