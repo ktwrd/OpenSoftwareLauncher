@@ -32,8 +32,7 @@ namespace OpenSoftwareLauncher.AdminClient
             checkBoxRemember.Text = LocaleManager.Get("Remember");
 
             buttonLogin.Text = LocaleManager.Get("Login");
-            buttonOptions.Text = LocaleManager.Get("Option_Plural");
-
+            
             Text = LocaleManager.Get("Title_LoginForm");
         }
         public LoginForm(bool validate = false, bool silent = false) : this()
