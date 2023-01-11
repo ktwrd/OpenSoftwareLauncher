@@ -127,7 +127,6 @@
     <Compile Include="BulkUserPermissionForm.Designer.cs">
       <DependentUpon>BulkUserPermissionForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Config.cs" />
     <Compile Include="CopyableErrorModal.cs">
       <SubType>Form</SubType>
     </Compile>

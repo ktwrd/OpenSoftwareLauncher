@@ -1,13 +1,12 @@
 ﻿using kate.FastConfig;
+using OSLCommon.Config;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace OpenSoftwareLauncher.AdminClient
+namespace OSLCommon
 {
-    public class Config
+    public class AdminClientConfig
     {
         [Group("General")]
         public string Language { get; set; }
@@ -15,31 +14,40 @@ namespace OpenSoftwareLauncher.AdminClient
         public bool ShowLatestRelease { get; set; }
         [Group("Connection")]
         public string Endpoint { get; set; }
-        public ConfigAuth Auth { get; set; }
-        public ConfigAuditLog AuditLog { get; set; }
-        public Config()
+        public AdminClientAuth Auth { get; set; }
+        public AdminAuditLog AuditLog { get; set; }
+        public AdminClientConfig()
         {
             Language = "en";
             ShowLatestRelease = true;
             Endpoint = "";
         }
     }
+}
+namespace OSLCommon.Config
+{
     [ConfigSerialize]
     [Group("Authentication")]
-    public class ConfigAuth
+    public class AdminClientAuth
     {
         public string Username { get; set; }
         public string Token { get; set; }
         public bool Remember { get; set; }
+        public AdminClientAuth()
+        {
+            Username = "";
+            Token = "";
+            Remember = false;
+        }
     }
     [ConfigSerialize]
     [Group("AuditLog")]
-    public class ConfigAuditLog
+    public class AdminAuditLog
     {
-        public ConfigAuditLog()
+        public long DefaultTimeRange_MinOffset { get; set; }
+        public AdminAuditLog()
         {
             DefaultTimeRange_MinOffset = -86400000;
         }
-        public long DefaultTimeRange_MinOffset { get; set; }
     }
 }

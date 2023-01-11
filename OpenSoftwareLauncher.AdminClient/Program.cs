@@ -2,6 +2,7 @@
 using kate.FastConfig;
 using kate.shared;
 using OpenSoftwareLauncher.AdminClient.ServerBridge;
+using OSLCommon;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -100,14 +101,14 @@ namespace OpenSoftwareLauncher.AdminClient
             }
         }
 
-        private static FastConfigSource<Config> ConfigSource;
-        internal static Config Config;
+        private static FastConfigSource<AdminClientConfig> ConfigSource;
+        internal static AdminClientConfig Config;
         private static void InitConfig()
         {
             string configLocation = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath) ?? Directory.GetCurrentDirectory(), "config.ini");
             if (!File.Exists(configLocation))
                 File.WriteAllText(configLocation, "");
-            ConfigSource = new FastConfigSource<Config>(configLocation);
+            ConfigSource = new FastConfigSource<AdminClientConfig>(configLocation);
             Config = ConfigSource.Parse();
         }
         public static void ConfigSave()
