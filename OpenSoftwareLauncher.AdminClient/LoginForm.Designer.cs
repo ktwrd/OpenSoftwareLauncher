@@ -45,13 +45,12 @@ namespace OpenSoftwareLauncher.AdminClient
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
             this.buttonLogin = new System.Windows.Forms.Button();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
-            this.buttonOptions = new System.Windows.Forms.Button();
             this.checkBoxRemember = new System.Windows.Forms.CheckBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.labelToken = new System.Windows.Forms.Label();
             this.textBoxToken = new System.Windows.Forms.TextBox();
+            this.labelToken = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -235,7 +234,6 @@ namespace OpenSoftwareLauncher.AdminClient
             // flowLayoutPanel3
             // 
             this.flowLayoutPanel3.AutoSize = true;
-            this.flowLayoutPanel3.Controls.Add(this.buttonOptions);
             this.flowLayoutPanel3.Controls.Add(this.checkBoxRemember);
             this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel3.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
@@ -245,23 +243,10 @@ namespace OpenSoftwareLauncher.AdminClient
             this.flowLayoutPanel3.Size = new System.Drawing.Size(83, 81);
             this.flowLayoutPanel3.TabIndex = 3;
             // 
-            // buttonOptions
-            // 
-            this.buttonOptions.Enabled = false;
-            this.buttonOptions.Image = global::OpenSoftwareLauncher.AdminClient.Properties.Resources.gear;
-            this.buttonOptions.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonOptions.Location = new System.Drawing.Point(3, 3);
-            this.buttonOptions.Name = "buttonOptions";
-            this.buttonOptions.Size = new System.Drawing.Size(75, 23);
-            this.buttonOptions.TabIndex = 5;
-            this.buttonOptions.Text = "Options";
-            this.buttonOptions.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.buttonOptions.UseVisualStyleBackColor = true;
-            // 
             // checkBoxRemember
             // 
             this.checkBoxRemember.AutoSize = true;
-            this.checkBoxRemember.Location = new System.Drawing.Point(3, 32);
+            this.checkBoxRemember.Location = new System.Drawing.Point(3, 3);
             this.checkBoxRemember.Name = "checkBoxRemember";
             this.checkBoxRemember.Size = new System.Drawing.Size(77, 17);
             this.checkBoxRemember.TabIndex = 6;
@@ -302,6 +287,13 @@ namespace OpenSoftwareLauncher.AdminClient
             this.tabPage2.Text = "Token";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // textBoxToken
+            // 
+            this.textBoxToken.Location = new System.Drawing.Point(6, 28);
+            this.textBoxToken.Name = "textBoxToken";
+            this.textBoxToken.Size = new System.Drawing.Size(198, 20);
+            this.textBoxToken.TabIndex = 1;
+            // 
             // labelToken
             // 
             this.labelToken.AutoSize = true;
@@ -311,13 +303,6 @@ namespace OpenSoftwareLauncher.AdminClient
             this.labelToken.Size = new System.Drawing.Size(38, 13);
             this.labelToken.TabIndex = 0;
             this.labelToken.Text = "Token";
-            // 
-            // textBoxToken
-            // 
-            this.textBoxToken.Location = new System.Drawing.Point(6, 28);
-            this.textBoxToken.Name = "textBoxToken";
-            this.textBoxToken.Size = new System.Drawing.Size(198, 20);
-            this.textBoxToken.TabIndex = 1;
             // 
             // LoginForm
             // 
@@ -372,7 +357,6 @@ namespace OpenSoftwareLauncher.AdminClient
         private FlowLayoutPanel flowLayoutPanel3;
         private CheckBox checkBoxRemember;
         private Button buttonLogin;
-        private Button buttonOptions;
         private TabControl tabControl1;
         private TabPage tabPage1;
         private TabPage tabPage2;
